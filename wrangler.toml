@@ -1,0 +1,12 @@
+name = "riseflake-landing"
+main = "build/index.js"
+type = "javascript"
+
+[docs]
+documentation = "https://developers.cloudflare.com/pages"
+
+[env.production]
+name = "riseflake-landing"
+routes = [
+  { pattern = "riseflake.com", zone_name = "riseflake.com" }
+]

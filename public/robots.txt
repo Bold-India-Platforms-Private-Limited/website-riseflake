@@ -1,0 +1,13 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+
+# Sitemap
+Sitemap: https://riseflake.com/sitemap.xml
+
+# Crawl delay (optional)
+Crawl-delay: 0
+
+# Allow popular crawlers faster access
+User-agent: Googlebot
+Crawl-delay: 0
