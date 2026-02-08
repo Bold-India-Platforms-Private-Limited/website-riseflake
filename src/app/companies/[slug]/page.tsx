@@ -3,6 +3,8 @@ import { notFound } from 'next/navigation'
 import Navbar from '../../components/Navbar'
 import { API_BASE_URL } from '../../../lib/config'
 
+export const dynamicParams = false
+
 type PageProps = {
   params: Promise<{ slug: string }>
 }
