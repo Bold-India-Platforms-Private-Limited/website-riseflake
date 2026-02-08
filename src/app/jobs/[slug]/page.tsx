@@ -39,22 +39,26 @@ const fetchJobsPage = async (page: number) => {
 }
 
 export async function generateStaticParams() {
-  const slugs: Array<{ slug: string }> = []
-  let page = 1
-  let hasMore = true
+  try {
+    const slugs: Array<{ slug: string }> = []
+    let page = 1
+    let hasMore = true
 
-  while (hasMore) {
-    const data = await fetchJobsPage(page)
-    if (!data?.status || !data.result?.length) break
+    while (hasMore) {
+      const data = await fetchJobsPage(page)
+      if (!data?.status || !data.result?.length) break
 
-    slugs.push(...data.result.map((job) => ({ slug: job.slug })))
-    hasMore = data.hasMore
-    page += 1
+      slugs.push(...data.result.map((job) => ({ slug: job.slug })))
+      hasMore = data.hasMore
+      page += 1
 
-    if (page > 50) break
+      if (page > 50) break
+    }
+
+    return slugs
+  } catch {
+    return []
   }
-
-  return slugs
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
