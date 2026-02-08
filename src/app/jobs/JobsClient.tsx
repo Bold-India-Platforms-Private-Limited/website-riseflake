@@ -1,13 +1,13 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
-import { useSearchParams } from 'next/navigation'
+import { useEffect, useMemo, useState, type FormEvent } from 'react'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import FiltersPanel from './components/FiltersPanel'
 import JobList from './components/JobList'
-import Pagination from './components/Pagination'
 import RightSidebar from './components/RightSidebar'
 import type { JobListItem } from './components/JobCard'
 import { API_BASE_URL } from '../../lib/config'
+import Pagination from '../components/Pagination'
 
 type JobsResponse = {
   status: boolean
@@ -60,6 +60,8 @@ const JobsSkeleton = () => (
 
 export default function JobsClient() {
   const searchParams = useSearchParams()
+  const router = useRouter()
+  const pathname = usePathname()
   const [data, setData] = useState<JobsResponse | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [hasError, setHasError] = useState(false)
@@ -101,6 +103,23 @@ export default function JobsClient() {
   const currentPage = data?.page ?? 1
   const totalPages = data?.totalPages ?? 1
   const totalJobs = data?.total ?? 0
+  const pageSize = data?.limit ?? 20
+
+  const handleSearchSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    const formData = new FormData(event.currentTarget)
+    const position = String(formData.get('position') ?? '').trim()
+    const params = new URLSearchParams(searchParams.toString())
+
+    if (position) {
+      params.set('position', position)
+    } else {
+      params.delete('position')
+    }
+
+    params.set('page', '1')
+    router.push(`${pathname}?${params.toString()}`)
+  }
 
   const currentFilters = {
     companyName: searchParams.get('company_name') ?? '',
@@ -111,35 +130,58 @@ export default function JobsClient() {
   }
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-[280px_minmax(0,1fr)_240px] gap-6 items-start">
-      <FiltersPanel currentFilters={currentFilters} />
-
-      <section className="space-y-4">
-        <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-600 shadow-sm">
-          <span>{totalJobs} roles available</span>
-          <span>Showing page {currentPage} of {totalPages}</span>
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 lg:grid-cols-[280px_minmax(0,1fr)_240px] gap-6 items-start">
+        <div className="hidden lg:block">
+          <FiltersPanel currentFilters={currentFilters} />
         </div>
 
-        {isLoading ? (
-          <JobsSkeleton />
-        ) : hasError ? (
-          <div className="rounded-2xl border border-dashed border-slate-200 bg-white p-12 text-center">
-            <h3 className="text-xl font-semibold text-slate-900">Unable to load jobs</h3>
-            <p className="mt-2 text-sm text-slate-600">
-              Please refresh the page or try again in a few moments.
-            </p>
-          </div>
-        ) : (
-          <>
-            <JobList jobs={jobs} />
-            {totalJobs > 20 && (
-              <Pagination currentPage={currentPage} totalPages={totalPages} baseQuery={queryParams} />
-            )}
-          </>
-        )}
-      </section>
+        <section className="space-y-4">
+          <form
+            onSubmit={handleSearchSubmit}
+            className="flex flex-wrap items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-600 shadow-sm"
+          >
+            <input
+              type="text"
+              name="position"
+              defaultValue={searchParams.get('position') ?? ''}
+              placeholder="Search jobs by position"
+              className="flex-1 rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-700"
+            />
+            <button
+              type="submit"
+              className="rounded-xl bg-[#414FEA] px-5 py-2.5 text-sm font-semibold text-white"
+            >
+              Search
+            </button>
+          </form>
 
-      <RightSidebar />
+          {isLoading ? (
+            <JobsSkeleton />
+          ) : hasError ? (
+            <div className="rounded-2xl border border-dashed border-slate-200 bg-white p-12 text-center">
+              <h3 className="text-xl font-semibold text-slate-900">Unable to load jobs</h3>
+              <p className="mt-2 text-sm text-slate-600">
+                Please refresh the page or try again in a few moments.
+              </p>
+            </div>
+          ) : (
+            <JobList jobs={jobs} />
+          )}
+        </section>
+
+        <RightSidebar />
+      </div>
+
+      {!isLoading && !hasError && totalJobs > 0 && (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          totalItems={totalJobs}
+          pageSize={pageSize}
+          baseQuery={queryParams}
+        />
+      )}
     </div>
   )
 }

@@ -46,15 +46,6 @@ export default function JobHeader({ job }: { job: JobDetail }) {
             <span className="rounded-full bg-slate-100 px-3 py-1">Posted {formatDate(job.created_at)}</span>
           </div>
         </div>
-
-        <div className="flex flex-wrap items-center gap-4 text-sm text-slate-600">
-          <span className="flex items-center gap-2 rounded-full bg-slate-50 px-3 py-1">
-            {job.location_name ?? 'Remote'}
-          </span>
-          <span className="flex items-center gap-2 rounded-full bg-slate-50 px-3 py-1">
-            {job.jobs_views ?? 0} views
-          </span>
-        </div>
       </div>
     </div>
   )

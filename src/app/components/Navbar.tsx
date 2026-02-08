@@ -3,10 +3,12 @@ export default function Navbar() {
     <nav className="sticky top-0 z-50 glass border-b border-white/20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-gradient-modern rounded-lg"></div>
+          <a href="/" className="flex items-center gap-3">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-white">
+              <img src="/logo.webp" alt="Riseflake logo" className="h-6 w-6 object-contain" />
+            </div>
             <h1 className="text-2xl font-semibold text-slate-900">Riseflake</h1>
-          </div>
+          </a>
 
           <div className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-700">
             <a href="/jobs" className="hover:text-indigo-600 transition">Jobs</a>

@@ -4,10 +4,12 @@ export default function Footer() {
       <div className="max-w-6xl mx-auto">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 mb-12">
           <div>
-            <div className="flex items-center gap-2 mb-4">
-              <div className="w-6 h-6 bg-gradient-modern rounded-lg"></div>
+            <a href="/" className="flex items-center gap-2 mb-4">
+              <div className="flex h-6 w-6 items-center justify-center rounded-lg border border-slate-200 bg-white">
+                <img src="/logo.webp" alt="Riseflake logo" className="h-4 w-4 object-contain" />
+              </div>
               <h4 className="font-semibold text-lg text-slate-900">Riseflake</h4>
-            </div>
+            </a>
             <p className="text-slate-600 text-sm leading-relaxed">
               A trusted job portal and professional networking platform built for career growth.
             </p>

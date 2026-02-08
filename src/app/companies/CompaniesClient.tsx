@@ -1,11 +1,11 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
-import { useSearchParams } from 'next/navigation'
+import { useEffect, useMemo, useState, type FormEvent } from 'react'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import CompanyList from './components/CompanyList'
-import Pagination from './components/Pagination'
 import type { CompanyListItem } from './components/CompanyCard'
 import { API_BASE_URL } from '../../lib/config'
+import Pagination from '../components/Pagination'
 
 type CompaniesResponse = {
   status: boolean
@@ -49,6 +49,8 @@ const CompaniesSkeleton = () => (
 
 export default function CompaniesClient() {
   const searchParams = useSearchParams()
+  const router = useRouter()
+  const pathname = usePathname()
   const [data, setData] = useState<CompaniesResponse | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [hasError, setHasError] = useState(false)
@@ -90,13 +92,44 @@ export default function CompaniesClient() {
   const currentPage = data?.page ?? 1
   const totalPages = data?.totalPages ?? 1
   const totalCompanies = data?.total ?? 0
+  const pageSize = data?.limit ?? 20
+
+  const handleSearchSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    const formData = new FormData(event.currentTarget)
+    const companyName = String(formData.get('company_name') ?? '').trim()
+    const params = new URLSearchParams(searchParams.toString())
+
+    if (companyName) {
+      params.set('company_name', companyName)
+    } else {
+      params.delete('company_name')
+    }
+
+    params.set('page', '1')
+    router.push(`${pathname}?${params.toString()}`)
+  }
 
   return (
     <section className="space-y-4">
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-600 shadow-sm">
-        <span>{totalCompanies} companies available</span>
-        <span>Showing page {currentPage} of {totalPages}</span>
-      </div>
+      <form
+        onSubmit={handleSearchSubmit}
+        className="flex flex-wrap items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-600 shadow-sm sticky top-20 z-10"
+      >
+        <input
+          type="text"
+          name="company_name"
+          defaultValue={searchParams.get('company_name') ?? ''}
+          placeholder="Search companies by name"
+          className="flex-1 rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-700"
+        />
+        <button
+          type="submit"
+          className="rounded-xl bg-[#414FEA] px-5 py-2.5 text-sm font-semibold text-white"
+        >
+          Search
+        </button>
+      </form>
 
       {isLoading ? (
         <CompaniesSkeleton />
@@ -108,12 +141,17 @@ export default function CompaniesClient() {
           </p>
         </div>
       ) : (
-        <>
-          <CompanyList companies={companies} />
-          {totalCompanies > 20 && (
-            <Pagination currentPage={currentPage} totalPages={totalPages} baseQuery={queryParams} />
-          )}
-        </>
+        <CompanyList companies={companies} />
+      )}
+
+      {!isLoading && !hasError && totalCompanies > 0 && (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          totalItems={totalCompanies}
+          pageSize={pageSize}
+          baseQuery={queryParams}
+        />
       )}
     </section>
   )
