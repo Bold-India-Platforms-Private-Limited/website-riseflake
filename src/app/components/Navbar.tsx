@@ -17,9 +17,14 @@ export default function Navbar() {
             <a href="#testimonials" className="hover:text-indigo-600 transition">Success Stories</a>
           </div>
 
+          <div className="flex items-center gap-3 md:hidden text-sm font-semibold text-slate-700">
+            <a href="/jobs" className="hover:text-indigo-600 transition">Jobs</a>
+            <a href="/companies" className="hover:text-indigo-600 transition">Companies</a>
+          </div>
+
           <a
             href="https://app.riseflake.com/home"
-            className="px-5 py-2.5 bg-gradient-modern text-white hover:shadow-lg hover:shadow-indigo-400/50 rounded-full font-semibold transition-all"
+            className="hidden md:inline-flex px-5 py-2.5 bg-gradient-modern text-white hover:shadow-lg hover:shadow-indigo-400/50 rounded-full font-semibold transition-all"
           >
             Find Jobs
           </a>
