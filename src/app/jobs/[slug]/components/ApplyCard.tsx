@@ -1,4 +1,9 @@
+'use client'
+
+import { useMemo } from 'react'
+import { usePathname } from 'next/navigation'
 import type { JobDetail } from './types'
+import { WEBSITE_BASE_URL } from '../../../../lib/config'
 
 const formatSalary = (job: JobDetail) => {
   if (job.is_salary_hidden) return 'Confidential'
@@ -25,6 +30,12 @@ const formatDate = (value?: string | null) => {
 }
 
 export default function ApplyCard({ job }: { job: JobDetail }) {
+  const pathname = usePathname()
+  const applyHref = useMemo(() => {
+    const appBase = WEBSITE_BASE_URL.replace('://', '://app.')
+    return `${appBase}${pathname}`
+  }, [pathname])
+
   return (
     <aside className="rounded-3xl border border-slate-200 bg-white p-6 space-y-5 h-fit shadow-sm">
       <div>
@@ -33,7 +44,7 @@ export default function ApplyCard({ job }: { job: JobDetail }) {
       </div>
 
       <a
-        href="https://app.riseflake.com"
+        href={applyHref}
         className="block w-full rounded-xl bg-[#414FEA] py-3 text-center text-sm font-semibold text-white hover:shadow-lg"
       >
         Apply Now
