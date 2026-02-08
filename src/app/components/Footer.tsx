@@ -78,17 +78,17 @@ export default function Footer() {
             <h5 className="font-semibold mb-4 text-slate-900">Legal</h5>
             <ul className="space-y-3 text-sm text-slate-600">
               <li>
-                <a href="#" className="hover:text-indigo-600 transition">
+                <a href="/privacy-policy" className="hover:text-indigo-600 transition">
                   Privacy Policy
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-indigo-600 transition">
+                <a href="/terms-of-service" className="hover:text-indigo-600 transition">
                   Terms of Service
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-indigo-600 transition">
+                <a href="/cookie-policy" className="hover:text-indigo-600 transition">
                   Cookie Policy
                 </a>
               </li>

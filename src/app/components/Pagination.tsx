@@ -10,6 +10,7 @@ type PaginationProps = {
   totalItems: number
   pageSize: number
   baseQuery: URLSearchParams
+  limitOptionPreset?: number[]
 }
 
 const getPageNumbers = (current: number, total: number, maxPages: number) => {
@@ -30,22 +31,36 @@ const getPageNumbers = (current: number, total: number, maxPages: number) => {
   return Array.from({ length: end - start + 1 }, (_, index) => start + index)
 }
 
-const getLimitOptions = (totalItems: number, currentLimit: number) => {
-  const baseOptions = [10, 20, 30, 40, 50, 100]
-  const maxLimit = totalItems > 0 ? Math.min(totalItems, 100) : 20
-  const options = new Set<number>()
+const DEFAULT_LIMIT_OPTIONS = [10, 20, 30, 40, 50, 100]
 
-  baseOptions.forEach((value) => {
-    if (value <= maxLimit) options.add(value)
-  })
+const getLimitOptions = (totalItems: number, currentLimit: number, preset?: number[]) => {
+  if (!preset?.length) {
+    const maxLimit = totalItems > 0 ? Math.min(totalItems, 100) : 20
+    const options = new Set<number>()
 
-  if (totalItems > 0) {
-    options.add(maxLimit)
+    DEFAULT_LIMIT_OPTIONS.forEach((value) => {
+      if (value <= maxLimit) options.add(value)
+    })
+
+    if (totalItems > 0) {
+      options.add(maxLimit)
+    }
+
+    options.add(Math.min(currentLimit, 100))
+
+    return Array.from(options).sort((a, b) => a - b)
   }
 
-  options.add(Math.min(currentLimit, 100))
+  const options = new Set<number>(preset)
+  options.add(currentLimit)
 
-  return Array.from(options).sort((a, b) => a - b)
+  let values = Array.from(options).sort((a, b) => a - b)
+
+  if (totalItems > 0) {
+    values = values.filter((value) => value <= totalItems || value === currentLimit)
+  }
+
+  return values
 }
 
 export default function Pagination({
@@ -54,6 +69,7 @@ export default function Pagination({
   totalItems,
   pageSize,
   baseQuery,
+  limitOptionPreset,
 }: PaginationProps) {
   const router = useRouter()
   const pathname = usePathname()
@@ -82,7 +98,10 @@ export default function Pagination({
     () => getPageNumbers(currentPage, totalPages, maxPages),
     [currentPage, totalPages, maxPages]
   )
-  const limitOptions = useMemo(() => getLimitOptions(totalItems, pageSize), [totalItems, pageSize])
+  const limitOptions = useMemo(
+    () => getLimitOptions(totalItems, pageSize, limitOptionPreset),
+    [totalItems, pageSize, limitOptionPreset]
+  )
 
   const start = totalItems === 0 ? 0 : (currentPage - 1) * pageSize + 1
   const end = totalItems === 0 ? 0 : Math.min(currentPage * pageSize, totalItems)

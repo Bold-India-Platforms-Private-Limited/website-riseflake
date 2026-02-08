@@ -15,8 +15,6 @@ export type JobDetail = {
   experience_min: number | null
   experience_max: number | null
   job_deadline: string | null
-  jobs_views: number | null
-  jobs_total_view: number | null
   salary_type: string | null
   fixed_amount: string | null
   min_amount: string | null
