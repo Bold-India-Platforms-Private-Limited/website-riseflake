@@ -1,0 +1,6 @@
+{
+  "/companies/page": "app/companies/page.js",
+  "/companies/[slug]/page": "app/companies/[slug]/page.js",
+  "/jobs/page": "app/jobs/page.js",
+  "/jobs/[slug]/page": "app/jobs/[slug]/page.js"
+}
