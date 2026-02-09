@@ -8,6 +8,8 @@ import TagsSection from './components/TagsSection'
 import type { JobDetail } from './components/types'
 import { API_BASE_URL } from '../../../lib/config'
 
+export const dynamicParams = false
+
 type PageProps = {
   params: Promise<{ slug: string }>
 }
@@ -25,6 +27,8 @@ type JobsListResponse = {
   hasMore: boolean
 }
 
+const JOBS_PAGE_SIZE = 100
+
 const fetchJob = async (slug: string) => {
   const response = await fetch(`${API_BASE_URL}/jobs/${slug}`, { cache: 'force-cache' })
 
@@ -33,29 +37,32 @@ const fetchJob = async (slug: string) => {
 }
 
 const fetchJobsPage = async (page: number) => {
-  const response = await fetch(`${API_BASE_URL}/jobs?page=${page}`, { cache: 'force-cache' })
+  const response = await fetch(`${API_BASE_URL}/jobs?page=${page}&limit=${JOBS_PAGE_SIZE}`, { cache: 'force-cache' })
   if (!response.ok) return null
   return (await response.json()) as JobsListResponse
 }
 
 export async function generateStaticParams() {
   try {
-    const slugs: Array<{ slug: string }> = []
-    let page = 1
-    let hasMore = true
+    const firstPage = await fetchJobsPage(1)
+    if (!firstPage?.status || !firstPage.result?.length) return []
 
-    while (hasMore) {
+    const slugs = new Set<string>()
+    firstPage.result
+      .filter((job) => job.slug)
+      .forEach((job) => slugs.add(job.slug))
+
+    const totalPages = Math.max(firstPage.totalPages ?? 1, 1)
+    for (let page = 2; page <= totalPages; page += 1) {
       const data = await fetchJobsPage(page)
-      if (!data?.status || !data.result?.length) break
+      if (!data?.status || !data.result?.length) continue
 
-      slugs.push(...data.result.map((job) => ({ slug: job.slug })))
-      hasMore = data.hasMore
-      page += 1
-
-      if (page > 50) break
+      data.result
+        .filter((job) => job.slug)
+        .forEach((job) => slugs.add(job.slug))
     }
 
-    return slugs
+    return Array.from(slugs).map((slug) => ({ slug }))
   } catch {
     return []
   }

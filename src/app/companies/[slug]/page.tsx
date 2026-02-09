@@ -30,6 +30,8 @@ type CompaniesListResponse = {
   hasMore: boolean
 }
 
+const COMPANIES_PAGE_SIZE = 1000
+
 const fetchCompany = async (slug: string) => {
   const response = await fetch(`${API_BASE_URL}/companies/${slug}`, { cache: 'force-cache' })
   if (!response.ok) return null
@@ -37,29 +39,35 @@ const fetchCompany = async (slug: string) => {
 }
 
 const fetchCompaniesPage = async (page: number) => {
-  const response = await fetch(`${API_BASE_URL}/companies?page=${page}`, { cache: 'force-cache' })
+  const response = await fetch(
+    `${API_BASE_URL}/companies?page=${page}&limit=${COMPANIES_PAGE_SIZE}`,
+    { cache: 'force-cache' }
+  )
   if (!response.ok) return null
   return (await response.json()) as CompaniesListResponse
 }
 
 export async function generateStaticParams() {
   try {
-    const slugs: Array<{ slug: string }> = []
-    let page = 1
-    let hasMore = true
+    const firstPage = await fetchCompaniesPage(1)
+    if (!firstPage?.status || !firstPage.result?.length) return []
 
-    while (hasMore) {
+    const slugs = new Set<string>()
+    firstPage.result
+      .filter((company) => company.slug)
+      .forEach((company) => slugs.add(company.slug))
+
+    const totalPages = Math.max(firstPage.totalPages ?? 1, 1)
+    for (let page = 2; page <= totalPages; page += 1) {
       const data = await fetchCompaniesPage(page)
-      if (!data?.status || !data.result?.length) break
+      if (!data?.status || !data.result?.length) continue
 
-      slugs.push(...data.result.map((company) => ({ slug: company.slug })))
-      hasMore = data.hasMore
-      page += 1
-
-      if (page > 50) break
+      data.result
+        .filter((company) => company.slug)
+        .forEach((company) => slugs.add(company.slug))
     }
 
-    return slugs
+    return Array.from(slugs).map((slug) => ({ slug }))
   } catch {
     return []
   }
