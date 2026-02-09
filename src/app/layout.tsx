@@ -87,6 +87,13 @@ export default function RootLayout({
               url: 'https://riseflake.com',
               logo: 'https://riseflake.com/logo.png',
               description: 'The leading job portal and professional networking platform for career growth',
+              aggregateRating: {
+                '@type': 'AggregateRating',
+                bestRating: 5,
+                worstRating: 1,
+                ratingValue: 4.8,
+                ratingCount: 5000,
+              },
               sameAs: [
                 'https://twitter.com/riseflake',
                 'https://linkedin.com/company/riseflake',
@@ -116,11 +123,6 @@ export default function RootLayout({
               url: 'https://riseflake.com',
               description: 'Job portal and professional networking platform with AI-powered recommendations',
               image: 'https://riseflake.com/og-image.png',
-              aggregateRating: {
-                '@type': 'AggregateRating',
-                ratingValue: '4.8',
-                ratingCount: '5000',
-              },
             }),
           }}
         />
