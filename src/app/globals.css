@@ -21,6 +21,10 @@ body {
   font-weight: 400;
 }
 
+.body-scroll-lock {
+  overflow: hidden;
+}
+
 /* Modern gradient text */
 .text-gradient {
   background: linear-gradient(135deg, #6366f1 0%, #3b82f6 50%, #ec4899 100%);

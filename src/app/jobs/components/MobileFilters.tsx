@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { FiFilter, FiX } from 'react-icons/fi'
 
@@ -36,6 +36,18 @@ export default function MobileFilters() {
     [searchParams]
   )
 
+  useEffect(() => {
+    if (!isOpen) {
+      document.body.classList.remove('body-scroll-lock')
+      return
+    }
+
+    document.body.classList.add('body-scroll-lock')
+    return () => {
+      document.body.classList.remove('body-scroll-lock')
+    }
+  }, [isOpen])
+
   return (
     <div className="lg:hidden">
       <div className="mb-4 flex items-center gap-3">
@@ -62,7 +74,7 @@ export default function MobileFilters() {
           onClick={() => setIsOpen(false)}
         ></div>
         <div
-          className={`absolute left-0 top-0 h-full w-full bg-white transition-transform duration-200 ${
+          className={`absolute left-0 top-0 flex h-dvh w-full flex-col bg-white transition-transform duration-200 ${
             isOpen ? 'translate-x-0' : '-translate-x-full'
           }`}
         >
@@ -141,7 +153,7 @@ export default function MobileFilters() {
             </div>
           </div>
 
-          <form action="/jobs" method="get" className="flex h-[calc(100vh-176px)] flex-col">
+          <form action="/jobs" method="get" className="flex flex-1 flex-col">
             {currentFilters.position ? (
               <input type="hidden" name="position" value={currentFilters.position} />
             ) : null}
@@ -225,17 +237,17 @@ export default function MobileFilters() {
               </div>
             </div>
 
-            <div className="border-t border-slate-200 bg-white px-5 py-4">
+            <div className="sticky bottom-0 border-t border-slate-200 bg-white px-5 pb-[calc(env(safe-area-inset-bottom)+16px)] pt-4">
               <div className="flex items-center gap-3">
                 <a
                   href="/jobs"
-                  className="flex-1 rounded-2xl border border-slate-200 bg-white py-2.5 text-center text-sm font-semibold text-slate-700"
+                  className="flex-1 rounded-none border border-slate-200 bg-white py-2.5 text-center text-base font-semibold text-slate-700"
                 >
                   Reset all
                 </a>
                 <button
                   type="submit"
-                  className="flex-1 rounded-2xl bg-[#414FEA] py-2.5 text-sm font-semibold text-white shadow-sm"
+                  className="flex-1 rounded-none bg-[#414FEA] py-2.5 text-base font-semibold text-white shadow-sm"
                 >
                   Apply filters
                 </button>
