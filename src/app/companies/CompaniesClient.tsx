@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import CompanyList from './components/CompanyList'
-import Pagination from './components/Pagination'
+import Pagination from '../components/Pagination'
 import type { CompanyListItem } from './components/CompanyCard'
 import { API_BASE_URL } from '../../lib/config'
 import { FiSearch } from 'react-icons/fi'
@@ -93,6 +93,7 @@ export default function CompaniesClient() {
   const currentPage = data?.page ?? 1
   const totalPages = data?.totalPages ?? 1
   const totalCompanies = data?.total ?? 0
+  const pageSize = data?.limit ?? Number.parseInt(searchParams.get('limit') ?? '20', 10)
 
   return (
     <section className="space-y-4">
@@ -143,8 +144,15 @@ export default function CompaniesClient() {
       ) : (
         <>
           <CompanyList companies={companies} />
-          {totalCompanies > 20 && (
-            <Pagination currentPage={currentPage} totalPages={totalPages} baseQuery={queryParams} />
+          {totalCompanies > 0 && (
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              totalItems={totalCompanies}
+              pageSize={Number.isNaN(pageSize) ? 20 : pageSize}
+              baseQuery={queryParams}
+              limitOptionPreset={[20, 30, 50, 100, 200, 500, 1000]}
+            />
           )}
         </>
       )}
