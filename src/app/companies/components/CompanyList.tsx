@@ -13,7 +13,7 @@ export default function CompanyList({ companies }: { companies: CompanyListItem[
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div className="grid grid-cols-1 gap-4 lg:gap-6">
       {companies.map((company) => (
         <CompanyCard key={company.slug} company={company} />
       ))}

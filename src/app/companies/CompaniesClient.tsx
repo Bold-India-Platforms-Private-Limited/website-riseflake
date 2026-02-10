@@ -7,6 +7,7 @@ import Pagination from '../components/Pagination'
 import type { CompanyListItem } from './components/CompanyCard'
 import { API_BASE_URL } from '../../lib/config'
 import { FiSearch } from 'react-icons/fi'
+import { FiFilter } from 'react-icons/fi'
 
 type CompaniesResponse = {
   status: boolean
@@ -55,6 +56,7 @@ export default function CompaniesClient() {
   const [isLoading, setIsLoading] = useState(true)
   const [hasError, setHasError] = useState(false)
   const [searchTerm, setSearchTerm] = useState(searchParams.get('company_name') ?? '')
+  const [isFilterOpen, setIsFilterOpen] = useState(false)
 
   const queryParams = useMemo(() => {
     const params = new URLSearchParams()
@@ -89,73 +91,207 @@ export default function CompaniesClient() {
     }
   }, [queryParams])
 
+  useEffect(() => {
+    if (!isFilterOpen) {
+      document.body.classList.remove('body-scroll-lock')
+      return
+    }
+
+    document.body.classList.add('body-scroll-lock')
+    return () => {
+      document.body.classList.remove('body-scroll-lock')
+    }
+  }, [isFilterOpen])
+
   const companies = data?.result ?? []
   const currentPage = data?.page ?? 1
   const totalPages = data?.totalPages ?? 1
   const totalCompanies = data?.total ?? 0
   const pageSize = data?.limit ?? Number.parseInt(searchParams.get('limit') ?? '20', 10)
 
+  const organizationTypes = ['Startup', 'Enterprise', 'Public', 'Non-profit', 'Agency']
+
   return (
-    <section className="space-y-4">
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-600 shadow-sm">
-        <span>{totalCompanies} companies available</span>
-        <span>Showing page {currentPage} of {totalPages}</span>
+    <section className="grid grid-cols-1 gap-6 lg:grid-cols-[260px_minmax(0,1fr)_320px]">
+      <aside className="order-2 hidden rounded-3xl border border-slate-200 bg-white p-5 shadow-sm lg:order-1 lg:block lg:sticky lg:top-24 lg:h-fit">
+        <div className="flex items-start justify-between">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Filters</p>
+            <h2 className="text-base font-semibold text-slate-900">Organization Type</h2>
+          </div>
+        </div>
+        <p className="mt-2 text-xs text-slate-500">Select an organization type to refine results.</p>
+        <div className="mt-4 space-y-3">
+          {organizationTypes.map((type) => (
+            <label key={type} className="flex items-center gap-2 text-sm text-slate-600">
+              <input
+                type="checkbox"
+                className="h-4 w-4 rounded border-slate-300 text-indigo-600"
+                disabled
+              />
+              {type}
+            </label>
+          ))}
+        </div>
+        <p className="mt-4 text-xs text-slate-400">Filters update is coming soon.</p>
+      </aside>
+
+      <div className="order-1 space-y-6 lg:order-2">
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={() => setIsFilterOpen(true)}
+            className="lg:hidden inline-flex h-11 items-center justify-center rounded-full border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-700 shadow-sm"
+          >
+            <FiFilter className="h-4 w-4 mr-2" />
+            Filters
+          </button>
+          <form
+            className="flex-1"
+            onSubmit={(e) => {
+              e.preventDefault()
+              const params = new URLSearchParams(searchParams.toString())
+
+              const trimmed = searchTerm.trim()
+              if (trimmed) {
+                params.set('company_name', trimmed)
+              } else {
+                params.delete('company_name')
+              }
+
+              params.delete('page')
+              router.push(`/companies?${params.toString()}`)
+            }}
+          >
+            <div className="relative">
+              <FiSearch className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+              <input
+                type="text"
+                name="company_name"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Search companies by name"
+                className="w-full rounded-full border border-slate-200 bg-white px-5 py-3 pl-11 text-sm text-slate-700 shadow-sm"
+              />
+            </div>
+          </form>
+        </div>
+
+        {isLoading ? (
+          <CompaniesSkeleton />
+        ) : hasError ? (
+          <div className="rounded-2xl border border-dashed border-slate-200 bg-white p-12 text-center">
+            <h3 className="text-xl font-semibold text-slate-900">Unable to load companies</h3>
+            <p className="mt-2 text-sm text-slate-600">Please refresh the page or try again in a few moments.</p>
+          </div>
+        ) : (
+          <CompanyList companies={companies} />
+        )}
       </div>
 
-      <form
-        className="flex w-full flex-wrap items-center justify-end gap-3"
-        onSubmit={(e) => {
-          e.preventDefault()
-          const params = new URLSearchParams(searchParams.toString())
+      <aside className="order-3 hidden space-y-4 lg:block lg:sticky lg:top-24 lg:h-fit">
+        <div className="rounded-3xl border border-indigo-200 bg-gradient-to-br from-indigo-50 via-white to-purple-50 p-5 shadow-sm">
+          <p className="text-xs font-semibold uppercase tracking-wide text-indigo-500">Grow your brand</p>
+          <h3 className="mt-2 text-lg font-semibold text-slate-900">List your company on Riseflake</h3>
+          <p className="mt-2 text-sm text-slate-600">
+            Reach high-intent talent and showcase your culture to 50k+ professionals.
+          </p>
+          <a
+            href="https://app.riseflake.com/home"
+            className="mt-4 inline-flex items-center justify-center rounded-full bg-indigo-600 px-4 py-2 text-sm font-semibold text-white"
+          >
+            Get started
+          </a>
+        </div>
 
-          const trimmed = searchTerm.trim()
-          if (trimmed) {
-            params.set('company_name', trimmed)
-          } else {
-            params.delete('company_name')
-          }
+        <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+          <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Talent alerts</p>
+          <h3 className="mt-2 text-lg font-semibold text-slate-900">Stay ahead of hiring trends</h3>
+          <p className="mt-2 text-sm text-slate-600">
+            Weekly insights on hiring velocity, roles in demand, and applicant supply.
+          </p>
+          <a
+            href="https://app.riseflake.com/home"
+            className="mt-4 inline-flex items-center justify-center rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700"
+          >
+            Subscribe
+          </a>
+        </div>
+      </aside>
 
-          params.delete('page') // reset pagination on new search
-          router.push(`/companies?${params.toString()}`)
-        }}
-      >
-        <div className="relative w-full md:w-[30%]">
-          <FiSearch className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-          <input
-            type="text"
-            name="company_name"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Search companies by name"
-            className="w-full rounded-3xl border border-slate-200 bg-slate-50 px-4 py-2.5 pl-10 text-sm text-slate-700"
+      {!isLoading && !hasError && totalCompanies > 0 && (
+        <div className="order-4 lg:col-span-3">
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            totalItems={totalCompanies}
+            pageSize={Number.isNaN(pageSize) ? 20 : pageSize}
+            baseQuery={queryParams}
+            limitOptionPreset={[20, 30, 50, 100, 200, 500, 1000]}
           />
         </div>
-      </form>
-
-      {isLoading ? (
-        <CompaniesSkeleton />
-      ) : hasError ? (
-        <div className="rounded-2xl border border-dashed border-slate-200 bg-white p-12 text-center">
-          <h3 className="text-xl font-semibold text-slate-900">Unable to load companies</h3>
-          <p className="mt-2 text-sm text-slate-600">
-            Please refresh the page or try again in a few moments.
-          </p>
-        </div>
-      ) : (
-        <>
-          <CompanyList companies={companies} />
-          {totalCompanies > 0 && (
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              totalItems={totalCompanies}
-              pageSize={Number.isNaN(pageSize) ? 20 : pageSize}
-              baseQuery={queryParams}
-              limitOptionPreset={[20, 30, 50, 100, 200, 500, 1000]}
-            />
-          )}
-        </>
       )}
+
+      <div
+        className={`fixed inset-0 z-50 transition ${
+          isFilterOpen ? 'visible pointer-events-auto' : 'invisible pointer-events-none'
+        }`}
+        aria-hidden={!isFilterOpen}
+      >
+        <div
+          className={`absolute inset-0 bg-slate-900/40 transition-opacity duration-200 ${
+            isFilterOpen ? 'opacity-100' : 'opacity-0'
+          }`}
+          onClick={() => setIsFilterOpen(false)}
+        ></div>
+        <div
+          className={`absolute left-0 top-0 h-dvh w-full bg-white transition-transform duration-200 lg:hidden ${
+            isFilterOpen ? 'translate-x-0' : '-translate-x-full'
+          }`}
+        >
+          <div className="flex items-center justify-between border-b border-slate-200 px-5 py-4">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Filters</p>
+              <h2 className="text-base font-semibold text-slate-900">Organization Type</h2>
+            </div>
+            <button
+              type="button"
+              onClick={() => setIsFilterOpen(false)}
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 text-slate-600 shadow-sm"
+              aria-label="Close filters"
+            >
+              ✕
+            </button>
+          </div>
+          <div className="flex h-[calc(100dvh-73px)] flex-col">
+            <div className="flex-1 overflow-y-auto px-5 py-5">
+              <p className="text-xs text-slate-500">Select an organization type to refine results.</p>
+              <div className="mt-4 space-y-3">
+                {organizationTypes.map((type) => (
+                  <label key={type} className="flex items-center gap-2 text-sm text-slate-600">
+                    <input
+                      type="checkbox"
+                      className="h-4 w-4 rounded border-slate-300 text-indigo-600"
+                      disabled
+                    />
+                    {type}
+                  </label>
+                ))}
+              </div>
+              <p className="mt-4 text-xs text-slate-400">Filters update is coming soon.</p>
+            </div>
+            <div className="border-t border-slate-200 bg-white px-5 py-4">
+              <button
+                type="button"
+                onClick={() => setIsFilterOpen(false)}
+                className="w-full rounded-full bg-indigo-600 py-2.5 text-sm font-semibold text-white"
+              >
+                Show results
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
   )
 }

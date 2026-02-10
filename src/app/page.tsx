@@ -3,10 +3,12 @@
 import { useState } from 'react'
 import Footer from './components/Footer'
 import Navbar from './components/Navbar'
+import AppDownloadSection from './components/AppDownloadSection'
 
 export default function Home() {
   const [email, setEmail] = useState('')
   const [subscribed, setSubscribed] = useState(false)
+  const [openIndex, setOpenIndex] = useState<number | null>(null)
 
   const handleNewsletterSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -293,48 +295,114 @@ export default function Home() {
         </div>
       </section>
 
-      {/* FAQ Section - SEO Rich */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-4xl font-bold text-center mb-16 text-slate-900">
-            Frequently Asked Questions About <span className="text-gradient">Riseflake</span>
+      {/* FAQ Section */}
+      <section id="faq" className="mx-auto max-w-[1400px] bg-white px-[5%] py-20">
+        <div className="mb-16 text-center">
+          <span className="inline-block rounded-full bg-indigo-100 px-4 py-2 text-sm font-semibold text-indigo-600">
+            FAQ
+          </span>
+          <h2 className="mt-3 text-4xl font-semibold text-slate-900 sm:text-4xl md:text-[2.5rem]">
+            Frequently asked questions
           </h2>
+          <img
+            src="/section-title-icon.png"
+            alt=""
+            className="mx-auto -mt-6 h-16 w-40 object-contain"
+          />
+          <p className="mt-3 text-sm text-slate-600 sm:text-base">
+            Browse through these FAQs to find answers to commonly asked questions.
+          </p>
+        </div>
 
-          <div className="space-y-6">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_1.5fr] lg:gap-16">
+          <div className="lg:sticky lg:top-8">
+            <div className="h-[250px] overflow-hidden rounded-xl bg-transparent sm:h-[300px] lg:h-[400px]">
+              <img
+                src="/faq-boy-with-logos.png"
+                alt="FAQ Illustration"
+                className="h-full w-full object-contain"
+              />
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-4">
             {[
               {
-                q: 'What makes Riseflake different from other job portals?',
-                a: 'Riseflake combines AI-powered job matching with professional networking. Unlike traditional job boards, we focus on quality connections and career growth. Our algorithm learns your preferences and presents only relevant opportunities.',
+                question: 'Is ListedIndia free for job seekers?',
+                answer:
+                  'Yes. Creating a profile, browsing jobs, applying, and networking with professionals on ListedIndia is completely free for candidates.',
               },
               {
-                q: 'How does the professional networking feature work?',
-                a: 'Connect with industry professionals, mentors, and peers. Share insights, ask for advice, and build relationships that enhance your career. Direct messaging allows you to network with decision-makers at top companies.',
+                question: 'Do companies need to pay to post jobs?',
+                answer:
+                  'We offer both free and premium hiring plans. Companies can post jobs for free, while premium plans provide advanced hiring tools, higher visibility, and faster shortlisting.',
               },
               {
-                q: 'Is Riseflake really a free job portal?',
-                a: 'Yes! Creating a profile and browsing job listings on Riseflake is completely free. We offer premium features for professionals seeking advanced tools like skill assessments and resume optimization.',
+                question: 'How does ListedIndia match candidates to jobs?',
+                answer:
+                  'We use smart matching based on skills, experience, preferences, and recruiter requirements to ensure candidates see the most relevant opportunities.',
               },
               {
-                q: 'How does the job matching algorithm work?',
-                a: 'Our AI analyzes your skills, experience, career goals, and preferences. It then matches you with job opportunities that align with your profile. The more complete your profile, the better your recommendations.',
+                question: 'Are companies and job listings verified?',
+                answer:
+                  'Yes. Every employer and job listing on ListedIndia goes through a verification process to ensure authenticity, safety, and quality opportunities.',
               },
               {
-                q: 'Can I contact hiring managers directly?',
-                a: 'Yes! Riseflake enables direct communication with recruiters and hiring managers. Skip the applicant tracking system and establish genuine professional relationships.',
+                question: 'Can students and fresh graduates use ListedIndia?',
+                answer:
+                  'Absolutely. ListedIndia is designed for students, fresh graduates, and working professionals, offering internships, entry-level roles, and full-time career opportunities.',
               },
-              {
-                q: 'What career resources are available on Riseflake?',
-                a: 'We provide interview preparation guides, resume templates, salary guides, career development resources, and skill assessments. Premium members get access to exclusive training from industry experts.',
-              },
-            ].map((item, idx) => (
-              <div key={idx} className="glass rounded-xl p-8">
-                <h3 className="text-lg font-bold text-slate-900 mb-3">{item.q}</h3>
-                <p className="text-slate-600 leading-relaxed">{item.a}</p>
-              </div>
-            ))}
+            ].map((faq, index) => {
+              const isOpen = openIndex === index
+              return (
+                <div
+                  key={faq.question}
+                  className={`flex w-full cursor-pointer flex-col justify-between rounded-xl border-2 bg-white px-6 py-5 shadow-[0_4px_15px_rgba(0,0,0,0.06)] transition hover:shadow-[0_6px_18px_rgba(0,0,0,0.10)] ${
+                    isOpen ? 'border-indigo-500' : 'border-transparent'
+                  }`}
+                  onClick={() => setOpenIndex(isOpen ? null : index)}
+                >
+                  <div className="flex w-full items-center justify-between gap-4">
+                    <p className="text-base font-semibold text-slate-900 sm:text-lg">
+                      {faq.question}
+                    </p>
+                    <span
+                      className={`flex h-5 w-5 items-center justify-center text-slate-500 transition-transform ${
+                        isOpen ? 'rotate-180' : 'rotate-0'
+                      }`}
+                    >
+                      <svg
+                        width="20"
+                        height="20"
+                        viewBox="0 0 20 20"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M5 7.5L10 12.5L15 7.5"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    </span>
+                  </div>
+                  <div
+                    className={`overflow-hidden text-sm text-slate-600 transition-all ${
+                      isOpen ? 'mt-4 max-h-40 opacity-100' : 'mt-0 max-h-0 opacity-0'
+                    }`}
+                  >
+                    {faq.answer}
+                  </div>
+                </div>
+              )
+            })}
           </div>
         </div>
       </section>
+
+      <AppDownloadSection />
 
       {/* CTA Section - High Converting */}
       <section className="relative py-24 px-4 sm:px-6 lg:px-8 overflow-hidden">

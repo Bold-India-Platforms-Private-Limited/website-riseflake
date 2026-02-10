@@ -1,10 +1,8 @@
 "use client";
 
-import React from "react";
 import { useEffect } from "react";
 import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
 import { useRouter } from "next/navigation";
-import styled from "styled-components";
 import Footer from "../components/Footer";
 
 const CookiePolicy = () => {
@@ -14,33 +12,36 @@ const CookiePolicy = () => {
     }, []);
     return (
         <>
-            <Wrapper>
-                <div className="cookie-policy-container">
-                    <div className="bc-wrapper">
-                        <nav className="breadcrumb">
-                            <span className="bc-link" onClick={() => router.push("/")}>
-                                Website
-                            </span>
-                            <span className="bc-separate"> <FiArrowRight /> </span>
-                            <span className="bc-link" onClick={() => router.push("/")}>
-                                Home
-                            </span>
-                            <span className="bc-separate"> <FiArrowRight /> </span>
-                            <span className="bc-current">Cookie Policy</span>
-                        </nav>
-                        <h1 className="cookie-policy-heading">Cookie Policy</h1>
-                    </div>
-                    <div className="top-bar">
-                        <button
-                            className="back-button"
-                            onClick={() => router.back()}
-                        >
-                            <FiArrowLeft color="black" />
-                        </button>
-                        <h1 className="cookie-policy-title">Cookie Policy</h1>
-                    </div>
-                    <div className="divider"></div>
-                    <div className="content">
+            <div className="min-h-screen bg-slate-100">
+                <div className="mx-auto flex w-full max-w-[1200px] flex-col">
+                    <div className="bg-white">
+                        <div className="hidden w-full bg-slate-100/70 md:block">
+                            <div className="px-6 py-3">
+                                <nav className="flex items-center gap-2 text-sm text-slate-600">
+                                    <span className="cursor-pointer font-medium text-slate-700 hover:text-indigo-600" onClick={() => router.push("/")}>Website</span>
+                                    <span className="text-slate-400"><FiArrowRight /></span>
+                                    <span className="cursor-pointer font-medium text-slate-700 hover:text-indigo-600" onClick={() => router.push("/")}>Home</span>
+                                    <span className="text-slate-400"><FiArrowRight /></span>
+                                    <span className="font-semibold text-indigo-600">Cookie Policy</span>
+                                </nav>
+                                <h1 className="mt-2 text-3xl font-semibold text-slate-900">Cookie Policy</h1>
+                            </div>
+                        </div>
+
+                        <div className="sticky top-0 z-10 flex items-center gap-3 border-b border-slate-200 bg-white px-6 py-4 md:hidden">
+                            <button
+                                className="flex h-9 w-9 items-center justify-center rounded-full text-slate-700 hover:bg-slate-100"
+                                onClick={() => router.back()}
+                                aria-label="Go back"
+                            >
+                                <FiArrowLeft color="black" />
+                            </button>
+                            <h1 className="text-lg font-semibold text-slate-900">Cookie Policy</h1>
+                        </div>
+
+                        <div className="h-px w-full bg-slate-200 md:hidden"></div>
+
+                        <div className="space-y-8 px-6 py-6 text-[15px] leading-relaxed text-slate-600 sm:text-base">
                         <section>
                             <p>Last Updated Date : 08/01/2026 12:00 PM</p>
                             <h2>1. Introduction</h2>
@@ -174,178 +175,13 @@ const CookiePolicy = () => {
                                 <strong>CIN:</strong> U85499PN2025PTC246360
                             </p>
                         </section>
+                        </div>
                     </div>
                 </div>
-            </Wrapper>
+            </div>
             <Footer />
         </>
     );
 };
-
-const Wrapper = styled.section`
-    padding: 0;
-    max-width: 1200px;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-
-    .cookie-policy-container {
-        background: #fff;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
-    }
-     .bc-wrapper{
-       display:none;
-       width: 100vw;
-       background-color: #f4f4ffff;
-       padding: 0.75rem 0;
-       }   
-
-    @media (min-width: 768px) {
-        .top-bar {
-            display: none;
-            align-items: center;
-            gap: 1rem;
-            padding: 1.5rem 2rem;
-            background: #fff;
-        }
-        .cookie-policy-title
-        {
-        display:none;
-        }
-        .back-button{
-        display:none;
-        }
-       .divider {
-       display:none;
-       }
-       .bc-wrapper{
-       display: block;
-       } 
-       .breadcrumb{
-       display: flex;
-       justify-content: flex-start;
-       align-items:center;
-       gap: 0.4rem;
-       font-size: 0.9rem;
-       color: #000000ff;
-       margin-top: 1.5rem;
-       padding-left: 2rem;
-       max-width: 1200px;
-       } 
-    }
-       
-        
-        .bc-link{
-        cursor:pointer;
-        font-weight:500;
-    color: rgb(0, 30, 101);
-  
-
-        }
-        .bc-separate
-        {
-        color: #000000ff;
-        }  
-        .bc-current{
-        font-weight:500;
-        color: #0165e9ff; 
-        }
-        .cookie-policy-heading{
-        font-size: 2.4rem;
-        font-weight:600;
-        margin: 0.75rem 0 1.5rem;
-         padding-left: 2rem;
-         
-        }
-
-    .divider {
-        height: 1px;
-        background: #e2e8f0;
-        width: 100%;
-        margin: 0;
-    }
-
-    .back-button {
-        background: none;
-        border: none;
-        font-size: 1.5rem;
-        cursor: pointer;
-        color: #3b82f6;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 0.5rem;
-        border-radius: 50%;
-        transition: all 0.2s;
-        margin-left: -10px;
-
-        &:hover {
-            background: #f1f5f9;
-        }
-    }
-
-    .cookie-policy-title {
-        font-size: 1.25rem;
-        color: #333;
-        font-weight: 600;
-        margin-left: -15px;
-    }
-
-    .content {
-        flex: 1;
-        padding: 1.5rem 2rem;
-        color: #64748b;
-        line-height: 1.6;
-
-        section {
-            margin-bottom: 2rem;
-
-            h2 {
-                color: #334155;
-                font-size: 1.2rem;
-                margin-bottom: 0.75rem;
-            }
-
-            p {
-                margin-bottom: 0.5rem;
-            }
-        }
-    }
-
-        @media (min-width: 768px) {
-        height: fit-content;
-        .content {
-            bottom: 60px;
-        }
-    }
-   
-    @media (max-width: 768px) {
-        height: 100vh;
-        .top-bar {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            padding: 1rem 1.5rem;
-            margin-left: -15px;
-            height: 50px;
-            position: sticky;
-            top: 0;
-            z-index: 10;
-        }
-        
-        .content {
-            padding: 1rem 1.5rem;
-            overflow-y: auto;
-            section {
-                margin-bottom: 1.5rem;
-            }
-        }
-        
-       
-         }
-`;
 
 export default CookiePolicy;
