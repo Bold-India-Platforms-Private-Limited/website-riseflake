@@ -152,11 +152,6 @@ export default function CityCategories() {
                         {city.name.charAt(0)}
                       </div>
                     )}
-
-                    <div className="pointer-events-none absolute -left-1/2 -top-1/2 h-[200%] w-[200%] animate-[spin_8s_linear_infinite] bg-[radial-gradient(circle,rgba(255,255,255,0.3)_0%,transparent_70%)]" />
-                    <div
-                      className={`${city.gradientClass} pointer-events-none absolute -inset-2 blur-[15px] opacity-20 transition-opacity duration-300 group-hover:opacity-40`}
-                    />
                   </div>
 
                   <div className="text-center text-[clamp(0.9rem,2vw,1rem)] font-bold text-slate-900 transition-transform duration-300 group-hover:scale-105 group-hover:text-indigo-500">

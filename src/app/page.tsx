@@ -1,26 +1,33 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { FiSearch } from 'react-icons/fi'
 import Footer from './components/Footer'
 import Navbar from './components/Navbar'
 import AppDownloadSection from './components/AppDownloadSection'
 import Brands from './components/Brands'
 import CityCategories from './components/CityCategories'
+import Categories from './components/Categories'
+import Introducing from './components/Introducing'
+import Testimonials from './components/Testimonials'
+import Assessment from './components/Assessment'
 import DownloadTheApp from './components/DownloadTheApp'
 import ContactSection from './components/ContactSection'
 
 export default function Home() {
-  const [email, setEmail] = useState('')
-  const [subscribed, setSubscribed] = useState(false)
+  const router = useRouter()
   const [openIndex, setOpenIndex] = useState<number | null>(null)
+  const [searchQuery, setSearchQuery] = useState('')
 
-  const handleNewsletterSubmit = (e: React.FormEvent) => {
+  const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    setSubscribed(true)
-    setTimeout(() => {
-      setEmail('')
-      setSubscribed(false)
-    }, 3000)
+    const trimmed = searchQuery.trim()
+    if (trimmed) {
+      router.push(`/jobs?position=${encodeURIComponent(trimmed)}`)
+    } else {
+      router.push('/jobs')
+    }
   }
 
   return (
@@ -73,7 +80,7 @@ export default function Home() {
             </button>
           </div>
 
-          <div className="flex justify-center gap-8 text-sm text-slate-600">
+          <div className="flex justify-center gap-8 text-sm text-slate-600 mb-12">
             <div>
               <p className="font-bold text-2xl text-slate-900">50K+</p>
               <p>Active Users</p>
@@ -89,19 +96,50 @@ export default function Home() {
               <p>Success Rate</p>
             </div>
           </div>
-        </div>
-      </section>
 
-      {/* Trust Section */}
-      <section className="py-12 px-4 sm:px-6 lg:px-8 bg-white/50">
-        <div className="max-w-6xl mx-auto">
-          <p className="text-center text-slate-600 mb-8">Trusted by professionals at:</p>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6 items-center">
-            {['Google', 'Microsoft', 'Apple', 'Meta', 'Amazon', 'Tesla'].map((company) => (
-              <div key={company} className="text-center py-4">
-                <p className="font-semibold text-slate-400">{company}</p>
-              </div>
-            ))}
+          {/* Search Bar */}
+          <form onSubmit={handleSearchSubmit} className="max-w-3xl mx-auto mb-12">
+            <div className="relative flex items-center gap-3 rounded-full border-2 border-slate-200 bg-white shadow-lg hover:border-indigo-300 transition-colors">
+              <FiSearch className="absolute left-6 h-5 w-5 text-slate-400" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Enter Job Role"
+                className="flex-1 pl-14 pr-2 py-4 text-base text-slate-700 bg-transparent focus:outline-none placeholder:text-slate-400"
+              />
+              <button
+                type="submit"
+                className="px-4 py-2 mr-2 bg-gradient-modern text-white rounded-full font-semibold text-base whitespace-nowrap"
+              >
+                Search
+              </button>
+            </div>
+          </form>
+
+          {/* Partners Section */}
+          <div className="text-center">
+            <p className="text-sm font-semibold text-slate-500 mb-4">Proud to Support</p>
+            <div className="flex flex-wrap justify-center items-center gap-8">
+              <img
+                src="https://assets.riseflake.com/images/logos/startup-india.png"
+                alt="Startup India"
+                width={80}
+                height={56}
+              />
+              <img
+                src="https://assets.riseflake.com/images/logos/mle.png"
+                alt="Ministry of Labour and Employment"
+                width={80}
+                height={56}
+              />
+              <img
+                src="https://assets.riseflake.com/images/logos/mca.png"
+                alt="MCA"
+                width={80}
+                height={56}
+              />
+            </div>
           </div>
         </div>
       </section>
@@ -247,64 +285,20 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Testimonials */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-white/30">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-4xl font-bold text-center mb-4 text-slate-900">
-            Success Stories from <span className="text-gradient">Riseflake</span> Users
-          </h2>
-          <p className="text-center text-slate-600 mb-16 max-w-2xl mx-auto">
-            Join thousands of professionals who've transformed their careers using Riseflake's job portal and professional networking platform.
-          </p>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              {
-                name: 'Sarah Chen',
-                title: 'Senior Software Engineer at Google',
-                company: 'Google',
-                quote:
-                  "Riseflake's AI matching algorithm found my perfect role in just 2 weeks. The professional networking features helped me build connections that led to my current position.",
-              },
-              {
-                name: 'Michael Torres',
-                title: 'Product Manager at Meta',
-                company: 'Meta',
-                quote:
-                  "The platform's direct company access feature is revolutionary. I contacted my future manager directly and had a conversation before even applying. Game-changing.",
-              },
-              {
-                name: 'Priya Sharma',
-                title: 'UX Designer at Apple',
-                company: 'Apple',
-                quote:
-                  "Every job recommendation was relevant to my career goals. The career analytics helped me understand my market value and negotiate a better salary.",
-              },
-            ].map((testimonial, idx) => (
-              <div key={idx} className="glass rounded-2xl p-8 hover:shadow-lg transition-all">
-                <div className="flex gap-1 mb-4">
-                  {[...Array(5)].map((_, i) => (
-                    <span key={i} className="text-lg">⭐</span>
-                  ))}
-                </div>
-                <p className="text-slate-700 mb-6 leading-relaxed italic">"{testimonial.quote}"</p>
-                <div>
-                  <p className="font-bold text-slate-900">{testimonial.name}</p>
-                  <p className="text-sm text-slate-600">{testimonial.title}</p>
-                  <p className="text-xs text-slate-500">Works at {testimonial.company}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       <Brands />
+
+      <Categories />
+
+      <Introducing />
+
+      <Testimonials />
 
       <CityCategories />
 
+      <Assessment />
+
       {/* FAQ Section */}
-      <section id="faq" className="mx-auto max-w-[1400px] bg-white px-[5%] py-20">
+      <section id="faq" className="mx-auto max-w-[1400px] bg-white px-[5%] py-20 z-10 relative">
         <div className="mb-16 text-center">
           <span className="inline-block rounded-full bg-indigo-100 px-4 py-2 text-sm font-semibold text-indigo-600">
             FAQ
@@ -411,52 +405,6 @@ export default function Home() {
       </section>
 
       <AppDownloadSection />
-
-      {/* CTA Section - High Converting */}
-      <section className="relative py-24 px-4 sm:px-6 lg:px-8 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-modern opacity-10"></div>
-        <div className="max-w-4xl mx-auto text-center relative z-10">
-          <h2 className="text-5xl sm:text-6xl font-bold mb-6 text-slate-900">
-            Ready to Transform Your <span className="text-gradient">Career?</span>
-          </h2>
-          <p className="text-xl text-slate-600 mb-10 leading-relaxed">
-            Join 50,000+ professionals who are discovering opportunities, building meaningful connections, and accelerating their career growth on Riseflake. Your dream job is just a few clicks away.
-          </p>
-          <a
-            href="https://app.riseflake.com/home"
-            className="inline-block px-10 py-5 bg-gradient-modern text-white hover:shadow-2xl hover:shadow-indigo-400/50 rounded-full font-bold text-lg transition-all"
-          >
-            Start Exploring Jobs Today
-          </a>
-        </div>
-      </section>
-
-      {/* Newsletter Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white/40">
-        <div className="max-w-2xl mx-auto">
-          <h3 className="text-3xl font-bold text-center mb-4 text-slate-900">Stay Updated</h3>
-          <p className="text-center text-slate-600 mb-8">
-            Get weekly job alerts, career tips, and industry insights tailored to your profile and goals.
-          </p>
-          <form onSubmit={handleNewsletterSubmit} className="flex flex-col sm:flex-row gap-3">
-            <input
-              type="email"
-              placeholder="Enter your professional email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              className="flex-1 px-6 py-4 bg-white border border-slate-200 rounded-full text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
-            />
-            <button
-              type="submit"
-              className="px-8 py-4 bg-gradient-modern text-white font-bold rounded-full hover:shadow-lg transition-all"
-            >
-              {subscribed ? 'Subscribed!' : 'Subscribe'}
-            </button>
-          </form>
-          <p className="text-center text-xs text-slate-500 mt-4">We respect your privacy. Unsubscribe anytime.</p>
-        </div>
-      </section>
 
       {/* Footer - SEO Optimized */}
       <ContactSection />

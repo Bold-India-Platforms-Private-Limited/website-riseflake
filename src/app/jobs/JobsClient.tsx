@@ -30,6 +30,43 @@ const fetchJobs = async (params: URLSearchParams) => {
   return (await response.json()) as JobsResponse
 }
 
+const LAST_UPDATED_KEY = 'jobs_last_updated_ts'
+const FIFTEEN_MINUTES = 15 * 60 * 1000
+
+/**
+ * Returns the persisted timestamp from localStorage if it exists and is less
+ * than 15 minutes old. Otherwise stamps "now", persists it, and returns it.
+ */
+const getOrInitTimestamp = (): Date => {
+  try {
+    const stored = localStorage.getItem(LAST_UPDATED_KEY)
+    if (stored) {
+      const parsed = new Date(stored)
+      if (!isNaN(parsed.getTime()) && Date.now() - parsed.getTime() < FIFTEEN_MINUTES) {
+        return parsed
+      }
+    }
+  } catch {
+    // localStorage unavailable (SSR guard, private browsing, etc.)
+  }
+
+  const now = new Date()
+  try {
+    localStorage.setItem(LAST_UPDATED_KEY, now.toISOString())
+  } catch {
+    // ignore write failure
+  }
+  return now
+}
+
+const persistTimestamp = (date: Date) => {
+  try {
+    localStorage.setItem(LAST_UPDATED_KEY, date.toISOString())
+  } catch {
+    // ignore
+  }
+}
+
 const JobsSkeleton = () => (
   <div className="space-y-4">
     {[...Array(6)].map((_, index) => (
@@ -54,6 +91,17 @@ export default function JobsClient() {
   const [data, setData] = useState<JobsResponse | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [hasError, setHasError] = useState(false)
+
+  // Initialise from localStorage so the timestamp survives page reloads.
+  // We use a lazy initialiser via useState(() => ...) but localStorage is
+  // only available on the client, so we guard with a null default and set
+  // the real value inside useEffect to avoid SSR mismatches.
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null)
+
+  // Hydrate the timestamp on the client after first mount
+  useEffect(() => {
+    setLastUpdated(getOrInitTimestamp())
+  }, [])
 
   const queryParams = useMemo(() => {
     const params = new URLSearchParams()
@@ -88,6 +136,24 @@ export default function JobsClient() {
     }
   }, [queryParams])
 
+  // Tick every minute to check whether 15 minutes have elapsed since the
+  // stored timestamp. If so, stamp a fresh time and persist it.
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setLastUpdated((prev) => {
+        if (!prev) return prev
+        if (Date.now() - prev.getTime() >= FIFTEEN_MINUTES) {
+          const next = new Date()
+          persistTimestamp(next)
+          return next
+        }
+        return prev
+      })
+    }, 60 * 1000) // check every minute
+
+    return () => clearInterval(interval)
+  }, [])
+
   const jobs = data?.result ?? []
   const currentPage = data?.page ?? 1
   const totalPages = data?.totalPages ?? 1
@@ -116,6 +182,15 @@ export default function JobsClient() {
     categories: searchParams.get('categories') ?? '',
     jobTypes: searchParams.getAll('job_type'),
     workplaceTypes: searchParams.getAll('workplace_type'),
+  }
+
+  const formatTimestamp = (date: Date) => {
+    const day = String(date.getDate()).padStart(2, '0')
+    const month = date.toLocaleString('en-GB', { month: 'short' })
+    const year = String(date.getFullYear()).slice(-2)
+    const hours = String(date.getHours()).padStart(2, '0')
+    const minutes = String(date.getMinutes()).padStart(2, '0')
+    return `${day} ${month} ${year}, ${hours}:${minutes}`
   }
 
   return (
@@ -171,6 +246,16 @@ export default function JobsClient() {
           baseQuery={queryParams}
         />
       )}
+
+      <footer className="mt-6 rounded-2xl px-6 py-4 text-center text-xs text-slate-600">
+        <p className="font-semibold text-slate-900">
+          Updated On: {lastUpdated ? formatTimestamp(lastUpdated) : '—'} IST
+        </p>
+        <p className="mt-1 text-slate-500">The data on this page gets updated every 15 minutes.</p>
+        <p className="mt-1 text-slate-500">
+          Best Viewed in Chrome, Opera, Mozilla, EDGE & Safari.
+        </p>
+      </footer>
     </div>
   )
 }

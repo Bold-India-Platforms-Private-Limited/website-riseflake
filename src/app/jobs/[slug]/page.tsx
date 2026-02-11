@@ -9,7 +9,7 @@ import type { JobDetail } from './components/types'
 import { API_BASE_URL } from '../../../lib/config'
 
 export const dynamicParams = true
-export const revalidate = 3600
+export const revalidate = 900
 
 type PageProps = {
   params: Promise<{ slug: string }>
@@ -67,6 +67,8 @@ export default async function JobDetailsPage({ params }: PageProps) {
       <main className="px-4 sm:px-6 lg:px-8 py-12 bg-slate-100">
         <div className="max-w-[1200px] mx-auto space-y-8">
           <div className="flex items-center gap-2 text-xs text-slate-500">
+            <a href="/" className="hover:text-indigo-600">Home</a>
+            <span>/</span>
             <a href="/jobs" className="hover:text-indigo-600">Jobs</a>
             <span>/</span>
             <span>{job.position}</span>

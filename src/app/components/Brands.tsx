@@ -62,20 +62,20 @@ const shuffleLogos = (arr: string[]) => {
 export default function Brands() {
   return (
     <section className="relative overflow-hidden bg-[#f7faff] py-12">
-      <div
-        className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 bg-gradient-to-r from-[#f7faff] to-transparent"
-        aria-hidden="true"
-      />
-      <div
-        className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 bg-gradient-to-l from-[#f7faff] to-transparent"
-        aria-hidden="true"
-      />
       <div className="mx-auto max-w-full">
-        <h2 className="mb-6 text-center text-xl font-semibold md:text-2xl">
+        <h2 className="mb-6 text-center text-xl font-semibold md:text-2xl z-11">
           Every 3rd software engineer is on {BRAND_NAME}
         </h2>
 
         <div className="mt-10 hidden space-y-3 md:block">
+          <div
+            className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 bg-gradient-to-r from-[#f7faff] to-transparent"
+            aria-hidden="true"
+          />
+          <div
+            className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 bg-gradient-to-l from-[#f7faff] to-transparent"
+            aria-hidden="true"
+          />
           {[0, 1, 2].map((row) => {
             const rowLogos = shuffleLogos([...logos, ...logos])
 

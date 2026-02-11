@@ -10,7 +10,7 @@ export default function AppDownloadSection() {
   return (
     <section className="hidden md:block px-10 pb-[60px] pt-[60px]">
       <div className="mx-auto max-w-[1500px]">
-        <div className="flex min-h-[450px] flex-col items-center justify-between gap-10 rounded-[24px_24px_12px_12px] bg-gradient-to-b from-pink-50/90 via-pink-100/80 to-rose-100/90 px-10 pb-0 pt-12 shadow-[0_8px_32px_rgba(0,0,0,0.08)] backdrop-blur xl:flex-row xl:items-start">
+        <div className="flex min-h-[450px] flex-col items-center justify-between gap-10 rounded-[24px_24px_12px_12px] bg-gradient-to-br from-white via-white to-pink-100 px-10 pb-0 pt-12 shadow-[0_8px_32px_rgba(0,0,0,0.08)] backdrop-blur xl:flex-row xl:items-start">
           <div className="max-w-[480px] pt-6 text-center xl:text-left">
             <h2 className="text-4xl font-bold tracking-tight text-slate-900">
               More than a resume

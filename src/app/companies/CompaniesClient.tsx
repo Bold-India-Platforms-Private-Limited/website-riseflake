@@ -30,6 +30,43 @@ const fetchCompanies = async (params: URLSearchParams) => {
   return (await response.json()) as CompaniesResponse
 }
 
+const LAST_UPDATED_KEY = 'companies_last_updated_ts'
+const ONE_HOUR = 60 * 60 * 1000
+
+/**
+ * Returns the persisted timestamp from localStorage if it exists and is less
+ * than 1 hour old. Otherwise stamps "now", persists it, and returns it.
+ */
+const getOrInitTimestamp = (): Date => {
+  try {
+    const stored = localStorage.getItem(LAST_UPDATED_KEY)
+    if (stored) {
+      const parsed = new Date(stored)
+      if (!isNaN(parsed.getTime()) && Date.now() - parsed.getTime() < ONE_HOUR) {
+        return parsed
+      }
+    }
+  } catch {
+    // localStorage unavailable (SSR guard, private browsing, etc.)
+  }
+
+  const now = new Date()
+  try {
+    localStorage.setItem(LAST_UPDATED_KEY, now.toISOString())
+  } catch {
+    // ignore write failure
+  }
+  return now
+}
+
+const persistTimestamp = (date: Date) => {
+  try {
+    localStorage.setItem(LAST_UPDATED_KEY, date.toISOString())
+  } catch {
+    // ignore
+  }
+}
+
 const CompaniesSkeleton = () => (
   <div className="space-y-4">
     {[...Array(6)].map((_, index) => (
@@ -57,6 +94,14 @@ export default function CompaniesClient() {
   const [hasError, setHasError] = useState(false)
   const [searchTerm, setSearchTerm] = useState(searchParams.get('company_name') ?? '')
   const [isFilterOpen, setIsFilterOpen] = useState(false)
+
+  // null on first render to avoid SSR/client mismatch — hydrated in useEffect
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null)
+
+  // Hydrate the timestamp on the client after first mount
+  useEffect(() => {
+    setLastUpdated(getOrInitTimestamp())
+  }, [])
 
   const queryParams = useMemo(() => {
     const params = new URLSearchParams()
@@ -91,6 +136,24 @@ export default function CompaniesClient() {
     }
   }, [queryParams])
 
+  // Tick every minute to check whether 1 hour has elapsed since the stored
+  // timestamp. If so, stamp a fresh time and persist it.
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setLastUpdated((prev) => {
+        if (!prev) return prev
+        if (Date.now() - prev.getTime() >= ONE_HOUR) {
+          const next = new Date()
+          persistTimestamp(next)
+          return next
+        }
+        return prev
+      })
+    }, 60 * 1000) // check every minute
+
+    return () => clearInterval(interval)
+  }, [])
+
   useEffect(() => {
     if (!isFilterOpen) {
       document.body.classList.remove('body-scroll-lock')
@@ -110,6 +173,15 @@ export default function CompaniesClient() {
   const pageSize = data?.limit ?? Number.parseInt(searchParams.get('limit') ?? '20', 10)
 
   const organizationTypes = ['Startup', 'Enterprise', 'Public', 'Non-profit', 'Agency']
+
+  const formatTimestamp = (date: Date) => {
+    const day = String(date.getDate()).padStart(2, '0')
+    const month = date.toLocaleString('en-GB', { month: 'short' })
+    const year = String(date.getFullYear()).slice(-2)
+    const hours = String(date.getHours()).padStart(2, '0')
+    const minutes = String(date.getMinutes()).padStart(2, '0')
+    return `${day} ${month} ${year}, ${hours}:${minutes}`
+  }
 
   return (
     <section className="grid grid-cols-1 gap-6 lg:grid-cols-[260px_minmax(0,1fr)_320px]">
@@ -231,6 +303,16 @@ export default function CompaniesClient() {
           />
         </div>
       )}
+
+      <footer className="order-5 lg:col-span-3 rounded-2xl px-6 py-4 text-center text-xs text-slate-600">
+        <p className="font-semibold text-slate-900">
+          Updated On: {lastUpdated ? formatTimestamp(lastUpdated) : '—'} IST
+        </p>
+        <p className="mt-1 text-slate-500">The data on this page gets updated every 1 hour.</p>
+        <p className="mt-1 text-slate-500">
+          Best Viewed in Chrome, Opera, Mozilla, EDGE & Safari.
+        </p>
+      </footer>
 
       <div
         className={`fixed inset-0 z-50 transition ${
