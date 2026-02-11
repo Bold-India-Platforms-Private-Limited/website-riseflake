@@ -1,6 +1,6 @@
 'use client'
 
-import DOMPurify from 'isomorphic-dompurify'
+import DOMPurify from 'dompurify'
 
 export default function JobDescription({ html }: { html?: string | null }) {
   if (!html) {
