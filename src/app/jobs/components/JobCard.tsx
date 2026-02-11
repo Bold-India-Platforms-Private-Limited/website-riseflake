@@ -1,4 +1,6 @@
 import Link from 'next/link'
+import { ArrowRight } from 'lucide-react'
+import { WEBSITE_BASE_URL } from '../../../lib/config'
 
 export type JobListItem = {
   slug: string
@@ -21,8 +23,10 @@ export default function JobCard({ job }: { job: JobListItem }) {
   const location = job.location_name ?? 'Remote'
 
   return (
-    <Link
-      href={`/jobs/${job.slug}`}
+    <a
+      href={`${WEBSITE_BASE_URL}/jobs/${job.slug}`}
+      target="_blank"
+      rel="noopener noreferrer"
       className="group block rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition hover:border-indigo-200 hover:shadow-md"
     >
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
@@ -53,7 +57,13 @@ export default function JobCard({ job }: { job: JobListItem }) {
           <span className="rounded-full bg-indigo-50 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-indigo-700">
             {job.job_type}
           </span>
-          <span className="rounded-full bg-slate-100 px-2.5 py-1">View details</span>
+          <Link
+            href={`/jobs/${job.slug}`}
+            onClick={(e) => e.stopPropagation()}
+            className="flex items-center justify-center rounded-full bg-slate-100 p-2 transition hover:bg-indigo-100 hover:text-indigo-700"
+          >
+            <ArrowRight className="h-4 w-4" />
+          </Link>
         </div>
       </div>
 
@@ -72,6 +82,6 @@ export default function JobCard({ job }: { job: JobListItem }) {
           )}
         </div>
       ) : null}
-    </Link>
+    </a>
   )
 }
