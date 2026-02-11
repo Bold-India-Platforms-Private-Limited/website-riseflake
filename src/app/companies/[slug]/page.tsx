@@ -3,8 +3,8 @@ import { notFound } from 'next/navigation'
 import Navbar from '../../components/Navbar'
 import { API_BASE_URL } from '../../../lib/config'
 
-export const runtime = 'edge';
-export const preferredRegion = 'auto';
+export const dynamicParams = true
+export const revalidate = 3600
 
 type PageProps = {
   params: Promise<{ slug: string }>
@@ -27,6 +27,12 @@ const fetchCompany = async (slug: string) => {
   const response = await fetch(`${API_BASE_URL}/companies/${slug}`, { cache: 'force-cache' })
   if (!response.ok) return null
   return (await response.json()) as CompanyResponse
+}
+
+export async function generateStaticParams() {
+  // Return empty array to skip build-time generation
+  // Pages will be generated on-demand with ISR when first requested
+  return []
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
