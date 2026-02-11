@@ -3,7 +3,10 @@ import { notFound } from 'next/navigation'
 import Navbar from '../../components/Navbar'
 import { API_BASE_URL } from '../../../lib/config'
 
-export const dynamicParams = false
+// Enable on-demand page generation for new companies
+export const dynamicParams = true
+// Revalidate pages every 1 hour (3600 seconds)
+export const revalidate = 3600
 
 type PageProps = {
   params: Promise<{ slug: string }>
