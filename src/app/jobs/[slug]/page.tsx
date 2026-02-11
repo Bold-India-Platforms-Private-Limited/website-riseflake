@@ -8,7 +8,8 @@ import TagsSection from './components/TagsSection'
 import type { JobDetail } from './components/types'
 import { API_BASE_URL } from '../../../lib/config'
 
-export const dynamicParams = false
+export const dynamicParams = true
+export const revalidate = 3600
 
 type PageProps = {
   params: Promise<{ slug: string }>
