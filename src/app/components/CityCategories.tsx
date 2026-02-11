@@ -123,13 +123,13 @@ export default function CityCategories() {
 
           <div
             ref={scrollRef}
-            className="[-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            className="overflow-x-auto overflow-y-hidden scroll-smooth [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           >
-            <div className="flex min-w-max items-center justify-center gap-6 px-[60px] py-4">
+            <div className="flex min-w-max items-center justify-start gap-4 px-4 py-4 sm:gap-5 sm:px-8 md:justify-center md:gap-6 md:px-[60px]">
               {cities.map((city, index) => (
                 <div
                   key={city.name}
-                  className="group flex min-w-[clamp(120px,15vw,140px)] flex-col items-center gap-3 rounded-3xl p-4 transition-transform duration-300 hover:-translate-y-2"
+                  className="group flex min-w-[clamp(120px,15vw,140px)] flex-col items-center gap-3 rounded-3xl p-3 transition-transform duration-300 hover:-translate-y-2 sm:p-4"
                 >
                   <div
                     className={`relative flex h-[clamp(90px,12vw,110px)] w-[clamp(90px,12vw,110px)] items-center justify-center overflow-hidden rounded-full bg-slate-100 shadow-[0_10px_25px_rgba(0,0,0,0.12)] transition-all duration-300 group-hover:rotate-[5deg] group-hover:scale-[1.08] group-hover:shadow-[0_15px_35px_rgba(0,0,0,0.2)]`}
