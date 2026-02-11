@@ -4,6 +4,7 @@ const nextConfig = {
   // Static export configuration
   images: {
     unoptimized: true,
+    qualities: [75, 100],
   },
   // For Cloudflare Pages compatibility
   eslint: {

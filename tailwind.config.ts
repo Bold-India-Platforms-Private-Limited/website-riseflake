@@ -26,6 +26,26 @@ const config: Config = {
       backdropBlur: {
         xs: '2px',
       },
+      keyframes: {
+        'scroll-ltr': {
+          '0%': { transform: 'translateX(0)' },
+          '100%': { transform: 'translateX(-50%)' },
+        },
+        'fade-in-up': {
+          '0%': { opacity: '0', transform: 'translateY(20px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        'slide-out-left': {
+          '0%': { transform: 'translateX(0)', opacity: '1' },
+          '100%': { transform: 'translateX(-120%)', opacity: '0' },
+        },
+      },
+      animation: {
+        'scroll-ltr-desktop-smooth': 'scroll-ltr 55s linear infinite',
+        'scroll-ltr-slow': 'scroll-ltr 80s linear infinite',
+        'fade-in-up': 'fade-in-up 0.6s ease-out',
+        'slide-out-left': 'slide-out-left 0.6s ease-in-out forwards',
+      },
     },
   },
   plugins: [],

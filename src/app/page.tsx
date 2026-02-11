@@ -4,6 +4,10 @@ import { useState } from 'react'
 import Footer from './components/Footer'
 import Navbar from './components/Navbar'
 import AppDownloadSection from './components/AppDownloadSection'
+import Brands from './components/Brands'
+import CityCategories from './components/CityCategories'
+import DownloadTheApp from './components/DownloadTheApp'
+import ContactSection from './components/ContactSection'
 
 export default function Home() {
   const [email, setEmail] = useState('')
@@ -295,6 +299,10 @@ export default function Home() {
         </div>
       </section>
 
+      <Brands />
+
+      <CityCategories />
+
       {/* FAQ Section */}
       <section id="faq" className="mx-auto max-w-[1400px] bg-white px-[5%] py-20">
         <div className="mb-16 text-center">
@@ -328,9 +336,9 @@ export default function Home() {
           <div className="flex flex-col gap-4">
             {[
               {
-                question: 'Is ListedIndia free for job seekers?',
+                question: 'Is Riseflake free for job seekers?',
                 answer:
-                  'Yes. Creating a profile, browsing jobs, applying, and networking with professionals on ListedIndia is completely free for candidates.',
+                  'Yes. Creating a profile, browsing jobs, applying, and networking with professionals on Riseflake is completely free for candidates.',
               },
               {
                 question: 'Do companies need to pay to post jobs?',
@@ -338,19 +346,19 @@ export default function Home() {
                   'We offer both free and premium hiring plans. Companies can post jobs for free, while premium plans provide advanced hiring tools, higher visibility, and faster shortlisting.',
               },
               {
-                question: 'How does ListedIndia match candidates to jobs?',
+                question: 'How does Riseflake match candidates to jobs?',
                 answer:
                   'We use smart matching based on skills, experience, preferences, and recruiter requirements to ensure candidates see the most relevant opportunities.',
               },
               {
                 question: 'Are companies and job listings verified?',
                 answer:
-                  'Yes. Every employer and job listing on ListedIndia goes through a verification process to ensure authenticity, safety, and quality opportunities.',
+                  'Yes. Every employer and job listing on Riseflake goes through a verification process to ensure authenticity, safety, and quality opportunities.',
               },
               {
-                question: 'Can students and fresh graduates use ListedIndia?',
+                question: 'Can students and fresh graduates use Riseflake?',
                 answer:
-                  'Absolutely. ListedIndia is designed for students, fresh graduates, and working professionals, offering internships, entry-level roles, and full-time career opportunities.',
+                  'Absolutely. Riseflake is designed for students, fresh graduates, and working professionals, offering internships, entry-level roles, and full-time career opportunities.',
               },
             ].map((faq, index) => {
               const isOpen = openIndex === index
@@ -451,6 +459,8 @@ export default function Home() {
       </section>
 
       {/* Footer - SEO Optimized */}
+      <ContactSection />
+      <DownloadTheApp />
       <Footer />
     </>
   )

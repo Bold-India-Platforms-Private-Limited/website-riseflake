@@ -46,7 +46,7 @@ const CookiePolicy = () => {
                             <p>Last Updated Date : 08/01/2026 12:00 PM</p>
                             <h2>1. Introduction</h2>
                             <p>
-                                This Cookie Policy explains how <strong>ListedIndia</strong>, operated by 
+                                This Cookie Policy explains how <strong>Riseflake</strong>, operated by 
                                 <strong> Bold India Platforms Private Limited</strong>, uses cookies and similar 
                                 tracking technologies on our website and mobile applications. By using our services, 
                                 you consent to the use of cookies as described in this policy.
@@ -170,8 +170,8 @@ const CookiePolicy = () => {
                             </p>
                             <p>
                                 <strong>Company:</strong> Bold India Platforms Private Limited<br />
-                                <strong>Brand:</strong> ListedIndia<br />
-                                <strong>Email:</strong> hello@boldindia.in, support@listedindia.com<br />
+                                <strong>Brand:</strong> Riseflake<br />
+                                <strong>Email:</strong> hello@boldindia.in, support@riseflake.com<br />
                                 <strong>CIN:</strong> U85499PN2025PTC246360
                             </p>
                         </section>

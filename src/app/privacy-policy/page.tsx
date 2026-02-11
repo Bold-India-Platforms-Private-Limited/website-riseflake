@@ -46,7 +46,7 @@ const PrivacyPolicy = () => {
         <p>Last Updated Date : 08/01/2026 12:00 PM</p>
         <h2>1. Introduction</h2>
         <p>
-            Welcome to <strong>ListedIndia</strong>, a digital employment and professional networking
+            Welcome to <strong>Riseflake</strong>, a digital employment and professional networking
             platform operated by <strong>Bold India Platforms Private Limited</strong>.
             We provide services through our website and mobile applications available on the
             Google Play Store and Apple App Store.
@@ -153,7 +153,7 @@ const PrivacyPolicy = () => {
     <section>
         <h2>9. Children’s Privacy</h2>
         <p>
-            ListedIndia is not intended for users under the age of 18. We do not knowingly
+            Riseflake is not intended for users under the age of 18. We do not knowingly
             collect personal data from minors.
         </p>
     </section>
@@ -173,8 +173,8 @@ const PrivacyPolicy = () => {
         </p>
         <p>
             <strong>Company:</strong> Bold India Platforms Private Limited<br />
-            <strong>Brand:</strong> ListedIndia<br />
-            <strong>Email:</strong> hello@boldindia.in, support@listedindia.com<br />
+            <strong>Brand:</strong> Riseflake<br />
+            <strong>Email:</strong> hello@boldindia.in, support@riseflake.com<br />
             <strong>CIN:</strong> U85499PN2025PTC246360
         </p>
     </section>

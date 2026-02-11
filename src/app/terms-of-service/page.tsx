@@ -48,12 +48,12 @@ const TermsOfService = () => {
                             <p>Last Updated Date: 08/01/2026 12:00 PM</p>
                             <h2>1. Introduction & Acceptance of Terms</h2>
                             <p>
-                                Welcome to <strong>ListedIndia</strong> (the "Platform"), a digital employment and 
+                                Welcome to <strong>Riseflake</strong> (the "Platform"), a digital employment and 
                                 professional networking platform operated by <strong>Bold India Platforms Private Limited</strong> 
                                 (CIN: U85499PN2025PTC246360) ("Company", "we", "us", or "our").
                             </p>
                             <p>
-                                By accessing or using our website at listedindia.com and mobile applications 
+                                By accessing or using our website at app.riseflake.com and mobile applications 
                                 available on Google Play Store and Apple App Store (collectively, the "Services"), 
                                 you ("User", "you", or "your") agree to be legally bound by these Terms of Service 
                                 ("Terms"). If you do not agree to these Terms, you must immediately discontinue use 
@@ -69,7 +69,7 @@ const TermsOfService = () => {
                         <section>
                             <h2>2. Eligibility & Account Registration</h2>
                             <p>
-                                <strong>2.1 Age Requirement:</strong> You must be at least 18 years of age to use ListedIndia. 
+                                <strong>2.1 Age Requirement:</strong> You must be at least 18 years of age to use Riseflake. 
                                 By using the Platform, you represent and warrant that you meet this age requirement.
                             </p>
                             <p>
@@ -97,7 +97,7 @@ const TermsOfService = () => {
                         <section>
                             <h2>3. Nature of the Platform & Disclaimer of Employment Relationship</h2>
                             <p>
-                                <strong>3.1 Intermediary Status:</strong> ListedIndia operates as an online intermediary platform 
+                                <strong>3.1 Intermediary Status:</strong> Riseflake operates as an online intermediary platform 
                                 that connects job seekers with employers and recruiters. We are NOT an employment agency, 
                                 recruitment firm, or employer.
                             </p>
@@ -111,7 +111,7 @@ const TermsOfService = () => {
                                 <li>The accuracy of information provided by users</li>
                             </ul>
                             <p>
-                                <strong>3.3 No Contractual Relationship:</strong> ListedIndia is not a party to any employment 
+                                <strong>3.3 No Contractual Relationship:</strong> Riseflake is not a party to any employment 
                                 contract, agreement, or relationship formed between job seekers and employers through the Platform. 
                                 All employment terms, conditions, compensation, and arrangements are solely between the employer 
                                 and employee.
@@ -229,7 +229,7 @@ const TermsOfService = () => {
                             <ul>
                                 <li>Operating, maintaining, and improving the Platform</li>
                                 <li>Providing Services to you and other users</li>
-                                <li>Marketing and promoting ListedIndia</li>
+                                <li>Marketing and promoting Riseflake</li>
                                 <li>Complying with legal obligations</li>
                             </ul>
                             <p>
@@ -281,7 +281,7 @@ const TermsOfService = () => {
                                 <li>They will respond professionally to employer communications</li>
                             </ul>
                             <p>
-                                <strong>7.3 Platform Role:</strong> ListedIndia's role is limited to facilitating connections. 
+                                <strong>7.3 Platform Role:</strong> Riseflake's role is limited to facilitating connections. 
                                 We do NOT:
                             </p>
                             <ul>
@@ -302,7 +302,7 @@ const TermsOfService = () => {
                         <section>
                             <h2>8. Payment Terms & Refund Policy</h2>
                             <p>
-                                <strong>8.1 Free & Paid Services:</strong> ListedIndia offers both free and premium (paid) 
+                                <strong>8.1 Free & Paid Services:</strong> Riseflake offers both free and premium (paid) 
                                 services. Premium features may include enhanced visibility, priority support, advanced search, 
                                 and additional tools.
                             </p>
@@ -334,7 +334,7 @@ const TermsOfService = () => {
                         <section>
                             <h2>9. Privacy & Data Protection</h2>
                             <p>
-                                Your use of ListedIndia is governed by our Privacy Policy, which is incorporated into these 
+                                Your use of Riseflake is governed by our Privacy Policy, which is incorporated into these 
                                 Terms by reference. The Privacy Policy explains how we collect, use, store, and protect your 
                                 personal information in compliance with the Information Technology Act, 2000, the Digital 
                                 Personal Data Protection Act, 2023, and other applicable data protection laws.
@@ -393,7 +393,7 @@ const TermsOfService = () => {
                             </ul>
                             <p>
                                 <strong>10.5 Maximum Liability:</strong> IN NO EVENT SHALL OUR TOTAL AGGREGATE LIABILITY TO 
-                                YOU EXCEED THE GREATER OF (A) THE AMOUNT PAID BY YOU TO LISTEDINDIA IN THE 12 MONTHS PRECEDING 
+                                YOU EXCEED THE GREATER OF (A) THE AMOUNT PAID BY YOU TO RISEFLAKE IN THE 12 MONTHS PRECEDING 
                                 THE CLAIM, OR (B) INR 10,000 (TEN THOUSAND RUPEES).
                             </p>
                             <p>
@@ -481,7 +481,7 @@ const TermsOfService = () => {
                                 obligations incurred prior to termination.
                             </p>
                             <p>
-                                <strong>14.2 Termination by ListedIndia:</strong> We reserve the right to suspend, disable, 
+                                <strong>14.2 Termination by Riseflake:</strong> We reserve the right to suspend, disable, 
                                 or terminate your account and access to the Platform at any time, with or without notice, for 
                                 any reason, including but not limited to:
                             </p>
@@ -624,27 +624,27 @@ const TermsOfService = () => {
                             </p>
                             <p>
                                 <strong>Company Name:</strong> Bold India Platforms Private Limited<br />
-                                <strong>Brand Name:</strong> ListedIndia<br />
+                                <strong>Brand Name:</strong> Riseflake<br />
                                 <strong>Registered Office:</strong> [Complete registered office address to be added]<br />
-                                <strong>Email:</strong> hello@boldindia.in, support@listedindia.com, legal@listedindia.com<br />
+                                <strong>Email:</strong> hello@boldindia.in, support@riseflake.com, legal@riseflake.com<br />
                                 <strong>CIN:</strong> U85499PN2025PTC246360<br />
                                 <strong>Customer Support:</strong> Available through the Platform
                             </p>
                             <p>
                                 For legal notices, please send correspondence to our registered office address or to 
-                                legal@listedindia.com with "Legal Notice" in the subject line.
+                                legal@riseflake.com with "Legal Notice" in the subject line.
                             </p>
                         </section>
 
                         <section>
                             <h2>19. Acknowledgment & Agreement</h2>
                             <p>
-                                BY ACCESSING OR USING LISTEDINDIA, YOU ACKNOWLEDGE THAT:
+                                BY ACCESSING OR USING RISEFLAKE, YOU ACKNOWLEDGE THAT:
                             </p>
                             <ul>
                                 <li>You have read, understood, and agree to be bound by these Terms of Service</li>
                                 <li>You meet all eligibility requirements specified herein</li>
-                                <li>You understand that ListedIndia is an intermediary platform and not an employment agency</li>
+                                <li>You understand that Riseflake is an intermediary platform and not an employment agency</li>
                                 <li>You accept all disclaimers and limitations of liability</li>
                                 <li>You will use the Platform lawfully, ethically, and professionally</li>
                                 <li>You are responsible for your own due diligence in all interactions</li>
