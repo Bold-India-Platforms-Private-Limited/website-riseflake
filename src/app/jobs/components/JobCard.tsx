@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
-import { WEBSITE_BASE_URL } from '../../../lib/config'
+
+const WEBSITE_BASE_URL='https://app.riseflake.com'
 
 export type JobListItem = {
   slug: string
