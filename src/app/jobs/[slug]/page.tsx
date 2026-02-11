@@ -8,10 +8,7 @@ import TagsSection from './components/TagsSection'
 import type { JobDetail } from './components/types'
 import { API_BASE_URL } from '../../../lib/config'
 
-// Enable on-demand page generation for new jobs
-export const dynamicParams = true
-// Revalidate pages every 1 hour (3600 seconds)
-export const revalidate = 3600
+export const dynamicParams = false
 
 type PageProps = {
   params: Promise<{ slug: string }>
