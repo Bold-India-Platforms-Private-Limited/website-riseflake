@@ -109,7 +109,7 @@ export default function Footer() {
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768)
-      setShowLogos(window.innerWidth > 968)
+      setShowLogos(true) // Always show logos on all screen sizes
     }
 
     handleResize()
@@ -155,7 +155,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 gap-x-4 gap-y-6 sm:gap-x-6 lg:mb-16 lg:grid-cols-5 lg:gap-x-12">
           <div className="lg:col-span-1">
             <div className="mb-8">
-              <a href="/" className="hidden md:inline-block">
+              <a href="/" className="md:inline-block">
                 <img src="/logo-main.webp" alt="Company Logo" className="h-10" />
               </a>
             </div>
@@ -241,7 +241,7 @@ export default function Footer() {
             </div>
           </div>
 
-          <div className="hidden w-full justify-center sm:flex lg:col-span-1 lg:-ml-[90px] lg:h-[150px] lg:w-[380px] lg:justify-start">
+          <div className="mb-16 flex w-full justify-center sm:flex lg:col-span-1 lg:mb-0 lg:-ml-[90px] lg:h-[150px] lg:w-[380px] lg:justify-start">
             <div className="h-[150px] w-[300px] rounded-xl border border-gray-200 bg-white p-4 shadow-md">
               <h4 className="mb-1 font-semibold text-gray-900">Apply on the go</h4>
               <p className="mb-4 text-sm text-gray-600">Get real-time job updates on our App</p>
@@ -311,7 +311,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="hidden sm:block">
+        <div className="sm:block">
           <div className="relative mt-6 flex flex-col gap-3 pt-6">
             <div className="absolute left-1/2 top-0 h-px w-full -translate-x-1/2 bg-gray-200" />
             <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs">
