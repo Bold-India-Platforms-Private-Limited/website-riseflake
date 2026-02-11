@@ -20,16 +20,6 @@ type JobResponse = {
   result: JobDetail
 }
 
-type JobsListResponse = {
-  status: boolean
-  result: Array<{ slug: string }>
-  page: number
-  totalPages: number
-  hasMore: boolean
-}
-
-const JOBS_PAGE_SIZE = 100
-
 const fetchJob = async (slug: string) => {
   const response = await fetch(`${API_BASE_URL}/jobs/${slug}`, { cache: 'force-cache' })
 
@@ -37,36 +27,10 @@ const fetchJob = async (slug: string) => {
   return (await response.json()) as JobResponse
 }
 
-const fetchJobsPage = async (page: number) => {
-  const response = await fetch(`${API_BASE_URL}/jobs?page=${page}&limit=${JOBS_PAGE_SIZE}`, { cache: 'force-cache' })
-  if (!response.ok) return null
-  return (await response.json()) as JobsListResponse
-}
-
 export async function generateStaticParams() {
-  try {
-    const firstPage = await fetchJobsPage(1)
-    if (!firstPage?.status || !firstPage.result?.length) return []
-
-    const slugs = new Set<string>()
-    firstPage.result
-      .filter((job) => job.slug)
-      .forEach((job) => slugs.add(job.slug))
-
-    const totalPages = Math.max(firstPage.totalPages ?? 1, 1)
-    for (let page = 2; page <= totalPages; page += 1) {
-      const data = await fetchJobsPage(page)
-      if (!data?.status || !data.result?.length) continue
-
-      data.result
-        .filter((job) => job.slug)
-        .forEach((job) => slugs.add(job.slug))
-    }
-
-    return Array.from(slugs).map((slug) => ({ slug }))
-  } catch {
-    return []
-  }
+  // Return empty array to skip build-time generation
+  // Pages will be generated on-demand with ISR when first requested
+  return []
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
