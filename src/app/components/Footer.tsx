@@ -247,10 +247,10 @@ export default function Footer() {
               <p className="mb-4 text-sm text-gray-600">Get real-time job updates on our App</p>
               <div className="flex justify-center gap-2">
                 <a href="#" className="w-1/2 max-w-[130px]">
-                  <img src="/android-app_v1.jpg" alt="Get it on Google Play" className="h-auto w-full object-contain" />
+                  <img src="https://assets.riseflake.com/images/illustrations/play-store.jpg" alt="Get it on Google Play" className="h-auto w-full object-contain" />
                 </a>
                 <a href="#" className="w-1/2 max-w-[130px]">
-                  <img src="/ios-app_v1.jpg" alt="Download on the App Store" className="h-auto w-full object-contain" />
+                  <img src="https://assets.riseflake.com/images/illustrations/app-store.jpg" alt="Download on the App Store" className="h-auto w-full object-contain" />
                 </a>
               </div>
               <div className="mt-10 flex justify-center lg:justify-start">

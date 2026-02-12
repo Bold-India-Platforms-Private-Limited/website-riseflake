@@ -5,7 +5,7 @@ import { BASE_ASSETS_URL } from '../../lib/config'
 
 export default function AppDownloadSection() {
   const [mobileNumber, setMobileNumber] = useState('')
-  const illustrationImage = `${BASE_ASSETS_URL}/hero-app-showcase.webp`
+  const illustrationImage = `${BASE_ASSETS_URL}/banners/hero-app-showcase.webp`
 
   return (
     <section className="hidden md:block px-10 pb-[60px] pt-[60px]">
@@ -37,12 +37,12 @@ export default function AppDownloadSection() {
 
             <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-start">
               <img
-                src="/android-app_v1.jpg"
+                src="https://assets.riseflake.com/images/illustrations/android_v1.png"
                 alt="Get it on Google Play"
                 className="h-10 w-auto cursor-pointer transition hover:-translate-y-0.5"
               />
               <img
-                src="/ios-app_v1.jpg"
+                src="https://assets.riseflake.com/images/illustrations/apple_v1.png"
                 alt="Download on App Store"
                 className="h-10 w-auto cursor-pointer transition hover:-translate-y-0.5"
               />
@@ -51,7 +51,7 @@ export default function AppDownloadSection() {
 
           <div className="flex flex-col items-center gap-3 xl:mt-8">
             <div className="rounded-xl bg-white p-4 shadow-[0_4px_12px_rgba(0,0,0,0.08)]">
-              <img src="/QR_code.png" alt="QR Code" className="h-[150px] w-[150px]" />
+              <img src="https://assets.riseflake.com/images/photos/download-app-qr.png" alt="QR Code" className="h-[150px] w-[150px]" />
             </div>
             <p className="text-xs font-medium text-slate-500">Scan to download</p>
           </div>

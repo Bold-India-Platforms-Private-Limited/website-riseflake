@@ -320,7 +320,7 @@ export default function Home() {
           <div className="lg:sticky lg:top-8">
             <div className="h-[250px] overflow-hidden rounded-xl bg-transparent sm:h-[300px] lg:h-[400px]">
               <img
-                src="/faq-boy-with-logos.png"
+                src="https://assets.riseflake.com/images/illustrations/faq-boy-with-logos.png"
                 alt="FAQ Illustration"
                 className="h-full w-full object-contain"
               />

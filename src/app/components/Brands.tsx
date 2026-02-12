@@ -6,7 +6,7 @@ const BRAND_NAME = 'Riseflake'
 const generateLogos = (count: number) => {
   const logos: string[] = []
   for (let i = 1; i <= count; i += 1) {
-    logos.push(`${BASE_ASSETS_URL}/row-company-logo-${i}.webp`)
+    logos.push(`${BASE_ASSETS_URL}/logos/row-company-logo-${i}.webp`)
   }
   return logos
 }

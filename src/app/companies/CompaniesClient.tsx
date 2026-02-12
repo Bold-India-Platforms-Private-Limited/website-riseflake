@@ -185,10 +185,10 @@ export default function CompaniesClient() {
 
   return (
     <section className="grid grid-cols-1 gap-6 lg:grid-cols-[260px_minmax(0,1fr)_320px]">
-      <aside className="order-2 hidden rounded-3xl border border-slate-200 bg-white p-5 shadow-sm lg:order-1 lg:block lg:sticky lg:top-24 lg:h-fit">
+      <aside className="order-2 hidden rounded-3xl border border-slate-200 bg-white p-5 pt-4 shadow-sm lg:order-1 lg:block lg:sticky lg:self-start lg:mt-0 lg:pt-0">
         <div className="flex items-start justify-between">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Filters</p>
+            <p className="text-xs font-semibold uppercase tracking-wide text-slate-400 mt-2 mb-2">Filters</p>
             <h2 className="text-base font-semibold text-slate-900">Organization Type</h2>
           </div>
         </div>
@@ -261,7 +261,7 @@ export default function CompaniesClient() {
         )}
       </div>
 
-      <aside className="order-3 hidden space-y-4 lg:block lg:sticky lg:top-24 lg:h-fit">
+      <aside className="order-3 hidden space-y-4 lg:block lg:sticky lg:self-start lg:mt-0 lg:pt-0">
         <div className="rounded-3xl border border-indigo-200 bg-gradient-to-br from-indigo-50 via-white to-purple-50 p-5 shadow-sm">
           <p className="text-xs font-semibold uppercase tracking-wide text-indigo-500">Grow your brand</p>
           <h3 className="mt-2 text-lg font-semibold text-slate-900">List your company on Riseflake</h3>

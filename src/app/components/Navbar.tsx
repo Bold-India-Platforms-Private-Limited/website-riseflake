@@ -7,7 +7,19 @@ import { Menu, X } from 'lucide-react'
 export default function Navbar() {
   const pathname = usePathname()
   const [open, setOpen] = useState(false)
-  const [scrolled, setScrolled] = useState(false)
+  const [, setScrolled] = useState(false)
+
+  // Determine active tab, but none for landing page
+  const activeTab =
+    pathname === '/jobs'
+      ? '/jobs'
+      : pathname === '/companies'
+      ? '/companies'
+      : pathname.startsWith('#features')
+      ? '#features'
+      : pathname.startsWith('#testimonials')
+      ? '#testimonials'
+      : null
 
   const isActive = (href: string) =>
     href.startsWith('/') && (pathname === href || (href !== '/' && pathname.startsWith(href)))
@@ -20,9 +32,15 @@ export default function Navbar() {
 
   return (
     <header
-      className={`sticky top-0 z-50 border-b border-white/30 bg-white/65 backdrop-blur-2xl transition-shadow ${
-        scrolled ? 'shadow-[0_10px_25px_rgba(15,23,42,0.12)]' : ''
-      }`}
+      className="sticky top-0 z-50 border-b border-white/30 bg-transparent backdrop-blur-3xl"
+      style={{
+        background: 'rgba(255,255,255,0.04)', // More transparent
+        WebkitBackdropFilter: 'blur(48px)',
+        backdropFilter: 'blur(48px)',
+        border: '1px solid rgba(255,255,255,0.10)',
+        boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.10)',
+        transition: 'background 0.5s, box-shadow 0.5s',
+      }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
@@ -33,40 +51,48 @@ export default function Navbar() {
             <h1 className="text-2xl font-semibold text-slate-900">Riseflake</h1>
           </a>
 
-          <div className="hidden md:flex items-center gap-1 rounded-lg bg-slate-100/80 p-1 shadow-inner">
+          <nav className="hidden md:flex items-center gap-1 rounded-lg p-1 bg-transparent">
             <a
               href="/jobs"
-              className={`rounded-lg px-4 py-2 text-sm font-medium transition ${
-                isActive('/jobs')
-                  ? 'bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 text-white shadow'
-                  : 'text-slate-700 hover:bg-white hover:text-slate-900 hover:shadow'
+              className={`rounded-lg px-4 py-2 text-sm font-medium transition-all duration-500 ${
+                activeTab === '/jobs'
+                  ? 'bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 text-white scale-105'
+                  : 'bg-transparent text-slate-700 hover:bg-white hover:text-slate-900'
               }`}
             >
               Jobs
             </a>
             <a
               href="/companies"
-              className={`rounded-lg px-4 py-2 text-sm font-medium transition ${
-                isActive('/companies')
-                  ? 'bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 text-white shadow'
-                  : 'text-slate-700 hover:bg-white hover:text-slate-900 hover:shadow'
+              className={`rounded-lg px-4 py-2 text-sm font-medium transition-all duration-500 ${
+                activeTab === '/companies'
+                  ? 'bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 text-white scale-105'
+                  : 'bg-transparent text-slate-700 hover:bg-white hover:text-slate-900'
               }`}
             >
               Companies
             </a>
             <a
               href="#features"
-              className="rounded-lg px-4 py-2 text-sm font-medium text-slate-700 hover:bg-white hover:text-slate-900 hover:shadow"
+              className={`rounded-lg px-4 py-2 text-sm font-medium transition-all duration-500 ${
+                activeTab === '#features'
+                  ? 'bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 text-white scale-105'
+                  : 'bg-transparent text-slate-700 hover:bg-white hover:text-slate-900'
+              }`}
             >
               Features
             </a>
             <a
               href="#testimonials"
-              className="rounded-lg px-4 py-2 text-sm font-medium text-slate-700 hover:bg-white hover:text-slate-900 hover:shadow"
+              className={`rounded-lg px-4 py-2 text-sm font-medium transition-all duration-500 ${
+                activeTab === '#testimonials'
+                  ? 'bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 text-white scale-105'
+                  : 'bg-transparent text-slate-700 hover:bg-white hover:text-slate-900'
+              }`}
             >
               Success Stories
             </a>
-          </div>
+          </nav>
 
           <div className="flex items-center gap-3">
             <a

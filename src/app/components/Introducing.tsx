@@ -51,7 +51,7 @@ const Introducing: React.FC = () => {
         {/* Right: Image */}
         <div className="w-full md:w-1/2 flex justify-center">
           <img
-            src="https://boldanalytics.in/static/assets/job-portal-hero.webp"
+            src="https://assets.riseflake.com/images/illustrations/job-portal-hero.webp"
             alt="Career Platform Illustration"
             className="w-full max-w-sm md:max-w-md object-contain"
           />

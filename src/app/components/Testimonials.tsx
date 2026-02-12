@@ -66,11 +66,11 @@ const Testimonials: React.FC = () => {
   ];
 
   const companyLogos: string[] = [
-    `${BASE_ASSETS_URL}/review-company-1.webp`,
-    `${BASE_ASSETS_URL}/review-company-2.webp`,
-    `${BASE_ASSETS_URL}/review-company-3.webp`,
-    `${BASE_ASSETS_URL}/review-company-4.webp`,
-    `${BASE_ASSETS_URL}/review-company-5.webp`,
+    `${BASE_ASSETS_URL}/logos/review-company-1.webp`,
+    `${BASE_ASSETS_URL}/logos/review-company-2.webp`,
+    `${BASE_ASSETS_URL}/logos/review-company-3.webp`,
+    `${BASE_ASSETS_URL}/logos/review-company-4.webp`,
+    `${BASE_ASSETS_URL}/logos/review-company-5.webp`,
   ];
 
   useEffect(() => {
