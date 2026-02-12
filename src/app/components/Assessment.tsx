@@ -264,7 +264,7 @@ export default function Assessment() {
       <style dangerouslySetInnerHTML={{ __html: STYLES }} />
 
       {/* ── Container ── */}
-      <div className="min-h-screen bg-white box-border flex justify-center items-start font-[Inter,sans-serif] max-md:p-4">
+      <div className="min-h-screen bg-white box-border flex justify-center items-start max-md:p-4">
         <div className="relative inline-block max-md:w-full">
 
           {/* ── Header ── */}

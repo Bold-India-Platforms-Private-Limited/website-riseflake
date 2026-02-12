@@ -258,7 +258,7 @@ const Testimonials: React.FC = () => {
               >
                 {/* Company Logo */}
                 <img
-                  src={`/logo-${testimonial.logoNumber}.png`}
+                  src={`/logo.webp`}
                   alt={`Company Logo ${testimonial.logoNumber}`}
                   className="object-contain mb-5"
                   style={{ 

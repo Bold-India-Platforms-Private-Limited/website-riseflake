@@ -13,10 +13,14 @@ export default function JobList({ jobs }: { jobs: JobListItem[] }) {
   }
 
   return (
-    <div className="space-y-3">
-      {jobs.map((job) => (
-        <JobCard key={job.slug} job={job} />
-      ))}
+    <div className="space-y-6">
+      <ul aria-label="Job Listings" style={{ listStyle: "none", padding: 0 }}>
+        {jobs.map((job) => (
+          <li key={job.slug} style={{ marginBottom: "12px" }}>
+            <JobCard job={job} />
+          </li>
+        ))}
+      </ul>
     </div>
   )
 }

@@ -75,6 +75,8 @@ export default function RootLayout({
         <link rel="canonical" href="https://riseflake.com" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+
+        <link rel="icon" href="/favicon.ico" />
         
         {/* Structured Data - Organization */}
         <script

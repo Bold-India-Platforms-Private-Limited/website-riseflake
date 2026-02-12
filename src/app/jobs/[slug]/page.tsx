@@ -7,6 +7,7 @@ import JobHeader from './components/JobHeader'
 import TagsSection from './components/TagsSection'
 import type { JobDetail } from './components/types'
 import { API_BASE_URL } from '../../../lib/config'
+import Head from 'next/head'
 
 export const dynamicParams = true
 export const revalidate = 900
@@ -128,6 +129,42 @@ export default async function JobDetailsPage({ params }: PageProps) {
           </div>
         </div>
       </main>
+      <Head>
+        <title>{job.position} at {job.company_name} | RiseFlake</title>
+        <meta name="description" content={job.job_description ?? ''} />
+        <link rel="canonical" href={`https://riseflake.com/jobs/${job.slug}`} />
+        <meta property="og:title" content={`${job.position} at ${job.company_name} | RiseFlake`} />
+        <meta property="og:description" content={job.job_description ?? ''} />
+        <meta property="og:type" content="article" />
+        <meta property="og:url" content={`https://riseflake.com/jobs/${job.slug}`} />
+        <meta property="og:site_name" content="RiseFlake" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={`${job.position} at ${job.company_name} | RiseFlake`} />
+        <meta name="twitter:description" content={job.job_description ?? ''} />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org/",
+              "@type": "JobPosting",
+              title: job.position,
+              description: job.job_description,
+              datePosted: job.created_at,
+              validThrough: job.job_deadline,
+              employmentType: job.job_type,
+              hiringOrganization: {
+                "@type": "Organization",
+                name: job.company_name,
+                logo: job.company_logo,
+              },
+              jobLocation: {
+                "@type": "Place",
+                address: job.location_name,
+              },
+            }),
+          }}
+        />
+      </Head>
     </>
   )
 }
