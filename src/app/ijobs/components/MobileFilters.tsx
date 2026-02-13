@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { FiFilter, FiX } from "react-icons/fi";
 
 type TabKey = "company" | "location" | "job-type" | "workplace" | "categories";

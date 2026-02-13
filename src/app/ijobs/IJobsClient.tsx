@@ -42,7 +42,7 @@ const IJobsClient = () => {
   };
   const [jobs, setJobs] = useState<Job[]>([]);
   const [page, setPage] = useState(() => parseInt(getParam("page", "1"), 10));
-  const [limit, setLimit] = useState(() => parseInt(getParam("limit", "15"), 10));
+  const [limit, ] = useState(() => parseInt(getParam("limit", "15"), 10));
   const [total, setTotal] = useState(0);
   const [, setHasMore] = useState(false);
   const [filters, setFilters] = useState(() => ({
