@@ -124,20 +124,20 @@ export default function Home() {
               <img
                 src="https://assets.riseflake.com/images/logos/startup-india.png"
                 alt="Startup India"
-                className="h-16 w-auto sm:h-20 md:h-24 lg:h-28 xl:h-32"
-                style={{ maxWidth: '220px' }}
+                className="h-12 w-auto sm:h-14 md:h-16 lg:h-20 xl:h-20"
+                style={{ maxWidth: '140px' }}
               />
               <img
                 src="https://assets.riseflake.com/images/logos/mle.png"
                 alt="Ministry of Labour and Employment"
-                className="h-16 w-auto sm:h-20 md:h-24 lg:h-28 xl:h-32"
-                style={{ maxWidth: '220px' }}
+                className="h-12 w-auto sm:h-14 md:h-16 lg:h-20 xl:h-20"
+                style={{ maxWidth: '140px' }}
               />
               <img
                 src="https://assets.riseflake.com/images/logos/mca.png"
                 alt="MCA"
-                className="h-16 w-auto sm:h-20 md:h-24 lg:h-28 xl:h-32"
-                style={{ maxWidth: '220px' }}
+                className="h-12 w-auto sm:h-14 md:h-16 lg:h-20 xl:h-20"
+                style={{ maxWidth: '140px' }}
               />
             </div>
           </div>
