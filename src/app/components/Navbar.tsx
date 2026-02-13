@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import { Menu, X } from 'lucide-react'
 
-export default function Navbar() {
+export default function Navbar({ bgTransparent = false }: { bgTransparent?: boolean }) {
   const pathname = usePathname()
   const [open, setOpen] = useState(false)
   const [, setScrolled] = useState(false)
@@ -13,6 +13,8 @@ export default function Navbar() {
   const activeTab =
     pathname === '/jobs'
       ? '/jobs'
+      : pathname === '/ijobs'
+      ? '/ijobs'
       : pathname === '/companies'
       ? '/companies'
       : pathname.startsWith('#features')
@@ -32,15 +34,25 @@ export default function Navbar() {
 
   return (
     <header
-      className="sticky top-0 z-50 border-b border-white/30 bg-transparent backdrop-blur-3xl"
-      style={{
-        background: 'rgba(255,255,255,0.04)', // More transparent
-        WebkitBackdropFilter: 'blur(48px)',
-        backdropFilter: 'blur(48px)',
-        border: '1px solid rgba(255,255,255,0.10)',
-        boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.10)',
-        transition: 'background 0.5s, box-shadow 0.5s',
-      }}
+      className={`sticky top-0 z-50 border-b border-white/20 ${bgTransparent ? 'bg-transparent' : 'bg-white'} backdrop-blur-3xl`}
+      style={bgTransparent
+        ? {
+            background: 'rgba(255, 255, 255, 0)', // Fully transparent
+            WebkitBackdropFilter: 'blur(100px)',
+            backdropFilter: 'blur(100px)',
+            border: '1px solid rgba(255, 255, 255, 0)', // Fully transparent border
+            boxShadow: '0 8px 32px 0 rgba(255, 255, 255, 0)',
+            transition: 'background 0.5s, box-shadow 0.5s',
+          }
+        : {
+            background: 'rgba(255, 255, 255, 1)', // Solid white
+            WebkitBackdropFilter: 'blur(100px)',
+            backdropFilter: 'blur(100px)',
+            border: '1px solid rgba(255, 255, 255, 0)',
+            boxShadow: '0 8px 32px 0 rgba(255, 255, 255, 0)',
+            transition: 'background 0.5s, box-shadow 0.5s',
+          }
+      }
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
@@ -61,6 +73,16 @@ export default function Navbar() {
               }`}
             >
               Jobs
+            </a>
+            <a
+              href="/ijobs"
+              className={`rounded-lg px-4 py-2 text-sm font-medium transition-all duration-500 ${
+                activeTab === '/ijobs'
+                  ? 'bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 text-white scale-105'
+                  : 'bg-transparent text-slate-700 hover:bg-white hover:text-slate-900'
+              }`}
+            >
+              iJobs
             </a>
             <a
               href="/companies"
@@ -127,6 +149,17 @@ export default function Navbar() {
               }`}
             >
               Jobs
+            </a>
+            <a
+              href="/ijobs"
+              onClick={() => setOpen(false)}
+              className={`block rounded-lg px-4 py-2 text-sm font-medium transition ${
+                isActive('/ijobs')
+                  ? 'bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 text-white shadow'
+                  : 'text-slate-700 hover:bg-white'
+              }`}
+            >
+              iJobs
             </a>
             <a
               href="/companies"

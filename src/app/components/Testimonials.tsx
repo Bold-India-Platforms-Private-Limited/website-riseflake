@@ -82,8 +82,11 @@ const Testimonials: React.FC = () => {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
+  // Show 2 cards for desktop, 1 for mobile
+  const itemsToShow: number = isMobile ? 1 : 2;
+  const visibleTestimonials: Testimonial[] = testimonials.slice(currentIndex, currentIndex + itemsToShow);
+
   useEffect(() => {
-    const itemsToShow = isMobile ? 1 : 3;
     const autoSwipe = setInterval(() => {
       setCurrentIndex((prevIndex) => {
         const nextIndex = prevIndex + 1;
@@ -98,10 +101,7 @@ const Testimonials: React.FC = () => {
     }, 5000);
 
     return () => clearInterval(autoSwipe);
-  }, [isMobile, testimonials.length, companyLogos.length]);
-
-  const itemsToShow: number = isMobile ? 1 : 3;
-  const visibleTestimonials: Testimonial[] = testimonials.slice(currentIndex, currentIndex + itemsToShow);
+  }, [isMobile, testimonials.length, companyLogos.length, itemsToShow]);
 
   const getVisibleLogos = (): Logo[] => {
     const visible: Logo[] = [];
@@ -146,10 +146,10 @@ const Testimonials: React.FC = () => {
 
   return (
     <section 
-      className="py-20 px-[5%] w-full bg-[#f8f9fb] relative mx-auto"
-      style={{ maxWidth: '2000px' }}
+    className="py-20 px-[5%] md:px-[1%] w-full bg-none relative mx-auto"
+      style={{ maxWidth: isMobile ? '100%' : '1200px' }} // Limit to 1200px for desktop
     >
-      <div className="max-w-[1500px] mx-auto flex flex-col lg:flex-row gap-16 lg:items-start">
+      <div className="max-w-[1200px] mx-auto flex flex-col lg:flex-row lg:items-start">
 
         {/* Section Header */}
         <div 
@@ -238,7 +238,7 @@ const Testimonials: React.FC = () => {
           {/* Cards Grid */}
           <div 
             className={`grid mb-12 w-full ${
-              isMobile ? 'grid-cols-1 gap-6' : 'grid-cols-3 gap-10'
+              isMobile ? 'grid-cols-1 gap-6' : 'grid-cols-2 gap-8'
             }`}
             style={isMobile ? { marginBottom: '2rem' } : {}}
           >
@@ -318,14 +318,14 @@ const Testimonials: React.FC = () => {
             } : {}}
           >
             <div 
-              className={`flex flex-wrap items-center gap-12 transition-all duration-500 ease-in-out ${
+              className={`flex flex-wrap items-center gap-8 transition-all duration-500 ease-in-out ${
                 isMobile ? 'justify-center' : 'justify-start'
               }`}
               style={isMobile ? { 
                 display: 'grid',
                 gridTemplateColumns: '1fr 1fr',
                 gap: '1rem',
-                maxWidth: '400px',
+                maxWidth: '500px',
                 margin: '0 auto',
                 padding: '0 1rem'
               } : {}}

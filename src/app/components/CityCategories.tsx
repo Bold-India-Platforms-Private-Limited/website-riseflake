@@ -97,7 +97,7 @@ export default function CityCategories() {
 
   return (
     <section className="bg-white px-4 py-12 sm:px-6">
-      <div className="mx-auto w-full max-w-[1400px]">
+      <div className="mx-auto w-full max-w-[1200px]">
         <div className="mb-8 px-4 text-center">
           <div className="animate-fade-in-up">
             <h2 className="text-[clamp(1.5rem,4vw,2.25rem)] font-extrabold text-slate-900">

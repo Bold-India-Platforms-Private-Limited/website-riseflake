@@ -65,7 +65,7 @@ export default async function CompanyDetailsPage({ params }: PageProps) {
 
   return (
     <>
-      <Navbar />
+      <Navbar bgTransparent />
       <main className="px-4 sm:px-6 lg:px-8 py-12 bg-slate-100">
         <div className="max-w-[1200px] mx-auto space-y-6">
           <div className="flex items-center gap-2 text-xs text-slate-500">

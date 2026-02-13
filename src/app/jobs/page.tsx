@@ -6,7 +6,7 @@ import MobileFilters from './components/MobileFilters'
 export default function JobsPage() {
   return (
     <>
-      <Navbar />
+      <Navbar bgTransparent />
       <main className="px-4 sm:px-6 lg:px-8 py-2 bg-slate-100">
         <div className="max-w-[1200px] mx-auto">
           <MobileFilters />

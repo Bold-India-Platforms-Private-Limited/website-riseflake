@@ -1,3 +1,4 @@
+
 type FiltersPanelProps = {
   currentFilters: {
     companyName?: string
@@ -5,24 +6,30 @@ type FiltersPanelProps = {
     categories?: string
     jobTypes: string[]
     workplaceTypes: string[]
+    experience?: string
   }
+  onApply?: (filters: any) => void
+  onClear?: () => void
 }
+
 
 const jobTypeOptions = [
   { label: 'Full-time', value: 'full-time' },
   { label: 'Part-time', value: 'part-time' },
   { label: 'Contract', value: 'contract' },
-]
+];
 
 const workplaceOptions = [
   { label: 'Remote', value: '1' },
   { label: 'Hybrid', value: '2' },
   { label: 'On-site', value: '3' },
-]
+];
+
+
 
 export default function FiltersPanel({ currentFilters }: FiltersPanelProps) {
   return (
-    <aside className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm h-fit lg:sticky lg:top-24">
+    <aside className="rounded-2xl border border-slate-200 bg-white p-5 shadow h-fit lg:sticky lg:top-24">
       <div className="flex items-center justify-between border-b border-slate-100 pb-4 mb-5">
         <h2 className="text-base font-semibold text-slate-900">Filter jobs</h2>
         <a href="/jobs" className="text-xs font-medium text-indigo-600 hover:text-indigo-700">
@@ -38,7 +45,7 @@ export default function FiltersPanel({ currentFilters }: FiltersPanelProps) {
             name="company_name"
             defaultValue={currentFilters.companyName}
             placeholder="Search by company"
-            className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="mt-2 w-full rounded-full border border-slate-200 bg-white px-5 py-3 text-base text-slate-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
         </div>
 
@@ -49,7 +56,7 @@ export default function FiltersPanel({ currentFilters }: FiltersPanelProps) {
             name="location"
             defaultValue={currentFilters.location}
             placeholder="City, state, country, or Remote"
-            className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="mt-2 w-full rounded-full border border-slate-200 bg-white px-5 py-3 text-base text-slate-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
         </div>
 
@@ -96,13 +103,13 @@ export default function FiltersPanel({ currentFilters }: FiltersPanelProps) {
             name="categories"
             defaultValue={currentFilters.categories}
             placeholder="Comma-separated categories"
-            className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="mt-2 w-full rounded-full border border-slate-200 bg-white px-5 py-3 text-base text-slate-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
         </div>
 
         <button
           type="submit"
-          className="w-full rounded-xl bg-[#414FEA] py-2.5 text-sm font-semibold text-white hover:shadow-lg"
+          className="w-full rounded-xl bg-[#414FEA] py-2.5 text-base font-semibold text-white hover:shadow-lg"
         >
           Apply filters
         </button>
