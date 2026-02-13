@@ -1,5 +1,10 @@
 import IJobDetailClient from "./IJobDetailClient";
 
-export default function IJobDetailPage({ params }: { params: { slug: string } }) {
-  return <IJobDetailClient slug={params.slug} />;
-}
+type PageProps = {
+  params: Promise<{ slug: string }>;
+};
+
+export default async function IJobDetailPage({ params }: PageProps) {
+  const { slug } = await params;
+  return <IJobDetailClient slug={slug} />
+};
