@@ -86,7 +86,7 @@ const IJobsClient = () => {
     if (search) params.set("search", search);
     // Only run on client
     if (typeof window !== "undefined") {
-      const url = params.toString() ? `/ijobs?${params.toString()}` : '/ijobs';
+      const url = params.toString() ? `/indexed-jobs?${params.toString()}` : '/indexed-jobs';
       window.history.replaceState(null, '', url);
     }
     // Fetch jobs
@@ -106,7 +106,7 @@ const IJobsClient = () => {
 
   const handleShare = (job: Job) => {
     const slug = slugify(job.job_title, job.id);
-    const url = `${window.location.origin}/ijobs/${slug}`;
+    const url = `${window.location.origin}/indexed-jobs/${slug}`;
     if (navigator.share) {
       navigator.share({
         title: job.job_title,
@@ -232,7 +232,7 @@ const IJobsClient = () => {
                 <div
                   key={job.id}
                   className="relative bg-white rounded-lg shadow p-6 flex flex-col gap-2 hover:shadow-lg transition-shadow cursor-pointer"
-                  onClick={() => router.push(`/ijobs/${slugify(job.job_title, job.id)}`)}
+                  onClick={() => router.push(`/indexed-jobs/${slugify(job.job_title, job.id)}`)}
                 >
                   <button
                     className="absolute top-4 right-4 text-gray-500 hover:text-blue-600"

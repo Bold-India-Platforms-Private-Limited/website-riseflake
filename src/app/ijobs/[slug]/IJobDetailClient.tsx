@@ -52,7 +52,7 @@ const IJobDetailClient = ({ slug }: { slug: string }) => {
   }, [slug]);
 
   const handleShare = () => {
-    const url = `${window.location.origin}/ijobs/${slug}`;
+    const url = `${window.location.origin}/indexed-jobs/${slug}`;
     if (navigator.share) {
       navigator.share({
         title: job?.job_title,
@@ -91,7 +91,7 @@ const IJobDetailClient = ({ slug }: { slug: string }) => {
         <nav className="text-sm text-gray-500 mb-6">
           <span className="cursor-pointer hover:text-blue-700" onClick={() => router.push("/")}>Home</span>
           <span className="mx-2">/</span>
-          <span className="cursor-pointer hover:text-blue-700" onClick={() => router.push("/ijobs")}>iJobs</span>
+          <span className="cursor-pointer hover:text-blue-700" onClick={() => router.push("/indexed-jobs")}>iJobs</span>
           <span className="mx-2">/</span>
           <span className="text-gray-800 font-semibold">{job.job_title}</span>
         </nav>
