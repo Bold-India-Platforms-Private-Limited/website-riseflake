@@ -179,8 +179,26 @@ export default function CollegesClient() {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Search colleges by name"
-              className="w-full rounded-full border border-slate-200 bg-white px-5 py-3 pl-11 text-sm text-slate-700 shadow-sm"
+              className="w-full rounded-full border border-slate-200 bg-white px-5 py-3 pl-11 pr-12 text-sm text-slate-700 shadow-sm"
             />
+            {searchTerm && (
+              <button
+                type="button"
+                onClick={() => {
+                  setSearchTerm("");
+                  const params = new URLSearchParams(searchParams.toString());
+                  params.delete("search");
+                  params.delete("page");
+                  router.push(`/colleges?${params.toString()}`);
+                }}
+                className="absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 flex items-center justify-center rounded-full bg-slate-200 hover:bg-slate-300 text-slate-500"
+                aria-label="Clear search"
+              >
+                <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-4 w-4">
+                  <path d="M6 6l8 8M14 6l-8 8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                </svg>
+              </button>
+            )}
           </div>
         </form>
         {isLoading ? (

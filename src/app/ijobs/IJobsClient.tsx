@@ -21,7 +21,7 @@ interface Job {
   is_active: boolean;
 }
 
-const API_URL = `${API_BASE_URL}/indexed-jobs`;
+const API_URL = `${API_BASE_URL}/ijobs`;
 
 function slugify(title: string, id: number) {
   return (

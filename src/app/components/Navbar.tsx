@@ -19,10 +19,6 @@ export default function Navbar({ bgTransparent = false }: { bgTransparent?: bool
       ? '/companies'
       : pathname === '/colleges'
       ? '/colleges'
-      : pathname.startsWith('#features')
-      ? '#features'
-      : pathname.startsWith('#testimonials')
-      ? '#testimonials'
       : null
 
   const isActive = (href: string) =>
@@ -105,26 +101,6 @@ export default function Navbar({ bgTransparent = false }: { bgTransparent?: bool
               }`}
             >
               Colleges
-            </a>
-            <a
-              href="#features"
-              className={`rounded-lg px-4 py-2 text-sm font-medium transition-all duration-500 ${
-                activeTab === '#features'
-                  ? 'bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 text-white scale-105'
-                  : 'bg-transparent text-slate-700 hover:bg-white hover:text-slate-900'
-              }`}
-            >
-              Features
-            </a>
-            <a
-              href="#testimonials"
-              className={`rounded-lg px-4 py-2 text-sm font-medium transition-all duration-500 ${
-                activeTab === '#testimonials'
-                  ? 'bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 text-white scale-105'
-                  : 'bg-transparent text-slate-700 hover:bg-white hover:text-slate-900'
-              }`}
-            >
-              Success Stories
             </a>
           </nav>
 
