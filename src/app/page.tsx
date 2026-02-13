@@ -118,26 +118,26 @@ export default function Home() {
           </form>
 
           {/* Partners Section */}
-          <div className="text-center">
-            <p className="text-sm font-semibold text-slate-500 mb-4">Proud to Support</p>
+          <div className="text-center mt-16">
+            <h2 className="text-base sm:text-lg font-semibold text-slate-500 mb-6">Proud to Support</h2>
             <div className="flex flex-wrap justify-center items-center gap-8">
               <img
                 src="https://assets.riseflake.com/images/logos/startup-india.png"
                 alt="Startup India"
-                width={80}
-                height={56}
+                className="h-16 w-auto sm:h-20 md:h-24 lg:h-28 xl:h-32"
+                style={{ maxWidth: '220px' }}
               />
               <img
                 src="https://assets.riseflake.com/images/logos/mle.png"
                 alt="Ministry of Labour and Employment"
-                width={80}
-                height={56}
+                className="h-16 w-auto sm:h-20 md:h-24 lg:h-28 xl:h-32"
+                style={{ maxWidth: '220px' }}
               />
               <img
                 src="https://assets.riseflake.com/images/logos/mca.png"
                 alt="MCA"
-                width={80}
-                height={56}
+                className="h-16 w-auto sm:h-20 md:h-24 lg:h-28 xl:h-32"
+                style={{ maxWidth: '220px' }}
               />
             </div>
           </div>
