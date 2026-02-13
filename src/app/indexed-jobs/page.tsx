@@ -1,7 +1,7 @@
 import IJobsClient from "./IJobsClient";
 import { Suspense } from "react";
 
-export default function IJobsPage() {
+export default function IndexedJobsPage() {
   return (
     <Suspense>
       <IJobsClient />

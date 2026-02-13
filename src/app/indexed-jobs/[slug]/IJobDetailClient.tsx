@@ -30,7 +30,7 @@ function unslugify(slug: string) {
   return { id, title };
 }
 
-const API_URL = `${API_BASE_URL}/ijobs`;
+const API_URL = `${API_BASE_URL}/indexed-jobs`;
 
 const IJobDetailClient = ({ slug }: { slug: string }) => {
   const [job, setJob] = useState<JobDetail | null>(null);

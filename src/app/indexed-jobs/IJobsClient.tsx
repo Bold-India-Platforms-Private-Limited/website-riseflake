@@ -21,8 +21,7 @@ interface Job {
   is_active: boolean;
 }
 
-const API_URL = `${API_BASE_URL}/ijobs`;
-
+const API_URL = `${API_BASE_URL}/indexed-jobs`;
 function slugify(title: string, id: number) {
   return (
     title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") +
