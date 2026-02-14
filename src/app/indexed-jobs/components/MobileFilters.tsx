@@ -1,38 +1,7 @@
-"use client"
 
-import { useEffect, useState } from "react";
-import { FiFilter, FiX } from "react-icons/fi";
-
-type TabKey = "company" | "location" | "job-type" | "workplace" | "categories";
-
-const jobTypeOptions = [
-  { label: "Full-time", value: "full-time" },
-  { label: "Part-time", value: "part-time" },
-  { label: "Contract", value: "contract" },
-];
-
-const workplaceOptions = [
-  { label: "Remote", value: "1" },
-  { label: "Hybrid", value: "2" },
-  { label: "On-site", value: "3" },
-];
-
-interface MobileFiltersProps {
-  filters: {
-    companyName: string;
-    position: string;
-    location: string;
-    categories: string;
-    jobTypes: string[];
-    workplaceTypes: string[];
-  };
-  onApply: (filters: any) => void;
-  onReset: () => void;
-}
-
-export default function MobileFilters({ filters, onApply, onReset }: MobileFiltersProps) {
+const MobileFilters = ({ filters, onApply, onReset }: MobileFiltersProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState<TabKey>("company");
+  const [activeTab, setActiveTab] = useState<TabKey>("position");
   const [localFilters, setLocalFilters] = useState(filters);
 
   useEffect(() => {
@@ -52,15 +21,6 @@ export default function MobileFilters({ filters, onApply, onReset }: MobileFilte
 
   const handleInput = (key: string, value: any) => {
     setLocalFilters((prev) => ({ ...prev, [key]: value }));
-  };
-
-  const handleCheckbox = (key: "jobTypes" | "workplaceTypes", value: string) => {
-    setLocalFilters((prev) => {
-      const arr = prev[key].includes(value)
-        ? prev[key].filter((v: string) => v !== value)
-        : [...prev[key], value];
-      return { ...prev, [key]: arr };
-    });
   };
 
   const handleApply = (e: React.FormEvent) => {
@@ -116,14 +76,14 @@ export default function MobileFilters({ filters, onApply, onReset }: MobileFilte
             <div className="no-scrollbar flex items-center gap-2 overflow-x-auto py-3">
               <button
                 type="button"
-                onClick={() => setActiveTab("company")}
+                onClick={() => setActiveTab("position")}
                 className={`whitespace-nowrap rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-wide ${
-                  activeTab === "company"
+                  activeTab === "position"
                     ? "bg-[#414FEA] text-white shadow-sm"
                     : "bg-slate-100 text-slate-600"
                 }`}
               >
-                Company
+                Position
               </button>
               <button
                 type="button"
@@ -138,49 +98,27 @@ export default function MobileFilters({ filters, onApply, onReset }: MobileFilte
               </button>
               <button
                 type="button"
-                onClick={() => setActiveTab("job-type")}
+                onClick={() => setActiveTab("experience")}
                 className={`whitespace-nowrap rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-wide ${
-                  activeTab === "job-type"
+                  activeTab === "experience"
                     ? "bg-[#414FEA] text-white shadow-sm"
                     : "bg-slate-100 text-slate-600"
                 }`}
               >
-                Job Type
-              </button>
-              <button
-                type="button"
-                onClick={() => setActiveTab("workplace")}
-                className={`whitespace-nowrap rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-wide ${
-                  activeTab === "workplace"
-                    ? "bg-[#414FEA] text-white shadow-sm"
-                    : "bg-slate-100 text-slate-600"
-                }`}
-              >
-                Workplace type
-              </button>
-              <button
-                type="button"
-                onClick={() => setActiveTab("categories")}
-                className={`whitespace-nowrap rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-wide ${
-                  activeTab === "categories"
-                    ? "bg-[#414FEA] text-white shadow-sm"
-                    : "bg-slate-100 text-slate-600"
-                }`}
-              >
-                Categories
+                Experience
               </button>
             </div>
           </div>
           <form onSubmit={handleApply} className="flex flex-1 flex-col">
             <div className="flex-1 overflow-y-auto px-5 py-5">
-              <div className={activeTab === "company" ? "space-y-4" : "hidden"}>
-                <label className="text-xs font-semibold uppercase tracking-wide text-slate-500">Company</label>
+              <div className={activeTab === "position" ? "space-y-4" : "hidden"}>
+                <label className="text-xs font-semibold uppercase tracking-wide text-slate-500">Position</label>
                 <input
                   type="text"
-                  name="company_name"
-                  value={localFilters.companyName}
-                  onChange={e => handleInput("companyName", e.target.value)}
-                  placeholder="Search by company"
+                  name="position"
+                  value={localFilters.position}
+                  onChange={e => handleInput("position", e.target.value)}
+                  placeholder="Search by position"
                   className="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700"
                 />
               </div>
@@ -195,58 +133,29 @@ export default function MobileFilters({ filters, onApply, onReset }: MobileFilte
                   className="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700"
                 />
               </div>
-              <div className={activeTab === "job-type" ? "space-y-4" : "hidden"}>
-                <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Job type</p>
-                <div className="grid grid-cols-2 gap-2">
-                  {jobTypeOptions.map(option => (
-                    <label
-                      key={option.value}
-                      className="flex items-center gap-2 rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-600"
-                    >
-                      <input
-                        type="checkbox"
-                        name="job_type"
-                        value={option.value}
-                        checked={localFilters.jobTypes.includes(option.value)}
-                        onChange={() => handleCheckbox("jobTypes", option.value)}
-                        className="h-4 w-4 rounded border-slate-300 text-indigo-600"
-                      />
-                      {option.label}
-                    </label>
-                  ))}
+              <div className={activeTab === "experience" ? "space-y-4" : "hidden"}>
+                <label className="text-xs font-semibold uppercase tracking-wide text-slate-500">Experience Range (years)</label>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="number"
+                    min={0}
+                    max={20}
+                    value={localFilters.experienceMin || ""}
+                    onChange={e => handleInput("experienceMin", e.target.value)}
+                    className="w-16 border rounded px-2 py-1"
+                    placeholder="Min"
+                  />
+                  <span>-</span>
+                  <input
+                    type="number"
+                    min={0}
+                    max={20}
+                    value={localFilters.experienceMax || ""}
+                    onChange={e => handleInput("experienceMax", e.target.value)}
+                    className="w-16 border rounded px-2 py-1"
+                    placeholder="Max"
+                  />
                 </div>
-              </div>
-              <div className={activeTab === "workplace" ? "space-y-4" : "hidden"}>
-                <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Workplace type</p>
-                <div className="grid grid-cols-2 gap-2">
-                  {workplaceOptions.map(option => (
-                    <label
-                      key={option.value}
-                      className="flex items-center gap-2 rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-600"
-                    >
-                      <input
-                        type="checkbox"
-                        name="workplace_type"
-                        value={option.value}
-                        checked={localFilters.workplaceTypes.includes(option.value)}
-                        onChange={() => handleCheckbox("workplaceTypes", option.value)}
-                        className="h-4 w-4 rounded border-slate-300 text-indigo-600"
-                      />
-                      {option.label}
-                    </label>
-                  ))}
-                </div>
-              </div>
-              <div className={activeTab === "categories" ? "space-y-4" : "hidden"}>
-                <label className="text-xs font-semibold uppercase tracking-wide text-slate-500">Categories</label>
-                <input
-                  type="text"
-                  name="categories"
-                  value={localFilters.categories}
-                  onChange={e => handleInput("categories", e.target.value)}
-                  placeholder="Comma-separated categories"
-                  className="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700"
-                />
               </div>
             </div>
             <div className="sticky bottom-0 border-t border-slate-200 bg-white px-5 pb-[calc(env(safe-area-inset-bottom)+16px)] pt-4">
@@ -271,4 +180,23 @@ export default function MobileFilters({ filters, onApply, onReset }: MobileFilte
       </div>
     </div>
   );
+};
+
+export default MobileFilters;
+import React, { useState, useEffect } from "react";
+import { FiFilter, FiX } from "react-icons/fi";
+
+type TabKey = "position" | "location" | "experience";
+
+interface Filters {
+  position: string;
+  location: string;
+  experienceMin: string;
+  experienceMax: string;
+}
+
+interface MobileFiltersProps {
+  filters: Filters;
+  onApply: (filters: Filters) => void;
+  onReset: () => void;
 }

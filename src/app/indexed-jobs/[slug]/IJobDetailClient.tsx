@@ -34,19 +34,24 @@ const API_URL = `${API_BASE_URL}/indexed-jobs`;
 
 const IJobDetailClient = ({ slug }: { slug: string }) => {
   const [job, setJob] = useState<JobDetail | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
     const { id } = unslugify(slug);
     if (!id) return;
     const fetchJob = async () => {
+      setIsLoading(true);
       const res = await fetch(`${API_URL}?id=${id}`);
       const data = await res.json();
       if (data.result && Array.isArray(data.result)) {
         setJob(data.result.find((j: any) => j.id === id) || null);
       } else if (data.result && data.result.id === id) {
         setJob(data.result);
+      } else {
+        setJob(null);
       }
+      setIsLoading(false);
     };
     fetchJob();
   }, [slug]);
@@ -74,11 +79,40 @@ const IJobDetailClient = ({ slug }: { slug: string }) => {
     }
   };
 
+  // Loading shimmer for job detail
+  function JobDetailShimmer() {
+    return (
+      <div className="min-h-screen bg-slate-100">
+        <Navbar />
+        <div className="max-w-3xl mx-auto px-4 py-8">
+          <div className="bg-white rounded-lg shadow p-8 animate-pulse relative">
+            <div className="absolute top-4 right-4 w-8 h-8 bg-slate-200 rounded-full" />
+            <div className="flex items-center gap-4 mb-4">
+              <div className="w-16 h-16 rounded-full bg-slate-200" />
+              <div>
+                <div className="h-7 w-40 bg-slate-200 rounded mb-2" />
+                <div className="h-5 w-24 bg-slate-100 rounded" />
+              </div>
+            </div>
+            <div className="h-4 w-3/4 bg-slate-100 rounded mb-2" />
+            <div className="h-4 w-1/2 bg-slate-100 rounded mb-4" />
+            <div className="flex justify-end mt-2">
+              <div className="h-10 w-32 bg-slate-200 rounded" />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    return <JobDetailShimmer />;
+  }
   if (!job) {
     return (
       <div className="min-h-screen bg-slate-100">
         <Navbar />
-        <div className="max-w-3xl mx-auto py-16 text-center text-gray-500">Loading...</div>
+        <div className="max-w-3xl mx-auto py-16 text-center text-gray-500 text-lg font-semibold">No job found.</div>
       </div>
     );
   }

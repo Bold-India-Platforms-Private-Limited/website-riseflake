@@ -69,12 +69,12 @@ const socialLinks = [
 ]
 
 const businessLogos = [
-  { id: 1, src: `${BASE_ASSETS_URL}/cloud-partner-1.webp`, alt: 'Razorpay' },
-  { id: 2, src: `${BASE_ASSETS_URL}/cloud-partner-2.webp`, alt: 'AWS' },
-  { id: 3, src: `${BASE_ASSETS_URL}/cloud-partner-3.webp`, alt: 'Azure' },
-  { id: 4, src: `${BASE_ASSETS_URL}/cloud-partner-4.webp`, alt: 'Cloudflare' },
-  { id: 5, src: `${BASE_ASSETS_URL}/cloud-partner-5.webp`, alt: 'Firebase' },
-  { id: 6, src: `${BASE_ASSETS_URL}/cloud-partner-6.webp`, alt: 'Google Cloud' },
+  { id: 1, src: `${BASE_ASSETS_URL}/logos/cloud-partner-1.webp`, alt: 'Razorpay' },
+  { id: 2, src: `${BASE_ASSETS_URL}/logos/cloud-partner-2.webp`, alt: 'AWS' },
+  { id: 3, src: `${BASE_ASSETS_URL}/logos/cloud-partner-3.webp`, alt: 'Azure' },
+  { id: 4, src: `${BASE_ASSETS_URL}/logos/cloud-partner-4.webp`, alt: 'Cloudflare' },
+  { id: 5, src: `${BASE_ASSETS_URL}/logos/cloud-partner-5.webp`, alt: 'Firebase' },
+  { id: 6, src: `${BASE_ASSETS_URL}/logos/cloud-partner-6.webp`, alt: 'Google Cloud' },
 ]
 
 const bottomLinks = [
