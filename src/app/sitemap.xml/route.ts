@@ -11,7 +11,7 @@ export async function GET() {
   }
   const data = await res.json();
   const jobs = (data.result || []).filter(
-    (job: any) => job.job_status === 'live' && job.visibility_status === 2
+    (job: any) => job.visibility_status === 2
   );
 
   const today = new Date();

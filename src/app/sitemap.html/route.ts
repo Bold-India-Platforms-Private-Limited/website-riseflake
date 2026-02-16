@@ -9,7 +9,7 @@ export async function GET() {
   }
   const data = await res.json();
   const jobs = (data.result || []).filter(
-    (job: any) => job.job_status === 'live' && (job.visibility_status === 2 || job.visibility_status === 3)
+    (job: any) => (job.visibility_status === 2 || job.visibility_status === 3)
   );
 
   const today = new Date();
