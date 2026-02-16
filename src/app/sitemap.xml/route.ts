@@ -1,6 +1,8 @@
 import { API_BASE_URL } from '../../lib/config';
 import { NextResponse } from 'next/server';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
   // Fetch all jobs (assume API returns all jobs with job_status and visibility_status)
   const res = await fetch(`${API_BASE_URL}/jobs?limit=10000`);

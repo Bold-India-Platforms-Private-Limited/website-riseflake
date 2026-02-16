@@ -12,9 +12,6 @@ import React from 'react'
 export const dynamicParams = true
 export const revalidate = 900
 
-type PageProps = {
-  params: { slug: string }
-}
 
 type JobResponse = {
   status: boolean
@@ -36,27 +33,29 @@ export async function generateStaticParams() {
   return []
 }
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { slug } = await params
-  const data = await fetchJob(slug)
-  const job = (data && 'result' in data) ? (data as JobResponse).result : undefined
+export async function generateMetadata({ params }: { params?: Promise<{ slug: string }> }): Promise<Metadata> {
+  const awaitedParams = params ? await params : { slug: '' };
+  const { slug } = awaitedParams;
+  const data = await fetchJob(slug);
+  const job = (data && 'result' in data) ? (data as JobResponse).result : undefined;
 
   if (!job) {
     return {
       title: 'Job Details | Riseflake',
       description: 'Explore verified job details on Riseflake.',
-    }
+    };
   }
 
   return {
     title: `${job.position} at ${job.company_name} | Riseflake`,
     description: `View details for ${job.position} at ${job.company_name}. Explore skills, requirements, and apply on Riseflake.`,
-  }
+  };
 }
 
-export default async function JobDetailsPage({ params }: PageProps) {
-  const { slug } = await params
-  const data = await fetchJob(slug)
+export default async function JobDetailsPage({ params }: { params?: Promise<{ slug: string }> }) {
+  const awaitedParams = params ? await params : { slug: '' };
+  const { slug } = awaitedParams;
+  const data = await fetchJob(slug);
 
   // Type guard for expired
   if (data && 'expired' in data && data.expired) {
