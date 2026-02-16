@@ -7,14 +7,13 @@ import JobHeader from './components/JobHeader'
 import TagsSection from './components/TagsSection'
 import type { JobDetail } from './components/types'
 import { API_BASE_URL } from '../../../lib/config'
-import Head from 'next/head'
 import React from 'react'
 
 export const dynamicParams = true
 export const revalidate = 900
 
 type PageProps = {
-  params: Promise<{ slug: string }>
+  params: { slug: string }
 }
 
 type JobResponse = {
@@ -29,14 +28,6 @@ const fetchJob = async (slug: string) => {
   }
   if (!response.ok) return null
   return (await response.json()) as JobResponse
-}
-
-const fetchStructuredData = async (slug: string) => {
-  const response = await fetch(`${API_BASE_URL}/jobs/${slug}/structured-data`, { cache: 'no-store' })
-  if (response.status === 410) return null
-  if (!response.ok) return null
-  const data = await response.json()
-  return data?.result || null
 }
 
 export async function generateStaticParams() {
@@ -88,7 +79,6 @@ export default async function JobDetailsPage({ params }: PageProps) {
   }
 
   const job = (data as JobResponse).result
-  const structuredData = await fetchStructuredData(slug)
 
   return (
     <>
@@ -157,25 +147,6 @@ export default async function JobDetailsPage({ params }: PageProps) {
           </div>
         </div>
       </main>
-      <Head>
-        <title>{job.position} at {job.company_name} | RiseFlake</title>
-        <meta name="description" content={job.job_description ?? ''} />
-        <link rel="canonical" href={`https://riseflake.com/jobs/${job.slug}`} />
-        <meta property="og:title" content={`${job.position} at ${job.company_name} | RiseFlake`} />
-        <meta property="og:description" content={job.job_description ?? ''} />
-        <meta property="og:type" content="article" />
-        <meta property="og:url" content={`https://riseflake.com/jobs/${job.slug}`} />
-        <meta property="og:site_name" content="RiseFlake" />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={`${job.position} at ${job.company_name} | RiseFlake`} />
-        <meta name="twitter:description" content={job.job_description ?? ''} />
-        {structuredData && (
-          <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-          />
-        )}
-      </Head>
     </>
   )
 }
