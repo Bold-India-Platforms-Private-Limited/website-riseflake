@@ -154,7 +154,10 @@ export default function JobsClient() {
     return () => clearInterval(interval)
   }, [])
 
-  const jobs = data?.result ?? []
+  // Only show jobs with job_status 'live' and visibility_status 2 or 3
+  const jobs = (data?.result ?? []).filter(
+    job => job.job_status === 'live' && (job.visibility_status === 2 || job.visibility_status === 3)
+  )
   const currentPage = data?.page ?? 1
   const totalPages = data?.totalPages ?? 1
   const totalJobs = data?.total ?? 0

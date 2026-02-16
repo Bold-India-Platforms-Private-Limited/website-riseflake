@@ -12,8 +12,8 @@ const links = {
   resources: [
     { label: 'Support', href: '/support' },
     { label: 'Login & Register', href: '/login' },
-    { label: 'HTML Sitemap', href: '/html-sitemap' },
-    { label: 'XML Sitemap', href: '/xml-sitemap' },
+    { label: 'HTML Sitemap', href: '/sitemap.html' },
+    { label: 'XML Sitemap', href: '/sitemap.xml' },
   ],
   company: [
     { label: 'Contact Us', href: '/contact' },

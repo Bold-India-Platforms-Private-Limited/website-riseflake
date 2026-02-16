@@ -1,3 +1,8 @@
+export const metadata = {
+  title: 'Companies | Riseflake - Discover Top Employers',
+  description: 'Connect with top companies, discover their profiles, and explore open positions. Find your dream employer on Riseflake.',
+  keywords: 'companies, employers, company profiles, hiring, riseflake',
+};
 import { Suspense } from 'react'
 import Navbar from '../components/Navbar'
 import CompaniesClient from './CompaniesClient'

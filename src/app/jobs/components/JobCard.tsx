@@ -12,6 +12,8 @@ export type JobListItem = {
   created_at: string
   location_name: string | null
   job_skills: string[]
+  job_status: string
+  visibility_status: number
 }
 
 const formatDate = (value: string) => {

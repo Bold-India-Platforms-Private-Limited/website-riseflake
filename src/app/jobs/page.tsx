@@ -1,3 +1,8 @@
+export const metadata = {
+  title: 'Jobs | Riseflake - Find Your Next Role',
+  description: 'Browse verified job opportunities with top companies and growing teams. Find your next role on Riseflake.',
+  keywords: 'jobs, job search, hiring, career, employment, riseflake jobs',
+};
 import { Suspense } from 'react'
 import Navbar from '../components/Navbar'
 import JobsClient from './JobsClient'

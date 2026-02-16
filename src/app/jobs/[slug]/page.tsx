@@ -8,6 +8,7 @@ import TagsSection from './components/TagsSection'
 import type { JobDetail } from './components/types'
 import { API_BASE_URL } from '../../../lib/config'
 import Head from 'next/head'
+import React from 'react'
 
 export const dynamicParams = true
 export const revalidate = 900
@@ -23,9 +24,19 @@ type JobResponse = {
 
 const fetchJob = async (slug: string) => {
   const response = await fetch(`${API_BASE_URL}/jobs/${slug}`, { cache: 'force-cache' })
-
+  if (response.status === 410) {
+    return { expired: true }
+  }
   if (!response.ok) return null
   return (await response.json()) as JobResponse
+}
+
+const fetchStructuredData = async (slug: string) => {
+  const response = await fetch(`${API_BASE_URL}/jobs/${slug}/structured-data`, { cache: 'no-store' })
+  if (response.status === 410) return null
+  if (!response.ok) return null
+  const data = await response.json()
+  return data?.result || null
 }
 
 export async function generateStaticParams() {
@@ -37,7 +48,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params
   const data = await fetchJob(slug)
-  const job = data?.result
+  const job = (data && 'result' in data) ? (data as JobResponse).result : undefined
 
   if (!job) {
     return {
@@ -56,11 +67,28 @@ export default async function JobDetailsPage({ params }: PageProps) {
   const { slug } = await params
   const data = await fetchJob(slug)
 
-  if (!data?.status || !data.result) {
+  // Type guard for expired
+  if (data && 'expired' in data && data.expired) {
+    return (
+      <>
+        <Navbar bgTransparent />
+        <main className="px-4 sm:px-6 lg:px-8 py-12 bg-slate-100">
+          <div className="max-w-[1200px] mx-auto text-center py-24">
+            <h1 className="text-3xl font-bold text-slate-800 mb-4">Job Expired</h1>
+            <p className="text-lg text-slate-600">This job posting is no longer available or has expired.</p>
+          </div>
+        </main>
+      </>
+    )
+  }
+
+  // Type guard for JobResponse
+  if (!data || typeof data !== 'object' || !('status' in data) || !('result' in data) || !data.status || !data.result) {
     notFound()
   }
 
-  const job = data.result
+  const job = (data as JobResponse).result
+  const structuredData = await fetchStructuredData(slug)
 
   return (
     <>
@@ -141,29 +169,12 @@ export default async function JobDetailsPage({ params }: PageProps) {
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={`${job.position} at ${job.company_name} | RiseFlake`} />
         <meta name="twitter:description" content={job.job_description ?? ''} />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org/",
-              "@type": "JobPosting",
-              title: job.position,
-              description: job.job_description,
-              datePosted: job.created_at,
-              validThrough: job.job_deadline,
-              employmentType: job.job_type,
-              hiringOrganization: {
-                "@type": "Organization",
-                name: job.company_name,
-                logo: job.company_logo,
-              },
-              jobLocation: {
-                "@type": "Place",
-                address: job.location_name,
-              },
-            }),
-          }}
-        />
+        {structuredData && (
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+          />
+        )}
       </Head>
     </>
   )

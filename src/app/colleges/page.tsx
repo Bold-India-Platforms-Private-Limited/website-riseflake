@@ -1,3 +1,8 @@
+export const metadata = {
+  title: 'Colleges | Riseflake - Explore Educational Institutions',
+  description: 'Browse and discover colleges, universities, and educational institutions. Find the right place for your academic journey on Riseflake.',
+  keywords: 'colleges, universities, education, academic institutions, riseflake',
+};
 import { Suspense } from 'react';
 import Navbar from '../components/Navbar';
 import CollegesClient from './CollegesClient';
