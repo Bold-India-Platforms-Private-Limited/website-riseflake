@@ -73,6 +73,16 @@ export default function Navbar({ bgTransparent = false }: { bgTransparent?: bool
               Jobs
             </a>
             <a
+              href="/internships"
+              className={`rounded-lg px-4 py-2 text-sm font-medium transition-all duration-500 ${
+                pathname === '/internships'
+                  ? 'bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 text-white scale-105'
+                  : 'bg-transparent text-slate-700 hover:bg-white hover:text-slate-900'
+              }`}
+            >
+              Internships
+            </a>
+            <a
               href="/indexed-jobs"
               className={`rounded-lg px-4 py-2 text-sm font-medium transition-all duration-500 ${
                 activeTab === '/indexed-jobs'
@@ -137,6 +147,17 @@ export default function Navbar({ bgTransparent = false }: { bgTransparent?: bool
               }`}
             >
               Jobs
+            </a>
+            <a
+              href="/internships"
+              onClick={() => setOpen(false)}
+              className={`block rounded-lg px-4 py-2 text-sm font-medium transition ${
+                isActive('/internships')
+                  ? 'bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 text-white shadow'
+                  : 'text-slate-700 hover:bg-white'
+              }`}
+            >
+              Internships
             </a>
             <a
               href="/indexed-jobs"

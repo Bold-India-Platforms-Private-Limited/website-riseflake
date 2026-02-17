@@ -26,6 +26,11 @@ export default function JobsPage() {
           <Suspense fallback={<div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">Loading jobs...</div>}>
             <JobsClient />
           </Suspense>
+
+          {/* Pagination full width below all content */}
+          <div className="w-full max-w-[1200px] mx-auto mt-8">
+            {/* Pagination will be rendered here, see JobsClient for data/props */}
+          </div>
         </div>
       </main>
     </>
