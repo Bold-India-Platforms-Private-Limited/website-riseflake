@@ -79,8 +79,27 @@ export default async function JobDetailsPage({ params }: { params?: Promise<{ sl
 
   const job = (data as JobResponse).result
 
+  const canonicalUrl = `https://riseflake.com/jobs/${job.slug}`;
+  const jobPostingSchema = {
+    "@context": "https://schema.org/",
+    "@type": "JobPosting",
+    title: job.position,
+    description: job.job_description,
+    datePosted: job.created_at ? new Date(job.created_at).toISOString().slice(0, 10) : undefined,
+    employmentType: job.job_type,
+    hiringOrganization: {
+      "@type": "Organization",
+      name: job.company_name
+    }
+  };
+
   return (
     <>
+      {/* Canonical tag and JobPosting schema for SEO */}
+      <head>
+        <link rel="canonical" href={canonicalUrl} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jobPostingSchema) }} />
+      </head>
       <Navbar bgTransparent />
       <main className="px-4 sm:px-6 lg:px-8 py-12 bg-slate-100">
         <div className="max-w-[1200px] mx-auto space-y-8">

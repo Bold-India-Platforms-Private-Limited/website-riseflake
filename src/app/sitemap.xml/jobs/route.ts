@@ -9,8 +9,9 @@ export async function GET() {
     return new NextResponse('Failed to fetch jobs', { status: 500 });
   }
   const data = await res.json();
-  // Exclude indexed jobs (slugs that start with 'indexed-jobs' or match the indexed-jobs pattern)
-  const jobs = (data.result || []).filter((job: any) => job.visibility_status === 2 && !(job.slug && job.slug.startsWith('indexed-jobs')));
+  const allowedStatuses = ['live', 'screening', 'interview', 'assessment'];
+  // Exclude indexed jobs and filter by allowed job_status
+  const jobs = (data.result || []).filter((job: any) => job.visibility_status === 2 && allowedStatuses.includes(job.job_status) && !(job.slug && job.slug.startsWith('indexed-jobs')));
   const today = new Date();
   const formatDate = (dateStr: string) => {
     const d = new Date(dateStr);

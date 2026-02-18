@@ -9,7 +9,8 @@ export async function GET() {
     return new NextResponse('Failed to fetch internships', { status: 500 });
   }
   const data = await res.json();
-  const internships = (data.result || []).filter((item: any) => item.visibility_status === 2);
+  const allowedStatuses = ['live', 'screening', 'interview', 'assessment'];
+  const internships = (data.result || []).filter((item: any) => item.visibility_status === 2 && allowedStatuses.includes(item.job_status));
   const today = new Date();
   const formatDate = (dateStr: string) => {
     const d = new Date(dateStr);

@@ -59,8 +59,27 @@ export default async function InternshipDetailsPage({ params }: { params?: Promi
   }
   const internship = (data as InternshipResponse).result;
 
+  const canonicalUrl = `https://riseflake.com/internships/${internship.slug}`;
+  const jobPostingSchema = {
+    "@context": "https://schema.org/",
+    "@type": "JobPosting",
+    title: internship.position,
+    description: internship.job_description,
+    datePosted: internship.created_at ? new Date(internship.created_at).toISOString().slice(0, 10) : undefined,
+    employmentType: internship.job_type,
+    hiringOrganization: {
+      "@type": "Organization",
+      name: internship.company_name
+    }
+  };
+
   return (
     <>
+      {/* Canonical tag and JobPosting schema for SEO */}
+      <head>
+        <link rel="canonical" href={canonicalUrl} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jobPostingSchema) }} />
+      </head>
       <Navbar bgTransparent />
       <main className="px-4 sm:px-6 lg:px-8 py-2 bg-slate-100">
         <div className="max-w-[1200px] mx-auto">

@@ -62,9 +62,23 @@ export default async function CompanyDetailsPage({ params }: PageProps) {
   }
 
   const company = data.result
+  const canonicalUrl = `https://riseflake.com/companies/${company.slug}`;
+  const orgSchema = {
+    "@context": "https://schema.org/",
+    "@type": "Organization",
+    name: company.company_name,
+    url: canonicalUrl,
+    logo: company.company_logo || undefined,
+    description: `View company details for ${company.company_name} on Riseflake.`,
+    // Add more fields as needed
+  };
 
   return (
     <>
+      <head>
+        <link rel="canonical" href={canonicalUrl} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }} />
+      </head>
       <Navbar bgTransparent />
       <main className="px-4 sm:px-6 lg:px-8 py-12 bg-slate-100">
         <div className="max-w-[1200px] mx-auto space-y-6">
