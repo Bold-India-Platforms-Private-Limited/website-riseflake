@@ -4,7 +4,6 @@ export const dynamic = 'force-dynamic';
 
 export async function GET() {
   const staticPages = [
-    'https://app.riseflake.com/',
     'https://riseflake.com/',
     'https://riseflake.com/jobs',
     'https://riseflake.com/internships',
