@@ -13,8 +13,8 @@ src={`${BASE_ASSETS_URL}/illustrations/clg-girl-hero.webp`} alt="Riseflake hirin
           </div>
         </div>
         <div className="flex-1 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-          <div className="h-full w-full rounded-xl bg-gradient-to-br from-slate-50 to-indigo-50 flex items-center justify-center text-xs font-medium text-slate-400">
-            Banner placeholder
+          <div className="h-full w-full rounded-xl overflow-hidden flex items-center justify-center">
+            <img src="/build-resume.webp" alt="Build Resume" className="h-full w-full object-cover" loading="lazy" />
           </div>
         </div>
       </div>

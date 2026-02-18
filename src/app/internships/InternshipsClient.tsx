@@ -83,7 +83,7 @@ export default function InternshipsClient() {
 
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-1 lg:grid-cols-[280px_minmax(0,1fr)_240px] gap-6 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-[280px_minmax(0,1fr)_240px] gap-6">
         {/* Desktop Filters */}
         <div className="hidden lg:block">
           <FiltersPanel currentFilters={currentFilters} />
@@ -131,14 +131,10 @@ export default function InternshipsClient() {
         <RightSidebar />
       </div>
 
-      {/* Mobile Filters */}
-      <div className="lg:hidden">
-        <MobileFilters />
-      </div>
 
-      {/* Pagination */}
+      {/* Pagination (always below grid, with extra margin on desktop) */}
       {!loading && !error && totalItems > 0 && (
-        <div className="w-full max-w-[1200px] mx-auto mt-8">
+        <div className="w-full max-w-[1200px] mx-auto mt-8 lg:mt-20">
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
@@ -148,6 +144,11 @@ export default function InternshipsClient() {
           />
         </div>
       )}
+
+      {/* Mobile Filters */}
+      <div className="lg:hidden">
+        <MobileFilters />
+      </div>
     </div>
   );
 }
