@@ -16,10 +16,10 @@ const staticPages = [
 ];
 
 const sitemapEndpoints = [
-  { url: '/sitemap.xml/jobs', label: 'Jobs Sitemap' },
-  { url: '/sitemap.xml/internships', label: 'Internships Sitemap' },
-  { url: '/sitemap.xml/companies', label: 'Companies Sitemap Index' },
-  { url: '/sitemap.xml/pages', label: 'Static Pages Sitemap' },
+  { url: '/sitemap-jobs.xml', label: 'Jobs Sitemap' },
+  { url: '/sitemap-internships.xml', label: 'Internships Sitemap' },
+  { url: '/sitemap-companies.xml', label: 'Companies Sitemap Index' },
+  { url: '/sitemap-static.xml', label: 'Static Pages Sitemap' },
 ];
 
 export default function SitemapHtml() {

@@ -1,4 +1,4 @@
-import { API_BASE_URL } from '../../../lib/config';
+import { API_BASE_URL } from '../../lib/config';
 import { NextResponse } from 'next/server';
 
 export const dynamic = 'force-dynamic';
@@ -10,14 +10,13 @@ export async function GET() {
   }
   const data = await res.json();
   const allowedStatuses = ['live', 'screening', 'interview', 'assessment'];
-  // Exclude indexed jobs and filter by allowed job_status
   const jobs = (data.result || []).filter((job: any) => job.visibility_status === 2 && allowedStatuses.includes(job.job_status) && !(job.slug && job.slug.startsWith('indexed-jobs')));
   const today = new Date();
   const formatDate = (dateStr: string) => {
     const d = new Date(dateStr);
     return isNaN(d.getTime()) ? today.toISOString().slice(0, 10) : d.toISOString().slice(0, 10);
   };
-  const urls = jobs.map((job: any) => `  <url>\n    <loc>https://riseflake.com/jobs/${job.slug}</loc>\n    <lastmod>${formatDate(job.updated_at || job.created_at)}</lastmod>\n    <changefreq>daily</changefreq>\n    <priority>0.9</priority>\n  </url>`).join('\n');
+  const urls = jobs.map((job: any) => `  <url>\n    <loc>https://riseflake.com/jobs/${job.slug}</loc>\n    <lastmod>${formatDate(job.updated_at || job.created_at)}</lastmod>\n  </url>`).join('\n');
   const xml = `<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n${urls}\n</urlset>`;
   return new NextResponse(xml, {
     status: 200,
