@@ -1,6 +1,5 @@
 import './globals.css'
 import type { Metadata } from 'next'
-import Script from 'next/script'
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://riseflake.com'),
@@ -152,22 +151,6 @@ export default function RootLayout({
       </head>
     <body className="bg-gradient-subtle text-slate-900 antialiased">
   {children}
-
-  {/* Google Analytics – Global */}
-  <Script
-    src="https://www.googletagmanager.com/gtag/js?id=G-E3TXB0F389"
-    strategy="afterInteractive"
-  />
-  <Script id="ga-init" strategy="afterInteractive">
-    {`
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-E3TXB0F389', {
-        anonymize_ip: true,
-      });
-    `}
-  </Script>
 </body>
     </html>
   )
