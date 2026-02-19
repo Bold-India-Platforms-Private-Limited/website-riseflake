@@ -53,12 +53,12 @@ export default function Navbar({ bgTransparent = false }: { bgTransparent?: bool
       }
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between">
+        <div className="flex h-12 items-center justify-between">
           <a href="/" className="flex items-center gap-3">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-white">
-              <img src="/logo.webp" alt="Riseflake logo" className="h-6 w-6 object-contain" />
+            <div className="flex h-7 w-7 items-center justify-center rounded-lg border border-slate-200 bg-white">
+              <img src="/logo.webp" alt="Riseflake logo" className="h-5 w-5 object-contain" />
             </div>
-            <h1 className="text-2xl font-semibold text-slate-900">Riseflake</h1>
+            <h1 className="text-xl font-semibold text-slate-900">Riseflake</h1>
           </a>
 
           <nav className="hidden md:flex items-center gap-1 rounded-lg p-1 bg-transparent">
@@ -114,17 +114,23 @@ export default function Navbar({ bgTransparent = false }: { bgTransparent?: bool
             </a>
           </nav>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             <a
               href="https://app.riseflake.com/home"
-              className="hidden md:inline-flex rounded-full bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 px-5 py-2.5 font-semibold text-white shadow-lg transition-all hover:shadow-xl"
+              className="hidden md:inline-flex rounded-full bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 px-4 py-2 font-semibold text-white shadow-lg transition-all hover:shadow-xl text-xs"
             >
               Find Jobs
             </a>
-
+            <a
+              href="https://app.riseflake.com/home"
+              className="md:hidden inline-flex rounded-full bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 px-3 py-1.5 font-semibold text-white shadow-lg transition-all hover:shadow-xl text-xs mr-2"
+              style={{ minWidth: '70px' }}
+            >
+              Find Jobs
+            </a>
             <button
               type="button"
-              className="md:hidden inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 hover:bg-slate-100"
+              className="md:hidden inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 hover:bg-slate-100"
               onClick={() => setOpen((value) => !value)}
               aria-label="Toggle navigation"
             >
