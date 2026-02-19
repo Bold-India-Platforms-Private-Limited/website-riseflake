@@ -16,7 +16,7 @@ export async function GET() {
     const d = new Date(dateStr);
     return isNaN(d.getTime()) ? today.toISOString().slice(0, 10) : d.toISOString().slice(0, 10);
   };
-  const urls = internships.map((item: any) => `  <url>\n    <loc>https://riseflake.com/internships/${item.slug}</loc>\n    <lastmod>${formatDate(item.updated_at || item.created_at)}</lastmod>\n  </url>`).join('\n');
+  const urls = internships.map((item: any) => `  <url>\n    <loc>https://riseflake.com/internships/${item.slug}</loc>\n    <lastmod>${formatDate(item.updated_at || item.created_at)}</lastmod>\n    <changefreq>daily</changefreq>\n    <priority>0.7</priority>\n  </url>`).join('\n');
   const xml = `<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n${urls}\n</urlset>`;
   return new NextResponse(xml, {
     status: 200,
