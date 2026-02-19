@@ -37,12 +37,12 @@ export default function AppDownloadSection() {
 
             <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-start">
               <img
-                src="https://assets.riseflake.com/images/illustrations/android_v1.png"
+                src="/download-on-the-play-store.png"
                 alt="Get it on Google Play"
                 className="h-10 w-auto cursor-pointer transition hover:-translate-y-0.5"
               />
               <img
-                src="https://assets.riseflake.com/images/illustrations/apple_v1.png"
+                src="/download-on-the-app-store.svg"
                 alt="Download on App Store"
                 className="h-10 w-auto cursor-pointer transition hover:-translate-y-0.5"
               />
