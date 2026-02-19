@@ -10,9 +10,14 @@ const staticPages = [
   { url: 'https://riseflake.com/companies', label: 'Companies' },
   { url: 'https://riseflake.com/about', label: 'About' },
   { url: 'https://riseflake.com/contact', label: 'Contact' },
+  { url: 'https://riseflake.com/careers', label: 'Careers' },
+  { url: 'https://riseflake.com/support', label: 'Support' },
   { url: 'https://riseflake.com/privacy-policy', label: 'Privacy Policy' },
-  { url: 'https://riseflake.com/cookie-policy', label: 'Cookie Policy' },
+  { url: 'https://riseflake.com/refund-policy', label: 'Refund Policy' },
   { url: 'https://riseflake.com/terms-of-service', label: 'Terms of Service' },
+  { url: 'https://riseflake.com/trust-and-safety', label: 'Trust & Safety' },
+  { url: 'https://riseflake.com/disclaimer', label: 'Disclaimer' },
+  { url: 'https://riseflake.com/cookie-policy', label: 'Cookie Policy' },
 ];
 
 const sitemapEndpoints = [

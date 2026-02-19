@@ -11,7 +11,7 @@ const BRAND_NAME = 'Riseflake'
 const links = {
   resources: [
     { label: 'Support', href: '/support' },
-    { label: 'Login & Register', href: '/login' },
+    { label: 'Login & Register', href: '/' },
     { label: 'HTML Sitemap', href: '/sitemap.html' },
     { label: 'XML Sitemap', href: '/sitemap.xml' },
   ],
