@@ -70,7 +70,6 @@ const Testimonials: React.FC = () => {
     `${BASE_ASSETS_URL}/logos/review-company-2.webp`,
     `${BASE_ASSETS_URL}/logos/review-company-3.webp`,
     `${BASE_ASSETS_URL}/logos/review-company-4.webp`,
-    `${BASE_ASSETS_URL}/logos/review-company-5.webp`,
   ];
 
   useEffect(() => {
@@ -82,8 +81,8 @@ const Testimonials: React.FC = () => {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Show 2 cards for desktop, 1 for mobile
-  const itemsToShow: number = isMobile ? 1 : 2;
+  // Show 3 cards for desktop, 1 for mobile
+  const itemsToShow: number = isMobile ? 1 : 3;
   const visibleTestimonials: Testimonial[] = testimonials.slice(currentIndex, currentIndex + itemsToShow);
 
   useEffect(() => {
@@ -238,15 +237,15 @@ const Testimonials: React.FC = () => {
           {/* Cards Grid */}
           <div 
             className={`grid mb-12 w-full ${
-              isMobile ? 'grid-cols-1 gap-6' : 'grid-cols-2 gap-8'
+              isMobile ? 'grid-cols-1 gap-6' : 'grid-cols-3 gap-6'
             }`}
             style={isMobile ? { marginBottom: '2rem' } : {}}
           >
             {visibleTestimonials.map((testimonial, index) => (
               <div
                 key={currentIndex + index}
-                className="flex flex-col overflow-hidden rounded-xl bg-white border border-black/[0.05] shadow-[0_4px_20px_rgba(0,0,0,0.08)] transition-all duration-[400ms] ease-[cubic-bezier(0.4,0,0.2,1)] hover:-translate-y-2 hover:shadow-[0_12px_40px_rgba(0,0,0,0.12)] p-8"
-                style={!isMobile ? { height: '340px' } : { 
+                className="flex flex-col overflow-hidden rounded-xl bg-white border border-black/[0.05] shadow-[0_4px_20px_rgba(0,0,0,0.08)] transition-all duration-[400ms] ease-[cubic-bezier(0.4,0,0.2,1)] hover:-translate-y-2 hover:shadow-[0_12px_40px_rgba(0,0,0,0.12)] p-6"
+                style={!isMobile ? { height: '320px', minWidth: '0', maxWidth: '370px', margin: '0 auto' } : { 
                   height: 'auto',
                   minHeight: '320px',
                   padding: '2rem',
@@ -318,7 +317,7 @@ const Testimonials: React.FC = () => {
             } : {}}
           >
             <div 
-              className={`flex flex-wrap items-center gap-8 transition-all duration-500 ease-in-out ${
+              className={`flex flex-wrap items-center gap-14 transition-all duration-500 ease-in-out ${
                 isMobile ? 'justify-center' : 'justify-start'
               }`}
               style={isMobile ? { 
