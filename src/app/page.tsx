@@ -144,6 +144,8 @@ export default function Home() {
         </div>
       </section>
 
+      <Brands />
+
       {/* Features Section - Modern Cards with Glassmorphism */}
       <section id="features" className="py-24 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
@@ -208,84 +210,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      {/* How It Works */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-indigo-50 to-white">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-5xl font-bold mb-4 text-slate-900">
-              Your Path to <span className="text-gradient">Career Success</span>
-            </h2>
-            <p className="text-xl text-slate-600">Four simple steps to land your dream job on Riseflake</p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {[
-              {
-                step: '01',
-                title: 'Create Your Profile',
-                description: 'Set up your professional profile showcasing your skills, experience, and achievements. Let employers discover you.',
-              },
-              {
-                step: '02',
-                title: 'Get Matched',
-                description: 'Our AI analyzes your profile and recommends perfect job opportunities. Browse curated listings or wait for recommendations.',
-              },
-              {
-                step: '03',
-                title: 'Connect & Apply',
-                description: 'Reach out to hiring managers directly or submit applications. Network with professionals in your field.',
-              },
-              {
-                step: '04',
-                title: 'Land Your Dream Job',
-                description: 'Attend interviews and receive offers. Start your new journey with confidence and career growth.',
-              },
-            ].map((item, idx) => (
-              <div key={idx} className="relative">
-                <div className="glass rounded-2xl p-8 text-center h-full">
-                  <div className="text-6xl font-bold text-transparent bg-clip-text bg-gradient-modern mb-4">
-                    {item.step}
-                  </div>
-                  <h3 className="text-xl font-bold mb-3 text-slate-900">{item.title}</h3>
-                  <p className="text-slate-600">{item.description}</p>
-                </div>
-                {idx < 3 && (
-                  <div className="hidden lg:block absolute top-1/2 -right-4 w-8 h-0.5 bg-gradient-modern"></div>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Statistics Section */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-4xl font-bold text-center mb-16 text-slate-900">
-            The Impact of <span className="text-gradient">Riseflake</span>
-          </h2>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {[
-              { metric: '50,000+', label: 'Active Professionals', icon: '👥' },
-              { metric: '10,000+', label: 'Job Opportunities', icon: '💼' },
-              { metric: '5,000+', label: 'Hiring Companies', icon: '🏢' },
-              { metric: '95%', label: 'Placement Success', icon: '✅' },
-            ].map((stat, idx) => (
-              <div key={idx} className="glass rounded-2xl p-8 text-center">
-                <p className="text-5xl mb-4">{stat.icon}</p>
-                <p className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-modern mb-2">
-                  {stat.metric}
-                </p>
-                <p className="text-slate-600">{stat.label}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <Brands />
 
       <Categories />
 
