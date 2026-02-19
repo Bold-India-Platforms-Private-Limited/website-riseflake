@@ -95,6 +95,7 @@ export default async function InternshipDetailsPage({ params }: { params?: Promi
             </div>
           </div>
         </div>
+
       </main>
     </>
   )

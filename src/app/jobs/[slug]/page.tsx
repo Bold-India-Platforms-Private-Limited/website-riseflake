@@ -111,6 +111,8 @@ export default async function JobDetailsPage({ params }: { params?: Promise<{ sl
             <span>{job.position}</span>
           </div>
 
+
+
           <JobHeader job={job} />
 
           <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_320px] gap-6 items-start">
@@ -164,6 +166,7 @@ export default async function JobDetailsPage({ params }: { params?: Promise<{ sl
             </div>
           </div>
         </div>
+
       </main>
     </>
   )

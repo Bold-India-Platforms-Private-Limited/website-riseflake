@@ -1,4 +1,5 @@
 import type { JobDetail } from './types'
+import JobReportWrapper from '../../../components/JobReportWrapper'
 
 const formatDate = (value: string) => {
   const date = new Date(value)
@@ -21,17 +22,25 @@ const formatWorkplace = (value?: number | null) => {
 
 export default function JobHeader({ job }: { job: JobDetail }) {
   return (
-    <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
+    <div className="relative rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
+      {/* Report button: top-right on desktop, below logo on mobile */}
+      <div className="absolute right-4 top-4 hidden sm:block">
+        <JobReportWrapper jobSlug={job.slug} />
+      </div>
       <div className="flex flex-col gap-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
           <div className="flex items-center gap-4">
-            <div className="h-14 w-14 rounded-2xl bg-slate-100 flex items-center justify-center overflow-hidden">
+            <div className="h-14 w-14 rounded-2xl bg-slate-100 flex items-center justify-center overflow-hidden relative">
               {job.company_logo ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={job.company_logo} alt={`${job.company_name} logo`} className="h-full w-full object-cover" />
               ) : (
                 <span className="text-base font-semibold text-slate-500">{job.company_name.slice(0, 2)}</span>
               )}
+              {/* Mobile: report button below logo */}
+              <div className="mt-2 sm:hidden w-full flex justify-center">
+                <JobReportWrapper jobSlug={job.slug} />
+              </div>
             </div>
             <div>
               <h1 className="text-2xl sm:text-3xl font-semibold text-slate-900">{job.position}</h1>
