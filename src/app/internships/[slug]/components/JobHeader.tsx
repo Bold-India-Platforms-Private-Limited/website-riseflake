@@ -23,8 +23,8 @@ const formatWorkplace = (value?: number | null) => {
 export default function JobHeader({ job }: { job: JobDetail }) {
   return (
     <div className="relative rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
-      {/* Report button: top-right on desktop, below logo on mobile */}
-      <div className="absolute right-4 top-4 hidden sm:block">
+      {/* Report button: top-right for both mobile and desktop */}
+      <div className="absolute right-4 top-4">
         <JobReportWrapper jobSlug={job.slug} isInternship />
       </div>
       <div className="flex flex-col gap-6">
@@ -37,10 +37,6 @@ export default function JobHeader({ job }: { job: JobDetail }) {
               ) : (
                 <span className="text-base font-semibold text-slate-500">{job.company_name.slice(0, 2)}</span>
               )}
-              {/* Mobile: report button below logo */}
-              <div className="mt-2 sm:hidden w-full flex justify-center">
-                <JobReportWrapper jobSlug={job.slug} isInternship />
-              </div>
             </div>
             <div>
               <h1 className="text-2xl sm:text-3xl font-semibold text-slate-900">{job.position}</h1>
