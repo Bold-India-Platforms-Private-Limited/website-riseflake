@@ -32,24 +32,78 @@ export default function Contact() {
             </div>
             <div className="h-px w-full bg-slate-200 md:hidden"></div>
             <div className="flex flex-col min-h-[60vh] justify-between space-y-8 px-6 py-10 text-[15px] leading-relaxed text-slate-600 sm:text-base">
-              <section>
-                <p>Last Updated Date: 08/01/2026 12:00 PM</p>
-                <h2>Contact Information</h2>
-                <ul className="list-disc ml-6">
-                  <li>Email: <a href="mailto:support@riseflake.com" className="text-blue-600 underline">support@riseflake.com</a></li>
-                  <li>Phone: +91-9876543210</li>
-                  <li>Support Hours: Monday to Friday, 9:00 AM – 6:00 PM IST</li>
-                </ul>
-                <h2>Business Address</h2>
-                <p>Bold India Platforms Pvt. Ltd.,<br/> 123, Tech Park, Pune, India</p>
-                <h2>Contact Form</h2>
-                <p>For quick queries, please use our <a href="/support" className="text-blue-600 underline">Support</a> page or fill out the contact form below:</p>
-                <form className="mt-4 grid gap-4 max-w-lg">
-                  <input type="text" placeholder="Your Name" className="border rounded px-3 py-2" required />
-                  <input type="email" placeholder="Your Email" className="border rounded px-3 py-2" required />
-                  <textarea placeholder="Your Message" className="border rounded px-3 py-2" rows={4} required></textarea>
-                  <button type="submit" className="bg-indigo-600 text-white rounded px-4 py-2 font-semibold hover:bg-indigo-700 transition">Send Message</button>
-                </form>
+              <section className="space-y-6">
+                <div>
+                  <p className="mb-4"><strong>Last Updated:</strong> March 05, 2026</p>
+                  <h2 className="text-2xl font-semibold text-slate-800 mb-2">Company Information</h2>
+                  <p className="text-slate-500 mb-6">Bold India Platforms Private Limited — the company behind RiseFlake</p>
+                </div>
+
+                <div className="grid gap-6 sm:grid-cols-2">
+                  <div className="flex items-start gap-3 p-4 rounded-xl bg-slate-50 border border-slate-100">
+                    <span className="text-2xl" role="img" aria-label="Company">🏢</span>
+                    <div>
+                      <h3 className="font-semibold text-slate-800">Company Name</h3>
+                      <p>Bold India Platforms Private Limited</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3 p-4 rounded-xl bg-slate-50 border border-slate-100">
+                    <span className="text-2xl" role="img" aria-label="Brand">🚀</span>
+                    <div>
+                      <h3 className="font-semibold text-slate-800">Brand Name</h3>
+                      <p>RiseFlake</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3 p-4 rounded-xl bg-slate-50 border border-slate-100">
+                    <span className="text-2xl" role="img" aria-label="CIN">📋</span>
+                    <div>
+                      <h3 className="font-semibold text-slate-800">CIN</h3>
+                      <p>U85499PN2025PTC246360</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3 p-4 rounded-xl bg-slate-50 border border-slate-100">
+                    <span className="text-2xl" role="img" aria-label="Website">🌐</span>
+                    <div>
+                      <h3 className="font-semibold text-slate-800">Company Website</h3>
+                      <a href="https://www.boldindia.in" target="_blank" rel="noopener noreferrer" className="text-indigo-600 hover:underline">www.boldindia.in</a>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3 p-4 rounded-xl bg-slate-50 border border-slate-100 sm:col-span-2">
+                    <span className="text-2xl" role="img" aria-label="Address">📍</span>
+                    <div>
+                      <h3 className="font-semibold text-slate-800">Registered Office</h3>
+                      <p>Sn 242/1/2 Baner, Tejaswini Soc, DP Road, N.I.A., Pune, Maharashtra 411045, India</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3 p-4 rounded-xl bg-slate-50 border border-slate-100 sm:col-span-2">
+                    <span className="text-2xl" role="img" aria-label="Email">✉️</span>
+                    <div>
+                      <h3 className="font-semibold text-slate-800">Email Us</h3>
+                      <div className="flex flex-wrap gap-x-4">
+                        <a href="mailto:hello@boldindia.in" className="text-indigo-600 hover:underline">hello@boldindia.in</a>
+                        <a href="mailto:support@riseflake.com" className="text-indigo-600 hover:underline">support@riseflake.com</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="pt-8 border-t border-slate-200">
+                  <h2 className="text-2xl font-semibold text-slate-800 mb-4">Contact Form</h2>
+                  <p className="mb-6">For quick queries, please use our <a href="/support" className="text-indigo-600 hover:underline">Support</a> page or fill out the contact form below:</p>
+                  <form className="grid gap-4 max-w-lg">
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      <input type="text" placeholder="Your Name" className="border border-slate-200 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition" required />
+                      <input type="email" placeholder="Your Email" className="border border-slate-200 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition" required />
+                    </div>
+                    <textarea placeholder="Your Message" className="border border-slate-200 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition" rows={4} required></textarea>
+                    <button type="submit" className="bg-indigo-600 text-white rounded-lg px-6 py-3 font-semibold hover:bg-indigo-700 transition shadow-lg shadow-indigo-200/50 w-full sm:w-max">Send Message</button>
+                  </form>
+                </div>
               </section>
             </div>
           </div>
