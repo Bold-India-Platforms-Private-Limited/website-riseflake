@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { FiArrowLeft, FiArrowRight, FiCheckCircle, FiAlertCircle, FiTrash2 } from "react-icons/fi";
 import { useRouter } from "next/navigation";
 import Footer from "../components/Footer";
+import { API_BASE_URL } from "../../lib/config";
 
 const REASONS = [
     "No longer using the account",
@@ -17,6 +18,7 @@ export default function DeleteAccount() {
     const router = useRouter();
     const [submitted, setSubmitted] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [toast, setToast] = useState<{ type: "success" | "error"; message: string } | null>(null);
     const [formData, setFormData] = useState({
         email: "",
         mobile: "",
@@ -28,22 +30,83 @@ export default function DeleteAccount() {
         window.scrollTo(0, 0);
     }, []);
 
-    const handleSubmit = (e: React.FormEvent) => {
+    useEffect(() => {
+        if (!toast) return;
+        const timeout = setTimeout(() => setToast(null), 3000);
+        return () => clearTimeout(timeout);
+    }, [toast]);
+
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        const normalizedEmail = formData.email.trim().toLowerCase();
+        const normalizedMobile = formData.mobile.replace(/\s+/g, "").trim();
+        const normalizedReason = formData.reason.trim();
+        const normalizedComments = formData.customMessage.trim();
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (!emailRegex.test(normalizedEmail)) {
+            setToast({ type: "error", message: "Please enter a valid email address." });
+            return;
+        }
+
+        if (!normalizedMobile) {
+            setToast({ type: "error", message: "Please enter a valid mobile number." });
+            return;
+        }
+
+        if (!API_BASE_URL) {
+            setToast({ type: "error", message: "API base URL is not configured." });
+            return;
+        }
+
         setLoading(true);
 
-        // Simulate API call
-        setTimeout(() => {
+        try {
+            const response = await fetch(`${API_BASE_URL}/delete-account-request`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    email: normalizedEmail,
+                    mobile_no: normalizedMobile,
+                    reason: normalizedReason,
+                    comments: normalizedComments || null
+                })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok || !data?.status) {
+                throw new Error(data?.message || "Failed to submit request");
+            }
+
+            setToast({ type: "success", message: "Delete account request submitted successfully." });
             setLoading(false);
             setSubmitted(true);
             window.scrollTo(0, 0);
-        }, 1500);
+        } catch (error) {
+            setLoading(false);
+            setToast({
+                type: "error",
+                message: error instanceof Error ? error.message : "Something went wrong. Please try again."
+            });
+        }
     };
 
     if (submitted) {
         return (
             <>
                 <div className="min-h-screen bg-slate-100 flex items-center justify-center p-6">
+                    {toast && (
+                        <div className="fixed right-4 top-4 z-50">
+                            <div className={`rounded-lg px-4 py-3 text-sm font-medium shadow-lg ${toast.type === "success" ? "bg-green-600 text-white" : "bg-red-600 text-white"}`}>
+                                {toast.message}
+                            </div>
+                        </div>
+                    )}
                     <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 text-center space-y-6">
                         <div className="flex justify-center">
                             <div className="h-20 w-20 bg-green-100 rounded-full flex items-center justify-center">
@@ -72,6 +135,13 @@ export default function DeleteAccount() {
     return (
         <>
             <div className="min-h-screen bg-slate-100">
+                {toast && (
+                    <div className="fixed right-4 top-4 z-50">
+                        <div className={`rounded-lg px-4 py-3 text-sm font-medium shadow-lg ${toast.type === "success" ? "bg-green-600 text-white" : "bg-red-600 text-white"}`}>
+                            {toast.message}
+                        </div>
+                    </div>
+                )}
                 <div className="mx-auto flex w-full max-w-[1200px] flex-col pb-20">
                     <div className="bg-white md:rounded-b-2xl overflow-hidden shadow-sm">
                         {/* Breadcrumbs (Desktop) */}
