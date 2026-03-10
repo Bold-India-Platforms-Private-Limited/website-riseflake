@@ -31,7 +31,8 @@ const Introducing: React.FC = () => {
           </h3>
 
           <p className="text-sm md:text-base text-gray-600 max-w-lg">
-           Learn from industry experts, compete in real-world challenges, assess your skills, explore career opportunities, and land verified jobs and internships — all in one platform.
+            Learn from industry experts, compete in skill-based contests, test your aptitude, discover career paths, 
+            and apply to verified jobs and internships — all in one place.
           </p>
 
           <div className="flex flex-wrap justify-center md:justify-start gap-2 mt-2">
@@ -42,12 +43,9 @@ const Introducing: React.FC = () => {
             ))}
           </div>
 
-          <Link
-        to="https://app.riseflake.com/home"
-        className="mt-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm px-7 py-2.5 rounded-full shadow-sm transition"
-      >
-        Explore now
-      </Link>
+          <button className="mt-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm px-7 py-2.5 rounded-full shadow-sm transition">
+            Explore now
+          </button>
         </div>
 
         {/* Right: Image */}
