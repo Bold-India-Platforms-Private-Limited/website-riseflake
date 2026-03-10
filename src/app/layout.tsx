@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     description: 'Discover your next opportunity. Connect with top companies and industry professionals on the #1 job portal for career growth.',
     images: [
       {
-        url: 'https://riseflake.com/og-image.png',
+        url: 'https://riseflake.com/og-image.webp',
         width: 1200,
         height: 630,
         alt: 'Riseflake - Job Portal & Professional Networking Platform',

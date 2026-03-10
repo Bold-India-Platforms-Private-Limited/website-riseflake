@@ -20,7 +20,7 @@ export default function ContactSection() {
         <div className="rounded-[60px_0_0_0] bg-[#f8f9fa] p-8 sm:p-7 lg:p-8">
           <div className="relative mb-6 rounded-[50px_0_0_0] bg-white shadow-[0_4px_12px_rgba(0,0,0,0.08)] sm:rounded-[50px_0_0_0]">
             <img
-              src="/contact-customer-service.png"
+              src="/contact-customer-service.webp"
               alt="Contact Us"
               className="h-[400px] w-full rounded-[50px_0_0_0] object-cover sm:h-[300px] sm:rounded-[50px_0_0_0] lg:h-[400px]"
             />

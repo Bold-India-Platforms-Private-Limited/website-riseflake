@@ -15,7 +15,7 @@ const Introducing: React.FC = () => {
   const featureTags: string[] = [
     "Upskill",
     "Riseflake V8",
-    "Professional Networking",
+    "Networking",
     "Jobs & Internships",
   ];
 
