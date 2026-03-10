@@ -14,8 +14,8 @@ const FeatureTag: React.FC<FeatureTagProps> = ({ children }) => (
 const Introducing: React.FC = () => {
   const featureTags: string[] = [
     "Upskill",
-    "LCAT",
-    "Career Pathfinder",
+    "Riseflake V8",
+    "Professional Networking",
     "Jobs & Internships",
   ];
 
@@ -27,12 +27,11 @@ const Introducing: React.FC = () => {
         <div className="w-full md:w-1/2 flex flex-col items-center md:items-start text-center md:text-left gap-5">
 
           <h3 className="text-xl md:text-2xl font-semibold text-gray-900 leading-snug">
-            Your complete career platform for students & early-career professionals
+          Riseflake V8 - The Complete Career Platform for College Students &Professionals
           </h3>
 
           <p className="text-sm md:text-base text-gray-600 max-w-lg">
-            Learn from industry experts, compete in skill-based contests, test your aptitude, discover career paths, 
-            and apply to verified jobs and internships — all in one place.
+           Learn from industry experts, compete in real-world challenges, assess your skills, explore career opportunities, and land verified jobs and internships — all in one platform.
           </p>
 
           <div className="flex flex-wrap justify-center md:justify-start gap-2 mt-2">
@@ -43,9 +42,12 @@ const Introducing: React.FC = () => {
             ))}
           </div>
 
-          <button className="mt-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm px-7 py-2.5 rounded-full shadow-sm transition">
-            Explore now
-          </button>
+          <Link
+        to="https://app.riseflake.com/home"
+        className="mt-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm px-7 py-2.5 rounded-full shadow-sm transition"
+      >
+        Explore now
+      </Link>
         </div>
 
         {/* Right: Image */}

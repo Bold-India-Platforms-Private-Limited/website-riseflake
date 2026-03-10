@@ -52,7 +52,7 @@ export default function DownloadTheApp() {
             <div className="h-8 w-px bg-slate-200" />
             <div className="flex flex-col">
               <div className="flex items-center gap-1 text-xl font-bold text-slate-900">
-                50L+
+                100K+
                 <Download size={18} className="text-slate-700" />
               </div>
               <div className="text-xs font-normal text-slate-400">Downloads</div>

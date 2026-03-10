@@ -24,15 +24,15 @@ interface Category {
 
 const category: Category[] = [
   { id: 1, cat: "Remote", count: "21.4K+ jobs", icon: <IoHomeOutline /> },
-  { id: 2, cat: "Machine Learning", count: "84K+ jobs", icon: <IoHardwareChipOutline /> },
-  { id: 3, cat: "MERN Stack Developer", count: "22K+ jobs", icon: <IoCodeSlashOutline /> },
+  { id: 2, cat: "Machine Learning", count: "34K+ jobs", icon: <IoHardwareChipOutline /> },
+  { id: 3, cat: "MERN Developer", count: "11K+ jobs", icon: <IoCodeSlashOutline /> },
   { id: 4, cat: "Backend Developer", count: "4.5K+ jobs", icon: <IoGitBranchOutline /> },
   { id: 5, cat: "UI UX Designer", count: "239 jobs", icon: <IoEaselOutline /> },
   { id: 6, cat: "Marketing", count: "19.7K+ jobs", icon: <IoBriefcaseOutline /> },
   { id: 7, cat: "AI", count: "2.2K+ jobs", icon: <IoTerminalOutline /> },
   { id: 8, cat: "Engineering", count: "7.8K+ jobs", icon: <IoSettingsOutline /> },
   { id: 9, cat: "Data Science", count: "3.9K+ jobs", icon: <IoStatsChartOutline /> },
-  { id: 10, cat: "Software & IT", count: "37.7K+ jobs", icon: <IoLaptopOutline /> },
+  { id: 10, cat: "Software & IT", count: "17.7K+ jobs", icon: <IoLaptopOutline /> },
 ];
 
 const Categories: React.FC = () => {

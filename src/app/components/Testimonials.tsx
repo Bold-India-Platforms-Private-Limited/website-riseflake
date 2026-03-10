@@ -29,7 +29,7 @@ const Testimonials: React.FC = () => {
       stars: 5,
       review: "A professional platform with growth and hiring at its core. Enables better matches and stronger career outcomes.",
       name: 'Pooja Kulkarni',
-      title: 'Software Engineer, Riseflake',
+      title: 'Software Engineer',
     },
     {
       logoNumber: 2,
@@ -37,7 +37,7 @@ const Testimonials: React.FC = () => {
       stars: 5,
       review: "Created for job seekers and recruiters alike. Enables seamless hiring and career growth with powerful tools.",
       name: 'Sayli Deshpande',
-      title: 'UI/UX Designer, Mitlix',
+      title: 'UI/UX Designer',
     },
     {
       logoNumber: 3,
@@ -45,7 +45,7 @@ const Testimonials: React.FC = () => {
       stars: 4,
       review: "Developer-friendly with all requirements considered. Enables building any interface imaginable with great flexibility.",
       name: 'Pratik Patil',
-      title: 'Software Engineer, BoldIndia',
+      title: 'Software Engineer',
     },
     {
       logoNumber: 4,
@@ -53,7 +53,7 @@ const Testimonials: React.FC = () => {
       stars: 5,
       review: "Built for modern professionals with real opportunities in mind. Enables smarter job search and meaningful networking.",
       name: 'Sujata Shinde',
-      title: 'Product Manager, Softius',
+      title: 'Product Manager',
     },
     {
       logoNumber: 5,
@@ -61,7 +61,7 @@ const Testimonials: React.FC = () => {
       stars: 5,
       review: "Designed for careers with every hiring need considered. Enables faster connections between professionals and top companies.",
       name: 'Rutuja Patil',
-      title: 'Frontend Developer, FlatUI',
+      title: 'Frontend Developer',
     },
   ];
 
