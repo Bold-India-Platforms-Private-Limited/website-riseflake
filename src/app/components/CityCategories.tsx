@@ -38,7 +38,7 @@ const cities: City[] = [
   },
   {
     name: 'Hyderabad',
-    image: '/city/hydrabad.wenp',
+    image: '/city/hydrabad.webp',
     gradientClass: 'bg-[linear-gradient(135deg,#a8edea_0%,#fed6e3_100%)]',
     jobs: '9.6K',
   },
