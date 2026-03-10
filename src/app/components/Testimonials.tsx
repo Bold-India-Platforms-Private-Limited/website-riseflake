@@ -28,40 +28,40 @@ const Testimonials: React.FC = () => {
       avatarNumber: 1,
       stars: 5,
       review: "A professional platform with growth and hiring at its core. Enables better matches and stronger career outcomes.",
-      name: 'Eugenia Moore',
-      title: 'Software Engineer, HubSpot',
+      name: 'Pooja Kulkarni',
+      title: 'Software Engineer, Riseflake',
     },
     {
       logoNumber: 2,
       avatarNumber: 2,
       stars: 5,
       review: "Created for job seekers and recruiters alike. Enables seamless hiring and career growth with powerful tools.",
-      name: 'Curtis Fletcher',
-      title: 'Design Lead, Dribbble',
+      name: 'Sayli Deshpande',
+      title: 'UI/UX Designer, Mitlix',
     },
     {
       logoNumber: 3,
       avatarNumber: 3,
       stars: 4,
       review: "Developer-friendly with all requirements considered. Enables building any interface imaginable with great flexibility.",
-      name: 'Sara Smith',
-      title: 'Software Engineer, Continental',
+      name: 'Pratik Patil',
+      title: 'Software Engineer, BoldIndia',
     },
     {
       logoNumber: 4,
       avatarNumber: 4,
       stars: 5,
       review: "Built for modern professionals with real opportunities in mind. Enables smarter job search and meaningful networking.",
-      name: 'John Davis',
-      title: 'Product Manager, Airbnb',
+      name: 'Sujata Shinde',
+      title: 'Product Manager, Softius',
     },
     {
       logoNumber: 5,
       avatarNumber: 5,
       stars: 5,
       review: "Designed for careers with every hiring need considered. Enables faster connections between professionals and top companies.",
-      name: 'Emily Chen',
-      title: 'CTO, Coinbase',
+      name: 'Rutuja Patil',
+      title: 'Frontend Developer, FlatUI',
     },
   ];
 
@@ -288,7 +288,7 @@ const Testimonials: React.FC = () => {
                 {/* Reviewer */}
                 <div className="flex items-center gap-4 mt-5 shrink-0">
                   <img
-                    src={`/${testimonial.avatarNumber}.png`}
+                    src={`/${testimonial.avatarNumber}.webp`}
                     alt={testimonial.name}
                     className="rounded-full object-cover shrink-0 shadow-[0_2px_8px_rgba(0,0,0,0.15)]"
                     style={{ width: '44px', height: '44px' }}
