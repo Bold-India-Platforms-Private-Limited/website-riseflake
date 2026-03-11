@@ -62,7 +62,7 @@ export default function Home() {
           </p>
 
           <p className="text-sm text-slate-500 mb-10">
-            ⚡ 10K+ Active Job Listings • 5K+ Companies Hiring • 95% Success Rate
+            ⚡ Browse active job listings from companies hiring now.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
@@ -82,17 +82,17 @@ export default function Home() {
 
           <div className="flex justify-center gap-8 text-sm text-slate-600 mb-12">
             <div>
-              <p className="font-bold text-2xl text-slate-900">50K+</p>
+              <p className="font-bold text-2xl text-slate-900">–</p>
               <p>Active Users</p>
             </div>
             <div className="w-px bg-slate-300"></div>
             <div>
-              <p className="font-bold text-2xl text-slate-900">10K+</p>
+              <p className="font-bold text-2xl text-slate-900">–</p>
               <p>Job Listings</p>
             </div>
             <div className="w-px bg-slate-300"></div>
             <div>
-              <p className="font-bold text-2xl text-slate-900">95%</p>
+              <p className="font-bold text-2xl text-slate-900">–</p>
               <p>Success Rate</p>
             </div>
           </div>
@@ -181,7 +181,7 @@ export default function Home() {
               {
                 icon: '💼',
                 title: 'Verified Job Listings',
-                description: 'Discover thousands of verified job opportunities from top companies across industries. Every listing is reviewed for authenticity and quality.',
+                description: 'Explore verified job opportunities from companies across various industries. Every listing is reviewed for authenticity.',
                 keywords: 'verified jobs, job listings, verified companies',
               },
               {

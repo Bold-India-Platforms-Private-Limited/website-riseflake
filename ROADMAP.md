@@ -338,7 +338,7 @@ Keep documentation updated:
 ## 🚀 Success Metrics
 
 By end of Q1 2026:
-- ✅ 10K+ monthly organic visitors
+- ✅ Several thousand monthly organic visitors
 - ✅ 90+ Lighthouse score
 - ✅ Rank for top 10 "job portal" keywords
 - ✅ <35% bounce rate

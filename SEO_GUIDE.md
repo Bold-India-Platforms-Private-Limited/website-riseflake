@@ -314,7 +314,7 @@ Within 24 hours of launch:
 ### Q1 2026
 - 📍 Rank for top 5 "job portal" keywords
 - 📍 Achieve 90+ Lighthouse score
-- 📍 Generate 10K+ organic visitors/month
+- 📍 Generate several thousand organic visitors per month
 - 📍 Reduce bounce rate to <35%
 
 ### Q2 2026
