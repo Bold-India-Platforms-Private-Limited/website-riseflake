@@ -126,8 +126,11 @@ export default function CityCategories() {
           >
             <div className="flex min-w-max items-center justify-start gap-4 px-4 py-4 sm:gap-5 sm:px-8 md:justify-center md:gap-6 md:px-[60px]">
               {cities.map((city, index) => (
-                <div
+                <a
                   key={city.name}
+                  href={`https://app.riseflake.com/jobs?location=${city.name.toLowerCase()}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="group flex min-w-[clamp(120px,15vw,140px)] flex-col items-center gap-3 rounded-3xl p-3 transition-transform duration-300 hover:-translate-y-2 sm:p-4"
                 >
                   <div
@@ -160,7 +163,7 @@ export default function CityCategories() {
                   <div className="rounded-full bg-white/80 px-3 py-1 text-[clamp(0.8rem,1.5vw,0.875rem)] font-medium text-slate-500 backdrop-blur-sm">
                     {city.jobs} Jobs
                   </div>
-                </div>
+                </a>
               ))}
             </div>
           </div>
@@ -184,8 +187,8 @@ export default function CityCategories() {
               <span
                 key={`${city.name}-dot`}
                 className={`h-2 rounded-full transition-all duration-300 ${isActive
-                    ? 'w-6 bg-[linear-gradient(135deg,#667eea_0%,#764ba2_100%)]'
-                    : 'w-2 bg-slate-300'
+                  ? 'w-6 bg-[linear-gradient(135deg,#667eea_0%,#764ba2_100%)]'
+                  : 'w-2 bg-slate-300'
                   }`}
               />
             )

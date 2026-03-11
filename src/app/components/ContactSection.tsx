@@ -38,7 +38,7 @@ export default function ContactSection() {
               </div>
               <div>
                 <div className="text-sm font-semibold text-slate-800">Email</div>
-                <div className="text-sm text-slate-600">hello@listedindia.com</div>
+                <div className="text-sm text-slate-600">hello@riseflake.com</div>
               </div>
             </div>
 
@@ -48,7 +48,7 @@ export default function ContactSection() {
               </div>
               <div>
                 <div className="text-sm font-semibold text-slate-800">Phone</div>
-                <div className="text-sm text-slate-600">+919209550273</div>
+                <div className="text-sm text-slate-600">+91 9225220170</div>
               </div>
             </div>
           </div>

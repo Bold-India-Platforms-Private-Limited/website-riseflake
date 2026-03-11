@@ -354,9 +354,8 @@ export default function Footer() {
           </div>
 
           <div
-            className={`overflow-hidden transition-[max-height] duration-500 ${
-              isExpanded ? 'max-h-[2000px] mb-8' : 'max-h-0'
-            }`}
+            className={`overflow-hidden transition-[max-height] duration-500 ${isExpanded ? 'max-h-[2000px] mb-8' : 'max-h-0'
+              }`}
           >
             <div className="flex flex-col gap-8 border-t border-white pt-5">
               <div>
@@ -482,9 +481,8 @@ export default function Footer() {
             >
               {isExpanded ? 'View Less' : 'View More'}
               <span
-                className={`inline-flex items-center justify-center text-sm font-bold transition-transform ${
-                  isExpanded ? 'rotate-180' : 'rotate-0'
-                }`}
+                className={`inline-flex items-center justify-center text-sm font-bold transition-transform ${isExpanded ? 'rotate-180' : 'rotate-0'
+                  }`}
               >
                 ∨
               </span>

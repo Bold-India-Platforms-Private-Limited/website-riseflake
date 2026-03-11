@@ -70,10 +70,10 @@ type GradientDirection = 'top' | 'bottom' | 'left' | 'right';
 
 // ─── Decorative box gradient border ─────────────────────────────────────────
 const gradientMap: Record<GradientDirection, string> = {
-  top:    'linear-gradient(to top, rgb(191,220,249), white)',
+  top: 'linear-gradient(to top, rgb(191,220,249), white)',
   bottom: 'linear-gradient(to bottom, rgb(191,220,249), white)',
-  left:   'linear-gradient(to left, rgb(191,220,249), white)',
-  right:  'linear-gradient(to right, rgb(191,220,249), white)',
+  left: 'linear-gradient(to left, rgb(191,220,249), white)',
+  right: 'linear-gradient(to right, rgb(191,220,249), white)',
 };
 
 const DecorativeBox: React.FC<{ dir: GradientDirection }> = ({ dir }) => (
@@ -159,28 +159,28 @@ const CardSlider: React.FC<{ cards: React.ReactNode[]; direction: 'top' | 'botto
 // ─── Main component ───────────────────────────────────────────────────────────
 export default function Assessment() {
   const allCards: CardDef[] = [
-    { icon: Code,          title: 'Hackathons & Case Challenges' },
-    { icon: HelpCircle,    title: 'Innovation Challenges' },
-    { icon: Briefcase,     title: 'Jobs Listings' },
-    { icon: FileText,      title: 'Internship Listings' },
-    { icon: Globe,         title: 'Branded Microsite' },
-    { icon: Building2,     title: 'Resume Parsing' },
-    { icon: Sparkles,      title: 'AI Compatibility Score' },
-    { icon: Users,         title: 'Manage Candidates' },
-    { icon: Monitor,       title: 'Skill-based Assessments' },
-    { icon: ListIcon,      title: '50,000+ Question Bank' },
-    { icon: LinkIcon,      title: 'Assessment Unique Link' },
+    { icon: Code, title: 'Hackathons & Case Challenges' },
+    { icon: HelpCircle, title: 'Innovation Challenges' },
+    { icon: Briefcase, title: 'Jobs Listings' },
+    { icon: FileText, title: 'Internship Listings' },
+    { icon: Globe, title: 'Branded Microsite' },
+    { icon: Building2, title: 'Resume Parsing' },
+    { icon: Sparkles, title: 'AI Compatibility Score' },
+    { icon: Users, title: 'Manage Candidates' },
+    { icon: Monitor, title: 'Skill-based Assessments' },
+    { icon: ListIcon, title: '50,000+ Question Bank' },
+    { icon: LinkIcon, title: 'Assessment Unique Link' },
     { icon: TranslateIcon, title: 'Multi-lingual AI Interviews' },
-    { icon: Calendar,      title: 'Schedule Interview' },
-    { icon: Video,         title: 'Coding Live Interview' },
-    { icon: FileCheck,     title: 'Automated Evaluations' },
-    { icon: RotateCw,      title: '360° Proctoring' },
-    { icon: CreditCard,    title: 'Aadhaar Verification' },
-    { icon: Monitor,       title: 'Device Detection' },
-    { icon: Shield,        title: 'Facial Verification' },
-    { icon: Mic,           title: 'Voice Biometric' },
-    { icon: XSquare,       title: 'Screen Share Blocking' },
-    { icon: FileCheck,     title: 'Candidate Report' },
+    { icon: Calendar, title: 'Schedule Interview' },
+    { icon: Video, title: 'Coding Live Interview' },
+    { icon: FileCheck, title: 'Automated Evaluations' },
+    { icon: RotateCw, title: '360° Proctoring' },
+    { icon: CreditCard, title: 'Aadhaar Verification' },
+    { icon: Monitor, title: 'Device Detection' },
+    { icon: Shield, title: 'Facial Verification' },
+    { icon: Mic, title: 'Voice Biometric' },
+    { icon: XSquare, title: 'Screen Share Blocking' },
+    { icon: FileCheck, title: 'Candidate Report' },
   ];
 
   const cardFeatures: Record<string, string[]> = {
@@ -270,7 +270,7 @@ export default function Assessment() {
           {/* ── Header ── */}
           <div className="relative z-10 mb-[150px] max-md:mb-8">
             <h1 className="text-[42px] font-bold text-[#111827] text-center mb-3 max-md:text-2xl max-md:mb-2">
-              What RiseFlake AI Talent Engine Really Means?
+              Intelligent platform for career opportunity matching
             </h1>
             <p className="text-[18px] text-[#4b5563] text-center mb-16 max-md:text-sm max-md:mb-6">
               Full-stack Features / AI Tools For College, Students, Companies, Recruiter's
