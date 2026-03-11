@@ -266,7 +266,7 @@ export default function CompaniesClient() {
           <p className="text-xs font-semibold uppercase tracking-wide text-indigo-500">Grow your brand</p>
           <h3 className="mt-2 text-lg font-semibold text-slate-900">List your company on Riseflake</h3>
           <p className="mt-2 text-sm text-slate-600">
-            Reach high-intent talent and showcase your culture to 50k+ professionals.
+            Reach high-intent talent and showcase your culture to our professional community.
           </p>
           <a
             href="https://app.riseflake.com/home"
@@ -310,26 +310,23 @@ export default function CompaniesClient() {
         </p>
         <p className="mt-1 text-slate-500">The data on this page gets updated every 1 hour.</p>
         <p className="mt-1 text-slate-500">
-          Best Viewed in Chrome, Opera, Mozilla, EDGE & Safari.
+          Designed for all modern browsers.
         </p>
       </footer>
 
       <div
-        className={`fixed inset-0 z-50 transition ${
-          isFilterOpen ? 'visible pointer-events-auto' : 'invisible pointer-events-none'
-        }`}
+        className={`fixed inset-0 z-50 transition ${isFilterOpen ? 'visible pointer-events-auto' : 'invisible pointer-events-none'
+          }`}
         aria-hidden={!isFilterOpen}
       >
         <div
-          className={`absolute inset-0 bg-slate-900/40 transition-opacity duration-200 ${
-            isFilterOpen ? 'opacity-100' : 'opacity-0'
-          }`}
+          className={`absolute inset-0 bg-slate-900/40 transition-opacity duration-200 ${isFilterOpen ? 'opacity-100' : 'opacity-0'
+            }`}
           onClick={() => setIsFilterOpen(false)}
         ></div>
         <div
-          className={`absolute left-0 top-0 h-dvh w-full bg-white transition-transform duration-200 lg:hidden ${
-            isFilterOpen ? 'translate-x-0' : '-translate-x-full'
-          }`}
+          className={`absolute left-0 top-0 h-dvh w-full bg-white transition-transform duration-200 lg:hidden ${isFilterOpen ? 'translate-x-0' : '-translate-x-full'
+            }`}
         >
           <div className="flex items-center justify-between border-b border-slate-200 px-5 py-4">
             <div>

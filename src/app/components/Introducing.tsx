@@ -27,12 +27,12 @@ const Introducing: React.FC = () => {
         <div className="w-full md:w-1/2 flex flex-col items-center md:items-start text-center md:text-left gap-5">
 
           <h3 className="text-xl md:text-2xl font-semibold text-gray-900 leading-snug">
-          Riseflake V8 - The Complete Career Platform for College Students &Professionals
+            Riseflake V8 - The Complete Career Platform for College Students &Professionals
           </h3>
 
           <p className="text-sm md:text-base text-gray-600 max-w-lg">
-            Learn from industry experts, compete in skill-based contests, test your aptitude, discover career paths, 
-            and apply to verified jobs and internships — all in one place.
+            Learn from industry experts, compete in skill-based contests, test your aptitude, discover career paths,
+            and apply to jobs and internships — all in one place.
           </p>
 
           <div className="flex flex-wrap justify-center md:justify-start gap-2 mt-2">

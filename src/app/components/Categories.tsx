@@ -23,16 +23,16 @@ interface Category {
 }
 
 const category: Category[] = [
-  { id: 1, cat: "Remote", count: "21.4K+ jobs", icon: <IoHomeOutline /> },
-  { id: 2, cat: "Machine Learning", count: "34K+ jobs", icon: <IoHardwareChipOutline /> },
-  { id: 3, cat: "MERN Developer", count: "11K+ jobs", icon: <IoCodeSlashOutline /> },
-  { id: 4, cat: "Backend Developer", count: "4.5K+ jobs", icon: <IoGitBranchOutline /> },
-  { id: 5, cat: "UI UX Designer", count: "239 jobs", icon: <IoEaselOutline /> },
-  { id: 6, cat: "Marketing", count: "19.7K+ jobs", icon: <IoBriefcaseOutline /> },
-  { id: 7, cat: "AI", count: "2.2K+ jobs", icon: <IoTerminalOutline /> },
-  { id: 8, cat: "Engineering", count: "7.8K+ jobs", icon: <IoSettingsOutline /> },
-  { id: 9, cat: "Data Science", count: "3.9K+ jobs", icon: <IoStatsChartOutline /> },
-  { id: 10, cat: "Software & IT", count: "17.7K+ jobs", icon: <IoLaptopOutline /> },
+  { id: 1, cat: "Remote", count: "Available jobs", icon: <IoHomeOutline /> },
+  { id: 2, cat: "Machine Learning", count: "Available jobs", icon: <IoHardwareChipOutline /> },
+  { id: 3, cat: "MERN Developer", count: "Available jobs", icon: <IoCodeSlashOutline /> },
+  { id: 4, cat: "Backend Developer", count: "Available jobs", icon: <IoGitBranchOutline /> },
+  { id: 5, cat: "UI UX Designer", count: "Available jobs", icon: <IoEaselOutline /> },
+  { id: 6, cat: "Marketing", count: "Available jobs", icon: <IoBriefcaseOutline /> },
+  { id: 7, cat: "AI", count: "Available jobs", icon: <IoTerminalOutline /> },
+  { id: 8, cat: "Engineering", count: "Available jobs", icon: <IoSettingsOutline /> },
+  { id: 9, cat: "Data Science", count: "Available jobs", icon: <IoStatsChartOutline /> },
+  { id: 10, cat: "Software & IT", count: "Available jobs", icon: <IoLaptopOutline /> },
 ];
 
 const Categories: React.FC = () => {
@@ -96,7 +96,7 @@ const Categories: React.FC = () => {
                     {cat}
                   </p>
                 </div>
-                <IoChevronForwardOutline className="text-xl text-gray-400"/>
+                <IoChevronForwardOutline className="text-xl text-gray-400" />
               </div>
             </div>
           ))}
@@ -123,7 +123,7 @@ const Categories: React.FC = () => {
                     {cat}
                   </p>
                 </div>
-                <IoChevronForwardOutline className="text-xl text-gray-400"/>
+                <IoChevronForwardOutline className="text-xl text-gray-400" />
               </div>
             </div>
           ))}
@@ -145,7 +145,7 @@ const Categories: React.FC = () => {
               </div>
             </div>
           ))}
-          
+
           {/* 8th card - 3 dots */}
           <div
             onClick={() => setIsModalOpen(true)}
@@ -181,7 +181,7 @@ const Categories: React.FC = () => {
                 <IoCloseOutline />
               </button>
             </div>
-            
+
             <div className="grid grid-cols-3 md:grid-cols-2 gap-3.5 md:gap-4">
               {category.map(({ id, cat, count, icon }, i) => (
                 <div

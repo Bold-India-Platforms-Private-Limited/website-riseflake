@@ -47,7 +47,7 @@ export default function Brands() {
     <section className="relative overflow-hidden bg-[#f7faff] py-12">
       <div className="mx-auto max-w-full">
         <h2 className="mb-6 text-center text-xl font-semibold md:text-2xl z-11">
-          Every 3rd software engineer is on {BRAND_NAME}
+          Our users work at leading companies
         </h2>
 
         {/* Desktop */}

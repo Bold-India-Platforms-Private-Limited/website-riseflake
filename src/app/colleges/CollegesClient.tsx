@@ -46,18 +46,18 @@ const getOrInitTimestamp = (): Date => {
         return parsed;
       }
     }
-  } catch {}
+  } catch { }
   const now = new Date();
   try {
     localStorage.setItem(LAST_UPDATED_KEY, now.toISOString());
-  } catch {}
+  } catch { }
   return now;
 };
 
 const persistTimestamp = (date: Date) => {
   try {
     localStorage.setItem(LAST_UPDATED_KEY, date.toISOString());
-  } catch {}
+  } catch { }
 };
 
 const CollegesSkeleton = () => (
@@ -212,11 +212,11 @@ export default function CollegesClient() {
           <CollegeList colleges={colleges} />
         )}
       </div>
-      <aside className="order-2 hidden lg:block fixed top-24 z-40 w-[320px]" style={{right: 'calc((100vw - 1200px)/2)', maxWidth: '320px'}}>
+      <aside className="order-2 hidden lg:block fixed top-24 z-40 w-[320px]" style={{ right: 'calc((100vw - 1200px)/2)', maxWidth: '320px' }}>
         <div className="rounded-3xl border border-indigo-200 bg-gradient-to-br from-indigo-50 via-white to-purple-50 p-5 shadow-sm">
           <p className="text-xs font-semibold uppercase tracking-wide text-indigo-500">Grow your brand</p>
           <h3 className="mt-2 text-lg font-semibold text-slate-900">List your college on Riseflake</h3>
-          <p className="mt-2 text-sm text-slate-600">Reach high-intent students and showcase your campus to 50k+ learners.</p>
+          <p className="mt-2 text-sm text-slate-600">Reach high-intent students and showcase your campus to our learners.</p>
           <a
             href="https://app.riseflake.com/home"
             className="mt-4 inline-flex items-center justify-center rounded-full bg-indigo-600 px-4 py-2 text-sm font-semibold text-white"
@@ -253,7 +253,7 @@ export default function CollegesClient() {
           Updated On: {lastUpdated ? formatTimestamp(lastUpdated) : "—"} IST
         </p>
         <p className="mt-1 text-slate-500">The data on this page gets updated every 1 hour.</p>
-        <p className="mt-1 text-slate-500">Best Viewed in Chrome, Opera, Mozilla, EDGE & Safari.</p>
+        <p className="mt-1 text-slate-500">Designed for all modern browsers.</p>
       </footer>
     </section>
   );

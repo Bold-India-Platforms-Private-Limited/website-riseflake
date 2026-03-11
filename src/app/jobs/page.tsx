@@ -1,6 +1,6 @@
 export const metadata = {
   title: 'Jobs | Riseflake - Find Your Next Role',
-  description: 'Browse verified job opportunities with top companies and growing teams. Find your next role on Riseflake.',
+  description: 'Browse job opportunities with companies and growing teams. Find your next role on Riseflake.',
   keywords: 'jobs, job search, hiring, career, employment, riseflake jobs',
 };
 import { Suspense } from 'react'
@@ -19,7 +19,7 @@ export default function JobsPage() {
             <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Riseflake Jobs</p>
             <h1 className="mt-1 text-3xl sm:text-4xl font-semibold text-slate-900">Find your next role</h1>
             <p className="mt-2 text-slate-600">
-              Verified opportunities with top companies and growing teams.
+              Opportunities with companies and growing teams.
             </p>
           </div>
 

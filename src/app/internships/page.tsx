@@ -1,6 +1,6 @@
 export const metadata = {
   title: 'Internships | Riseflake - Find Your Next Internship',
-  description: 'Browse verified internship opportunities with top companies and growing teams. Find your next internship on Riseflake.',
+  description: 'Browse internship opportunities with companies and growing teams. Find your next internship on Riseflake.',
   keywords: 'internships, internship search, hiring, career, employment, riseflake internships',
 };
 import { Suspense } from 'react';
@@ -19,7 +19,7 @@ export default function InternshipsPage() {
             <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Riseflake Internships</p>
             <h1 className="mt-1 text-3xl sm:text-4xl font-semibold text-slate-900">Find your next internship</h1>
             <p className="mt-2 text-slate-600">
-              Verified opportunities with top companies and growing teams.
+              Opportunities with companies and growing teams.
             </p>
           </div>
           <Suspense fallback={<div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">Loading internships...</div>}>

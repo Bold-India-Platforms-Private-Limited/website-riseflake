@@ -1,6 +1,6 @@
 export const metadata = {
-  title: 'Companies | Riseflake - Discover Top Employers',
-  description: 'Connect with top companies, discover their profiles, and explore open positions. Find your dream employer on Riseflake.',
+  title: 'Companies | Riseflake - Discover Employers',
+  description: 'Connect with companies, discover their profiles, and explore open positions. Find your employer on Riseflake.',
   keywords: 'companies, employers, company profiles, hiring, riseflake',
 };
 import { Suspense } from 'react'

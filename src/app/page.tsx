@@ -47,7 +47,7 @@ export default function Home() {
         <div className="max-w-5xl mx-auto text-center z-10">
           <div className="inline-block mb-6 px-4 py-2 bg-gradient-to-r from-indigo-100 to-pink-100 rounded-full border border-indigo-200">
             <p className="text-sm font-semibold text-transparent bg-clip-text bg-gradient-modern">
-              ✨ The Future of Job Searching is Here
+              Discover Your Next Career Move
             </p>
           </div>
 
@@ -58,7 +58,7 @@ export default function Home() {
           </h1>
 
           <p className="text-xl sm:text-2xl text-slate-600 mb-8 leading-relaxed max-w-3xl mx-auto font-light">
-            Riseflake is the next-generation job portal and professional networking platform designed for ambitious professionals. Discover job opportunities from top companies, connect with industry leaders, and accelerate your career growth with AI-powered recommendations.
+            Riseflake is a job portal and professional networking platform designed for career growth. Discover job opportunities, connect with industry leaders, and find roles that match your skills.
           </p>
 
           <p className="text-sm text-slate-500 mb-10">
@@ -154,7 +154,7 @@ export default function Home() {
               Why Professionals Choose <span className="text-gradient">Riseflake</span>
             </h2>
             <p className="text-xl text-slate-600 max-w-2xl mx-auto">
-              Experience the most advanced job portal and professional networking platform built for career growth in 2026.
+              Experience a job portal and professional networking platform built for career growth.
             </p>
           </div>
 
@@ -259,11 +259,6 @@ export default function Home() {
                   'Yes. Creating a profile, browsing jobs, applying, and networking with professionals on Riseflake is completely free for candidates.',
               },
               {
-                question: 'Do companies need to pay to post jobs?',
-                answer:
-                  'We offer both free and premium hiring plans. Companies can post jobs for free, while premium plans provide advanced hiring tools, higher visibility, and faster shortlisting.',
-              },
-              {
                 question: 'How does Riseflake match candidates to jobs?',
                 answer:
                   'We use smart matching based on skills, experience, preferences, and recruiter requirements to ensure candidates see the most relevant opportunities.',
@@ -283,9 +278,8 @@ export default function Home() {
               return (
                 <div
                   key={faq.question}
-                  className={`flex w-full cursor-pointer flex-col justify-between rounded-xl border-2 bg-white px-6 py-5 shadow-[0_4px_15px_rgba(0,0,0,0.06)] transition hover:shadow-[0_6px_18px_rgba(0,0,0,0.10)] ${
-                    isOpen ? 'border-indigo-500' : 'border-transparent'
-                  }`}
+                  className={`flex w-full cursor-pointer flex-col justify-between rounded-xl border-2 bg-white px-6 py-5 shadow-[0_4px_15px_rgba(0,0,0,0.06)] transition hover:shadow-[0_6px_18px_rgba(0,0,0,0.10)] ${isOpen ? 'border-indigo-500' : 'border-transparent'
+                    }`}
                   onClick={() => setOpenIndex(isOpen ? null : index)}
                 >
                   <div className="flex w-full items-center justify-between gap-4">
@@ -293,9 +287,8 @@ export default function Home() {
                       {faq.question}
                     </p>
                     <span
-                      className={`flex h-5 w-5 items-center justify-center text-slate-500 transition-transform ${
-                        isOpen ? 'rotate-180' : 'rotate-0'
-                      }`}
+                      className={`flex h-5 w-5 items-center justify-center text-slate-500 transition-transform ${isOpen ? 'rotate-180' : 'rotate-0'
+                        }`}
                     >
                       <svg
                         width="20"
@@ -315,9 +308,8 @@ export default function Home() {
                     </span>
                   </div>
                   <div
-                    className={`overflow-hidden text-sm text-slate-600 transition-all ${
-                      isOpen ? 'mt-4 max-h-40 opacity-100' : 'mt-0 max-h-0 opacity-0'
-                    }`}
+                    className={`overflow-hidden text-sm text-slate-600 transition-all ${isOpen ? 'mt-4 max-h-40 opacity-100' : 'mt-0 max-h-0 opacity-0'
+                      }`}
                   >
                     {faq.answer}
                   </div>

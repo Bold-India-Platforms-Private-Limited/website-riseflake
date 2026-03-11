@@ -4,8 +4,8 @@ import Script from 'next/script'
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://riseflake.com'),
-  title: 'Riseflake - #1 Job Portal & Professional Networking Platform 2024-2026',
-  description: 'The fastest growing job portal and professional networking platform. Discover curated job opportunities, connect with industry leaders, and accelerate your career growth. Join 50K+ professionals today.',
+  title: 'Riseflake - Job Portal & Professional Networking Platform',
+  description: 'A platform for job seekers and professional networking. Discover curated job opportunities, connect with industry leaders, and accelerate your career growth.',
   keywords: 'job portal, professional networking, career growth, find jobs, job search, hiring platform, job marketplace, LinkedIn alternative, career opportunities, professional development',
   authors: [{ name: 'Riseflake Team' }],
   creator: 'Riseflake',
@@ -20,8 +20,8 @@ export const metadata: Metadata = {
     locale: 'en_US',
     url: 'https://riseflake.com',
     siteName: 'Riseflake - Job Portal & Professional Networking',
-    title: 'Riseflake - The Future of Job Portals & Professional Networking',
-    description: 'Discover your next opportunity. Connect with top companies and industry professionals on the #1 job portal for career growth.',
+    title: 'Riseflake - Job Portals & Professional Networking',
+    description: 'Discover your next opportunity. Connect with companies and industry professionals on our job portal for career growth.',
     images: [
       {
         url: 'https://riseflake.com/og-image.webp',
@@ -34,8 +34,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Riseflake - #1 Job Portal for Career Growth',
-    description: 'The fastest growing job portal connecting professionals with dream companies',
+    title: 'Riseflake - Job Portal for Career Growth',
+    description: 'A job portal connecting professionals with career opportunities',
     site: '@riseflake',
     creator: '@riseflake',
   },
@@ -99,13 +99,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               name: 'Riseflake',
               url: 'https://riseflake.com',
               logo: 'https://riseflake.com/logo.png',
-              description: 'The leading job portal and professional networking platform for career growth',
+              description: 'A job portal and professional networking platform for career growth',
               aggregateRating: {
                 '@type': 'AggregateRating',
                 bestRating: 5,
                 worstRating: 1,
-                ratingValue: 4.8,
-                ratingCount: 5000,
+                ratingValue: 4.5,
+                ratingCount: 500,
               },
               sameAs: [
                 'https://twitter.com/riseflake',

@@ -16,37 +16,37 @@ const cities: City[] = [
     name: 'Bengaluru',
     image: '/city/bengloru.webp',
     gradientClass: 'bg-[linear-gradient(135deg,#667eea_0%,#764ba2_100%)]',
-    jobs: '12.5K',
+    jobs: '842',
   },
   {
     name: 'Pune',
     image: '/city/pune.webp',
     gradientClass: 'bg-[linear-gradient(135deg,#4facfe_0%,#00f2fe_100%)]',
-    jobs: '8.2K',
+    jobs: '647',
   },
   {
     name: 'Mumbai',
     image: '/city/mumbai.webp',
     gradientClass: 'bg-[linear-gradient(135deg,#f093fb_0%,#f5576c_100%)]',
-    jobs: '15.8K',
+    jobs: '958',
   },
   {
     name: 'Chennai',
     image: '/city/chennai.webp',
     gradientClass: 'bg-[linear-gradient(135deg,#4ade80_0%,#22c55e_100%)]',
-    jobs: '7.3K',
+    jobs: '523',
   },
   {
     name: 'Hyderabad',
     image: '/city/hydrabad.webp',
     gradientClass: 'bg-[linear-gradient(135deg,#a8edea_0%,#fed6e3_100%)]',
-    jobs: '9.6K',
+    jobs: '784',
   },
   {
     name: 'Gurugram',
     image: '/city/gurugram.webp',
     gradientClass: 'bg-[linear-gradient(135deg,#fbc2eb_0%,#a6c1ee_100%)]',
-    jobs: '11.2K',
+    jobs: '912',
   },
 ]
 
@@ -113,9 +113,8 @@ export default function CityCategories() {
           <button
             type="button"
             onClick={() => scroll('left')}
-            className={`absolute left-2 top-1/2 z-10 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-slate-200 bg-slate-100 text-slate-600 shadow-[0_2px_8px_rgba(0,0,0,0.08)] transition md:flex hover:scale-105 hover:bg-slate-200 hover:shadow-[0_3px_10px_rgba(0,0,0,0.12)] active:scale-95 ${
-              canScrollLeft ? 'opacity-100' : 'pointer-events-none opacity-40'
-            }`}
+            className={`absolute left-2 top-1/2 z-10 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-slate-200 bg-slate-100 text-slate-600 shadow-[0_2px_8px_rgba(0,0,0,0.08)] transition md:flex hover:scale-105 hover:bg-slate-200 hover:shadow-[0_3px_10px_rgba(0,0,0,0.12)] active:scale-95 ${canScrollLeft ? 'opacity-100' : 'pointer-events-none opacity-40'
+              }`}
             aria-label="Scroll left"
           >
             <ChevronLeft size={22} strokeWidth={2.5} />
@@ -169,9 +168,8 @@ export default function CityCategories() {
           <button
             type="button"
             onClick={() => scroll('right')}
-            className={`absolute right-2 top-1/2 z-10 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-slate-200 bg-slate-100 text-slate-600 shadow-[0_2px_8px_rgba(0,0,0,0.08)] transition md:flex hover:scale-105 hover:bg-slate-200 hover:shadow-[0_3px_10px_rgba(0,0,0,0.12)] active:scale-95 ${
-              canScrollRight ? 'opacity-100' : 'pointer-events-none opacity-40'
-            }`}
+            className={`absolute right-2 top-1/2 z-10 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-slate-200 bg-slate-100 text-slate-600 shadow-[0_2px_8px_rgba(0,0,0,0.08)] transition md:flex hover:scale-105 hover:bg-slate-200 hover:shadow-[0_3px_10px_rgba(0,0,0,0.12)] active:scale-95 ${canScrollRight ? 'opacity-100' : 'pointer-events-none opacity-40'
+              }`}
             aria-label="Scroll right"
           >
             <ChevronRight size={22} strokeWidth={2.5} />
@@ -185,11 +183,10 @@ export default function CityCategories() {
             return (
               <span
                 key={`${city.name}-dot`}
-                className={`h-2 rounded-full transition-all duration-300 ${
-                  isActive
+                className={`h-2 rounded-full transition-all duration-300 ${isActive
                     ? 'w-6 bg-[linear-gradient(135deg,#667eea_0%,#764ba2_100%)]'
                     : 'w-2 bg-slate-300'
-                }`}
+                  }`}
               />
             )
           })}
