@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { BASE_ASSETS_URL } from '../../lib/config'
 
-const BRAND_NAME = 'Riseflake'
 
 const generateLogos = (count: number) => {
   const logos: string[] = []
