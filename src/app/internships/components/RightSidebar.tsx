@@ -20,9 +20,14 @@ export default function RightSidebar() {
           </div>
         </div>
         <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-          <div className="w-full rounded-xl overflow-hidden flex items-center justify-center">
+          <a
+            href="https://resume.riseflake.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full rounded-xl overflow-hidden flex items-center justify-center transition-transform hover:scale-[1.02]"
+          >
             <img src="/build-resume.webp" alt="Build Resume" className="w-full object-cover" loading="lazy" />
-          </div>
+          </a>
         </div>
       </div>
     </aside>

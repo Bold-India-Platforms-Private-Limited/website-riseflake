@@ -341,18 +341,18 @@ export default function Assessment() {
               >
                 {/* Column 1 */}
                 <div className="flex flex-col gap-[10px] w-[296px] max-md:w-full max-md:gap-4">
-                  {/* LargeCard1 — blue */}
+                  {/* LargeCard1 — blue/indigo multi-color */}
                   <FeaturedCard
-                    className={`${baseCard} ${large} bg-[linear-gradient(140deg,rgba(38,142,246,0.4),rgba(230,230,230,0.2))] border border-[rgb(115,178,241)]`}
+                    className={`${baseCard} ${large} bg-[linear-gradient(135deg,#EBEFFF_0%,#F3F8FF_50%,#DBEAFE_100%)] border-[#C7D2FE]`}
                     titleText="Employer Branding"
                     titleColor="rgba(38,127,228,1)"
                     bulletColor="rgba(38,127,228,1)"
                     featureKey="Employer Branding"
                     large
                   />
-                  {/* MediumCard1 — purple */}
+                  {/* MediumCard1 — purple/pink multi-color */}
                   <FeaturedCard
-                    className={`${baseCard} ${medium} bg-[linear-gradient(140deg,rgba(208,199,244,1),rgba(245,241,241,0.2))] border border-[rgb(170,154,246)]`}
+                    className={`${baseCard} ${medium} bg-[linear-gradient(135deg,#F8F5FF_0%,#F3E8FF_50%,#FFF0F6_100%)] border-[#DDD6FE]`}
                     titleText="Screen"
                     titleColor="rgb(101,72,238)"
                     bulletColor="rgb(101,72,238)"
@@ -362,18 +362,18 @@ export default function Assessment() {
 
                 {/* Column 2 */}
                 <div className="flex flex-col gap-[10px] w-[296px] max-md:w-full max-md:gap-4">
-                  {/* LargeCard2 — pink */}
+                  {/* LargeCard2 — pink/peach/apricot multi-color */}
                   <FeaturedCard
-                    className={`${baseCard} ${large} bg-[linear-gradient(140deg,rgba(243,146,180,1),rgba(241,239,239,0.2))] border border-[rgb(240,121,162)]`}
+                    className={`${baseCard} ${large} bg-[linear-gradient(135deg,#FFF5F7_0%,#FFE4E6_50%,#FFF3E1_100%)] border-[#FECACA]`}
                     titleText="Source"
                     titleColor="#c2185b"
                     bulletColor="#c2185b"
                     featureKey="Source"
                     large
                   />
-                  {/* MediumCard2 — orange */}
+                  {/* MediumCard2 — orange/gold/light-yellow multi-color */}
                   <FeaturedCard
-                    className={`${baseCard} ${medium} bg-[linear-gradient(140deg,rgba(243,211,185,1),rgba(230,230,230,0.2))] border border-[rgb(252,166,96)]`}
+                    className={`${baseCard} ${medium} bg-[linear-gradient(135deg,#FFF9F2_0%,#FFEDD5_50%,#FEFCE8_100%)] border-[#FED7AA]`}
                     titleText="Assess"
                     titleColor="rgb(211,101,11)"
                     bulletColor="rgb(211,101,11)"
@@ -383,17 +383,17 @@ export default function Assessment() {
 
                 {/* Column 3 */}
                 <div className="flex flex-col gap-[10px] w-[296px] max-md:w-full max-md:gap-4">
-                  {/* MediumCard3 — green */}
+                  {/* MediumCard3 — green/mint/light-sky multi-color */}
                   <FeaturedCard
-                    className={`${baseCard} ${medium} bg-[linear-gradient(140deg,rgba(179,234,207,1),rgba(230,230,230,0.2))] border border-[rgb(80,212,147)]`}
+                    className={`${baseCard} ${medium} bg-[linear-gradient(135deg,#F4FDF8_0%,#DCFCE7_50%,#E8F9FF_100%)] border-[#BBF7D0]`}
                     titleText="Interview"
                     titleColor="rgb(5,193,101)"
                     bulletColor="rgb(5,193,101)"
                     featureKey="Interview"
                   />
-                  {/* LargeCard3 — yellow */}
+                  {/* LargeCard3 — yellow/amber/pale-red multi-color */}
                   <FeaturedCard
-                    className={`${baseCard} ${large} bg-[linear-gradient(140deg,rgba(249,229,157,1),rgba(230,230,230,0.2))] border border-[rgb(255,221,102)]`}
+                    className={`${baseCard} ${large} bg-[linear-gradient(135deg,#FFFDF0_0%,#FEF3C7_50%,#FFF2F2_100%)] border-[#FEF08A]`}
                     titleText="Recruitment Automation & AI-powered ATS"
                     titleColor="rgb(153,119,0)"
                     bulletColor="rgb(153,119,0)"

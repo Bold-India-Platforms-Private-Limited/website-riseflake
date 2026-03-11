@@ -16,9 +16,8 @@ export default function DownloadTheApp() {
 
   return (
     <div
-      className={`fixed bottom-7 right-7 z-[10000] hidden flex-col items-start md:flex ${
-        isClosing ? 'animate-slide-out-left' : ''
-      }`}
+      className={`fixed bottom-7 right-7 z-[10000] hidden flex-col items-start md:flex ${isClosing ? 'animate-slide-out-left' : ''
+        }`}
     >
       <div className="ml-5 rounded-t-xl bg-[#ff4d88] px-4 py-1.5 text-xs font-bold text-white shadow-[0_-2px_10px_rgba(0,0,0,0.1)]">
         Download the App!
@@ -34,7 +33,7 @@ export default function DownloadTheApp() {
         </button>
 
         <img
-          src="https://api.qrserver.com/v1/create-qr-code/?size=90x90&data=https://hirenext.app"
+          src="https://api.qrserver.com/v1/create-qr-code/?size=90x90&data=https://app.riseflake.com"
           alt="QR"
           className="h-[90px] w-[90px] rounded-xl border border-slate-200 object-cover"
           loading="lazy"
