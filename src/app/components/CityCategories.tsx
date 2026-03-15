@@ -16,37 +16,37 @@ const cities: City[] = [
     name: 'Bengaluru',
     image: '/city/bengloru.webp',
     gradientClass: 'bg-[linear-gradient(135deg,#667eea_0%,#764ba2_100%)]',
-    jobs: '842',
+    jobs: '84',
   },
   {
     name: 'Pune',
     image: '/city/pune.webp',
     gradientClass: 'bg-[linear-gradient(135deg,#4facfe_0%,#00f2fe_100%)]',
-    jobs: '647',
+    jobs: '64',
   },
   {
     name: 'Mumbai',
     image: '/city/mumbai.webp',
     gradientClass: 'bg-[linear-gradient(135deg,#f093fb_0%,#f5576c_100%)]',
-    jobs: '958',
+    jobs: '95',
   },
   {
     name: 'Chennai',
     image: '/city/chennai.webp',
     gradientClass: 'bg-[linear-gradient(135deg,#4ade80_0%,#22c55e_100%)]',
-    jobs: '523',
+    jobs: '52',
   },
   {
     name: 'Hyderabad',
     image: '/city/hydrabad.webp',
     gradientClass: 'bg-[linear-gradient(135deg,#a8edea_0%,#fed6e3_100%)]',
-    jobs: '784',
+    jobs: '78',
   },
   {
     name: 'Gurugram',
     image: '/city/gurugram.webp',
     gradientClass: 'bg-[linear-gradient(135deg,#fbc2eb_0%,#a6c1ee_100%)]',
-    jobs: '912',
+    jobs: '91',
   },
 ]
 
