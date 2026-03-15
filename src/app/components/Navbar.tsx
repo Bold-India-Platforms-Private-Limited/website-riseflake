@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
-import { Menu, X, ChevronRight } from 'lucide-react'
+import { Menu, X, ChevronRight, ChevronDown, Building2, GraduationCap, Briefcase, Cloud, FileText, Search } from 'lucide-react'
 
 export default function Navbar({ bgTransparent = false }: { bgTransparent?: boolean }) {
   const pathname = usePathname()
@@ -16,12 +16,12 @@ export default function Navbar({ bgTransparent = false }: { bgTransparent?: bool
     pathname === '/jobs'
       ? '/jobs'
       : pathname === '/indexed-jobs'
-      ? '/indexed-jobs'
-      : pathname === '/companies'
-      ? '/companies'
-      : pathname === '/colleges'
-      ? '/colleges'
-      : null
+        ? '/indexed-jobs'
+        : pathname === '/companies'
+          ? '/companies'
+          : pathname === '/colleges'
+            ? '/colleges'
+            : null
 
   const isActive = (href: string) =>
     href.startsWith('/') && (pathname === href || (href !== '/' && pathname.startsWith(href)))
@@ -46,7 +46,7 @@ export default function Navbar({ bgTransparent = false }: { bgTransparent?: bool
       const timeout = setTimeout(() => setShowDrawer(false), 300)
       return () => clearTimeout(timeout)
     }
-  }, [open])
+  }, [open, showDrawer])
 
   // Lock body scroll when drawer is open
   useEffect(() => {
@@ -63,105 +63,178 @@ export default function Navbar({ bgTransparent = false }: { bgTransparent?: bool
   return (
     <>
       <header
-        className={`sticky top-0 z-50 border-b border-white/20 ${bgTransparent ? 'bg-transparent' : 'bg-white'} backdrop-blur-3xl`}
+        className={`sticky top-0 z-50 transition-all duration-300 ${bgTransparent ? 'bg-transparent border-transparent' : 'bg-white/20 border-white/20 shadow-sm'} backdrop-blur-3xl`}
         style={bgTransparent
           ? {
-              background: 'rgba(255, 255, 255, 0)', // Fully transparent
-              WebkitBackdropFilter: 'blur(100px)',
-              backdropFilter: 'blur(100px)',
-              border: '1px solid rgba(255, 255, 255, 0)', // Fully transparent border
-              boxShadow: '0 8px 32px 0 rgba(255, 255, 255, 0)',
-              transition: 'background 0.5s, box-shadow 0.5s',
-            }
+            background: 'rgba(255, 255, 255, 0.02)', // Even more transparent when 'transparent' prop is passed
+            WebkitBackdropFilter: 'blur(30px)',
+            backdropFilter: 'blur(30px)',
+            borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
+          }
           : {
-              background: 'rgba(255, 255, 255, 1)', // Solid white
-              WebkitBackdropFilter: 'blur(100px)',
-              backdropFilter: 'blur(100px)',
-              border: '1px solid rgba(255, 255, 255, 0)',
-              boxShadow: '0 8px 32px 0 rgba(255, 255, 255, 0)',
-              transition: 'background 0.5s, box-shadow 0.5s',
-            }
+            background: 'rgba(255, 255, 255, 0.25)', // Deeply glassy transparent white
+            WebkitBackdropFilter: 'blur(40px) saturate(200%)',
+            backdropFilter: 'blur(40px) saturate(200%)',
+            borderBottom: '1px solid rgba(255, 255, 255, 0.2)',
+          }
         }
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex h-14 md:h-16 items-center justify-between">
-            <a href="/" className="flex items-center gap-3">
-              <div className="flex h-7 w-7 items-center justify-center rounded-lg border border-slate-200 bg-white">
+            <a href="/" className="flex items-center gap-3 shrink-0 mr-4">
+              <div className="flex h-7 w-7 items-center justify-center rounded-lg border border-slate-200/50 bg-white/80 backdrop-blur">
                 <img src="/logo.webp" alt="Riseflake logo" className="h-5 w-5 object-contain" />
               </div>
-              <h1 className="text-xl font-semibold text-slate-900">Riseflake</h1>
+              <h1 className="text-xl font-semibold text-slate-900 hidden sm:block">Riseflake</h1>
             </a>
 
-            <nav className="hidden md:flex items-center gap-1 rounded-lg p-1 bg-transparent">
+            {/* Main Center Menu */}
+            <nav className="hidden lg:flex items-center gap-1 xl:gap-2 rounded-lg p-1 bg-transparent shrink">
               <a
                 href="/jobs"
-                className={`rounded-lg px-4 py-2 text-sm font-medium transition-all duration-500 ${
-                  activeTab === '/jobs'
-                    ? 'bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 text-white scale-105'
-                    : 'bg-transparent text-slate-700 hover:bg-white hover:text-slate-900'
-                }`}
+                className={`rounded-lg px-2 xl:px-3 py-2 text-sm font-medium transition-all duration-500 whitespace-nowrap ${activeTab === '/jobs'
+                  ? 'bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 text-white scale-105 shadow-md shadow-indigo-500/20'
+                  : 'bg-transparent text-slate-700 hover:bg-white/60 hover:text-slate-900'
+                  }`}
               >
                 Jobs
               </a>
               <a
                 href="/internships"
-                className={`rounded-lg px-4 py-2 text-sm font-medium transition-all duration-500 ${
-                  pathname === '/internships'
-                    ? 'bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 text-white scale-105'
-                    : 'bg-transparent text-slate-700 hover:bg-white hover:text-slate-900'
-                }`}
+                className={`rounded-lg px-2 xl:px-3 py-2 text-sm font-medium transition-all duration-500 whitespace-nowrap ${pathname === '/internships'
+                  ? 'bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 text-white scale-105 shadow-md shadow-indigo-500/20'
+                  : 'bg-transparent text-slate-700 hover:bg-white/60 hover:text-slate-900'
+                  }`}
               >
                 Internships
               </a>
               <a
-                href="/indexed-jobs"
-                className={`rounded-lg px-4 py-2 text-sm font-medium transition-all duration-500 ${
-                  activeTab === '/indexed-jobs'
-                    ? 'bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 text-white scale-105'
-                    : 'bg-transparent text-slate-700 hover:bg-white hover:text-slate-900'
-                }`}
-              >
-                iJobs
-              </a>
-              <a
                 href="/companies"
-                className={`rounded-lg px-4 py-2 text-sm font-medium transition-all duration-500 ${
-                  activeTab === '/companies'
-                    ? 'bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 text-white scale-105'
-                    : 'bg-transparent text-slate-700 hover:bg-white hover:text-slate-900'
-                }`}
+                className={`rounded-lg px-2 xl:px-3 py-2 text-sm font-medium transition-all duration-500 whitespace-nowrap ${activeTab === '/companies'
+                  ? 'bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 text-white scale-105 shadow-md shadow-indigo-500/20'
+                  : 'bg-transparent text-slate-700 hover:bg-white/60 hover:text-slate-900'
+                  }`}
               >
                 Companies
               </a>
               <a
                 href="/colleges"
-                className={`rounded-lg px-4 py-2 text-sm font-medium transition-all duration-500 ${
-                  activeTab === '/colleges'
-                    ? 'bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 text-white scale-105'
-                    : 'bg-transparent text-slate-700 hover:bg-white hover:text-slate-900'
-                }`}
+                className={`rounded-lg px-2 xl:px-3 py-2 text-sm font-medium transition-all duration-500 whitespace-nowrap ${activeTab === '/colleges'
+                  ? 'bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 text-white scale-105 shadow-md shadow-indigo-500/20'
+                  : 'bg-transparent text-slate-700 hover:bg-white/60 hover:text-slate-900'
+                  }`}
               >
                 Colleges
               </a>
+              <a
+                href="https://app.riseflake.com/chat"
+                className={`rounded-lg px-2 xl:px-3 py-2 text-sm font-medium transition-all duration-500 whitespace-nowrap bg-transparent text-slate-700 hover:bg-white/60 hover:text-slate-900`}
+              >
+                Chat
+              </a>
+              <a
+                href="https://app.riseflake.com/network"
+                className={`rounded-lg px-2 xl:px-3 py-2 text-sm font-medium transition-all duration-500 whitespace-nowrap bg-transparent text-slate-700 hover:bg-white/60 hover:text-slate-900`}
+              >
+                Networking
+              </a>
+
+              {/* More Dropdown */}
+              <div className="relative group shrink-0 ml-1">
+                <button className="flex items-center gap-1 rounded-lg px-2 xl:px-3 py-2 text-sm font-medium transition-all duration-500 whitespace-nowrap bg-transparent text-slate-700 hover:bg-white/60 hover:text-slate-900">
+                  More <ChevronDown className="h-4 w-4" />
+                </button>
+                <div className="absolute top-full right-0 mt-3 w-56 rounded-2xl bg-white/95 backdrop-blur-xl p-2 shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 border border-slate-100 flex flex-col gap-1">
+                  <Link href="/indexed-jobs" className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-indigo-600 transition-colors">
+                    <Search className="h-4 w-4 text-slate-400" />
+                    iJobs
+                  </Link>
+                  <a href="https://app.riseflake.com/login-recruiter" className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-indigo-600 transition-colors">
+                    <Briefcase className="h-4 w-4 text-slate-400" />
+                    List Your Jobs
+                  </a>
+                  <div className="h-px bg-slate-100 my-1"></div>
+                  <a href="https://resume.riseflake.com" className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-indigo-600 transition-colors">
+                    <FileText className="h-4 w-4 text-slate-400" />
+                    Build Resume
+                  </a>
+                </div>
+              </div>
             </nav>
 
-            <div className="flex items-center gap-2">
+            {/* Right Group (Business Dropdown + CTA) */}
+            <div className="flex items-center gap-2 md:gap-3 shrink-0 ml-auto lg:ml-0">
+              
+              {/* Business Dropdown */}
+              <div className="relative group shrink-0">
+                <button className="flex items-center gap-1 md:gap-1.5 rounded-full px-3 md:px-4 lg:px-5 py-2 md:py-2.5 text-xs lg:text-sm font-semibold transition-all duration-500 whitespace-nowrap bg-indigo-50/80 text-indigo-700 hover:bg-indigo-100 hover:text-indigo-800 border-[1.5px] border-indigo-200/60 hover:border-indigo-300/60 hover:-translate-y-0.5 shadow-sm">
+                  <span className="hidden sm:inline">For </span>Business <ChevronDown className="h-3.5 w-3.5 md:h-4 md:w-4 text-indigo-500 group-hover:text-indigo-600 transition-colors" />
+                </button>
+                <div className="absolute top-full left-4 right-4 sm:left-auto sm:right-0 sm:w-[420px] mt-3 rounded-2xl bg-white/95 backdrop-blur-xl p-3 shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 border border-slate-100 grid grid-cols-1 gap-1">
+
+                  <a href="https://app.riseflake.com/login-company" className="flex items-start gap-4 rounded-xl p-3 hover:bg-slate-50 transition-colors group/item relative overflow-hidden">
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600 group-hover/item:bg-gradient-to-br group-hover/item:from-indigo-500 group-hover/item:to-violet-500 group-hover/item:text-white transition-all duration-300 shadow-sm">
+                      <Building2 className="h-6 w-6" />
+                    </div>
+                    <div className="flex-1">
+                      <div className="text-sm font-semibold text-slate-900 group-hover/item:text-indigo-700 transition-colors">Manage Your Company Team</div>
+                      <div className="text-xs text-slate-500 mt-0.5 leading-relaxed">Streamline your workforce, post exclusive jobs, and manage employees efficiently.</div>
+                    </div>
+                  </a>
+
+                  <a href="https://app.riseflake.com/login-college" className="flex items-start gap-4 rounded-xl p-3 hover:bg-slate-50 transition-colors group/item relative overflow-hidden">
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-sky-50 text-sky-600 group-hover/item:bg-gradient-to-br group-hover/item:from-sky-500 group-hover/item:to-blue-600 group-hover/item:text-white transition-all duration-300 shadow-sm">
+                      <GraduationCap className="h-6 w-6" />
+                    </div>
+                    <div className="flex-1">
+                      <div className="text-sm font-semibold text-slate-900 group-hover/item:text-sky-700 transition-colors">Training & Placement - Colleges</div>
+                      <div className="text-xs text-slate-500 mt-0.5 leading-relaxed">Empower your TPO cell, track student progress, and connect with top recruiters.</div>
+                    </div>
+                  </a>
+
+                  <a href="https://app.riseflake.com/login-recruiter" className="flex items-start gap-4 rounded-xl p-3 hover:bg-slate-50 transition-colors group/item relative overflow-hidden">
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 group-hover/item:bg-gradient-to-br group-hover/item:from-emerald-500 group-hover/item:to-teal-500 group-hover/item:text-white transition-all duration-300 shadow-sm">
+                      <Briefcase className="h-6 w-6" />
+                    </div>
+                    <div className="flex-1">
+                      <div className="text-sm font-semibold text-slate-900 group-hover/item:text-emerald-700 transition-colors">List Your Jobs</div>
+                      <div className="text-xs text-slate-500 mt-0.5 leading-relaxed">Post openings quickly and reach thousands of qualified candidates on our platform.</div>
+                    </div>
+                  </a>
+
+                  <a href="https://app.riseflake.com/dashboard/manage-jobs" className="flex items-start gap-4 rounded-xl p-3 hover:bg-slate-50 transition-colors group/item relative overflow-hidden">
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-purple-50 text-purple-600 group-hover/item:bg-gradient-to-br group-hover/item:from-purple-500 group-hover/item:to-fuchsia-500 group-hover/item:text-white transition-all duration-300 shadow-sm">
+                      <Cloud className="h-6 w-6" />
+                    </div>
+                    <div className="flex-1">
+                      <div className="text-sm font-semibold text-slate-900 group-hover/item:text-purple-700 transition-colors">Riseflake Talent Cloud</div>
+                      <div className="text-xs text-slate-500 mt-0.5 leading-relaxed">Access AI-driven candidate matching and build your premium talent pipeline.</div>
+                    </div>
+                  </a>
+
+                </div>
+              </div>
+
+              {/* Main Call to Action */}
               <a
                 href="https://app.riseflake.com/home"
-                className="hidden md:inline-flex rounded-full bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 px-4 py-2 font-semibold text-white shadow-lg transition-all hover:shadow-xl text-xs"
+                className="hidden md:inline-flex rounded-full bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 px-4 lg:px-5 py-2.5 font-semibold text-white shadow-lg shadow-indigo-500/30 transition-all duration-300 hover:shadow-xl hover:shadow-indigo-500/40 hover:-translate-y-0.5 text-xs lg:text-sm whitespace-nowrap"
               >
                 Find Jobs
               </a>
-              <a
+              
+               {/* Mobile Call to Action */}
+               <a
                 href="https://app.riseflake.com/home"
-                className="md:hidden inline-flex rounded-full bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 px-3 py-1.5 font-semibold text-white shadow-lg transition-all hover:shadow-xl text-xs mr-2"
-                style={{ minWidth: '70px' }}
+                className="md:hidden inline-flex rounded-full bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 px-4 py-1.5 font-semibold text-white shadow-md transition-all hover:shadow-lg text-xs mr-1"
+                style={{ minWidth: '80px', justifyContent: 'center' }}
               >
                 Find Jobs
               </a>
+
               <button
                 type="button"
-                className="md:hidden inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 hover:bg-slate-100"
+                className="lg:hidden inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 bg-white/80 backdrop-blur text-slate-700 hover:bg-white shrink-0"
                 onClick={() => setOpen((value) => !value)}
                 aria-label="Toggle navigation"
               >
@@ -175,82 +248,184 @@ export default function Navbar({ bgTransparent = false }: { bgTransparent?: bool
       {/* Mobile Drawer Overlay and Drawer (unmount after fade-out) */}
       {showDrawer && (
         <div
-          className={`md:hidden fixed inset-0 z-40 transition-all duration-300 ${open ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
+          className={`lg:hidden fixed inset-0 z-40 transition-all duration-300 ${open ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
           style={{ background: open ? 'rgba(0,0,0,0.12)' : 'rgba(0,0,0,0)' }}
           aria-hidden={!open}
           onClick={() => open && setOpen(false)}
         >
           <div
-            className={`absolute top-0 left-0 w-full border-t border-slate-200/70 bg-white/95 backdrop-blur transition-transform duration-300 ${open ? 'translate-y-0' : '-translate-y-8'}`}
+            className={`absolute top-0 left-0 w-full h-screen overflow-y-auto border-t border-slate-200/70 bg-white/95 backdrop-blur-xl transition-transform duration-300 ${open ? 'translate-y-0' : '-translate-y-8'}`}
             style={{ pointerEvents: 'auto' }}
             onClick={e => e.stopPropagation()}
           >
-            <div className="mx-3 mt-10 mb-5 rounded-2xl bg-white/90 p-3 shadow-xl flex flex-col gap-2">
+            <div className="mx-3 mt-4 mb-20 rounded-3xl bg-white/90 p-4 shadow-xl flex flex-col gap-2">
+              <div className="px-4 py-2 text-xs font-bold uppercase tracking-wider text-slate-400">
+                Menu
+              </div>
               <Link
                 href="/jobs"
-                className={`flex items-center justify-between rounded-xl px-4 py-3 text-base font-medium transition ${
-                  isActive('/jobs')
-                    ? 'bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 text-white shadow'
-                    : 'text-slate-700 hover:bg-slate-100'
-                }`}
+                className={`flex items-center justify-between rounded-xl px-4 py-3 text-base font-medium transition ${isActive('/jobs')
+                  ? 'bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 text-white shadow'
+                  : 'text-slate-700 hover:bg-slate-100'
+                  }`}
                 onClick={() => setOpen(false)}
-                prefetch={false}
               >
                 <span>Jobs</span>
                 <ChevronRight className="h-5 w-5 opacity-70" />
               </Link>
               <Link
                 href="/internships"
-                className={`flex items-center justify-between rounded-xl px-4 py-3 text-base font-medium transition ${
-                  isActive('/internships')
-                    ? 'bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 text-white shadow'
-                    : 'text-slate-700 hover:bg-slate-100'
-                }`}
+                className={`flex items-center justify-between rounded-xl px-4 py-3 text-base font-medium transition ${isActive('/internships')
+                  ? 'bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 text-white shadow'
+                  : 'text-slate-700 hover:bg-slate-100'
+                  }`}
                 onClick={() => setOpen(false)}
-                prefetch={false}
               >
                 <span>Internships</span>
                 <ChevronRight className="h-5 w-5 opacity-70" />
               </Link>
               <Link
-                href="/indexed-jobs"
-                className={`flex items-center justify-between rounded-xl px-4 py-3 text-base font-medium transition ${
-                  isActive('/indexed-jobs')
-                    ? 'bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 text-white shadow'
-                    : 'text-slate-700 hover:bg-slate-100'
-                }`}
-                onClick={() => setOpen(false)}
-                prefetch={false}
-              >
-                <span>iJobs</span>
-                <ChevronRight className="h-5 w-5 opacity-70" />
-              </Link>
-              <Link
                 href="/companies"
-                className={`flex items-center justify-between rounded-xl px-4 py-3 text-base font-medium transition ${
-                  isActive('/companies')
-                    ? 'bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 text-white shadow'
-                    : 'text-slate-700 hover:bg-slate-100'
-                }`}
+                className={`flex items-center justify-between rounded-xl px-4 py-3 text-base font-medium transition ${isActive('/companies')
+                  ? 'bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 text-white shadow'
+                  : 'text-slate-700 hover:bg-slate-100'
+                  }`}
                 onClick={() => setOpen(false)}
-                prefetch={false}
               >
                 <span>Companies</span>
                 <ChevronRight className="h-5 w-5 opacity-70" />
               </Link>
               <Link
                 href="/colleges"
-                className={`flex items-center justify-between rounded-xl px-4 py-3 text-base font-medium transition ${
-                  isActive('/colleges')
-                    ? 'bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 text-white shadow'
-                    : 'text-slate-700 hover:bg-slate-100'
-                }`}
+                className={`flex items-center justify-between rounded-xl px-4 py-3 text-base font-medium transition ${isActive('/colleges')
+                  ? 'bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 text-white shadow'
+                  : 'text-slate-700 hover:bg-slate-100'
+                  }`}
                 onClick={() => setOpen(false)}
-                prefetch={false}
               >
                 <span>Colleges</span>
                 <ChevronRight className="h-5 w-5 opacity-70" />
               </Link>
+
+              <a
+                href="https://app.riseflake.com/chat"
+                className="flex items-center justify-between rounded-xl px-4 py-3 text-base font-medium transition text-slate-700 hover:bg-slate-100"
+                onClick={() => setOpen(false)}
+              >
+                <span>Chat</span>
+                <ChevronRight className="h-5 w-5 opacity-70" />
+              </a>
+              <a
+                href="https://app.riseflake.com/network"
+                className="flex items-center justify-between rounded-xl px-4 py-3 text-base font-medium transition text-slate-700 hover:bg-slate-100"
+                onClick={() => setOpen(false)}
+              >
+                <span>Networking</span>
+                <ChevronRight className="h-5 w-5 opacity-70" />
+              </a>
+
+              <div className="mt-4 mb-2 px-4 text-xs font-bold uppercase tracking-wider text-slate-400">
+                Business
+              </div>
+
+              <a
+                href="https://app.riseflake.com/login-company"
+                className="flex items-center gap-3 rounded-xl px-4 py-3 text-base font-medium transition text-slate-700 hover:bg-indigo-50 hover:text-indigo-700"
+                onClick={() => setOpen(false)}
+              >
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-100/50 text-indigo-600">
+                  <Building2 className="h-4 w-4" />
+                </div>
+                <span className="flex-1">Manage Your Company Team</span>
+                <ChevronRight className="h-5 w-5 opacity-50" />
+              </a>
+
+              <a
+                href="https://app.riseflake.com/login-college"
+                className="flex items-center gap-3 rounded-xl px-4 py-3 text-base font-medium transition text-slate-700 hover:bg-sky-50 hover:text-sky-700"
+                onClick={() => setOpen(false)}
+              >
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-sky-100/50 text-sky-600">
+                  <GraduationCap className="h-4 w-4" />
+                </div>
+                <span className="flex-1">Training and Placement</span>
+                <ChevronRight className="h-5 w-5 opacity-50" />
+              </a>
+
+              <a
+                href="https://app.riseflake.com/login-recruiter"
+                className="flex items-center gap-3 rounded-xl px-4 py-3 text-base font-medium transition text-slate-700 hover:bg-emerald-50 hover:text-emerald-700"
+                onClick={() => setOpen(false)}
+              >
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-100/50 text-emerald-600">
+                  <Briefcase className="h-4 w-4" />
+                </div>
+                <span className="flex-1">List Your Jobs</span>
+                <ChevronRight className="h-5 w-5 opacity-50" />
+              </a>
+
+              <a
+                href="https://app.riseflake.com/dashboard/manage-jobs"
+                className="flex items-center gap-3 rounded-xl px-4 py-3 text-base font-medium transition text-slate-700 hover:bg-purple-50 hover:text-purple-700"
+                onClick={() => setOpen(false)}
+              >
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-purple-100/50 text-purple-600">
+                  <Cloud className="h-4 w-4" />
+                </div>
+                <span className="flex-1">Talent Cloud</span>
+                <ChevronRight className="h-5 w-5 opacity-50" />
+              </a>
+
+              <div className="mt-4 mb-2 px-4 text-xs font-bold uppercase tracking-wider text-slate-400">
+                More
+              </div>
+
+              <Link
+                href="/indexed-jobs"
+                className={`flex items-center justify-between rounded-xl px-4 py-3 text-base font-medium transition ${isActive('/indexed-jobs')
+                  ? 'bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 text-white shadow'
+                  : 'text-slate-700 hover:bg-slate-100'
+                  }`}
+                onClick={() => setOpen(false)}
+              >
+                <div className="flex items-center gap-3">
+                  <Search className="h-5 w-5 text-slate-400" />
+                  <span>iJobs</span>
+                </div>
+                <ChevronRight className="h-5 w-5 opacity-50" />
+              </Link>
+              <a
+                href="https://app.riseflake.com/login-recruiter"
+                className="flex items-center justify-between rounded-xl px-4 py-3 text-base font-medium transition text-slate-700 hover:bg-slate-100"
+                onClick={() => setOpen(false)}
+              >
+                <div className="flex items-center gap-3">
+                  <Briefcase className="h-5 w-5 text-slate-400" />
+                  <span>List your job</span>
+                </div>
+                <ChevronRight className="h-5 w-5 opacity-50" />
+              </a>
+              <a
+                href="https://resume.riseflake.com"
+                className="flex items-center justify-between rounded-xl px-4 py-3 text-base font-medium transition text-slate-700 hover:bg-slate-100"
+                onClick={() => setOpen(false)}
+              >
+                <div className="flex items-center gap-3">
+                  <FileText className="h-5 w-5 text-slate-400" />
+                  <span>Build Resume</span>
+                </div>
+                <ChevronRight className="h-5 w-5 opacity-50" />
+              </a>
+
+              <div className="mt-4 pt-4 pb-12 border-t border-slate-100 md:hidden">
+                <a
+                  href="https://app.riseflake.com/home"
+                  className="flex w-full justify-center rounded-xl bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 px-4 py-3 font-semibold text-white shadow-lg transition-all"
+                  onClick={() => setOpen(false)}
+                >
+                  Find Jobs
+                </a>
+              </div>
             </div>
           </div>
         </div>
