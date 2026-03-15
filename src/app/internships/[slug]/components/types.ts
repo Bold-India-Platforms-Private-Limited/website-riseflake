@@ -4,6 +4,7 @@ export type JobDetail = {
   company_name: string
   company_logo: string | null
   job_type: string
+  job_status: string
   workplace_type: number | null
   created_at: string
   location_name: string | null

@@ -1,6 +1,20 @@
 import type { JobDetail } from './types'
 import JobReportWrapper from '../../../components/JobReportWrapper'
 
+const JOB_STATUS_STYLES: Record<string, string> = {
+  pending: 'bg-amber-50 text-amber-700',
+  live: 'bg-emerald-50 text-emerald-700',
+  screening: 'bg-cyan-50 text-cyan-700',
+  interview: 'bg-violet-50 text-violet-700',
+  assessment: 'bg-sky-50 text-sky-700',
+  offer_made: 'bg-blue-50 text-blue-700',
+  hired: 'bg-green-50 text-green-700',
+  closed: 'bg-slate-100 text-slate-700',
+  expired: 'bg-rose-50 text-rose-700',
+  on_hold: 'bg-orange-50 text-orange-700',
+  cancelled: 'bg-red-50 text-red-700',
+}
+
 const formatDate = (value: string) => {
   const date = new Date(value)
   if (Number.isNaN(date.getTime())) return value
@@ -20,7 +34,15 @@ const formatWorkplace = (value?: number | null) => {
   }
 }
 
+const formatStatusLabel = (status: string) =>
+  status
+    .split('_')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ')
+
 export default function JobHeader({ job }: { job: JobDetail }) {
+  const statusStyle = JOB_STATUS_STYLES[job.job_status] ?? 'bg-slate-100 text-slate-700'
+
   return (
     <div className="relative rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
       {/* Report button: top-right for both mobile and desktop */}
@@ -44,6 +66,9 @@ export default function JobHeader({ job }: { job: JobDetail }) {
             </div>
           </div>
           <div className="flex flex-wrap gap-3 text-xs text-slate-600">
+            <span className={`rounded-full px-3 py-1 font-semibold uppercase tracking-wide ${statusStyle}`}>
+              {formatStatusLabel(job.job_status)}
+            </span>
             <span className="rounded-full bg-indigo-50 px-3 py-1 font-semibold uppercase tracking-wide text-indigo-700">
               {job.job_type}
             </span>
