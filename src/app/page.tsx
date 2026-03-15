@@ -10,7 +10,7 @@ import Brands from './components/Brands'
 import CityCategories from './components/CityCategories'
 import Categories from './components/Categories'
 import Introducing from './components/Introducing'
-import Testimonials from './components/Testimonials'
+// import Testimonials from './components/Testimonials'
 import Assessment from './components/Assessment'
 import DownloadTheApp from './components/DownloadTheApp'
 import ContactSection from './components/ContactSection'
@@ -215,7 +215,7 @@ export default function Home() {
 
       <Introducing />
 
-      <Testimonials />
+      {/* <Testimonials /> */}
 
       <CityCategories />
 
