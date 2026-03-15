@@ -79,15 +79,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         </Script>
         {/* End Google Tag Manager */}
 
-        {/* Google AdSense */}
-        <Script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7464304182231148"
-          strategy="afterInteractive"
-          crossOrigin="anonymous"
-        />
-
         <link rel="preconnect" href="https://www.googletagmanager.com" />
+        <meta name="google-adsense-account" content="ca-pub-7464304182231148" />
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
         <meta httpEquiv="X-UA-Compatible" content="ie=edge" />
