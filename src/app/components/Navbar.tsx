@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
-import { Menu, X, ChevronRight, ChevronDown, Building2, GraduationCap, Briefcase, Cloud, FileText, Search } from 'lucide-react'
+import { Menu, X, ChevronRight, ChevronDown, Building2, GraduationCap, Briefcase, Cloud, FileText, Search, FileCheck } from 'lucide-react'
 
 export default function Navbar({ bgTransparent = false }: { bgTransparent?: boolean }) {
   const pathname = usePathname()
@@ -157,6 +157,10 @@ export default function Navbar({ bgTransparent = false }: { bgTransparent?: bool
                   <a href="https://resume.riseflake.com" className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-indigo-600 transition-colors">
                     <FileText className="h-4 w-4 text-slate-400" />
                     Build Resume
+                  </a>
+                  <a href="https://resume.riseflake.com/ats-checker" className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-indigo-600 transition-colors">
+                    <FileCheck className="h-4 w-4 text-slate-400" />
+                    ATS Checker
                   </a>
                 </div>
               </div>
@@ -413,6 +417,17 @@ export default function Navbar({ bgTransparent = false }: { bgTransparent?: bool
                 <div className="flex items-center gap-3">
                   <FileText className="h-5 w-5 text-slate-400" />
                   <span>Build Resume</span>
+                </div>
+                <ChevronRight className="h-5 w-5 opacity-50" />
+              </a>
+              <a
+                href="https://resume.riseflake.com/ats-checker"
+                className="flex items-center justify-between rounded-xl px-4 py-3 text-base font-medium transition text-slate-700 hover:bg-slate-100"
+                onClick={() => setOpen(false)}
+              >
+                <div className="flex items-center gap-3">
+                  <FileCheck className="h-5 w-5 text-slate-400" />
+                  <span>ATS Checker</span>
                 </div>
                 <ChevronRight className="h-5 w-5 opacity-50" />
               </a>
