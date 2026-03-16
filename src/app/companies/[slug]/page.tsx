@@ -111,12 +111,20 @@ export default async function CompanyDetailsPage({ params }: PageProps) {
                 </div>
               </div>
 
-              <a
-                href="https://app.riseflake.com"
-                className="inline-flex items-center justify-center rounded-xl border border-indigo-200 bg-indigo-50 px-4 py-2 text-sm font-semibold text-indigo-700"
-              >
-                View on Riseflake
-              </a>
+              <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
+                <a
+                  href={`https://app.riseflake.com/companies/${company.slug}`}
+                  className="inline-flex items-center justify-center rounded-xl border border-indigo-200 bg-indigo-50 px-4 py-2 text-sm font-semibold text-indigo-700"
+                >
+                  View Complete Profile
+                </a>
+                <a
+                  href={`https://app.riseflake.com/companies/${company.slug}`}
+                  className="inline-flex items-center justify-center rounded-xl bg-[#414FEA] px-4 py-2 text-sm font-semibold text-white"
+                >
+                  Claim Your Company Profile
+                </a>
+              </div>
             </div>
           </section>
 
@@ -153,7 +161,7 @@ export default async function CompanyDetailsPage({ params }: PageProps) {
                 Explore current openings and connect with the hiring team.
               </p>
               <a
-                href="https://app.riseflake.com"
+                href={`https://app.riseflake.com/companies/${company.slug}`}
                 className="mt-4 inline-flex w-full items-center justify-center rounded-xl bg-[#414FEA] py-3 text-sm font-semibold text-white"
               >
                 Explore jobs
