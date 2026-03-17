@@ -8,6 +8,7 @@ import { Menu, X, ChevronRight, ChevronDown, Building2, GraduationCap, Briefcase
 export default function Navbar({ bgTransparent = false }: { bgTransparent?: boolean }) {
   const pathname = usePathname()
   const [open, setOpen] = useState(false)
+  const [businessModalOpen, setBusinessModalOpen] = useState(false)
   const [showDrawer, setShowDrawer] = useState(false)
   const [, setScrolled] = useState(false)
 
@@ -35,6 +36,7 @@ export default function Navbar({ bgTransparent = false }: { bgTransparent?: bool
   // Close mobile drawer on route change
   useEffect(() => {
     setOpen(false)
+    setBusinessModalOpen(false)
   }, [pathname])
 
   // Show/hide drawer with fade-out
@@ -50,7 +52,7 @@ export default function Navbar({ bgTransparent = false }: { bgTransparent?: bool
 
   // Lock body scroll when drawer is open
   useEffect(() => {
-    if (open) {
+    if (open || businessModalOpen) {
       document.body.classList.add('body-scroll-lock')
     } else {
       document.body.classList.remove('body-scroll-lock')
@@ -58,7 +60,7 @@ export default function Navbar({ bgTransparent = false }: { bgTransparent?: bool
     return () => {
       document.body.classList.remove('body-scroll-lock')
     }
-  }, [open])
+  }, [open, businessModalOpen])
 
   return (
     <>
@@ -170,7 +172,7 @@ export default function Navbar({ bgTransparent = false }: { bgTransparent?: bool
             <div className="flex items-center gap-2 md:gap-3 shrink-0 ml-auto lg:ml-0">
               
               {/* Business Dropdown */}
-              <div className="relative group shrink-0">
+              <div className="relative group shrink-0 hidden lg:block">
                 <button className="flex items-center gap-1 md:gap-1.5 rounded-full px-3 md:px-4 lg:px-5 py-2 md:py-2.5 text-xs lg:text-sm font-semibold transition-all duration-500 whitespace-nowrap bg-indigo-50/80 text-indigo-700 hover:bg-indigo-100 hover:text-indigo-800 border-[1.5px] border-indigo-200/60 hover:border-indigo-300/60 hover:-translate-y-0.5 shadow-sm">
                   <span className="hidden sm:inline">For </span>Business <ChevronDown className="h-3.5 w-3.5 md:h-4 md:w-4 text-indigo-500 group-hover:text-indigo-600 transition-colors" />
                 </button>
@@ -226,6 +228,21 @@ export default function Navbar({ bgTransparent = false }: { bgTransparent?: bool
               >
                 Find Jobs
               </a>
+
+              {/* Mobile Business Button */}
+              <button
+                type="button"
+                className="md:hidden inline-flex items-center gap-1 rounded-full border border-indigo-200/70 bg-indigo-50/90 px-3 py-1.5 text-xs font-semibold text-indigo-700 shadow-sm transition-all hover:bg-indigo-100"
+                onClick={() => {
+                  setBusinessModalOpen((value) => !value)
+                  setOpen(false)
+                }}
+                aria-label="Open business menu"
+                aria-expanded={businessModalOpen}
+              >
+                Business
+                <ChevronDown className={`h-3.5 w-3.5 transition-transform ${businessModalOpen ? 'rotate-180' : ''}`} />
+              </button>
               
                {/* Mobile Call to Action */}
                <a
@@ -239,7 +256,10 @@ export default function Navbar({ bgTransparent = false }: { bgTransparent?: bool
               <button
                 type="button"
                 className="lg:hidden inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 bg-white/80 backdrop-blur text-slate-700 hover:bg-white shrink-0"
-                onClick={() => setOpen((value) => !value)}
+                onClick={() => {
+                  setBusinessModalOpen(false)
+                  setOpen((value) => !value)
+                }}
                 aria-label="Toggle navigation"
               >
                 {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -248,6 +268,90 @@ export default function Navbar({ bgTransparent = false }: { bgTransparent?: bool
           </div>
         </div>
       </header>
+
+      {/* Mobile Business Modal */}
+      {businessModalOpen && (
+        <div
+          className="fixed inset-0 z-[60] bg-slate-900/30 backdrop-blur-[1px] lg:hidden"
+          onClick={() => setBusinessModalOpen(false)}
+          aria-hidden={!businessModalOpen}
+        >
+          <div
+            className="absolute inset-x-0 bottom-0 max-h-[85vh] overflow-y-auto rounded-t-3xl border-t border-slate-200 bg-white p-4 shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="mb-3 flex items-center justify-between px-1">
+              <div className="text-sm font-semibold text-slate-900">Business Tools</div>
+              <button
+                type="button"
+                className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-slate-200 text-slate-600"
+                onClick={() => setBusinessModalOpen(false)}
+                aria-label="Close business menu"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 gap-2 pb-3">
+              <a
+                href="https://app.riseflake.com/login-company"
+                className="flex items-start gap-3 rounded-xl border border-slate-100 p-3 transition hover:bg-indigo-50"
+                onClick={() => setBusinessModalOpen(false)}
+              >
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-indigo-100 text-indigo-600">
+                  <Building2 className="h-5 w-5" />
+                </div>
+                <div>
+                  <div className="text-sm font-semibold text-slate-900">Manage Your Company Team</div>
+                  <div className="text-xs text-slate-500">Post exclusive jobs and manage your workforce efficiently.</div>
+                </div>
+              </a>
+
+              <a
+                href="https://app.riseflake.com/login-college"
+                className="flex items-start gap-3 rounded-xl border border-slate-100 p-3 transition hover:bg-sky-50"
+                onClick={() => setBusinessModalOpen(false)}
+              >
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-sky-100 text-sky-600">
+                  <GraduationCap className="h-5 w-5" />
+                </div>
+                <div>
+                  <div className="text-sm font-semibold text-slate-900">Training and Placement</div>
+                  <div className="text-xs text-slate-500">Empower your college placement cell and connect with recruiters.</div>
+                </div>
+              </a>
+
+              <a
+                href="https://app.riseflake.com/login-recruiter"
+                className="flex items-start gap-3 rounded-xl border border-slate-100 p-3 transition hover:bg-emerald-50"
+                onClick={() => setBusinessModalOpen(false)}
+              >
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-emerald-100 text-emerald-600">
+                  <Briefcase className="h-5 w-5" />
+                </div>
+                <div>
+                  <div className="text-sm font-semibold text-slate-900">List Your Jobs</div>
+                  <div className="text-xs text-slate-500">Post openings and reach quality candidates faster.</div>
+                </div>
+              </a>
+
+              <a
+                href="https://app.riseflake.com/dashboard/manage-jobs"
+                className="flex items-start gap-3 rounded-xl border border-slate-100 p-3 transition hover:bg-purple-50"
+                onClick={() => setBusinessModalOpen(false)}
+              >
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-purple-100 text-purple-600">
+                  <Cloud className="h-5 w-5" />
+                </div>
+                <div>
+                  <div className="text-sm font-semibold text-slate-900">Riseflake Talent Cloud</div>
+                  <div className="text-xs text-slate-500">Use AI matching to build your hiring pipeline.</div>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Mobile Drawer Overlay and Drawer (unmount after fade-out) */}
       {showDrawer && (
