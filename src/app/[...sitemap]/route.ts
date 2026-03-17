@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { API_BASE_URL } from '../../lib/config';
+import { notFound } from 'next/navigation';
 
 export const dynamic = 'force-dynamic';
 
@@ -7,24 +8,27 @@ interface RouteContext {
     params: Promise<{ sitemap: string[] }>;
 }
 
-export async function GET(_req: Request, context: RouteContext): Promise<NextResponse> {
+export async function GET(_req: Request, context: RouteContext): Promise<Response> {
     if (!API_BASE_URL) {
         return new NextResponse('API_BASE_URL not set', { status: 500 });
     }
     // Await params for dynamic route compliance
     const { sitemap: sitemapArr } = await context.params;
     if (!sitemapArr || sitemapArr.length !== 1) {
-        return new NextResponse('Invalid sitemap path', { status: 404 });
+        notFound();
     }
     const match = sitemapArr[0].match(/^sitemap-companies-(\d+)\.xml$/);
     if (!match) {
-        return new NextResponse('Invalid companies sitemap batch path', { status: 404 });
+        notFound();
     }
     const batch = match[1];
     const url = `${API_BASE_URL}/companies-sitemap-${batch}.xml`;
     try {
         const res = await fetch(url);
         if (!res.ok) {
+            if (res.status === 404) {
+                notFound();
+            }
             return new NextResponse('Failed to fetch companies sitemap batch', { status: 500 });
         }
         let xml = await res.text();

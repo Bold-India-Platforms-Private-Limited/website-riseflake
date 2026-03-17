@@ -2,11 +2,13 @@
 import Link from "next/link";
 import { FiHome, FiSearch, FiArrowLeft } from "react-icons/fi";
 import Footer from "./components/Footer";
+import Navbar from "./components/Navbar";
 
 export default function NotFound() {
     return (
         <div className="flex flex-col min-h-screen bg-slate-50">
-            {/* Top Header / Breadcrumb area (Simulated for 404) */}
+            <Navbar />
+
             <div className="w-full bg-white border-b border-slate-200">
                 <div className="mx-auto max-w-[1200px] px-6 py-4 flex items-center gap-3">
                     <Link
@@ -16,7 +18,7 @@ export default function NotFound() {
                     >
                         <FiArrowLeft className="text-xl" />
                     </Link>
-                    <h1 className="text-lg font-semibold text-slate-900">Page Not Found</h1>
+                    <h1 className="text-lg font-semibold text-slate-900">Requested Resources Not Available Right Now</h1>
                 </div>
             </div>
 
@@ -35,9 +37,9 @@ export default function NotFound() {
                     </div>
 
                     <div className="space-y-4">
-                        <h2 className="text-3xl md:text-4xl font-bold text-slate-900">Oops! We can&apos;t find that page.</h2>
+                        <h2 className="text-3xl md:text-4xl font-bold text-slate-900">Requested Resources Not Available Right Now</h2>
                         <p className="text-slate-600 text-lg max-w-md mx-auto leading-relaxed">
-                            The link you followed might be broken, or the page may have been moved. Let&apos;s get you back on track.
+                            404 error: The page or sitemap resource you requested is currently unavailable. Please go back to home.
                         </p>
                     </div>
 
