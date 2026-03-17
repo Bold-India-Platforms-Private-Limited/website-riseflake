@@ -14,7 +14,7 @@ export default function InternshipList({ internships }: { internships: JobListIt
 
   return (
     <div className="space-y-6">
-      <ul aria-label="Internship Listings" style={{ listStyle: "none", padding: 0 }}>
+      <ul aria-label="Internship Posting" style={{ listStyle: "none", padding: 0 }}>
         {internships.map((internship) => (
           <li key={internship.slug} style={{ marginBottom: "12px" }}>
             <InternshipCard job={internship} />
