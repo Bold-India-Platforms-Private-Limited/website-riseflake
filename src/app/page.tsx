@@ -67,7 +67,9 @@ export default function Home() {
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
             <a
-              href="https://app.riseflake.com/home"
+              href="https://play.google.com/store/apps/details?id=com.riseflake.app"
+              target="_blank"
+              rel="noopener noreferrer"
               className="px-8 py-4 bg-gradient-modern text-white hover:shadow-2xl hover:shadow-indigo-400/50 rounded-full font-bold text-lg transition-all"
             >
               🚀 Start Your Journey

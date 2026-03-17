@@ -33,7 +33,7 @@ export default function DownloadTheApp() {
         </button>
 
         <img
-          src="https://api.qrserver.com/v1/create-qr-code/?size=90x90&data=https://app.riseflake.com"
+          src="https://assets.riseflake.com/images/photos/download-app-qr.png"
           alt="QR"
           className="h-[90px] w-[90px] rounded-xl border border-slate-200 object-cover"
           loading="lazy"
@@ -43,15 +43,15 @@ export default function DownloadTheApp() {
           <div className="mb-2 flex items-center gap-5">
             <div className="flex flex-col">
               <div className="flex items-center gap-1 text-xl font-bold text-slate-900">
-                0.0
+                4.9
                 <Star size={18} className="text-amber-400" fill="currentColor" />
               </div>
-              <div className="text-xs font-normal text-slate-400">0.0K Reviews</div>
+              <div className="text-xs font-normal text-slate-400">5Reviews</div>
             </div>
             <div className="h-8 w-px bg-slate-200" />
             <div className="flex flex-col">
               <div className="flex items-center gap-1 text-xl font-bold text-slate-900">
-                0M+
+                100+
                 <Download size={18} className="text-slate-700" />
               </div>
               <div className="text-xs font-normal text-slate-400">Downloads</div>
@@ -60,18 +60,32 @@ export default function DownloadTheApp() {
 
           <div className="mt-2 flex items-center gap-2 border-t border-slate-200 pt-2 text-xs text-slate-500">
             <span>Available on</span>
-            <img
-              src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg"
-              alt="Apple"
-              className="h-3.5"
-              loading="lazy"
-            />
-            <img
-              src="https://upload.wikimedia.org/wikipedia/commons/d/d0/Google_Play_Arrow_logo.svg"
-              alt="Play Store"
-              className="h-3.5"
-              loading="lazy"
-            />
+            <a
+              href="https://apps.apple.com/app/idYOUR_APP_ID"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="transition hover:opacity-80"
+            >
+              <img
+                src="https://assets.riseflake.com/images/illustrations/apple_v1.png"
+                alt="Apple"
+                className="h-3.5 cursor-pointer"
+                loading="lazy"
+              />
+            </a>
+            <a
+              href="https://play.google.com/store/apps/details?id=com.riseflake.app"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="transition hover:opacity-80"
+            >
+              <img
+                src="https://assets.riseflake.com/images/illustrations/android_v1.png"
+                alt="Play Store"
+                className="h-3.5 cursor-pointer"
+                loading="lazy"
+              />
+            </a>
           </div>
         </div>
       </div>
