@@ -1,0 +1,15 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls",
+      "delegate_permission/common.get_login_creds"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.riseflake.app",
+      "sha256_cert_fingerprints": [
+        "37:51:95:D9:DC:56:B8:46:70:F8:88:EC:74:04:F5:A9:19:7D:A9:41:58:A1:07:7A:97:03:18:5A:90:A8:18:9E"
+      ]
+    }
+  }
+]
