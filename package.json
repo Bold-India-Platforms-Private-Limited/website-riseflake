@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build:resume": "cd resume && cp ../.env .env || true && npm install --no-package-lock && npm run build",
+    "build:resume": "cd resume && cp ../.env .env || true && npm install --include=dev --no-package-lock && npm run build",
     "prebuild": "npm run build:resume && rm -rf public/resume && cp -R resume/out public/resume",
     "build": "next build",
     "start": "next start",
