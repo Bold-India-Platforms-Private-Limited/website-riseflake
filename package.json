@@ -5,6 +5,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "build:resume": "cd resume && cp ../.env .env || true && npm install --no-package-lock && npm run build",
+    "prebuild": "npm run build:resume && rm -rf public/resume && cp -R resume/out public/resume",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -24,6 +26,7 @@
     "@types/node": "25.2.1",
     "@types/react": "19.2.13",
     "autoprefixer": "^10.4.24",
+    "concurrently": "^9.2.1",
     "eslint": "^8.57.0",
     "eslint-config-next": "^15.0.0",
     "postcss": "^8.5.6",

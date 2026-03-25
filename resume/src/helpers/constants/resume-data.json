@@ -1,0 +1,179 @@
+{
+  "basics": {
+    "name": "Alex Rivers",
+    "label": "Senior Data Analyst",
+    "image": "https://randomuser.me/api/portraits/men/32.jpg",
+    "email": "alex.rivers@example.com",
+    "phone": "+1 (555) 012-3456",
+    "url": "https://alexivers.data",
+    "summary": "Strategic and results-driven Senior Data Analyst with over 6 years of experience in translating complex datasets into actionable business insights at Google and Microsoft. Expert in statistical modeling, data visualization, and predictive analytics. Proven ability to optimize data architecture and drive multi-million dollar revenue growth through data-backed decision making.",
+    "location": {
+      "address": "1600 Amphitheatre Parkway",
+      "postalCode": "94043",
+      "city": "Mountain View",
+      "countryCode": "US",
+      "region": "California"
+    },
+    "relExp": "6 Years",
+    "totalExp": "6 Years",
+    "objective": "To leverage advanced analytical skills and enterprise-level experience to drive data-driven innovation and operational excellence in a lead analyst role.",
+    "profiles": [
+      {
+        "network": "linkedin",
+        "username": "alexrivers",
+        "url": "https://linkedin.com/in/alexrivers"
+      },
+      {
+        "network": "github",
+        "username": "arivers-data",
+        "url": "https://github.com/arivers-data"
+      }
+    ]
+  },
+  "skills": {
+    "languages": [
+      {
+        "name": "SQL (PostgreSQL, BigQuery)",
+        "level": 95
+      },
+      {
+        "name": "Python (Pandas, SciPy)",
+        "level": 90
+      }
+    ],
+    "frameworks": [
+      {
+        "name": "Scikit-learn",
+        "level": 85
+      },
+      {
+        "name": "TensorFlow",
+        "level": 75
+      }
+    ],
+    "technologies": [
+      {
+        "name": "Google BigQuery",
+        "level": 95
+      },
+      {
+        "name": "Tableau / Power BI",
+        "level": 95
+      },
+      {
+        "name": "Apache Spark",
+        "level": 80
+      }
+    ],
+    "libraries": [
+      {
+        "name": "Matplotlib / Seaborn",
+        "level": 90
+      },
+      {
+        "name": "NumPy",
+        "level": 90
+      }
+    ],
+    "databases": [
+      {
+        "name": "Microsoft SQL Server",
+        "level": 95
+      },
+      {
+        "name": "Snowflake",
+        "level": 85
+      }
+    ],
+    "practices": [
+      {
+        "name": "Statistical Modeling",
+        "level": 95
+      },
+      {
+        "name": "A/B Testing",
+        "level": 90
+      },
+      {
+        "name": "ETL Pipelining",
+        "level": 90
+      }
+    ],
+    "tools": [
+      {
+        "name": "Git / GitHub",
+        "level": 90
+      },
+      {
+        "name": "Airflow",
+        "level": 80
+      }
+    ]
+  },
+  "work": [
+    {
+      "id": "1",
+      "name": "Google",
+      "position": "Senior Data Analyst",
+      "url": "https://google.com",
+      "startDate": "Jan 2022",
+      "isWorkingHere": true,
+      "endDate": null,
+      "summary": "<ul><li>Lead the Google Cloud data insights team, overseeing analysis for a 200M+ user segment.</li><li>Developed a churn prediction model using Python and BigQuery that accurately reduced user attrition by 18% in the first year.</li></ul>"
+    },
+    {
+      "id": "2",
+      "name": "Microsoft",
+      "position": "Data Analyst (Intelligence & Insights)",
+      "url": "https://microsoft.com",
+      "startDate": "July 2018",
+      "isWorkingHere": false,
+      "endDate": "Dec 2021",
+      "summary": "<ul><li>Analyzed telemetry data for Microsoft 365, identifying critical performance bottlenecks that led to a 12% improvement in app load times.</li><li>Engineered unified data dashboards in Power BI for executive leadership, consolidating metrics from 12+ separate global regions.</li><li>Reduced data processing costs by 25% by optimizing complex T-SQL queries and redesigning star-schema databases.</li><li>Partnered with UX teams to perform deep-dive analysis on user friction points, directly influencing 3 major product updates.</li></ul>"
+    }
+  ],
+  "education": [
+    {
+      "id": "1",
+      "institution": "Stanford University",
+      "url": "https://stanford.edu",
+      "studyType": "Master of Science",
+      "area": "Statistics & Data Science",
+      "startDate": "2016",
+      "isStudyingHere": false,
+      "endDate": "2018",
+      "score": "3.9 GPA"
+    }
+  ],
+  "activities": {
+    "involvements": "<ul><li>Open Source: Contributor to Scikit-learn data preprocessing modules.</li><li>Kaggle: Ranked in top 1% of global analysts in predictive finance competitions.</li><li>Speaker: Regular presenter at Bay Area Data Science summits on Cloud Analytics.</li></ul>",
+    "achievements": "<ul><li>Google Platinum Peer Award for Operational Excellence (2023)</li><li>Microsoft Circle of Excellence Award Winner (2020)</li><li>Certified Google Professional Data Engineer</li><li>Certified Azure Data Scientist Associate</li></ul>"
+  },
+  "volunteer": [
+    {
+      "id": "1",
+      "organization": "DataKind",
+      "position": "Pro-bono Data Scientist",
+      "url": "https://datakind.org",
+      "startDate": "2019",
+      "endDate": "2021",
+      "summary": "Leveraged demographic data analysis to help non-profits optimize resource allocation in underserved urban areas."
+    }
+  ],
+  "awards": [
+    {
+      "id": "1",
+      "title": "Excellence in Analytics Award",
+      "date": "2023",
+      "awarder": "Google Cloud",
+      "summary": "Recognized for leading the 'Data-First' initiative which improved infrastructure efficiency by 30%."
+    },
+    {
+      "id": "2",
+      "title": "Top Tech Innovator",
+      "date": "2020",
+      "awarder": "Microsoft",
+      "summary": "Awarded for designing a scalable telemetry pipeline for real-time collaboration tools."
+    }
+  ]
+}
