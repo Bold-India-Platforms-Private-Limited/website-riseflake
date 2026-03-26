@@ -719,12 +719,14 @@ const AdminPanelPage = () => {
                                   >
                                     {item.latest_payment.plan_name}
                                   </span>
-                                  <span className="text-xs text-slate-500">
-                                    Payments: {item.payment_count ?? 0}
-                                  </span>
+                                  <div className="flex flex-col text-xs text-slate-500 mt-1 leading-tight">
+                                    <span>
+                                      Payments: {item.payment_count ?? 0}, Payment ID count: {item.payment_id_count ?? 0}
+                                    </span>
+                                  </div>
                                 </div>
                               ) : (
-                                <span className="text-xs text-slate-500">- (Payments: {item.payment_count ?? 0})</span>
+                                <span className="text-xs text-slate-500">- (Payments: {item.payment_count ?? 0}, Payment ID count: {item.payment_id_count ?? 0})</span>
                               )}
                             </td>
                             <td className="py-3 pr-3">

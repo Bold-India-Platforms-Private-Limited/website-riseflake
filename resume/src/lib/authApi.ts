@@ -53,6 +53,7 @@ export interface AdminUserListItem {
   user: AuthUser;
   latest_payment: PaymentSnapshot | null;
   payment_count: number;
+  payment_id_count: number;
   quota: {
     used: number;
     limit: number;

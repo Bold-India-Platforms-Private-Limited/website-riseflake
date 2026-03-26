@@ -166,7 +166,10 @@ export default function CompaniesClient() {
     }
   }, [isFilterOpen])
 
-  const companies = data?.result ?? []
+  const companies = useMemo(() => {
+    return (data?.result ?? []).filter((company) => company.slug && company.slug !== 'null' && company.company_name);
+  }, [data]);
+
   const currentPage = data?.page ?? 1
   const totalPages = data?.totalPages ?? 1
   const totalCompanies = data?.total ?? 0
