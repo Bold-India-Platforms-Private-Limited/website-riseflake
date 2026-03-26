@@ -49,6 +49,7 @@ import {
   getAdminUserPlans,
   getAdminUserProfile,
   getAdminUsers,
+  deleteAdminUsers,
   PaymentSnapshot,
   updateAdminSettings,
 } from '@/lib/authApi';
@@ -201,6 +202,9 @@ const AdminPanelPage = () => {
   const [settingsLoading, setSettingsLoading] = useState(false);
   const [settingsSaving, setSettingsSaving] = useState(false);
 
+  const [selectedUserIds, setSelectedUserIds] = useState<(number | string)[]>([]);
+  const [isDeleting, setIsDeleting] = useState(false);
+
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [activeSection, setActiveSection] = useState<AdminSection>('dashboard');
 
@@ -239,6 +243,7 @@ const AdminPanelPage = () => {
       setAnalytics(analyticsRes.analytics);
       setUsers(usersRes.users || []);
       setTotalUsersCount(usersRes.pagination?.totalItems || 0);
+      setSelectedUserIds([]); // reset selection on new data
     } finally {
       setLoading(false);
     }
@@ -376,6 +381,30 @@ const AdminPanelPage = () => {
   const handleLogout = () => {
     logout();
     window.location.href = '/enter-404-refresh';
+  };
+
+  const handleDeleteSelected = async () => {
+    if (!token || selectedUserIds.length === 0) return;
+    
+    if (!window.confirm(`Are you sure you want to permanently delete ${selectedUserIds.length} users?`)) {
+      return;
+    }
+
+    setIsDeleting(true);
+    try {
+      const response = await deleteAdminUsers(token, selectedUserIds);
+      if (response.success) {
+        alert(response.message);
+        loadData(); // reload the table
+      } else {
+        alert('Failed to delete users.');
+      }
+    } catch (err: any) {
+      alert(err.message || 'Error deleting users');
+    } finally {
+      setIsDeleting(false);
+      setSelectedUserIds([]);
+    }
   };
 
   if (!token || !isAdmin) {
@@ -659,7 +688,20 @@ const AdminPanelPage = () => {
                   </select>
                 </div>
 
-                <div className="mt-4">
+                <div className="mt-6 border-t border-slate-100 pt-4 flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <button
+                      type="button"
+                      disabled={selectedUserIds.length === 0 || isDeleting}
+                      onClick={handleDeleteSelected}
+                      className="inline-flex items-center justify-center rounded-lg bg-red-50 text-red-600 border border-red-200 px-4 py-2 text-sm font-semibold transition hover:bg-red-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {isDeleting ? 'Deleting...' : `Delete Selected (${selectedUserIds.length})`}
+                    </button>
+                    {selectedUserIds.length > 0 && (
+                      <span className="text-xs text-slate-500">Only users with 0 payments can be deleted.</span>
+                    )}
+                  </div>
                   <CustomPagination
                     totalItems={totalUsersCount}
                     currentPage={page}
@@ -680,6 +722,28 @@ const AdminPanelPage = () => {
                     <table className="min-w-full text-sm">
                       <thead className="bg-slate-50">
                         <tr className="text-left border-b border-slate-200 text-slate-600">
+                          <th className="py-2 pl-3 pr-2 w-10">
+                            <input
+                              type="checkbox"
+                              className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                              onChange={(e) => {
+                                if (e.target.checked) {
+                                  // Select only users that have 0 successful payments
+                                  const validIds = users
+                                    .filter((u) => u.payment_id_count === 0)
+                                    .map((u) => u.user.id);
+                                  setSelectedUserIds(validIds);
+                                } else {
+                                  setSelectedUserIds([]);
+                                }
+                              }}
+                              checked={
+                                users.length > 0 &&
+                                selectedUserIds.length === users.filter((u) => u.payment_id_count === 0).length &&
+                                users.filter((u) => u.payment_id_count === 0).length > 0
+                              }
+                            />
+                          </th>
                           <th className="py-2 pr-3">Name</th>
                           <th className="py-2 pr-3">Email</th>
                           <th className="py-2 pr-3">Mobile</th>
@@ -694,13 +758,31 @@ const AdminPanelPage = () => {
                       <tbody>
                         {users.length === 0 && (
                           <tr>
-                            <td className="py-10 text-center text-slate-500" colSpan={9}>
+                            <td className="py-10 text-center text-slate-500" colSpan={10}>
                               No users found for selected filters.
                             </td>
                           </tr>
                         )}
-                        {users.map((item) => (
+                        {users.map((item) => {
+                          const canDelete = item.payment_id_count === 0;
+                          return (
                           <tr key={String(item.user.id)} className="border-b border-slate-100 align-top hover:bg-slate-50/60">
+                            <td className="py-3 pl-3 pr-2">
+                              <input
+                                type="checkbox"
+                                className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 disabled:opacity-50"
+                                disabled={!canDelete}
+                                checked={selectedUserIds.includes(item.user.id)}
+                                onChange={(e) => {
+                                  if (!canDelete) return;
+                                  if (e.target.checked) {
+                                    setSelectedUserIds((prev) => [...prev, item.user.id]);
+                                  } else {
+                                    setSelectedUserIds((prev) => prev.filter((id) => id !== item.user.id));
+                                  }
+                                }}
+                              />
+                            </td>
                             <td className="py-3 pr-3">
                               <div className="flex items-center gap-2">
                                 <InitialsAvatar name={item.user.full_name} seed={item.user.id} size={32} />
@@ -813,7 +895,8 @@ const AdminPanelPage = () => {
                               </div>
                             </td>
                           </tr>
-                        ))}
+                          );
+                        })}
                       </tbody>
                     </table>
                   </div>

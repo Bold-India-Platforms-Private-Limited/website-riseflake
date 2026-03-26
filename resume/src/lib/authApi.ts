@@ -361,3 +361,16 @@ export const updateAdminSettings = async (
 
   return parseResponse<{ success: boolean; settings: BuilderSettingsPayload }>(response);
 };
+
+export const deleteAdminUsers = async (
+  token: string,
+  userIds: (string | number)[]
+): Promise<{ success: boolean; message: string; deletedCount: number }> => {
+  const response = await fetch(`${API_BASE_URL}/api/admin/users`, {
+    method: 'DELETE',
+    headers: authHeaders(token),
+    body: JSON.stringify({ userIds }),
+  });
+
+  return parseResponse<{ success: boolean; message: string; deletedCount: number }>(response);
+};
