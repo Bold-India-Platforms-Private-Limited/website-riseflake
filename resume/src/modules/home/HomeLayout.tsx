@@ -499,17 +499,17 @@ const HomeLayout = () => {
             {[
               {
                 name: 'Priya Sharma',
-                role: 'SDE-1 at Google',
+                role: 'SDE-1',
                 story: 'Got 7 offers including Google & Microsoft after using Riseflake template',
               },
               {
                 name: 'Rahul Verma',
-                role: 'Product Manager at Flipkart',
+                role: 'Product Manager',
                 story: 'Landed PM role with 28 LPA within 21 days of building resume',
               },
               {
                 name: 'Anjali Mehta',
-                role: 'UX Designer at Swiggy',
+                role: 'UX Designer',
                 story: 'Returned to work with 42% salary hike using designer template',
               },
             ].map((person, i) => (

@@ -11,6 +11,7 @@ interface Testimonial {
   name: string;
   title: string;
   id: string;
+  image?: string;
 }
 
 interface Logo {
@@ -27,26 +28,47 @@ const Testimonials: React.FC = () => {
     {
       logoNumber: 1,
       stars: 5,
-      review: "Got 7 offers including Google & Microsoft after using Riseflake template",
+      review: "The resume templates are clean, professional, and ATS-friendly. Got 7 offers from top tech firms using the designer templates!",
       name: 'Priya Sharma',
-      title: 'SDE-1 at Google',
+      title: 'SDE-1',
       id: 'priya-sharma',
+      image: '/1.webp'
     },
     {
       logoNumber: 2,
       stars: 5,
-      review: "Landed PM role with 28 LPA within 21 days of building resume",
-      name: 'Rahul Verma',
-      title: 'Product Manager at Flipkart',
-      id: 'rahul-verma',
+      review: "Found amazing mentors and built my professional network within weeks. Professional Networking here is simple and effective.",
+      name: 'Anjali Mehta',
+      title: 'UX Designer',
+      id: 'anjali-mehta',
+      image: '/2.webp'
     },
     {
       logoNumber: 3,
       stars: 5,
-      review: "Returned to work with 42% salary hike using designer template",
-      name: 'Anjali Mehta',
-      title: 'UX Designer at Swiggy',
-      id: 'anjali-mehta',
+      review: "The AI suggestions for job applications were spot on. Landed multiple interviews and my dream PM role within 21 days.",
+      name: 'Rahul Verma',
+      title: 'Product Manager',
+      id: 'rahul-verma',
+      image: '/3.webp'
+    },
+    {
+      logoNumber: 4,
+      stars: 5,
+      review: "Upgraded my resume and saw an immediate 42% increase in interview callbacks. The best tool for any serious job seeker.",
+      name: 'Sneha Kapoor',
+      title: 'Data Scientist',
+      id: 'sneha-kapoor',
+      image: '/4.webp'
+    },
+    {
+      logoNumber: 5,
+      stars: 5,
+      review: "This comprehensive job search platform changed my career path. Efficiently managed my search and got my dream role.",
+      name: 'Neha Gupta',
+      title: 'HR Manager',
+      id: 'neha-gupta',
+      image: '/5.webp'
     },
   ];
 
@@ -129,28 +151,28 @@ const Testimonials: React.FC = () => {
   );
 
   return (
-    <section 
-    className="py-20 px-[5%] md:px-[1%] w-full bg-none relative mx-auto"
+    <section
+      className="py-20 px-[5%] md:px-[1%] w-full bg-none relative mx-auto"
       style={{ maxWidth: isMobile ? '100%' : '1200px' }} // Limit to 1200px for desktop
     >
       <div className="max-w-[1200px] mx-auto flex flex-col lg:flex-row lg:items-start">
 
         {/* Section Header */}
-        <div 
+        <div
           className="lg:sticky lg:top-[120px] lg:flex-none lg:w-[320px] w-full"
           style={isMobile ? { textAlign: 'left' } : {}}
         >
-          <span 
+          <span
             className="inline-block bg-[rgba(95,114,228,0.15)] text-[#6b7ff5] px-5 py-2 rounded-[10px] font-semibold text-[0.80rem] mb-4"
             style={isMobile ? { marginBottom: '0.5rem' } : {}}
           >
             Real Customers Reviews
           </span>
 
-          <h2 
+          <h2
             className="relative inline-block font-bold text-[#2D3A4B] leading-[1.3] text-[1.7rem] lg:text-[1.7rem]"
-            style={isMobile ? { 
-              margin: '0 0 0.3rem 0', 
+            style={isMobile ? {
+              margin: '0 0 0.3rem 0',
               fontSize: '1.5rem',
               display: 'block'
             } : {}}
@@ -158,17 +180,17 @@ const Testimonials: React.FC = () => {
             What people say
             <span
               className="absolute left-0 bottom-[-2px] w-full opacity-60"
-              style={{ 
-                height: '10px', 
+              style={{
+                height: '10px',
                 background: "url('/section-title-icon.png') no-repeat center/cover",
                 ...(isMobile ? { width: '60%' } : {})
               }}
             />
           </h2>
 
-          <p 
+          <p
             className="text-[#6b7280] text-[0.95rem] leading-[1.5] mb-5 max-w-[300px]"
-            style={isMobile ? { 
+            style={isMobile ? {
               margin: '0 0 1rem 0',
               textAlign: 'left',
               maxWidth: '100%'
@@ -178,9 +200,9 @@ const Testimonials: React.FC = () => {
           </p>
 
           {/* Controls */}
-          <div 
+          <div
             className="flex items-center gap-4 mt-[30px]"
-            style={isMobile ? { 
+            style={isMobile ? {
               justifyContent: 'flex-start',
               marginTop: '0.5rem',
               marginBottom: '1rem'
@@ -206,9 +228,8 @@ const Testimonials: React.FC = () => {
                   <button
                     key={i}
                     onClick={() => setCurrentIndex(i)}
-                    className={`rounded-full transition-all duration-300 ${
-                      i === currentIndex ? 'w-4 h-2 bg-[#5f72e4]' : 'w-2 h-2 bg-[#c8ccf5]'
-                    }`}
+                    className={`rounded-full transition-all duration-300 ${i === currentIndex ? 'w-4 h-2 bg-[#5f72e4]' : 'w-2 h-2 bg-[#c8ccf5]'
+                      }`}
                   />
                 ))}
               </div>
@@ -218,19 +239,18 @@ const Testimonials: React.FC = () => {
 
         {/* Right Column - Cards and Logos */}
         <div className="flex-1 min-w-0 relative" style={isMobile ? { width: '100%' } : {}}>
-          
+
           {/* Cards Grid */}
-          <div 
-            className={`grid mb-12 w-full ${
-              isMobile ? 'grid-cols-1 gap-6' : 'grid-cols-3 gap-6'
-            }`}
+          <div
+            className={`grid mb-12 w-full ${isMobile ? 'grid-cols-1 gap-6' : 'grid-cols-3 gap-6'
+              }`}
             style={isMobile ? { marginBottom: '2rem' } : {}}
           >
             {visibleTestimonials.map((testimonial, index) => (
               <div
                 key={currentIndex + index}
                 className="flex flex-col overflow-hidden rounded-xl bg-white border border-black/[0.05] shadow-[0_4px_20px_rgba(0,0,0,0.08)] transition-all duration-[400ms] ease-[cubic-bezier(0.4,0,0.2,1)] hover:-translate-y-2 hover:shadow-[0_12px_40px_rgba(0,0,0,0.12)] p-6"
-                style={!isMobile ? { height: '320px', minWidth: '0', maxWidth: '370px', margin: '0 auto' } : { 
+                style={!isMobile ? { height: '320px', minWidth: '0', maxWidth: '370px', margin: '0 auto' } : {
                   height: 'auto',
                   minHeight: '320px',
                   padding: '2rem',
@@ -240,17 +260,7 @@ const Testimonials: React.FC = () => {
                   border: '1px solid rgba(0,0,0,0.06)'
                 }}
               >
-                {/* Company Logo */}
-                <img
-                  src={`/logo.webp`}
-                  alt={`Company Logo ${testimonial.logoNumber}`}
-                  className="object-contain mb-5"
-                  style={{ 
-                    height: '22px', 
-                    width: 'auto', 
-                    maxWidth: '110px' 
-                  }}
-                />
+
 
                 {/* Stars */}
                 {renderStars(testimonial.stars)}
@@ -272,7 +282,15 @@ const Testimonials: React.FC = () => {
 
                 {/* Reviewer */}
                 <div className="flex items-center gap-4 mt-5 shrink-0">
-                  <InitialsAvatar name={testimonial.name} seed={testimonial.name} size={44} className="shadow-md" />
+                  {testimonial.image ? (
+                    <img 
+                      src={testimonial.image} 
+                      alt={testimonial.name} 
+                      className="w-11 h-11 rounded-full object-cover shadow-md"
+                    />
+                  ) : (
+                    <InitialsAvatar name={testimonial.name} seed={testimonial.name} size={44} className="shadow-md" />
+                  )}
                   <div className="min-w-0">
                     <p className="font-semibold text-[#2c3e50] text-[0.9rem] whitespace-nowrap overflow-hidden text-ellipsis mb-0.5">
                       {testimonial.name}
@@ -287,20 +305,19 @@ const Testimonials: React.FC = () => {
           </div>
 
           {/* Logos Section */}
-          <div 
+          <div
             className="pt-14 border-t border-black/[0.08]"
-            style={isMobile ? { 
+            style={isMobile ? {
               marginTop: '3rem',
               paddingTop: '0',
               borderTop: 'none',
               textAlign: 'center'
             } : {}}
           >
-            <div 
-              className={`flex flex-wrap items-center gap-14 transition-all duration-500 ease-in-out ${
-                isMobile ? 'justify-center' : 'justify-start'
-              }`}
-              style={isMobile ? { 
+            <div
+              className={`flex flex-wrap items-center gap-14 transition-all duration-500 ease-in-out ${isMobile ? 'justify-center' : 'justify-start'
+                }`}
+              style={isMobile ? {
                 display: 'grid',
                 gridTemplateColumns: '1fr 1fr',
                 gap: '1rem',
@@ -316,8 +333,8 @@ const Testimonials: React.FC = () => {
                     src={logo.src}
                     alt="Company Logo"
                     className="opacity-70 grayscale transition-all duration-500 hover:opacity-100 hover:grayscale-0"
-                    style={{ 
-                      height: '24px', 
+                    style={{
+                      height: '24px',
                       width: 'auto',
                       margin: '0 auto',
                       justifySelf: 'center'
