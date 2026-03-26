@@ -22,9 +22,10 @@ const getInitials = (name?: string | null) => {
     .filter(Boolean);
 
   if (tokens.length === 1) {
-    return tokens[0].slice(0, 2).toUpperCase();
+    return tokens[0].slice(0, 1).toUpperCase();
   }
 
+  // User specifically asked for "P S" format
   return `${tokens[0][0]} ${tokens[tokens.length - 1][0]}`.toUpperCase();
 };
 
@@ -47,17 +48,19 @@ const InitialsAvatar = ({ name, seed, size = 36, className = '' }: InitialsAvata
 
   return (
     <div
-      className={`inline-flex items-center justify-center rounded-full font-semibold select-none ${className}`.trim()}
+      className={`inline-flex items-center justify-center rounded-full font-bold select-none ${className}`.trim()}
       style={{
         width: size,
         height: size,
         backgroundColor: colors.bg,
         color: colors.text,
+        fontSize: Math.max(12, Math.floor(size * 0.38)),
+        lineHeight: 1
       }}
       aria-label={name || 'User'}
       title={name || 'User'}
     >
-      <span style={{ fontSize: Math.max(12, Math.floor(size * 0.36)) }}>{initials}</span>
+      <span>{initials}</span>
     </div>
   );
 };

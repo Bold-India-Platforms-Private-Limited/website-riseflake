@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { BASE_ASSETS_URL } from '@/lib/config';
+import { BASE_ASSETS_URL } from '../../lib/config';
+import InitialsAvatar from './InitialsAvatar';
 
 interface Testimonial {
   logoNumber: number;
@@ -48,27 +49,6 @@ const Testimonials: React.FC = () => {
       id: 'anjali-mehta',
     },
   ];
-
-  const COLOR_PAIRS = [
-    { bg: '#f0f4ff', text: '#4f46e5' },
-    { bg: '#f5f3ff', text: '#7c3aed' },
-    { bg: '#faf5ff', text: '#9333ea' },
-    { bg: '#fdf2f8', text: '#db2777' },
-    { bg: '#fff1f2', text: '#e11d48' },
-    { bg: '#f0fdf4', text: '#16a34a' },
-    { bg: '#eff6ff', text: '#2563eb' },
-  ];
-
-  const getInitials = (name: string) => {
-    const tokens = name.split(/\s+/).filter(Boolean);
-    if (tokens.length === 1) return tokens[0].slice(0, 1).toUpperCase();
-    return `${tokens[0][0]} ${tokens[tokens.length - 1][0]}`.toUpperCase();
-  };
-
-  const getColorPair = (name: string) => {
-    const hash = name.split('').reduce((acc, char) => char.charCodeAt(0) + ((acc << 5) - acc), 0);
-    return COLOR_PAIRS[Math.abs(hash) % COLOR_PAIRS.length];
-  };
 
   const companyLogos: string[] = [
     `${BASE_ASSETS_URL}/logos/review-company-1.webp`,
@@ -292,18 +272,7 @@ const Testimonials: React.FC = () => {
 
                 {/* Reviewer */}
                 <div className="flex items-center gap-4 mt-5 shrink-0">
-                  <div 
-                    className="flex items-center justify-center rounded-full font-bold shadow-md shrink-0"
-                    style={{ 
-                      width: '44px', 
-                      height: '44px',
-                      backgroundColor: getColorPair(testimonial.name).bg,
-                      color: getColorPair(testimonial.name).text,
-                      fontSize: '1rem'
-                    }}
-                  >
-                    {getInitials(testimonial.name)}
-                  </div>
+                  <InitialsAvatar name={testimonial.name} seed={testimonial.name} size={44} className="shadow-md" />
                   <div className="min-w-0">
                     <p className="font-semibold text-[#2c3e50] text-[0.9rem] whitespace-nowrap overflow-hidden text-ellipsis mb-0.5">
                       {testimonial.name}

@@ -86,7 +86,7 @@ const HomeLayout = () => {
     closeMobileNav();
 
     if (!token) {
-      router.push('/plans');
+      router.push('/plans?auth=register');
       return;
     }
 
@@ -101,7 +101,7 @@ const HomeLayout = () => {
       setIsNavigating(false);
     }
 
-    router.push('/plans');
+    router.push('/plans?auth=register');
   };
 
   const handleFreeNavigation = () => {
@@ -306,10 +306,10 @@ const HomeLayout = () => {
             </p>
           </div>
 
-          <div className="flex flex-col gap-10">
-            {/* Row 1 - Forward Fast */}
+          <div className="flex flex-col gap-6 md:gap-10">
+            {/* Row 1 - Forward */}
             <div className="marquee-wrapper">
-              <div className="animate-marquee duration-fast flex gap-12 px-4">
+              <div className="animate-marquee duration-fast flex gap-8 md:gap-12 px-4">
                 {[...COMPANY_LOGO_URLS.slice(0, 23), ...COMPANY_LOGO_URLS.slice(0, 23)].map(
                   (logo, i) => (
                     <div
@@ -331,9 +331,9 @@ const HomeLayout = () => {
               </div>
             </div>
 
-            {/* Row 2 - Reverse Slow */}
+            {/* Row 2 - Same Direction, Staggered */}
             <div className="marquee-wrapper">
-              <div className="animate-marquee-reverse duration-slow flex gap-12 px-4">
+              <div className="animate-marquee duration-slow flex gap-8 md:gap-12 px-4 ml-[65px]">
                 {[...COMPANY_LOGO_URLS.slice(23, 46), ...COMPANY_LOGO_URLS.slice(23, 46)].map(
                   (logo, i) => (
                     <div
@@ -355,9 +355,9 @@ const HomeLayout = () => {
               </div>
             </div>
 
-            {/* Row 3 - Forward Normal */}
+            {/* Row 3 - Same Direction */}
             <div className="marquee-wrapper">
-              <div className="animate-marquee duration-normal flex gap-12 px-4">
+              <div className="animate-marquee duration-normal flex gap-8 md:gap-12 px-4">
                 {[...COMPANY_LOGO_URLS.slice(46, 70), ...COMPANY_LOGO_URLS.slice(46, 70)].map(
                   (logo, i) => (
                     <div
