@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { ChangeEvent, FormEvent, useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
 import PhoneInput from 'react-phone-input-2';
-import { Check, CheckCircle2, ShieldCheck, X } from 'lucide-react';
+import { Check, CheckCircle2, ShieldCheck, X, XCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import LandingFooter from '@/components/landing/LandingFooter';
 import {
@@ -687,15 +687,15 @@ const PlansPage = () => {
                         className="w-full mt-2 rounded-lg border border-slate-300 px-4 py-3"
                         required
                       />
-                      <div className="flex justify-end mt-1">
-                        <button
-                          type="button"
-                          onClick={() => setAuthMode('forgot')}
-                          className="text-xs font-semibold text-[#2f5ee7] hover:underline"
-                        >
-                          Forgot Password?
-                        </button>
-                      </div>
+                    </div>
+                    <div className="flex justify-end -mt-2">
+                      <button
+                        type="button"
+                        onClick={() => setAuthMode('forgot')}
+                        className="text-xs font-semibold text-[#2f5ee7] hover:underline cursor-pointer"
+                      >
+                        Forgot Password?
+                      </button>
                     </div>
                     <button
                       type="submit"
@@ -797,6 +797,17 @@ const PlansPage = () => {
                       Send Reset Link
                     </button>
                   </form>
+                )}
+
+                {error && (
+                  <div className="mt-6 p-4 rounded-xl bg-red-50 border border-red-100 flex items-start gap-3">
+                    <div className="flex-shrink-0 mt-0.5">
+                      <XCircle className="h-5 w-5 text-red-500" />
+                    </div>
+                    <p className="text-sm font-medium text-red-800 leading-tight">
+                      {error}
+                    </p>
+                  </div>
                 )}
               </div>
             </aside>

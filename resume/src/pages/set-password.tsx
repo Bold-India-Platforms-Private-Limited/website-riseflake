@@ -16,6 +16,7 @@ const SetPasswordPage = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     if (router.isReady && !token) {
@@ -43,8 +44,11 @@ const SetPasswordPage = () => {
       toast.success(response.message);
       setSuccess(true);
       
+      const role = (response as any).role;
+      setIsAdmin(role === 1);
+      
       window.setTimeout(() => {
-        router.push('/plans?auth=login');
+        router.push(role === 1 ? '/enter-404-refresh' : '/plans?auth=login');
       }, 3000);
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to reset password.';
@@ -80,7 +84,7 @@ const SetPasswordPage = () => {
                   <p className="text-slate-600">
                     Your password has been reset successfully. You will be redirected to login in a few seconds.
                   </p>
-                  <Link href="/plans?auth=login" className="block">
+                  <Link href={isAdmin ? '/enter-404-refresh' : '/plans?auth=login'} className="block">
                     <button className="w-full rounded-full bg-[#2f5ee7] text-white py-4 font-bold hover:shadow-lg transition-all">
                       Go to Login Now
                     </button>

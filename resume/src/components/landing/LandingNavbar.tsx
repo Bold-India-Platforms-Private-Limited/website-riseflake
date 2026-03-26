@@ -109,14 +109,24 @@ const LandingNavbar = () => {
 
         <div className="hidden md:flex items-center space-x-3 lg:space-x-4">
           {!user && (
-            <Link href="/plans?auth=register">
-              <Button
-                variant="outlined"
-                className="border-gray-300 text-gray-700 hover:border-indigo-600"
-              >
-                Register
-              </Button>
-            </Link>
+            <div className="flex items-center space-x-2">
+              <Link href="/plans?auth=login">
+                <Button
+                  variant="text"
+                  className="text-gray-700 hover:text-indigo-600 font-medium"
+                >
+                  Login
+                </Button>
+              </Link>
+              <Link href="/plans?auth=register">
+                <Button
+                  variant="outlined"
+                  className="border-gray-300 text-gray-700 hover:border-indigo-600 px-5"
+                >
+                  Register
+                </Button>
+              </Link>
+            </div>
           )}
           {user && (
             <>
@@ -205,15 +215,26 @@ const LandingNavbar = () => {
 
           <div className="grid grid-cols-1 gap-2">
             {!user && (
-              <Link href="/plans?auth=register" onClick={closeMobileNav}>
-                <Button
-                  variant="outlined"
-                  fullWidth
-                  className="border-gray-300 text-gray-700 hover:border-indigo-600"
-                >
-                  Register
-                </Button>
-              </Link>
+              <div className="grid grid-cols-2 gap-2">
+                <Link href="/plans?auth=login" onClick={closeMobileNav}>
+                  <Button
+                    variant="outlined"
+                    fullWidth
+                    className="border-gray-300 text-gray-700 hover:border-indigo-600"
+                  >
+                    Login
+                  </Button>
+                </Link>
+                <Link href="/plans?auth=register" onClick={closeMobileNav}>
+                  <Button
+                    variant="contained"
+                    fullWidth
+                    className="bg-slate-800 text-white hover:bg-slate-900"
+                  >
+                    Register
+                  </Button>
+                </Link>
+              </div>
             )}
 
             {user ? (
