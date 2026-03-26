@@ -644,6 +644,7 @@ const PlansPage = () => {
                       className={`flex-1 py-2 rounded-full text-center font-semibold transition-all text-sm ${authMode === 'register' ? 'bg-[#2f5ee7] text-white shadow' : 'text-[#2f5ee7] hover:bg-slate-200'}`}
                       style={{ minWidth: 0 }}
                     >
+                      Register for free
                     </button>
                     <button
                       type="button"
