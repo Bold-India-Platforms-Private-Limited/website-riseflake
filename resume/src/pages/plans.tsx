@@ -265,7 +265,8 @@ const PlansPage = () => {
 
     if (!loginCompleted || !token || !user) {
       setIsNavigating(false);
-      const preferredMode = router.query.auth === 'register' ? 'register' : 'login';
+      // Default to register unless explicitly set to login
+      const preferredMode = router.query.auth === 'login' ? 'login' : 'register';
       openAuthDrawer(preferredMode);
       return;
     }

@@ -500,22 +500,16 @@ const HomeLayout = () => {
               {
                 name: 'Priya Sharma',
                 role: 'SDE-1 at Google',
-                prev: 'Tier-3 College',
-                img: '/person1.jpg',
                 story: 'Got 7 offers including Google & Microsoft after using Riseflake template',
               },
               {
                 name: 'Rahul Verma',
                 role: 'Product Manager at Flipkart',
-                prev: '0 Experience',
-                img: '/person2.jpg',
                 story: 'Landed PM role with 28 LPA within 21 days of building resume',
               },
               {
                 name: 'Anjali Mehta',
                 role: 'UX Designer at Swiggy',
-                prev: 'Career Gap 2 Years',
-                img: '/person3.jpg',
                 story: 'Returned to work with 42% salary hike using designer template',
               },
             ].map((person, i) => (
@@ -527,7 +521,7 @@ const HomeLayout = () => {
                 className="bg-white rounded-2xl p-6 shadow-xl"
               >
                 <div className="flex items-center mb-4">
-                  <div className="w-16 h-16 bg-gray-200 rounded-full mr-4" />
+                  <InitialsAvatar name={person.name} seed={person.name} size={64} className="mr-4 shadow-sm" />
                   <div>
                     <h4 className="font-bold text-gray-900">{person.name}</h4>
                     <p className="text-indigo-600 font-medium">{person.role}</p>
