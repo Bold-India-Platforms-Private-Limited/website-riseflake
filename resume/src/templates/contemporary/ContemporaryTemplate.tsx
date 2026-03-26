@@ -229,7 +229,7 @@ export default function ContemporaryTemplate() {
 
         <SectionValidator value={spokenLanguages}>
           <Section title="LANGUAGES" icon="🌐" titleColor={activeTheme.titleColor}>
-            <RatedSkills items={spokenLanguages} />
+            <RatedSkills items={spokenLanguages} activeColor={activeTheme.titleColor} />
           </Section>
         </SectionValidator>
       </MainColumn>

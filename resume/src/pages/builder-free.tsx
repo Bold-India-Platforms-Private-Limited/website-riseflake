@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { Button } from '@mui/material';
 import BuilderLayout from '@/modules/builder/BuilderLayout';
+import { withBasePath } from '@/utils/withBasePath';
 import { useAuthStore } from '@/stores/auth.store';
 import { getCurrentPlan, getPublicBuilderSettings } from '@/lib/authApi';
 import LandingNavbar from '@/components/landing/LandingNavbar';
@@ -59,7 +60,7 @@ const BuilderFreePage: NextPage = () => {
       <Head>
         <title>Riseflake Resume Builder - Free</title>
         <meta name="description" content="Single Page Resume Builder - Free" />
-        <link rel="icon" type="image/png" href="hero.jpg" />
+        <link rel="icon" type="image/png" href={withBasePath('/hero.jpg')} />
       </Head>
 
       {settingsLoading ? (

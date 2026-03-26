@@ -51,7 +51,7 @@ const AwardComp: React.FC<IAwardComp> = ({ awardInfo, currentIndex }) => {
     <Fragment>
       <TextField
         label="Award name"
-        variant="filled"
+        variant="outlined"
         value={awardInfo.title}
         onChange={(e: ChangeEvent<HTMLInputElement>) => {
           const value = e.target.value;
@@ -61,11 +61,20 @@ const AwardComp: React.FC<IAwardComp> = ({ awardInfo, currentIndex }) => {
         fullWidth
         required
         autoFocus={true}
-        sx={{ marginBottom: '26px' }}
+        sx={{
+          marginBottom: '26px',
+          '& .MuiOutlinedInput-root': {
+            borderRadius: '12px',
+            backgroundColor: 'white',
+            '&:hover fieldset': { borderColor: '#4f46e5' },
+            '&.Mui-focused fieldset': { borderColor: '#4f46e5' },
+          },
+          '& .MuiInputLabel-root.Mui-focused': { color: '#4f46e5' },
+        }}
       />
       <TextField
         label="Awarded by"
-        variant="filled"
+        variant="outlined"
         value={awardInfo.awarder}
         onChange={(e: ChangeEvent<HTMLInputElement>) => {
           const value = e.target.value;
@@ -74,7 +83,16 @@ const AwardComp: React.FC<IAwardComp> = ({ awardInfo, currentIndex }) => {
         autoComplete="off"
         fullWidth
         required
-        sx={{ marginBottom: '26px' }}
+        sx={{
+          marginBottom: '26px',
+          '& .MuiOutlinedInput-root': {
+            borderRadius: '12px',
+            backgroundColor: 'white',
+            '&:hover fieldset': { borderColor: '#4f46e5' },
+            '&.Mui-focused fieldset': { borderColor: '#4f46e5' },
+          },
+          '& .MuiInputLabel-root.Mui-focused': { color: '#4f46e5' },
+        }}
       />
       <DatePicker
         label="Date"
@@ -85,11 +103,20 @@ const AwardComp: React.FC<IAwardComp> = ({ awardInfo, currentIndex }) => {
         format={DATE_PICKER_FORMAT}
         slotProps={{
           textField: {
-            variant: 'filled',
+            variant: 'outlined',
             autoComplete: 'off',
             fullWidth: true,
             required: true,
-            sx: { marginBottom: '26px' },
+            sx: {
+              marginBottom: '26px',
+              '& .MuiOutlinedInput-root': {
+                borderRadius: '12px',
+                backgroundColor: 'white',
+                '&:hover fieldset': { borderColor: '#4f46e5' },
+                '&.Mui-focused fieldset': { borderColor: '#4f46e5' },
+              },
+              '& .MuiInputLabel-root.Mui-focused': { color: '#4f46e5' },
+            },
           },
         }}
       />

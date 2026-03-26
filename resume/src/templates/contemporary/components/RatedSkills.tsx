@@ -35,14 +35,14 @@ const DotsWrapper = styled.div`
   gap: 4px;
 `;
 
-const Dot = styled.div<{ active: boolean }>`
+const Dot = styled.div<{ active: boolean; activeColor?: string }>`
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background-color: ${(props) => (props.active ? '#27345c' : '#e2e8f0')};
+  background-color: ${(props) => (props.active ? props.activeColor || '#27345c' : '#e2e8f0')};
 `;
 
-export default function RatedSkills({ items }: { items: ISkillItem[] }) {
+export default function RatedSkills({ items, activeColor }: { items: ISkillItem[]; activeColor?: string }) {
   if (!items || items.length === 0) return null;
 
   return (
@@ -65,7 +65,7 @@ export default function RatedSkills({ items }: { items: ISkillItem[] }) {
             <LevelLabel>{getLevelLabel(level)}</LevelLabel>
             <DotsWrapper>
               {[...Array(totalDots)].map((_, i) => (
-                <Dot key={i} active={i < activeDots} />
+                <Dot key={i} active={i < activeDots} activeColor={activeColor} />
               ))}
             </DotsWrapper>
           </SkillRow>

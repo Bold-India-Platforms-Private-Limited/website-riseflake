@@ -62,7 +62,7 @@ const Volunteer: React.FC<IVolunteerProps> = ({ volunteeringInfo, currentIndex }
     <Fragment>
       <TextField
         label="Organisation"
-        variant="filled"
+        variant="outlined"
         value={volunteeringInfo.organization}
         onChange={(e: ChangeEvent<HTMLInputElement>) => {
           const value = e.target.value;
@@ -72,11 +72,20 @@ const Volunteer: React.FC<IVolunteerProps> = ({ volunteeringInfo, currentIndex }
         fullWidth
         required
         autoFocus={true}
-        sx={{ marginBottom: '26px' }}
+        sx={{
+          marginBottom: '26px',
+          '& .MuiOutlinedInput-root': {
+            borderRadius: '12px',
+            backgroundColor: 'white',
+            '&:hover fieldset': { borderColor: '#4f46e5' },
+            '&.Mui-focused fieldset': { borderColor: '#4f46e5' },
+          },
+          '& .MuiInputLabel-root.Mui-focused': { color: '#4f46e5' },
+        }}
       />
       <TextField
         label="Role"
-        variant="filled"
+        variant="outlined"
         value={volunteeringInfo.position}
         onChange={(e: ChangeEvent<HTMLInputElement>) => {
           const value = e.target.value;
@@ -85,7 +94,16 @@ const Volunteer: React.FC<IVolunteerProps> = ({ volunteeringInfo, currentIndex }
         autoComplete="off"
         fullWidth
         required
-        sx={{ marginBottom: '26px' }}
+        sx={{
+          marginBottom: '26px',
+          '& .MuiOutlinedInput-root': {
+            borderRadius: '12px',
+            backgroundColor: 'white',
+            '&:hover fieldset': { borderColor: '#4f46e5' },
+            '&.Mui-focused fieldset': { borderColor: '#4f46e5' },
+          },
+          '& .MuiInputLabel-root.Mui-focused': { color: '#4f46e5' },
+        }}
       />
       <DatePicker
         label="Start date"
@@ -95,7 +113,22 @@ const Volunteer: React.FC<IVolunteerProps> = ({ volunteeringInfo, currentIndex }
         }}
         format={DATE_PICKER_FORMAT}
         slotProps={{
-          textField: { variant: 'filled', autoComplete: 'off', fullWidth: true, required: true },
+          textField: {
+            variant: 'outlined',
+            autoComplete: 'off',
+            fullWidth: true,
+            required: true,
+            sx: {
+              marginBottom: '26px',
+              '& .MuiOutlinedInput-root': {
+                borderRadius: '12px',
+                backgroundColor: 'white',
+                '&:hover fieldset': { borderColor: '#4f46e5' },
+                '&.Mui-focused fieldset': { borderColor: '#4f46e5' },
+              },
+              '& .MuiInputLabel-root.Mui-focused': { color: '#4f46e5' },
+            },
+          },
         }}
       />
       <SwitchWidget
@@ -114,11 +147,20 @@ const Volunteer: React.FC<IVolunteerProps> = ({ volunteeringInfo, currentIndex }
         format={DATE_PICKER_FORMAT}
         slotProps={{
           textField: {
-            variant: 'filled',
+            variant: 'outlined',
             autoComplete: 'off',
             fullWidth: true,
             required: true,
-            sx: { marginBottom: '26px' },
+            sx: {
+              marginBottom: '26px',
+              '& .MuiOutlinedInput-root': {
+                borderRadius: '12px',
+                backgroundColor: 'white',
+                '&:hover fieldset': { borderColor: '#4f46e5' },
+                '&.Mui-focused fieldset': { borderColor: '#4f46e5' },
+              },
+              '& .MuiInputLabel-root.Mui-focused': { color: '#4f46e5' },
+            },
           },
         }}
         disabled={volunteeringInfo.isVolunteeringNow}
