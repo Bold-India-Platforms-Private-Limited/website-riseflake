@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { BsGithub } from 'react-icons/bs';
 import { ChevronDown } from 'lucide-react';
+import { withBasePath } from '@/utils/withBasePath';
 
 const LandingFooter = () => {
   const [open, setOpen] = useState<string | null>(null);
@@ -18,7 +19,7 @@ const LandingFooter = () => {
           <div className="space-y-5">
             <div className="flex items-center space-x-3">
               <Image
-                src="/hero.jpg"
+                src={withBasePath('/hero.jpg')}
                 alt="Riseflake"
                 width={42}
                 height={42}

@@ -14,10 +14,12 @@ import {
   loginUser,
   registerUser,
   verifyOrderPayment,
+  forgotPassword,
   type PlanItem,
 } from '@/lib/authApi';
 import { useAuthStore } from '@/stores/auth.store';
 import LoadingOverlay from '@/components/common/LoadingOverlay';
+import { withBasePath } from '@/utils/withBasePath';
 
 declare global {
   interface Window {
@@ -60,7 +62,8 @@ const PlansPage = () => {
 
   const [authDrawerMounted, setAuthDrawerMounted] = useState(false);
   const [authDrawerOpen, setAuthDrawerOpen] = useState(false);
-  const [authMode, setAuthMode] = useState<'login' | 'register'>('login');
+  const [authMode, setAuthMode] = useState<'login' | 'register' | 'forgot'>('login');
+  const [forgotEmail, setForgotEmail] = useState('');
 
   const [loginEmail, setLoginEmail] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
@@ -131,7 +134,7 @@ const PlansPage = () => {
     }
   }, [router.isReady, router.query.auth, loginCompleted]);
 
-  const openAuthDrawer = (mode: 'login' | 'register') => {
+  const openAuthDrawer = (mode: 'login' | 'register' | 'forgot') => {
     setAuthMode(mode);
     setStep(2);
 
@@ -146,7 +149,10 @@ const PlansPage = () => {
 
   const closeAuthDrawer = () => {
     setAuthDrawerOpen(false);
-    window.setTimeout(() => setAuthDrawerMounted(false), AUTH_DRAWER_TRANSITION_MS);
+    window.setTimeout(() => {
+      setAuthDrawerMounted(false);
+      setAuthMode('login');
+    }, AUTH_DRAWER_TRANSITION_MS);
   };
 
   useEffect(() => {
@@ -320,6 +326,24 @@ const PlansPage = () => {
     }
   };
 
+  const handleInlineForgot = async (event: FormEvent) => {
+    event.preventDefault();
+    setError('');
+    setIsNavigating(true);
+
+    try {
+      const response = await forgotPassword(forgotEmail);
+      toast.success(response.message);
+      setAuthMode('login');
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Failed to send reset link.';
+      setError(message);
+      toast.error(message);
+    } finally {
+      setIsNavigating(false);
+    }
+  };
+
   const stepLabelClass = (index: 1 | 2 | 3) => {
     const active = step === index;
     return active ? 'text-slate-900 font-semibold' : 'text-slate-600 font-medium';
@@ -345,7 +369,7 @@ const PlansPage = () => {
         <header className="bg-white border-b border-slate-200 sticky top-0 z-30">
           <div className="max-w-7xl mx-auto h-16 px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
             <Link href="/" className="flex items-center gap-2 min-w-[130px]">
-              <Image src="/hero.jpg" alt="Riseflake" width={34} height={34} />
+              <Image src={withBasePath('/hero.jpg')} alt="Riseflake" width={34} height={34} />
               <span className="text-2xl leading-none font-bold text-[#2f5ee7] hidden sm:inline">Riseflake</span>
             </Link>
 
@@ -613,14 +637,21 @@ const PlansPage = () => {
               <div className="px-6 py-5 border-b border-slate-200 flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <h3 className="text-2xl font-semibold text-slate-900">
-                    {authMode === 'login' ? 'Login' : 'Register'}
+                    {authMode === 'login' ? 'Login' : authMode === 'register' ? 'Register' : 'Reset Password'}
                   </h3>
                   <button
                     type="button"
-                    onClick={() => setAuthMode(authMode === 'login' ? 'register' : 'login')}
+                    onClick={() => {
+                      if (authMode === 'forgot') setAuthMode('login');
+                      else setAuthMode(authMode === 'login' ? 'register' : 'login');
+                    }}
                     className="text-[#2f5ee7] font-semibold text-sm cursor-pointer"
                   >
-                    {authMode === 'login' ? 'Register for free' : 'Already have an account? Login'}
+                    {authMode === 'login'
+                      ? 'Register for free'
+                      : authMode === 'register'
+                        ? 'Already have an account? Login'
+                        : 'Back to Login'}
                   </button>
                 </div>
                 <button
@@ -656,6 +687,15 @@ const PlansPage = () => {
                         className="w-full mt-2 rounded-lg border border-slate-300 px-4 py-3"
                         required
                       />
+                      <div className="flex justify-end mt-1">
+                        <button
+                          type="button"
+                          onClick={() => setAuthMode('forgot')}
+                          className="text-xs font-semibold text-[#2f5ee7] hover:underline"
+                        >
+                          Forgot Password?
+                        </button>
+                      </div>
                     </div>
                     <button
                       type="submit"
@@ -664,7 +704,7 @@ const PlansPage = () => {
                       Login
                     </button>
                   </form>
-                ) : (
+                ) : authMode === 'register' ? (
                   <form className="space-y-4" onSubmit={handleInlineRegister}>
                     <div className="grid grid-cols-2 gap-3">
                       <input
@@ -732,6 +772,29 @@ const PlansPage = () => {
                       className="w-full rounded-full bg-[#2f5ee7] text-white py-3 font-semibold cursor-pointer"
                     >
                       Register
+                    </button>
+                  </form>
+                ) : (
+                  <form className="space-y-4" onSubmit={handleInlineForgot}>
+                    <p className="text-sm text-slate-600 mb-4">
+                      Enter your email address and we'll send you a link to reset your password.
+                    </p>
+                    <div>
+                      <label className="text-sm font-medium text-slate-700">Email ID</label>
+                      <input
+                        type="email"
+                        value={forgotEmail}
+                        onChange={(event: ChangeEvent<HTMLInputElement>) => setForgotEmail(event.target.value)}
+                        placeholder="Enter your registered email"
+                        className="w-full mt-2 rounded-lg border border-slate-300 px-4 py-3"
+                        required
+                      />
+                    </div>
+                    <button
+                      type="submit"
+                      className="w-full rounded-full bg-[#2f5ee7] text-white py-3 font-semibold cursor-pointer"
+                    >
+                      Send Reset Link
                     </button>
                   </form>
                 )}

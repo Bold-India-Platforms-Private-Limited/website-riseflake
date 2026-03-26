@@ -8,6 +8,7 @@ import { FileText } from 'lucide-react';
 import { getCurrentPlan, getCurrentUser, getPaymentLogs, PaymentSnapshot } from '@/lib/authApi';
 import { useAuthStore } from '@/stores/auth.store';
 import InitialsAvatar from '@/components/common/InitialsAvatar';
+import { withBasePath } from '@/utils/withBasePath';
 
 const getRoleLabel = (role?: number) => {
   if (role === 1) return 'Admin';
@@ -106,7 +107,7 @@ const ProfilePage = () => {
         <nav className="sticky top-0 z-50 w-full bg-white border-b border-gray-100 backdrop-blur-xl bg-opacity-95">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
             <Link href="/" className="flex items-center space-x-3">
-              <Image src="/hero.jpg" alt="Riseflake" width={42} height={42} />
+              <Image src={withBasePath('/hero.jpg')} alt="Riseflake" width={42} height={42} />
               <span className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
                 Riseflake
               </span>

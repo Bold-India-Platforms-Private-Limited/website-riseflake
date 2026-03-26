@@ -374,3 +374,23 @@ export const deleteAdminUsers = async (
 
   return parseResponse<{ success: boolean; message: string; deletedCount: number }>(response);
 };
+
+export const forgotPassword = async (email: string) => {
+  const response = await fetch(`${API_BASE_URL}/api/auth/forgot-password`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email }),
+  });
+
+  return parseResponse<{ success: boolean; message: string }>(response);
+};
+
+export const resetPassword = async (token: string, password: string) => {
+  const response = await fetch(`${API_BASE_URL}/api/auth/reset-password`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ token, password }),
+  });
+
+  return parseResponse<{ success: boolean; message: string }>(response);
+};
