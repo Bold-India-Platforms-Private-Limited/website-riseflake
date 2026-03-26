@@ -14,7 +14,7 @@ export default function RightSidebar() {
         </div>
         <div className="flex-1 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
           <a
-            href="https://resume.riseflake.com"
+            href="https://riseflake.com/resume"
             target="_blank"
             rel="noopener noreferrer"
             className="h-full w-full rounded-xl overflow-hidden flex items-center justify-center transition-transform hover:scale-[1.02]"

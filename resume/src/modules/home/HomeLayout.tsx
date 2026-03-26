@@ -389,7 +389,7 @@ const HomeLayout = () => {
             <h2 className="text-3xl md:text-5xl font-bold text-gray-900">
               10K+ Indians Choose{' '}
               <span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-                Resume.Riseflake.com
+                riseflake.com/resume
               </span>
             </h2>
             <p className="mt-4 text-xl text-gray-600">Everything you need to get hired faster</p>

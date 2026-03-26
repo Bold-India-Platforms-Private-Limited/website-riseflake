@@ -52,7 +52,7 @@ const addTrialWatermark = () => {
   line1.setAttribute('style', 'font-size: 116px;');
 
   const line2 = document.createElement('div');
-  line2.textContent = 'resume.riseflake.com';
+  line2.textContent = 'riseflake.com/resume';
   line2.setAttribute('style', 'font-size: 64px; margin-top: 14px;');
 
   if (!document.getElementById(TRIAL_WATERMARK_STYLE_ID)) {

@@ -156,11 +156,11 @@ export default function Navbar({ bgTransparent = false }: { bgTransparent?: bool
                     List Your Jobs
                   </a>
                   <div className="h-px bg-slate-100 my-1"></div>
-                  <a href="https://resume.riseflake.com" className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-indigo-600 transition-colors">
+                  <a href="https://riseflake.com/resume" className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-indigo-600 transition-colors">
                     <FileText className="h-4 w-4 text-slate-400" />
                     Build Resume
                   </a>
-                  <a href="https://resume.riseflake.com/ats-checker" className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-indigo-600 transition-colors">
+                  <a href="https://riseflake.com/resume/ats-checker" className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-indigo-600 transition-colors">
                     <FileCheck className="h-4 w-4 text-slate-400" />
                     ATS Checker
                   </a>
@@ -170,7 +170,7 @@ export default function Navbar({ bgTransparent = false }: { bgTransparent?: bool
 
             {/* Right Group (Business Dropdown + CTA) */}
             <div className="flex items-center gap-2 md:gap-3 shrink-0 ml-auto lg:ml-0">
-              
+
               {/* Business Dropdown */}
               <div className="relative group shrink-0 hidden lg:block">
                 <button className="flex items-center gap-1 md:gap-1.5 rounded-full px-3 md:px-4 lg:px-5 py-2 md:py-2.5 text-xs lg:text-sm font-semibold transition-all duration-500 whitespace-nowrap bg-indigo-50/80 text-indigo-700 hover:bg-indigo-100 hover:text-indigo-800 border-[1.5px] border-indigo-200/60 hover:border-indigo-300/60 hover:-translate-y-0.5 shadow-sm">
@@ -243,9 +243,9 @@ export default function Navbar({ bgTransparent = false }: { bgTransparent?: bool
                 Business
                 <ChevronDown className={`h-3.5 w-3.5 transition-transform ${businessModalOpen ? 'rotate-180' : ''}`} />
               </button>
-              
-               {/* Mobile Call to Action */}
-               <a
+
+              {/* Mobile Call to Action */}
+              <a
                 href="https://app.riseflake.com/home"
                 className="md:hidden inline-flex rounded-full bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 px-4 py-1.5 font-semibold text-white shadow-md transition-all hover:shadow-lg text-xs mr-1"
                 style={{ minWidth: '80px', justifyContent: 'center' }}
@@ -514,7 +514,7 @@ export default function Navbar({ bgTransparent = false }: { bgTransparent?: bool
                 <ChevronRight className="h-5 w-5 opacity-50" />
               </a>
               <a
-                href="https://resume.riseflake.com"
+                href="https://riseflake.com/resume"
                 className="flex items-center justify-between rounded-xl px-4 py-3 text-base font-medium transition text-slate-700 hover:bg-slate-100"
                 onClick={() => setOpen(false)}
               >
@@ -525,7 +525,7 @@ export default function Navbar({ bgTransparent = false }: { bgTransparent?: bool
                 <ChevronRight className="h-5 w-5 opacity-50" />
               </a>
               <a
-                href="https://resume.riseflake.com/ats-checker"
+                href="https://riseflake.com/resume/ats-checker"
                 className="flex items-center justify-between rounded-xl px-4 py-3 text-base font-medium transition text-slate-700 hover:bg-slate-100"
                 onClick={() => setOpen(false)}
               >
