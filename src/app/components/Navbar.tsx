@@ -10,7 +10,7 @@ export default function Navbar({ bgTransparent = false }: { bgTransparent?: bool
   const [open, setOpen] = useState(false)
   const [businessModalOpen, setBusinessModalOpen] = useState(false)
   const [showDrawer, setShowDrawer] = useState(false)
-  const [, setScrolled] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
 
   // Determine active tab, but none for landing page
   const activeTab =
@@ -65,8 +65,8 @@ export default function Navbar({ bgTransparent = false }: { bgTransparent?: bool
   return (
     <>
       <header
-        className={`sticky top-0 z-50 transition-all duration-300 ${bgTransparent ? 'bg-transparent border-transparent' : 'bg-white/20 border-white/20 shadow-sm'} backdrop-blur-3xl`}
-        style={bgTransparent
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${bgTransparent && !scrolled ? 'bg-transparent border-transparent' : 'bg-white/70 border-white/60 shadow-md'} backdrop-blur-3xl`}
+        style={bgTransparent && !scrolled
           ? {
             background: 'rgba(255, 255, 255, 0.02)', // Even more transparent when 'transparent' prop is passed
             WebkitBackdropFilter: 'blur(30px)',
@@ -74,10 +74,10 @@ export default function Navbar({ bgTransparent = false }: { bgTransparent?: bool
             borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
           }
           : {
-            background: 'rgba(255, 255, 255, 0.25)', // Deeply glassy transparent white
+            background: 'rgba(255, 255, 255, 0.65)', // More solid glassy white when scrolled or not transparent
             WebkitBackdropFilter: 'blur(40px) saturate(200%)',
             backdropFilter: 'blur(40px) saturate(200%)',
-            borderBottom: '1px solid rgba(255, 255, 255, 0.2)',
+            borderBottom: '1px solid rgba(255, 255, 255, 0.25)',
           }
         }
       >
