@@ -81,26 +81,10 @@ const HomeLayout = () => {
 
   const [isNavigating, setIsNavigating] = useState(false);
 
-  const handlePaidNavigation = async () => {
+  // Always go to /plans?auth=register on Buy Now
+  const handlePaidNavigation = () => {
     setIsNavigating(true);
     closeMobileNav();
-
-    if (!token) {
-      router.push('/plans?auth=register');
-      return;
-    }
-
-    try {
-      const response = await getCurrentPlan(token);
-      if (response.hasAnyPlan) {
-        router.push('/builder-paid');
-        return;
-      }
-    } catch (_error) {
-      // fallback to plans page
-      setIsNavigating(false);
-    }
-
     router.push('/plans?auth=register');
   };
 

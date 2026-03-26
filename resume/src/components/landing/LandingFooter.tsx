@@ -156,6 +156,13 @@ const LandingFooter = () => {
             </span>
           </div>
         </div>
+
+        {/* Big brand name at the very end */}
+        <div className="w-full flex justify-center mt-12">
+          <span className="text-[2.5rem] md:text-[4rem] font-extrabold tracking-tight text-gray-200 select-none" style={{letterSpacing: '0.05em', lineHeight: 1}}>
+            Riseflake
+          </span>
+        </div>
       </div>
     </footer>
   );

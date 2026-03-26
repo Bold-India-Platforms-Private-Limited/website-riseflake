@@ -636,24 +636,32 @@ const PlansPage = () => {
                 }`}
             >
               <div className="px-6 py-5 border-b border-slate-200 flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <h3 className="text-2xl font-semibold text-slate-900">
-                    {authMode === 'login' ? 'Login' : authMode === 'register' ? 'Register' : 'Reset Password'}
-                  </h3>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      if (authMode === 'forgot') setAuthMode('login');
-                      else setAuthMode(authMode === 'login' ? 'register' : 'login');
-                    }}
-                    className="text-[#2f5ee7] font-semibold text-sm cursor-pointer"
-                  >
-                    {authMode === 'login'
-                      ? 'Register for free'
-                      : authMode === 'register'
-                        ? 'Already have an account? Login'
-                        : 'Back to Login'}
-                  </button>
+                <div className="flex items-center gap-4 w-full">
+                  <div className="flex w-full justify-between bg-slate-100 rounded-full p-1">
+                    <button
+                      type="button"
+                      onClick={() => setAuthMode('register')}
+                      className={`flex-1 py-2 rounded-full text-center font-semibold transition-all text-sm ${authMode === 'register' ? 'bg-[#2f5ee7] text-white shadow' : 'text-[#2f5ee7] hover:bg-slate-200'}`}
+                      style={{ minWidth: 0 }}
+                    >
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setAuthMode('login')}
+                      className={`flex-1 py-2 rounded-full text-center font-semibold transition-all text-sm ${authMode === 'login' ? 'bg-[#2f5ee7] text-white shadow' : 'text-[#2f5ee7] hover:bg-slate-200'}`}
+                      style={{ minWidth: 0 }}
+                    >
+                      Login
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setAuthMode('forgot')}
+                      className={`flex-1 py-2 rounded-full text-center font-semibold transition-all text-sm ${authMode === 'forgot' ? 'bg-[#2f5ee7] text-white shadow' : 'text-[#2f5ee7] hover:bg-slate-200'}`}
+                      style={{ minWidth: 0 }}
+                    >
+                      Forgot Password
+                    </button>
+                  </div>
                 </div>
                 <button
                   type="button"
