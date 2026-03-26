@@ -79,17 +79,21 @@ const Testimonials: React.FC = () => {
     `${BASE_ASSETS_URL}/logos/review-company-4.webp`,
   ];
 
+  const [isTablet, setIsTablet] = useState<boolean>(false);
+
   useEffect(() => {
     const checkMobile = (): void => {
-      setIsMobile(window.innerWidth <= 768);
+      const w = window.innerWidth;
+      setIsMobile(w < 768);
+      setIsTablet(w >= 768 && w < 1024);
     };
     checkMobile();
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Show 3 cards for desktop, 1 for mobile
-  const itemsToShow: number = isMobile ? 1 : 3;
+  // Show 3 cards for desktop, 2 for tablet, 1 for mobile
+  const itemsToShow: number = isMobile ? 1 : isTablet ? 2 : 3;
   const visibleTestimonials: Testimonial[] = testimonials.slice(currentIndex, currentIndex + itemsToShow);
 
   useEffect(() => {
@@ -152,8 +156,8 @@ const Testimonials: React.FC = () => {
 
   return (
     <section
-      className="py-20 px-[5%] md:px-[1%] w-full bg-none relative mx-auto"
-      style={{ maxWidth: isMobile ? '100%' : '1200px' }} // Limit to 1200px for desktop
+      className="py-20 px-[5%] md:px-[3%] w-full bg-none relative mx-auto overflow-hidden"
+      style={{ maxWidth: '1200px' }} // Limit to 1200px for desktop
     >
       <div className="max-w-[1200px] mx-auto flex flex-col lg:flex-row lg:items-start">
 
@@ -242,23 +246,13 @@ const Testimonials: React.FC = () => {
 
           {/* Cards Grid */}
           <div
-            className={`grid mb-12 w-full ${isMobile ? 'grid-cols-1 gap-6' : 'grid-cols-3 gap-6'
-              }`}
-            style={isMobile ? { marginBottom: '2rem' } : {}}
+            className="grid mb-12 w-full gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
           >
             {visibleTestimonials.map((testimonial, index) => (
               <div
                 key={currentIndex + index}
                 className="flex flex-col overflow-hidden rounded-xl bg-white border border-black/[0.05] shadow-[0_4px_20px_rgba(0,0,0,0.08)] transition-all duration-[400ms] ease-[cubic-bezier(0.4,0,0.2,1)] hover:-translate-y-2 hover:shadow-[0_12px_40px_rgba(0,0,0,0.12)] p-6"
-                style={!isMobile ? { height: '320px', minWidth: '0', maxWidth: '370px', margin: '0 auto' } : {
-                  height: 'auto',
-                  minHeight: '320px',
-                  padding: '2rem',
-                  margin: '0 auto',
-                  maxWidth: '95%',
-                  boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
-                  border: '1px solid rgba(0,0,0,0.06)'
-                }}
+                style={{ minHeight: '320px', minWidth: '0' }}
               >
 
 
