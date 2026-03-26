@@ -5,11 +5,11 @@ import { BASE_ASSETS_URL } from '@/lib/config';
 
 interface Testimonial {
   logoNumber: number;
-  avatarNumber: number;
   stars: number;
   review: string;
   name: string;
   title: string;
+  id: string;
 }
 
 interface Logo {
@@ -25,45 +25,50 @@ const Testimonials: React.FC = () => {
   const testimonials: Testimonial[] = [
     {
       logoNumber: 1,
-      avatarNumber: 1,
       stars: 5,
-      review: "A professional platform with growth and hiring at its core. Enables better matches and stronger career outcomes.",
-      name: 'Pooja Kulkarni',
-      title: 'Software Engineer',
+      review: "Got 7 offers including Google & Microsoft after using Riseflake template",
+      name: 'Priya Sharma',
+      title: 'SDE-1 at Google',
+      id: 'priya-sharma',
     },
     {
       logoNumber: 2,
-      avatarNumber: 2,
       stars: 5,
-      review: "Created for job seekers and recruiters alike. Enables seamless hiring and career growth with powerful tools.",
-      name: 'Sayli Deshpande',
-      title: 'UI/UX Designer',
+      review: "Landed PM role with 28 LPA within 21 days of building resume",
+      name: 'Rahul Verma',
+      title: 'Product Manager at Flipkart',
+      id: 'rahul-verma',
     },
     {
       logoNumber: 3,
-      avatarNumber: 3,
-      stars: 4,
-      review: "Developer-friendly with all requirements considered. Enables building any interface imaginable with great flexibility.",
-      name: 'Pratik Patil',
-      title: 'Software Engineer',
-    },
-    {
-      logoNumber: 4,
-      avatarNumber: 4,
       stars: 5,
-      review: "Built for modern professionals with real opportunities in mind. Enables smarter job search and meaningful networking.",
-      name: 'Sujata Shinde',
-      title: 'Product Manager',
-    },
-    {
-      logoNumber: 5,
-      avatarNumber: 5,
-      stars: 5,
-      review: "Designed for careers with every hiring need considered. Enables faster connections between professionals and top companies.",
-      name: 'Rutuja Patil',
-      title: 'Frontend Developer',
+      review: "Returned to work with 42% salary hike using designer template",
+      name: 'Anjali Mehta',
+      title: 'UX Designer at Swiggy',
+      id: 'anjali-mehta',
     },
   ];
+
+  const COLOR_PAIRS = [
+    { bg: '#f0f4ff', text: '#4f46e5' },
+    { bg: '#f5f3ff', text: '#7c3aed' },
+    { bg: '#faf5ff', text: '#9333ea' },
+    { bg: '#fdf2f8', text: '#db2777' },
+    { bg: '#fff1f2', text: '#e11d48' },
+    { bg: '#f0fdf4', text: '#16a34a' },
+    { bg: '#eff6ff', text: '#2563eb' },
+  ];
+
+  const getInitials = (name: string) => {
+    const tokens = name.split(/\s+/).filter(Boolean);
+    if (tokens.length === 1) return tokens[0].slice(0, 1).toUpperCase();
+    return `${tokens[0][0]} ${tokens[tokens.length - 1][0]}`.toUpperCase();
+  };
+
+  const getColorPair = (name: string) => {
+    const hash = name.split('').reduce((acc, char) => char.charCodeAt(0) + ((acc << 5) - acc), 0);
+    return COLOR_PAIRS[Math.abs(hash) % COLOR_PAIRS.length];
+  };
 
   const companyLogos: string[] = [
     `${BASE_ASSETS_URL}/logos/review-company-1.webp`,
@@ -287,12 +292,18 @@ const Testimonials: React.FC = () => {
 
                 {/* Reviewer */}
                 <div className="flex items-center gap-4 mt-5 shrink-0">
-                  <img
-                    src={`/${testimonial.avatarNumber}.webp`}
-                    alt={testimonial.name}
-                    className="rounded-full object-cover shrink-0 shadow-[0_2px_8px_rgba(0,0,0,0.15)]"
-                    style={{ width: '44px', height: '44px' }}
-                  />
+                  <div 
+                    className="flex items-center justify-center rounded-full font-bold shadow-md shrink-0"
+                    style={{ 
+                      width: '44px', 
+                      height: '44px',
+                      backgroundColor: getColorPair(testimonial.name).bg,
+                      color: getColorPair(testimonial.name).text,
+                      fontSize: '1rem'
+                    }}
+                  >
+                    {getInitials(testimonial.name)}
+                  </div>
                   <div className="min-w-0">
                     <p className="font-semibold text-[#2c3e50] text-[0.9rem] whitespace-nowrap overflow-hidden text-ellipsis mb-0.5">
                       {testimonial.name}
