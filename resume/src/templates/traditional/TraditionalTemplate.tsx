@@ -3,6 +3,7 @@ import styled from '@emotion/styled';
 import { StateContext } from '@/modules/builder/resume/ResumeLayout';
 import { SectionValidator } from '@/helpers/common/components/ValidSectionRenderer';
 import { useThemes } from '@/stores/themes';
+import { withBasePath } from '@/utils/withBasePath';
 
 import AboutMe from './components/AboutMe';
 import Work from './components/Work';
@@ -151,7 +152,7 @@ export default function TraditionalTemplate() {
         {basics.image && (
           <PhotoWrapper border={theme.titleColor}>
             <img
-              src={basics.image}
+              src={withBasePath(basics.image)}
               alt="profile"
               style={{
                 width: '100%',

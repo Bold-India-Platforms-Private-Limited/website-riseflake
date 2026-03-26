@@ -1,6 +1,7 @@
 import { ColorBox, ColorBoxWrapper } from '../atoms';
 import { IThemeColor } from '@/helpers/constants/index.interface';
 import Image from 'next/image';
+import { withBasePath } from '@/utils/withBasePath';
 import { SYSTEM_COLORS } from '@/helpers/constants/index';
 import { useThemes } from '@/stores/themes';
 import { useMemo } from 'react';
@@ -38,7 +39,7 @@ export const ThemeSelect = ({ onClose }: { onClose?: () => void }) => {
           className="p-1 hover:bg-gray-100 rounded-full transition-colors"
           aria-label="Close"
         >
-          <Image src="/icons/close.svg" alt="close" width={18} height={18} />
+          <Image src={withBasePath('/icons/close.svg')} alt="close" width={18} height={18} />
         </button>
       </div>
 
@@ -70,7 +71,7 @@ export const ThemeSelect = ({ onClose }: { onClose?: () => void }) => {
                 </ColorBoxWrapper>
               </div>
               {isActive && (
-                <Image src={'/icons/selected-tick.svg'} alt="selected" width={28} height={20} />
+                <Image src={withBasePath('/icons/selected-tick.svg')} alt="selected" width={28} height={20} />
               )}
             </div>
           );

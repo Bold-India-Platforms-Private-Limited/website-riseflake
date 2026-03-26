@@ -3,6 +3,7 @@ import styled from '@emotion/styled';
 import { StateContext } from '@/modules/builder/resume/ResumeLayout';
 import { SectionValidator } from '@/helpers/common/components/ValidSectionRenderer';
 import { useThemes } from '@/stores/themes';
+import { withBasePath } from '@/utils/withBasePath';
 
 import BasicIntro from './components/BasicIntro';
 import AboutMe from './components/AboutMe';
@@ -152,7 +153,7 @@ export default function SantiagoTemplate() {
       <Sidebar accent={theme.titleColor}>
         {basics.image && (
           <Photo>
-            <img src={basics.image} alt={basics.name} />
+            <img src={withBasePath(basics.image)} alt={basics.name} />
           </Photo>
         )}
 

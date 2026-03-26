@@ -39,6 +39,7 @@
 import { OutlinedButton } from '@/helpers/common/atoms/Buttons';
 import { TemplateSlider } from './TemplatesSlider';
 import Image from 'next/image';
+import { withBasePath } from '@/utils/withBasePath';
 import { useTemplates } from '@/stores/useTemplate';
 import Link from 'next/link';
 
@@ -54,7 +55,7 @@ export const TemplateSelect = ({ onClose }: { onClose?: () => void }) => {
           className="p-1 hover:bg-gray-100 rounded-full transition-colors"
           aria-label="Close"
         >
-          <Image src="/icons/close.svg" alt="close" width={18} height={18} />
+          <Image src={withBasePath('/icons/close.svg')} alt="close" width={18} height={18} />
         </button>
       </div>
       <TemplateSlider />

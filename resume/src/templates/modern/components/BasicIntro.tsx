@@ -8,8 +8,9 @@ import { SectionSubtitle } from '../atoms/SectionSubtitle';
 import { IProfiles } from 'src/stores/basic.interface';
 import { socialIcons } from 'src/helpers/icons';
 import { useMemo } from 'react';
+import { withBasePath } from '@/utils/withBasePath';
 
-function SocialIcons({ profiles }: { profiles: IProfiles[] }) {
+function SocialIcons({ profiles, color }: { profiles: IProfiles[]; color: string }) {
   return (
     <div className="social-icons flex">
       {profiles.map((profile) => {
@@ -23,7 +24,7 @@ function SocialIcons({ profiles }: { profiles: IProfiles[] }) {
             rel="noopener noreferrer"
             className="ml-2"
           >
-            <Icon className="h-5 w-5 bg-white" />
+            <Icon className="h-5 w-5 bg-white" style={{ color }} />
           </a>
         );
       })}
@@ -41,6 +42,7 @@ export const BasicIntro = ({
   image,
   setImage,
   profiles = [],
+  themeColor,
 }: {
   name: string;
   label: string;
@@ -51,6 +53,7 @@ export const BasicIntro = ({
   image: string;
   setImage: (url: string) => void;
   profiles?: IProfiles[];
+  themeColor: string;
 }) => {
   const isProfileLinkAvailable = useMemo(
     () => !!profiles?.some((profile) => profile.url) && !image,
@@ -80,9 +83,15 @@ export const BasicIntro = ({
       </div>
 
       <div className="flex items-end gap-2">
-        <ProfilePhoto key={image} src={image} setPhoto={setImage} height="100px" width="100px" />
+        <ProfilePhoto
+          key={image}
+          src={image}
+          setPhoto={setImage}
+          height="100px"
+          width="100px"
+        />
 
-        {isProfileLinkAvailable && <SocialIcons profiles={profiles} />}
+        {isProfileLinkAvailable && <SocialIcons profiles={profiles} color={themeColor} />}
       </div>
     </div>
   );

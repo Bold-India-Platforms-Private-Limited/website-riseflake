@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { SectionValidator } from './ValidSectionRenderer';
+import { withBasePath } from '@/utils/withBasePath';
 
 const RoundedImage = styled.img`
   border-radius: 50%;
@@ -20,7 +21,7 @@ export const ProfileImage = ({
   return (
     <div className={imageWrapperClassname}>
       <SectionValidator value={src}>
-        <RoundedImage alt="Profile image" src={src} height={height} width={width} />
+        <RoundedImage alt="Profile image" src={withBasePath(src || '/default-avatar.png')} height={height} width={width} />
       </SectionValidator>
     </div>
   );

@@ -1,6 +1,7 @@
 import { IBasics } from '@/stores/index.interface';
 import styled from '@emotion/styled';
 import { useThemes } from '@/stores/themes';
+import { withBasePath } from '@/utils/withBasePath';
 
 const Wrapper = styled.div`
   display: flex;
@@ -42,7 +43,7 @@ export default function BasicIntro({ basics }: { basics: IBasics }) {
 
   return (
     <Wrapper>
-      {basics.image && <Image src={basics.image} alt={'Profile'} />}
+      {basics.image && <Image src={withBasePath(basics.image)} alt={'Profile'} />}
       <Text>
         <Name color={theme.titleColor}>{basics.name}</Name>
         {basics.label && <Role color={theme.titleColor}>{basics.label}</Role>}

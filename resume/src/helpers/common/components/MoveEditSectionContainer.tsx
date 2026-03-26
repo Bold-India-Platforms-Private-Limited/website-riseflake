@@ -2,6 +2,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { Fragment, ReactNode } from 'react';
 
 import Image from 'next/image';
+import { withBasePath } from '@/utils/withBasePath';
 
 const animation = {
   exit: {
@@ -48,7 +49,7 @@ const MoveEditSection = ({
           {length > 1 && (
             <Fragment>
               <Image
-                src={'/icons/up-arrow.svg'}
+                src={withBasePath('/icons/up-arrow.svg')}
                 width={16}
                 height={16}
                 alt="up-arrow"
@@ -58,7 +59,7 @@ const MoveEditSection = ({
                 }}
               />
               <Image
-                src={'/icons/down-arrow.svg'}
+                src={withBasePath('/icons/down-arrow.svg')}
                 width={16}
                 height={16}
                 alt="down-arrow"
@@ -70,7 +71,7 @@ const MoveEditSection = ({
             </Fragment>
           )}
           <Image
-            src={'/icons/delete.svg'}
+            src={withBasePath('/icons/delete.svg')}
             width={14}
             height={18}
             alt="delete"

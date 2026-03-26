@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { withBasePath } from '@/utils/withBasePath';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { motion } from 'framer-motion';
@@ -64,7 +65,7 @@ const SkillPill = ({
       >
         <div className="flex items-center min-w-max" {...listeners}>
           <Image
-            src="/icons/equals.svg"
+            src={withBasePath('/icons/equals.svg')}
             width={16}
             height={6}
             alt="close"
@@ -82,14 +83,14 @@ const SkillPill = ({
             transition={animationEditIcon.transition}
             onClick={() => onEdit({ name, level, index })}
           >
-            <Image src="/icons/edit.svg" width={16} height={16} alt="edit" />
+            <Image src={withBasePath('/icons/edit.svg')} width={16} height={16} alt="edit" />
           </motion.button>
         )}
         <button
           className="ml-2 min-w-max flex items-center deleteButton"
           onClick={() => onDelete(index)}
         >
-          <Image src="/icons/close.svg" width={16} height={16} alt="close" />
+          <Image src={withBasePath('/icons/close.svg')} width={16} height={16} alt="close" />
         </button>
       </div>
     </motion.div>

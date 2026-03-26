@@ -9,7 +9,13 @@ import { useRef } from 'react';
 import { useExperiences } from '../../../stores/experience';
 import { scrollToElement } from '../../../helpers/utils/index';
 
-export const WorkSection = ({ experience }: { experience: IWorkIntrf[] }) => {
+export const WorkSection = ({
+  experience,
+  titleColor,
+}: {
+  experience: IWorkIntrf[];
+  titleColor: string;
+}) => {
   const experienceRef = useRef<null | HTMLDivElement>(null);
   useExperiences.subscribe(() => {
     scrollToElement(experienceRef);
@@ -17,7 +23,7 @@ export const WorkSection = ({ experience }: { experience: IWorkIntrf[] }) => {
 
   return (
     <div className="mb-3" ref={experienceRef}>
-      <SectionHeading title="Experience" />
+      <SectionHeading title="Experience" color={titleColor} />
 
       {experience.map((item: IWorkIntrf, index: number) => {
         return (

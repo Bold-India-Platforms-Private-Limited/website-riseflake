@@ -1,4 +1,5 @@
 import { lazy, Suspense, useEffect, useState } from 'react';
+import { withBasePath } from '@/utils/withBasePath';
 
 const PhotoUpload = lazy(() => import('@/modules/builder/resume/components/PhotoUpload'));
 
@@ -11,7 +12,7 @@ type Props = {
 
 export const ProfilePhoto = ({ src, height, width, setPhoto }: Props) => {
   const [open, setOpen] = useState(false);
-  const [safeSrc, setSafeSrc] = useState<string>('/default-avatar.png');
+  const [safeSrc, setSafeSrc] = useState<string>(withBasePath('/default-avatar.png'));
   const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
@@ -26,7 +27,7 @@ export const ProfilePhoto = ({ src, height, width, setPhoto }: Props) => {
     ) {
       setSafeSrc(src);
     } else {
-      setSafeSrc('/default-avatar.png');
+      setSafeSrc(withBasePath('/default-avatar.png'));
     }
   }, [src]);
 
@@ -40,7 +41,7 @@ export const ProfilePhoto = ({ src, height, width, setPhoto }: Props) => {
         aria-label="Change profile photo"
       >
         <img
-          src={hasError ? '/default-avatar.png' : safeSrc}
+          src={hasError ? withBasePath('/default-avatar.png') : safeSrc}
           alt="Profile"
           className="h-full w-full object-cover"
           draggable={false}

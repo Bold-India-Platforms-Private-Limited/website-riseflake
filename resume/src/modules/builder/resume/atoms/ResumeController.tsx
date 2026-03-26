@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { withBasePath } from '@/utils/withBasePath';
 import { ReactNode } from 'react';
 import Tooltip from '@mui/material/Tooltip';
 
@@ -22,7 +23,7 @@ const ResumeController = ({
           <div className="flex flex-col items-center gap-2">
             <TooltipRenderer title="Zoom out">
               <Image
-                src="/icons/zoom-out.svg"
+                src={withBasePath('/icons/zoom-out.svg')}
                 className="cursor-pointer"
                 alt="Zoom out"
                 width="24"
@@ -32,7 +33,7 @@ const ResumeController = ({
             </TooltipRenderer>
             <TooltipRenderer title="Zoom in">
               <Image
-                src="/icons/zoom-in.svg"
+                src={withBasePath('/icons/zoom-in.svg')}
                 className="cursor-pointer"
                 alt="Zoom in"
                 width="24"
@@ -45,7 +46,7 @@ const ResumeController = ({
         {showReset && (
           <TooltipRenderer title="Reset zoom">
             <Image
-              src="/icons/reset-zoom.svg"
+              src={withBasePath('/icons/reset-zoom.svg')}
               className="cursor-pointer"
               alt="Reset zoom"
               width="24"

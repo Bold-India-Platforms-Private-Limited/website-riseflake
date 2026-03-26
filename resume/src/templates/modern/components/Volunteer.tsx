@@ -9,7 +9,13 @@ import { useRef } from 'react';
 import { useVoluteeringStore } from '../../../stores/volunteering';
 import { scrollToElement } from '../../../helpers/utils/index';
 
-export const VolunteerSection = ({ volunteer }: { volunteer: IVolunteer[] }) => {
+export const VolunteerSection = ({
+  volunteer,
+  titleColor,
+}: {
+  volunteer: IVolunteer[];
+  titleColor: string;
+}) => {
   const volunteerRef = useRef<null | HTMLDivElement>(null);
   useVoluteeringStore.subscribe(() => {
     scrollToElement(volunteerRef);
@@ -17,7 +23,7 @@ export const VolunteerSection = ({ volunteer }: { volunteer: IVolunteer[] }) => 
 
   return (
     <div className="mb-3" ref={volunteerRef}>
-      <SectionHeading title="Volunteering" />
+      <SectionHeading title="Volunteering" color={titleColor} />
 
       {volunteer.map((item: IVolunteer, index: number) => {
         return (

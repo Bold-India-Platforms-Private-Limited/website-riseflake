@@ -120,6 +120,7 @@
 // };
 
 import Image from 'next/image';
+import { withBasePath } from '@/utils/withBasePath';
 import { useTemplates } from '@/stores/useTemplate';
 
 export const TemplateSlider = () => {
@@ -159,11 +160,11 @@ export const TemplateSlide = ({ isActive, id, name, thumbnail, onChangeTemplate,
       onClick={() => onChangeTemplate(id)}
     >
       <div className="aspect-[1/1.4] relative overflow-hidden rounded-md shadow-sm">
-        <Image src={thumbnail} alt={name} fill className="object-cover" />
+        <Image src={withBasePath(thumbnail)} alt={name} fill className="object-cover" />
 
         {isActive && (
           <div className="absolute top-1 right-1 bg-white rounded-full shadow-md z-10">
-            <Image src={'/icons/selected-tick.svg'} alt="selected" width={20} height={20} />
+            <Image src={withBasePath('/icons/selected-tick.svg')} alt="selected" width={20} height={20} />
           </div>
         )}
       </div>

@@ -1,6 +1,7 @@
 import React, { Fragment, useState } from 'react';
 import { INavMenuItemProps } from './MenuItem.interface';
 import Image from 'next/image';
+import { withBasePath } from '@/utils/withBasePath';
 import { NavMenuPopover } from './NavMenuPopover';
 import { StyledButton } from '../atoms';
 
@@ -33,7 +34,7 @@ export const NavMenuItem = ({ caption, popoverChildren }: INavMenuItemProps) => 
         }}
         endIcon={
           <Image
-            src="/icons/dropdown-arrow.svg"
+            src={withBasePath('/icons/dropdown-arrow.svg')}
             alt="dropdown-arrow"
             width={20}
             height={20}

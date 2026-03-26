@@ -2,6 +2,7 @@ import { IBasics } from '@/stores/index.interface';
 import styled from '@emotion/styled';
 import Color from 'color';
 import Image from 'next/image';
+import { withBasePath } from '@/utils/withBasePath';
 
 const Role = styled.span`
   color: ${(props) => Color(props.theme.titleColor).alpha(0.85).toString()};
@@ -25,21 +26,21 @@ export default function BasicIntro({ basics }: { basics: IBasics }) {
 
       <div className="flex flex-col justify-end items-end gap-2">
         <div className="flex gap-2">
-          <Image src={'/icons/phone.svg'} alt="Phone" width={12} height={12} />
+          <Image src={withBasePath('/icons/phone.svg')} alt="Phone" width={12} height={12} />
           {/* <span className="text-sm">{basics.phone}</span> */}
           <a className="text-xs" href={`tel:${basics.phone}`}>
             {basics.phone}
           </a>
         </div>
         <div className="flex gap-2">
-          <Image src={'/icons/mail.svg'} alt="Email" width={12} height={12} />
+          <Image src={withBasePath('/icons/mail.svg')} alt="Email" width={12} height={12} />
           <a className="text-xs" href={`mailto:${basics.email}`}>
             {basics.email}
           </a>
         </div>
         {basics.location.city && (
           <div className="flex gap-2">
-            <Image src={'/icons/location.svg'} alt="Location" width={12} height={12} />
+            <Image src={withBasePath('/icons/location.svg')} alt="Location" width={12} height={12} />
             <span className="text-xs">{basics.location.city}</span>
           </div>
         )}

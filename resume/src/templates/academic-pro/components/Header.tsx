@@ -1,4 +1,5 @@
 import { ProfilePhoto } from '@/modules/builder/resume/components/ProfilePhoto';
+import { withBasePath } from '@/utils/withBasePath';
 import { socialIcons } from 'src/helpers/icons';
 import { ProfileName } from '../atoms';
 
@@ -54,7 +55,7 @@ export const Header = ({
             {image && (
                 <div className="flex-shrink-0 relative group">
                     <div className="absolute -inset-2 bg-slate-50 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity" />
-                    <ProfilePhoto src={image} setPhoto={setImage} height="140px" width="140px" />
+                    <ProfilePhoto src={withBasePath(image)} setPhoto={setImage} height="140px" width="140px" />
                 </div>
             )}
         </div>

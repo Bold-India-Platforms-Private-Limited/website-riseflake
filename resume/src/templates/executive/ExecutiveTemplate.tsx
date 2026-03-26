@@ -13,6 +13,7 @@ import AboutMe from './components/AboutMe';
 import UnratedSkills from './components/UnratedSkills';
 import BasicIntro from './components/BasicIntro';
 import { useThemes } from '@/stores/themes';
+import { withBasePath } from '@/utils/withBasePath';
 
 const ResumeContainer = styled.div`
   font-family: 'Inter', sans-serif;
@@ -122,7 +123,7 @@ export default function ExecutiveTemplate() {
 
         {basics.image && (
           <img
-            src={basics.image}
+            src={withBasePath(basics.image)}
             alt={basics.name}
             style={{
               width: '100px',

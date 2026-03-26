@@ -12,6 +12,7 @@ import {
 
 import DEFAULT_RESUME_JSON from '@/helpers/constants/resume-data.json';
 import Image from 'next/image';
+import { withBasePath } from '@/utils/withBasePath';
 import Link from 'next/link';
 import { NavMenuItem } from './components/MenuItem';
 import { PrintResume } from './components/PrintResume';
@@ -121,7 +122,7 @@ const NavBarLayout = () => {
     <nav className="h-16 w-full min-w-[calc(210mm+20rem)] md:min-w-0 bg-white sticky top-0 flex px-4 md:px-8 items-center border-b border-slate-100 z-20 print:hidden transition-all duration-300 shadow-sm">
       <Link href="/" className="flex items-center gap-2 group transition-transform hover:scale-105">
         <Image
-          src="/hero.jpg"
+          src={withBasePath('/hero.jpg')}
           alt="logo"
           height={38}
           width={38}

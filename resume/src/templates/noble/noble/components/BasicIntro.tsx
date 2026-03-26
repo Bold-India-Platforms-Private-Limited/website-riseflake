@@ -1,5 +1,6 @@
 import { IBasics } from '@/stores/index.interface';
 import styled from '@emotion/styled';
+import { withBasePath } from '@/utils/withBasePath';
 
 const Header = styled.div`
   display: flex;
@@ -63,7 +64,7 @@ export default function BasicIntro({ basics }: { basics: IBasics }) {
     <Header>
       {basics.image && (
         <Photo>
-          <img src={basics.image} alt={basics.name} />
+          <img src={withBasePath(basics.image)} alt={basics.name} />
         </Photo>
       )}
 

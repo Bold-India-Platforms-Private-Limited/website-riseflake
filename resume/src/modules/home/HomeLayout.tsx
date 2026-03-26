@@ -17,11 +17,12 @@ import { COMPANY_LOGO_URLS } from '@/config/companyLogos';
 import LoadingOverlay from '@/components/common/LoadingOverlay';
 import LandingNavbar from '@/components/landing/LandingNavbar';
 import LandingFooter from '@/components/landing/LandingFooter';
+import { withBasePath } from '@/utils/withBasePath';
 const templates = [
-  { id: 'compact', src: '/templates/berlin.png' },
-  { id: 'elegant', src: '/templates/amsterdam.png' },
-  { id: 'modern', src: '/templates/atlas.png' },
-  { id: 'professional', src: '/templates/minimal.png' },
+  { id: 'compact', src: withBasePath('/templates/berlin.png') },
+  { id: 'elegant', src: withBasePath('/templates/amsterdam.png') },
+  { id: 'modern', src: withBasePath('/templates/atlas.png') },
+  { id: 'professional', src: withBasePath('/templates/minimal.png') },
 ];
 const HomeLayout = () => {
   // const controls = useAnimation();
@@ -254,7 +255,7 @@ const HomeLayout = () => {
             >
               <div className="relative z-10">
                 <Image
-                  src="/hero.jpg"
+                  src={withBasePath('/hero.jpg')}
                   alt="Professional Resume Preview"
                   width={650}
                   height={750}

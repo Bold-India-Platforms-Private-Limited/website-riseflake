@@ -7,7 +7,13 @@ import { useRef } from 'react';
 import { useEducations } from '../../../stores/education';
 import { scrollToElement } from '../../../helpers/utils/index';
 
-export const EducationSection = ({ education }: { education: IEducation[] }) => {
+export const EducationSection = ({
+  education,
+  titleColor,
+}: {
+  education: IEducation[];
+  titleColor: string;
+}) => {
   const educationRef = useRef<null | HTMLDivElement>(null);
   useEducations.subscribe(() => {
     scrollToElement(educationRef);
@@ -15,7 +21,7 @@ export const EducationSection = ({ education }: { education: IEducation[] }) => 
 
   return (
     <div className="mb-3" ref={educationRef}>
-      <SectionHeading title="Education" />
+      <SectionHeading title="Education" color={titleColor} />
 
       {education.map((item: IEducation, index: number) => {
         return (

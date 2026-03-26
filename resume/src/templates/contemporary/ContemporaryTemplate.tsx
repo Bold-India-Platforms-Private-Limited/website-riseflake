@@ -13,6 +13,7 @@ import { Section } from './components/Section';
 import Work from './components/Work';
 import Courses from './components/Courses';
 import { useThemes } from '@/stores/themes';
+import { withBasePath } from '@/utils/withBasePath';
 
 const ResumeContainer = styled.div<{ bgColor: string; fontColor: string }>`
   display: flex;
@@ -143,7 +144,7 @@ export default function ContemporaryTemplate() {
       <Sidebar>
         {basics.image && (
           <ProfileBlobWrapper>
-            <img src={basics.image} alt={basics.name} />
+            <img src={withBasePath(basics.image)} alt={basics.name} />
           </ProfileBlobWrapper>
         )}
 

@@ -2,6 +2,7 @@
 
 import EditorLayout from './editor/EditorLayout';
 import Image from 'next/image';
+import { withBasePath } from '@/utils/withBasePath';
 import NavBarLayout from './nav-bar/NavBarLayout';
 import ResumeHeader from './resume/components/ResumeHeader';
 import { ResumeLayout } from './resume/ResumeLayout';
@@ -102,7 +103,7 @@ const BuilderLayout = ({ mode = 'free' }: { mode?: BuilderMode }) => {
               rel="noreferrer"
               className="fixed w-15 h-14 rounded-full bottom-15 left-10 flex justify-center items-center bg-resume-50 shadow-level-4dp"
             >
-              <Image src="/icons/rate-review.svg" alt="Feedback button" width={24} height={24} />
+              <Image src={withBasePath('/icons/rate-review.svg')} alt="Feedback button" width={24} height={24} />
             </a>
           </Tooltip>
         </footer>

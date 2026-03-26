@@ -9,7 +9,13 @@ import { useRef } from 'react';
 import { useAwards } from '../../../stores/awards';
 import { scrollToElement } from '../../../helpers/utils/index';
 
-export const AwardSection = ({ awardsReceived }: { awardsReceived: IAwards[] }) => {
+export const AwardSection = ({
+  awardsReceived,
+  titleColor,
+}: {
+  awardsReceived: IAwards[];
+  titleColor: string;
+}) => {
   const awardsRef = useRef<null | HTMLDivElement>(null);
   useAwards.subscribe(() => {
     scrollToElement(awardsRef);
@@ -17,7 +23,7 @@ export const AwardSection = ({ awardsReceived }: { awardsReceived: IAwards[] }) 
 
   return (
     <div className="mb-2" ref={awardsRef}>
-      <SectionHeading title="Awards" />
+      <SectionHeading title="Awards" color={titleColor} />
 
       {awardsReceived.map((award: IAwards, index: number) => {
         return (

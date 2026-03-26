@@ -118,7 +118,7 @@ export default function AcademicProTemplate() {
                 )}
 
                 {awards.length > 0 && (
-                    <SectionValidator value={awards}>
+                <SectionValidator value={awards.length > 0 ? awards : null}>
                         <div className="print:break-inside-avoid">
                             <InfoSection
                                 title="Key Projects & Achievements"

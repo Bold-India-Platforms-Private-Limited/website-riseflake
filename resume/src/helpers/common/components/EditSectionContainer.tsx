@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion';
 
 import Image from 'next/image';
+import { withBasePath } from '@/utils/withBasePath';
 import { ReactNode } from 'react';
 
 const animation = {
@@ -45,7 +46,7 @@ const EditSectionContainer = ({
       >
         <span>{title}</span>
         <Image
-          src={isEnabled ? '/icons/eye.svg' : '/icons/eye-slash.svg'}
+          src={withBasePath(isEnabled ? '/icons/eye.svg' : '/icons/eye-slash.svg')}
           alt="eye"
           height="16"
           width="21"
