@@ -46,12 +46,12 @@ export default function DownloadTheApp() {
                 4.9
                 <Star size={18} className="text-amber-400" fill="currentColor" />
               </div>
-              <div className="text-xs font-normal text-slate-400">10K+ Review</div>
+              <div className="text-xs font-normal text-slate-400">2.3K+ Review</div>
             </div>
             <div className="h-8 w-px bg-slate-200" />
             <div className="flex flex-col">
               <div className="flex items-center gap-1 text-xl font-bold text-slate-900">
-                1M+
+                10K+
                 <Download size={18} className="text-slate-700" />
               </div>
               <div className="text-xs font-normal text-slate-400">Downloads</div>

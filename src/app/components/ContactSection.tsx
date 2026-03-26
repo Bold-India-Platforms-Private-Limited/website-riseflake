@@ -76,7 +76,7 @@ export default function ContactSection() {
                   <label className="text-sm font-medium text-slate-700">Email</label>
                   <input
                     type="email"
-                    placeholder="samayraina@gmail.com"
+                    placeholder="samayraina@icloud.com"
                     className="rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 transition focus:border-slate-300 focus:outline-none"
                   />
                 </div>

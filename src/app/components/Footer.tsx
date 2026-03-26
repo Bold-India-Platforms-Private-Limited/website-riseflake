@@ -108,6 +108,19 @@ export default function Footer() {
   const logosContainerRef = useRef<HTMLDivElement | null>(null)
   const animationRef = useRef<number | null>(null)
 
+
+  // Inject Google Fonts for fancy brand name (Bebas Neue)
+  useEffect(() => {
+    const id = 'google-font-bebas-neue';
+    if (!document.getElementById(id)) {
+      const link = document.createElement('link');
+      link.id = id;
+      link.rel = 'stylesheet';
+      link.href = 'https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap';
+      document.head.appendChild(link);
+    }
+  }, []);
+
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768)
@@ -333,6 +346,7 @@ export default function Footer() {
         </div>
 
         <div className="hidden sm:block">
+
           <div className="mb-8 mt-8">
             <h3 className="mb-4 mt-4 text-base font-semibold text-gray-800">Location based jobs</h3>
             <div className="grid grid-cols-1 gap-x-5 gap-y-3 text-sm text-gray-600 sm:grid-cols-2 lg:grid-cols-4">
@@ -491,6 +505,34 @@ export default function Footer() {
                 ∨
               </span>
             </button>
+          </div>
+          {/* Big full-width brand name after View More button with gradient fill */}
+          <div className="w-full flex justify-center mt-8">
+            <span
+              className="block w-full text-center"
+              style={{
+                fontFamily: `'Bebas Neue', 'Arial Black', 'Arial', sans-serif`,
+                fontSize: 'clamp(3rem, 10vw, 8rem)',
+                fontWeight: 900,
+                letterSpacing: '0.15em',
+                lineHeight: 1.05,
+                opacity: 0.97,
+                textTransform: 'uppercase',
+                margin: 0,
+                padding: 0,
+                wordBreak: 'break-word',
+                width: '100%',
+                display: 'block',
+                background: 'linear-gradient(90deg, #CE2DAD, #723EDD, #FE9341, #F41F5E, #F9446B)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+                textFillColor: 'transparent',
+                filter: 'drop-shadow(0 2px 16px rgba(206,45,173,0.10))',
+              }}
+            >
+              Riseflake
+            </span>
           </div>
         </div>
       </div>

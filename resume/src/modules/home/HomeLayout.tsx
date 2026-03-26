@@ -388,7 +388,7 @@ const HomeLayout = () => {
               {
                 icon: '✨',
                 title: '1-Click Apply',
-                desc: 'Apply to 1M+ jobs in seconds with pre-filled details',
+                desc: 'Apply to 10K+ jobs in seconds with pre-filled details',
               },
               {
                 icon: '⭐',

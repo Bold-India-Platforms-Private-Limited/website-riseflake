@@ -148,70 +148,7 @@ export default function Home() {
 
       <Brands />
 
-      {/* Features Section - Modern Cards with Glassmorphism */}
-      <section id="features" className="py-24 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-5xl font-bold mb-4 text-slate-900">
-              Why Professionals Choose <span className="text-gradient">Riseflake</span>
-            </h2>
-            <p className="text-xl text-slate-600 max-w-2xl mx-auto">
-              Experience a job portal and professional networking platform built for career growth.
-            </p>
-          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[
-              {
-                icon: '🎯',
-                title: 'AI-Powered Job Matching',
-                description: 'Our intelligent algorithm matches you with job opportunities based on your skills, experience, and career aspirations. Get personalized recommendations daily.',
-                keywords: 'AI job matching, smart recommendations, personalized jobs',
-              },
-              {
-                icon: '🌐',
-                title: 'Professional Networking',
-                description: 'Connect with industry leaders, mentors, and like-minded professionals. Build meaningful relationships that accelerate your career growth and open new doors.',
-                keywords: 'networking, professional connections, industry leaders',
-              },
-              {
-                icon: '📊',
-                title: 'Career Analytics & Insights',
-                description: 'Track your job search progress with detailed analytics. Get market insights, salary trends, and skill demand forecasts to make informed career decisions.',
-                keywords: 'career analytics, market trends, salary insights',
-              },
-              {
-                icon: '💼',
-                title: 'Verified Job Listings',
-                description: 'Explore verified job opportunities from companies across various industries. Every listing is reviewed for authenticity.',
-                keywords: 'verified jobs, job listings, verified companies',
-              },
-              {
-                icon: '🤝',
-                title: 'Direct Company Access',
-                description: 'Contact hiring managers and recruiters directly. Skip the middleman and establish meaningful professional relationships with decision-makers.',
-                keywords: 'direct hiring, recruiter contact, company access',
-              },
-              {
-                icon: '🏆',
-                title: 'Premium Resources & Training',
-                description: 'Access exclusive interview preparation guides, resume templates, and professional development resources. Learn from industry experts.',
-                keywords: 'training resources, interview prep, professional development',
-              },
-            ].map((feature, idx) => (
-              <div
-                key={idx}
-                className="group glass rounded-2xl p-8 hover:shadow-xl transition-all hover:bg-white/80"
-              >
-                <div className="text-5xl mb-4 group-hover:scale-110 transition-transform">{feature.icon}</div>
-                <h3 className="text-xl font-bold mb-3 text-slate-900">{feature.title}</h3>
-                <p className="text-slate-600 leading-relaxed mb-4">{feature.description}</p>
-                <p className="text-xs text-slate-400">{feature.keywords}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       <Categories />
 
@@ -323,6 +260,71 @@ export default function Home() {
       </section>
 
       <AppDownloadSection />
+
+      {/* Features Section - Modern Cards with Glassmorphism (moved to bottom) */}
+      <section id="features" className="py-24 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-5xl font-bold mb-4 text-slate-900">
+              Why Professionals Choose <span className="text-gradient">Riseflake</span>
+            </h2>
+            <p className="text-xl text-slate-600 max-w-2xl mx-auto">
+              Experience a job portal and professional networking platform built for career growth.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[
+              {
+                icon: '🎯',
+                title: 'AI-Powered Job Matching',
+                description: 'Our intelligent algorithm matches you with job opportunities based on your skills, experience, and career aspirations. Get personalized recommendations daily.',
+                keywords: 'AI job matching, smart recommendations, personalized jobs',
+              },
+              {
+                icon: '🌐',
+                title: 'Professional Networking',
+                description: 'Connect with industry leaders, mentors, and like-minded professionals. Build meaningful relationships that accelerate your career growth and open new doors.',
+                keywords: 'networking, professional connections, industry leaders',
+              },
+              {
+                icon: '📊',
+                title: 'Career Analytics & Insights',
+                description: 'Track your job search progress with detailed analytics. Get market insights, salary trends, and skill demand forecasts to make informed career decisions.',
+                keywords: 'career analytics, market trends, salary insights',
+              },
+              {
+                icon: '💼',
+                title: 'Verified Job Listings',
+                description: 'Explore verified job opportunities from companies across various industries. Every listing is reviewed for authenticity.',
+                keywords: 'verified jobs, job listings, verified companies',
+              },
+              {
+                icon: '🤝',
+                title: 'Direct Company Access',
+                description: 'Contact hiring managers and recruiters directly. Skip the middleman and establish meaningful professional relationships with decision-makers.',
+                keywords: 'direct hiring, recruiter contact, company access',
+              },
+              {
+                icon: '🏆',
+                title: 'Premium Resources & Training',
+                description: 'Access exclusive interview preparation guides, resume templates, and professional development resources. Learn from industry experts.',
+                keywords: 'training resources, interview prep, professional development',
+              },
+            ].map((feature, idx) => (
+              <div
+                key={idx}
+                className="group glass rounded-2xl p-8 hover:shadow-xl transition-all hover:bg-white/80"
+              >
+                <div className="text-5xl mb-4 group-hover:scale-110 transition-transform">{feature.icon}</div>
+                <h3 className="text-xl font-bold mb-3 text-slate-900">{feature.title}</h3>
+                <p className="text-slate-600 leading-relaxed mb-4">{feature.description}</p>
+                <p className="text-xs text-slate-400">{feature.keywords}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* Footer - SEO Optimized */}
       <ContactSection />
