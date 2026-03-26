@@ -506,34 +506,6 @@ export default function Footer() {
               </span>
             </button>
           </div>
-          {/* Big full-width brand name after View More button with gradient fill */}
-          <div className="w-full flex justify-center mt-8">
-            <span
-              className="block w-full text-center"
-              style={{
-                fontFamily: `'Bebas Neue', 'Arial Black', 'Arial', sans-serif`,
-                fontSize: 'clamp(3rem, 10vw, 8rem)',
-                fontWeight: 900,
-                letterSpacing: '0.15em',
-                lineHeight: 1.05,
-                opacity: 0.97,
-                textTransform: 'uppercase',
-                margin: 0,
-                padding: 0,
-                wordBreak: 'break-word',
-                width: '100%',
-                display: 'block',
-                background: 'linear-gradient(90deg, #CE2DAD, #723EDD, #FE9341, #F41F5E, #F9446B)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-                textFillColor: 'transparent',
-                filter: 'drop-shadow(0 2px 16px rgba(206,45,173,0.10))',
-              }}
-            >
-              Riseflake
-            </span>
-          </div>
         </div>
       </div>
 

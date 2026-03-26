@@ -28,18 +28,21 @@ export default function Brands() {
   const [mobileRows, setMobileRows] = useState<string[][]>([[], [], [], [], []])
 
   useEffect(() => {
-    setDesktopRows([
-      shuffleLogos([...logos, ...logos]),
-      shuffleLogos([...logos, ...logos]),
-      shuffleLogos([...logos, ...logos]),
-    ])
-    setMobileRows([
-      shuffleLogos([...logos, ...logos]),
-      shuffleLogos([...logos, ...logos]),
-      shuffleLogos([...logos, ...logos]),
-      shuffleLogos([...logos, ...logos]),
-      shuffleLogos([...logos, ...logos]),
-    ])
+    const dRows = [
+      shuffleLogos([...logos]),
+      shuffleLogos([...logos]),
+      shuffleLogos([...logos]),
+    ]
+    setDesktopRows(dRows.map(r => [...r, ...r]))
+
+    const mRows = [
+      shuffleLogos([...logos]),
+      shuffleLogos([...logos]),
+      shuffleLogos([...logos]),
+      shuffleLogos([...logos]),
+      shuffleLogos([...logos]),
+    ]
+    setMobileRows(mRows.map(r => [...r, ...r]))
   }, [])
 
   return (
@@ -62,8 +65,8 @@ export default function Brands() {
           {desktopRows.map((rowLogos, row) => (
             <div key={row} className="overflow-hidden py-1">
               <div
-                className={`flex w-max gap-6 animate-scroll-ltr-desktop-smooth ${
-                  row % 2 === 0 ? 'ml-0' : 'ml-[65px]'
+                className={`flex w-max gap-6 animate-scroll-ltr-desktop-smooth will-change-transform ${
+                  row % 2 === 0 ? '' : '[animation-direction:reverse] ml-[65px]'
                 }`}
               >
                 {(rowLogos.length ? rowLogos : [...logos, ...logos]).map((logo, index) => (
@@ -89,9 +92,9 @@ export default function Brands() {
           {mobileRows.map((rowLogos, row) => (
             <div key={row} className="overflow-hidden py-1">
               <div
-                className={`flex w-max gap-5 animate-scroll-ltr-slow ${
-                  row % 2 !== 0 ? 'flex-row-reverse' : ''
-                } ${row % 2 === 0 ? 'ml-0' : 'ml-[65px]'}`}
+                className={`flex w-max gap-5 animate-scroll-ltr-slow will-change-transform ${
+                  row % 2 === 0 ? '' : '[animation-direction:reverse] ml-[65px]'
+                }`}
               >
                 {(rowLogos.length ? rowLogos : [...logos, ...logos]).map((logo, index) => (
                   <div

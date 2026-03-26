@@ -65,19 +65,18 @@ export default function Navbar({ bgTransparent = false }: { bgTransparent?: bool
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${bgTransparent && !scrolled ? 'bg-transparent border-transparent' : 'bg-white/70 border-white/60 shadow-md'} backdrop-blur-3xl`}
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${bgTransparent && !scrolled ? 'bg-transparent border-transparent' : 'border-white/10 shadow-lg'}`}
         style={bgTransparent && !scrolled
           ? {
-            background: 'rgba(255, 255, 255, 0.02)', // Even more transparent when 'transparent' prop is passed
-            WebkitBackdropFilter: 'blur(30px)',
-            backdropFilter: 'blur(30px)',
-            borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
+            background: 'rgba(255, 255, 255, 0.01)',
+            backdropFilter: 'blur(0px)',
+            borderBottom: '1px solid transparent',
           }
           : {
-            background: 'rgba(255, 255, 255, 0.65)', // More solid glassy white when scrolled or not transparent
-            WebkitBackdropFilter: 'blur(40px) saturate(200%)',
-            backdropFilter: 'blur(40px) saturate(200%)',
-            borderBottom: '1px solid rgba(255, 255, 255, 0.25)',
+            background: 'rgba(255, 255, 255, 0.3)', // Solid glass feel
+            WebkitBackdropFilter: 'blur(64px) saturate(200%)',
+            backdropFilter: 'blur(64px) saturate(200%)',
+            borderBottom: '1px solid rgba(255, 255, 255, 0.2)',
           }
         }
       >
@@ -130,8 +129,12 @@ export default function Navbar({ bgTransparent = false }: { bgTransparent?: bool
               </a>
               <a
                 href="https://app.riseflake.com/chat"
-                className={`rounded-lg px-2 xl:px-3 py-2 text-sm font-medium transition-all duration-500 whitespace-nowrap bg-transparent text-slate-700 hover:bg-white/60 hover:text-slate-900`}
+                className={`flex items-center rounded-lg px-2 xl:px-3 py-2 text-sm font-medium transition-all duration-500 whitespace-nowrap bg-transparent text-slate-700 hover:bg-white/60 hover:text-slate-900`}
               >
+                <span className="relative flex h-2 w-2 mr-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                </span>
                 Chat
               </a>
               <a
@@ -420,7 +423,13 @@ export default function Navbar({ bgTransparent = false }: { bgTransparent?: bool
                 className="flex items-center justify-between rounded-xl px-4 py-3 text-base font-medium transition text-slate-700 hover:bg-slate-100"
                 onClick={() => setOpen(false)}
               >
-                <span>Chat</span>
+                <div className="flex items-center gap-3">
+                  <span className="relative flex h-2.5 w-2.5">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+                  </span>
+                  <span>Chat</span>
+                </div>
                 <ChevronRight className="h-5 w-5 opacity-70" />
               </a>
               <a
