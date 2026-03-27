@@ -131,11 +131,11 @@ export default function Navbar({ bgTransparent = false }: { bgTransparent?: bool
                 href="https://app.riseflake.com/chat"
                 className={`flex items-center rounded-lg px-2 xl:px-3 py-2 text-sm font-medium transition-all duration-500 whitespace-nowrap bg-transparent text-slate-700 hover:bg-white/60 hover:text-slate-900`}
               >
-                <span className="relative flex h-2 w-2 mr-2">
+                Chat
+                <span className="relative flex h-2 w-2 ml-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
                 </span>
-                Chat
               </a>
               <a
                 href="https://app.riseflake.com/network"

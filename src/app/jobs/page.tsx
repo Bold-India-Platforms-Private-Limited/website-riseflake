@@ -12,7 +12,7 @@ export default function JobsPage() {
   return (
     <>
       <Navbar bgTransparent />
-      <main className="px-4 sm:px-6 lg:px-8 py-2 bg-slate-100">
+      <main className="px-4 sm:px-6 lg:px-8 pt-20 pb-12 bg-slate-100 min-h-screen">
         <div className="max-w-[1200px] mx-auto">
           <MobileFilters />
           <div className="mb-6 rounded-3xl border border-slate-200 bg-white px-6 py-5 shadow-sm">

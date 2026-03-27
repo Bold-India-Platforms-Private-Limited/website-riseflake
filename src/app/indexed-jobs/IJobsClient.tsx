@@ -227,7 +227,7 @@ const IJobsClient = () => {
             />
           </form>
         </div>
-        <div className="max-w-[1200px] mx-auto px-4 pt-3 pb-8 grid grid-cols-12 gap-6">
+        <div className="max-w-[1200px] mx-auto px-4 pt-20 pb-12 grid grid-cols-12 gap-6">
           {/* Left Filters (Desktop) */}
           <aside className="col-span-12 md:col-span-3 hidden md:block lg:sticky lg:top-[80px] lg:self-start">
             <div className="bg-white rounded-lg shadow p-4 mb-6">
