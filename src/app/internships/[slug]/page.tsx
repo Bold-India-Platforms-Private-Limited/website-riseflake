@@ -8,6 +8,7 @@ import TagsSection from './components/TagsSection'
 import type { JobDetail } from './components/types'
 import { API_BASE_URL } from '../../../lib/config'
 import React from 'react'
+import DownloadAppCard from '../jobs/[slug]/components/DownloadAppCard';
 
 export const dynamicParams = true
 export const revalidate = 900
@@ -82,7 +83,14 @@ export default async function InternshipDetailsPage({ params }: { params?: Promi
       </head>
       <Navbar bgTransparent />
       <main className="px-4 sm:px-6 lg:px-8 py-2 bg-slate-100 pt-16">
-        <div className="max-w-[1200px] mx-auto">
+        <div className="max-w-[1200px] mx-auto space-y-8">
+          <div className="flex items-center gap-2 text-xs text-slate-500">
+            <a href="/" className="hover:text-indigo-600">Home</a>
+            <span>/</span>
+            <a href="/internships" className="hover:text-indigo-600">Internships</a>
+            <span>/</span>
+            <span>{internship.position}</span>
+          </div>
           <JobHeader job={internship} />
           <div className="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2 space-y-6">
@@ -90,8 +98,9 @@ export default async function InternshipDetailsPage({ params }: { params?: Promi
               <TagsSection title="Skills" tags={internship.job_skills} />
               <TagsSection title="Facilities" tags={internship.job_facilities} />
             </div>
-            <div className="lg:col-span-1">
+            <div className="lg:col-span-1 space-y-6">
               <ApplyCard job={internship} />
+              <DownloadAppCard />
             </div>
           </div>
         </div>

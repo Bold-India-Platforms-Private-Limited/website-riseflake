@@ -5,6 +5,7 @@ import ApplyCard from './components/ApplyCard'
 import JobDescription from './components/JobDescription'
 import JobHeader from './components/JobHeader'
 import TagsSection from './components/TagsSection'
+import DownloadAppCard from './components/DownloadAppCard'
 import type { JobDetail } from './components/types'
 import { API_BASE_URL } from '../../../lib/config'
 import React from 'react'
@@ -161,8 +162,9 @@ export default async function JobDetailsPage({ params }: { params?: Promise<{ sl
               <TagsSection title="Facilities & Benefits" tags={job.job_facilities} />
             </div>
 
-            <div className="lg:sticky lg:top-24">
+            <div className="lg:sticky lg:top-24 space-y-6">
               <ApplyCard job={job} />
+              <DownloadAppCard />
             </div>
           </div>
         </div>
