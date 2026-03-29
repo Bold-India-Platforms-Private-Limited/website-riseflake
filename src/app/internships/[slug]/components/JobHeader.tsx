@@ -1,5 +1,4 @@
 import type { JobDetail } from './types'
-import JobReportWrapper from '../../../components/JobReportWrapper'
 
 const JOB_STATUS_STYLES: Record<string, string> = {
   pending: 'bg-amber-50 text-amber-700',
