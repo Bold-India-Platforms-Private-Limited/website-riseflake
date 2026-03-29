@@ -9,6 +9,7 @@ import type { JobDetail } from './components/types'
 import { API_BASE_URL } from '../../../lib/config'
 import React from 'react'
 import DownloadAppCard from '../../jobs/[slug]/components/DownloadAppCard';
+import JobReportWrapper from '../../components/JobReportWrapper';
 
 export const dynamicParams = true
 export const revalidate = 900
@@ -97,6 +98,7 @@ export default async function InternshipDetailsPage({ params }: { params?: Promi
               <JobDescription html={internship.job_description} />
               <TagsSection title="Skills" tags={internship.job_skills} />
               <TagsSection title="Facilities" tags={internship.job_facilities} />
+              <JobReportWrapper jobSlug={internship.slug} isInternship />
             </div>
             <div className="lg:col-span-1 space-y-6">
               <ApplyCard job={internship} />
@@ -106,6 +108,11 @@ export default async function InternshipDetailsPage({ params }: { params?: Promi
         </div>
 
       </main>
+      <div className="max-w-[1200px] mx-auto px-4 pb-8">
+        <p className="text-xs text-gray-700 text-center mt-12">
+          BIPPL has taken all reasonable steps to ensure that information on this site is authentic. Applicants are advised to research bonafides of advertisers independently. BIPPL shall not have any responsibility in this regard. We also recommend that you visit Security Guidelines and Terms of Service for more comprehensive information on this aspect. Please note that RiseFlake will not be responsible for any information you share on the company platform.
+        </p>
+      </div>
     </>
   )
 }

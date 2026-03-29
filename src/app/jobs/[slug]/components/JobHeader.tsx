@@ -45,10 +45,6 @@ export default function JobHeader({ job }: { job: JobDetail }) {
 
   return (
     <div className="relative rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
-      {/* Report button: top-right for both mobile and desktop */}
-      <div className="absolute right-4 top-4">
-        <JobReportWrapper jobSlug={job.slug} />
-      </div>
       <div className="flex flex-col gap-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
           <div className="flex items-center gap-4">
