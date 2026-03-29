@@ -8,7 +8,7 @@ import TagsSection from './components/TagsSection'
 import type { JobDetail } from './components/types'
 import { API_BASE_URL } from '../../../lib/config'
 import React from 'react'
-import DownloadAppCard from '../jobs/[slug]/components/DownloadAppCard';
+import DownloadAppCard from '../../jobs/[slug]/components/DownloadAppCard';
 
 export const dynamicParams = true
 export const revalidate = 900
