@@ -81,7 +81,7 @@ export default async function InternshipDetailsPage({ params }: { params?: Promi
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jobPostingSchema) }} />
       </head>
       <Navbar bgTransparent />
-      <main className="px-4 sm:px-6 lg:px-8 py-2 bg-slate-100">
+      <main className="px-4 sm:px-6 lg:px-8 py-2 bg-slate-100 pt-16">
         <div className="max-w-[1200px] mx-auto">
           <JobHeader job={internship} />
           <div className="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-6">

@@ -78,7 +78,7 @@ export default function CollegeDetailClient({ slug }: { slug: string }) {
   return (
     <>
       <Navbar />
-      <main className="px-4 sm:px-6 lg:px-8 py-6 bg-slate-100 min-h-[60vh]">
+      <main className="px-4 sm:px-6 lg:px-8 py-6 bg-slate-100 min-h-[60vh] pt-16">
         <div className="max-w-2xl mx-auto">
           <nav className="mb-4 text-xs text-slate-500 flex items-center gap-2">
             <Link href="/" className="hover:underline text-slate-500">Home</Link>
