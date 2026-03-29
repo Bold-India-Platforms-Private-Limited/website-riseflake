@@ -1,4 +1,4 @@
-import { Award, TrendingUp, Clock, Utensils, HeartPulse, FileCheck, Laptop, Gift, DollarSign, GraduationCap, Bus, Home, Users, Briefcase, Shield, Star, Monitor, Building2, Sparkles, Settings2, BarChart3 } from "lucide-react";
+import { Award, TrendingUp, Clock, Utensils, HeartPulse, FileCheck, Laptop, Gift, DollarSign, GraduationCap, Bus, Home } from "lucide-react";
 
 type TagsSectionProps = {
   title: string
