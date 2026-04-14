@@ -102,21 +102,26 @@ export default function JobCard({ job }: { job: JobListItem }) {
           </div>
         </div>
 
-        {job.job_skills?.length ? (
-          <div className="mt-3 flex flex-wrap gap-2">
-            {job.job_skills.slice(0, 5).map((skill) => (
-              <span
-                key={skill}
-                className="rounded-full border border-slate-200 bg-slate-50 px-2.5 py-0.5 text-[11px] text-slate-600"
-              >
-                {skill}
-              </span>
-            ))}
-            {job.job_skills.length > 5 && (
-              <span className="text-xs text-slate-500">+{job.job_skills.length - 5} more</span>
-            )}
-          </div>
-        ) : null}
+        {(() => {
+          // Filter out raw numeric DB IDs that the API may return instead of resolved names
+          const displaySkills = (job.job_skills ?? []).filter(skill => !/^\d+$/.test(skill.trim()))
+          if (!displaySkills.length) return null
+          return (
+            <div className="mt-3 flex flex-wrap gap-2">
+              {displaySkills.slice(0, 5).map((skill) => (
+                <span
+                  key={skill}
+                  className="rounded-full border border-slate-200 bg-slate-50 px-2.5 py-0.5 text-[11px] text-slate-600"
+                >
+                  {skill}
+                </span>
+              ))}
+              {displaySkills.length > 5 && (
+                <span className="text-xs text-slate-500">+{displaySkills.length - 5} more</span>
+              )}
+            </div>
+          )
+        })()}
       </a>
     </div>
   )
