@@ -4,15 +4,10 @@ export const metadata = {
   keywords: 'internships, internship search, hiring, career, employment, riseflake internships',
 };
 import { Suspense } from 'react';
-import dynamic from 'next/dynamic';
 import Navbar from '../components/Navbar';
 import InternshipsClient from './InternshipsClient';
 import MobileFilters from './components/MobileFilters';
-
-const LoginPromptModal = dynamic(
-  () => import('../components/LoginPromptModal'),
-  { ssr: false }
-)
+import LoginPromptModal from '../components/LoginPromptModalLoader'
 
 export default function InternshipsPage() {
   return (

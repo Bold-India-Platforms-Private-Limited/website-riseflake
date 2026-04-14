@@ -4,16 +4,10 @@ export const metadata = {
   keywords: 'jobs, job search, hiring, career, employment, riseflake jobs',
 };
 import { Suspense } from 'react'
-import dynamic from 'next/dynamic'
 import Navbar from '../components/Navbar'
 import JobsClient from './JobsClient'
 import MobileFilters from './components/MobileFilters'
-
-// ssr:false → modal is never in the server HTML, so crawlers never see it
-const LoginPromptModal = dynamic(
-  () => import('../components/LoginPromptModal'),
-  { ssr: false }
-)
+import LoginPromptModal from '../components/LoginPromptModalLoader'
 
 export default function JobsPage() {
   return (
