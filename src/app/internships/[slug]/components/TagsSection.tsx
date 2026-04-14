@@ -49,10 +49,7 @@ function getRandomGradient(idx: number) {
 }
 
 export default function TagsSection({ title, tags }: TagsSectionProps) {
-  // Filter out raw numeric DB IDs that the API may return instead of resolved names
-  const displayTags = (tags ?? []).filter(tag => !/^\d+$/.test(tag.trim()))
-
-  if (!displayTags.length) {
+  if (!tags || tags.length === 0) {
     return (
       <div className="rounded-2xl border border-dashed border-slate-200 bg-white p-6">
         <h3 className="text-lg font-semibold text-slate-900 mb-2">{title}</h3>
@@ -67,7 +64,7 @@ export default function TagsSection({ title, tags }: TagsSectionProps) {
     <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
       <h3 className="text-sm font-semibold uppercase tracking-wide text-slate-500 mb-3">{title}</h3>
       <div className="flex flex-wrap gap-2">
-        {displayTags.map((tag, idx) => {
+        {tags.map((tag, idx) => {
           if (isFacilities && FACILITY_ICONS[tag]) {
             const { icon, color } = FACILITY_ICONS[tag];
             return (
