@@ -4,8 +4,14 @@ export const metadata = {
   keywords: 'companies, employers, company profiles, hiring, riseflake',
 };
 import { Suspense } from 'react'
+import dynamic from 'next/dynamic'
 import Navbar from '../components/Navbar'
 import CompaniesClient from './CompaniesClient'
+
+const LoginPromptModal = dynamic(
+  () => import('../components/LoginPromptModal'),
+  { ssr: false }
+)
 
 export default function CompaniesPage() {
   return (
@@ -18,6 +24,9 @@ export default function CompaniesPage() {
           </Suspense>
         </div>
       </main>
+
+      {/* Login prompt modal — client-only, SEO safe */}
+      <LoginPromptModal />
     </>
   )
 }

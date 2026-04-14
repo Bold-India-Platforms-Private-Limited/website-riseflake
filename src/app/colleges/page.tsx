@@ -4,8 +4,14 @@ export const metadata = {
   keywords: 'colleges, universities, education, academic institutions, riseflake',
 };
 import { Suspense } from 'react';
+import dynamic from 'next/dynamic';
 import Navbar from '../components/Navbar';
 import CollegesClient from './CollegesClient';
+
+const LoginPromptModal = dynamic(
+  () => import('../components/LoginPromptModal'),
+  { ssr: false }
+)
 
 export default function CollegesPage() {
   return (
@@ -18,6 +24,9 @@ export default function CollegesPage() {
           </Suspense>
         </div>
       </main>
+
+      {/* Login prompt modal — client-only, SEO safe */}
+      <LoginPromptModal />
     </>
   );
 }
