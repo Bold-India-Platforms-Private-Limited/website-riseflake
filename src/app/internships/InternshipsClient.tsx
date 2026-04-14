@@ -9,7 +9,6 @@ import RightSidebar from './components/RightSidebar'
 import type { JobListItem } from './components/InternshipCard'
 import { API_BASE_URL } from '../../lib/config'
 import Pagination from '../components/Pagination'
-import InternshipsLoading from './loading'
 
 type InternshipsResponse = {
   status: boolean
@@ -64,47 +63,31 @@ export default function InternshipsClient() {
     experience: searchParams.get('experience') ?? '',
   }), [searchParams])
 
-
-  if (loading) {
-    return <InternshipsLoading />;
-  }
-  if (error) {
-    return <div className="rounded-2xl border border-red-200 bg-white p-6 shadow-sm text-red-600">{error}</div>;
-  }
-  if (!data) {
-    return null;
-  }
-
   const currentPage = data?.page ?? 1;
   const totalPages = data?.totalPages ?? 1;
   const totalItems = data?.total ?? 0;
   const pageSize = data?.limit ?? 20;
-  const baseQuery = params;
 
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 lg:grid-cols-[280px_minmax(0,1fr)_240px] gap-6">
-        {/* Desktop Filters */}
+
+        {/* Left — Filters panel: always visible immediately */}
         <div className="hidden lg:block">
           <FiltersPanel currentFilters={currentFilters} />
         </div>
 
-        {/* Main content */}
+        {/* Centre — search bar always visible; cards shimmer while loading */}
         <section className="space-y-4">
-          {/* Search bar */}
           <form
             onSubmit={e => {
               e.preventDefault();
               const formData = new FormData(e.currentTarget);
               const position = String(formData.get('position') ?? '').trim();
-              const params = new URLSearchParams(searchParams.toString());
-              if (position) {
-                params.set('position', position);
-              } else {
-                params.delete('position');
-              }
-              params.set('page', '1');
-              window.location.search = params.toString();
+              const p = new URLSearchParams(searchParams.toString());
+              if (position) { p.set('position', position); } else { p.delete('position'); }
+              p.set('page', '1');
+              window.location.search = p.toString();
             }}
             className="flex flex-wrap items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-600 shadow-sm"
           >
@@ -123,16 +106,42 @@ export default function InternshipsClient() {
             </button>
           </form>
 
-          {/* Internship list */}
-          <InternshipList internships={data.result} />
+          {/* Shimmer while loading */}
+          {loading && (
+            <div className="space-y-4">
+              {[...Array(6)].map((_, i) => (
+                <div key={i} className="rounded-2xl border border-slate-200 bg-white p-5">
+                  <div className="flex items-start gap-4">
+                    <div className="h-12 w-12 rounded-xl bg-slate-200/70 animate-pulse" />
+                    <div className="flex-1 space-y-3">
+                      <div className="h-4 w-2/3 rounded-lg bg-slate-200/70 animate-pulse" />
+                      <div className="h-3 w-1/3 rounded-lg bg-slate-200/70 animate-pulse" />
+                      <div className="h-3 w-1/2 rounded-lg bg-slate-200/70 animate-pulse" />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Error state */}
+          {!loading && error && (
+            <div className="rounded-2xl border border-red-200 bg-white p-6 shadow-sm text-red-600">
+              {error}
+            </div>
+          )}
+
+          {/* Loaded list */}
+          {!loading && !error && data && (
+            <InternshipList internships={data.result} />
+          )}
         </section>
 
-        {/* Right sidebar */}
+        {/* Right sidebar: always visible immediately */}
         <RightSidebar />
       </div>
 
-
-      {/* Pagination (always below grid, with extra margin on desktop) */}
+      {/* Pagination */}
       {!loading && !error && totalItems > 0 && (
         <div className="w-full max-w-[1200px] mx-auto mt-8 lg:mt-20">
           <Pagination
@@ -140,7 +149,7 @@ export default function InternshipsClient() {
             totalPages={totalPages}
             totalItems={totalItems}
             pageSize={pageSize}
-            baseQuery={baseQuery}
+            baseQuery={params}
           />
         </div>
       )}
