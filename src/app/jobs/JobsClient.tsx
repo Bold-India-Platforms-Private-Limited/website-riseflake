@@ -19,6 +19,75 @@ type JobsResponse = {
   hasMore: boolean
 }
 
+// ---------------------------------------------------------------------------
+// Skills resolver — the /jobs list API returns numeric skill IDs instead of
+// names. We resolve them by fetching the individual job detail (which always
+// returns string names) and cache results for 15 minutes to avoid hammering
+// the backend on every re-render / filter change.
+// ---------------------------------------------------------------------------
+const SKILL_CACHE_TTL = 15 * 60 * 1000 // 15 minutes
+
+// slug → resolved string[] names
+const _skillCache = new Map<string, string[]>()
+const _skillCacheAt = new Map<string, number>()
+
+// In-flight promises so concurrent renders don't duplicate requests
+const _skillFlight = new Map<string, Promise<string[]>>()
+
+async function fetchSkillsForSlug(slug: string): Promise<string[]> {
+  const now = Date.now()
+  const cached = _skillCache.get(slug)
+  if (cached && now - (_skillCacheAt.get(slug) ?? 0) < SKILL_CACHE_TTL) {
+    return cached
+  }
+
+  const inflight = _skillFlight.get(slug)
+  if (inflight) return inflight
+
+  const promise = fetch(`${API_BASE_URL}/jobs/${slug}`)
+    .then(r => r.ok ? r.json() : null)
+    .then((data) => {
+      const skills: string[] = (data?.result?.job_skills ?? []).filter(
+        (s: unknown) => typeof s === 'string'
+      )
+      _skillCache.set(slug, skills)
+      _skillCacheAt.set(slug, Date.now())
+      return skills
+    })
+    .catch(() => {
+      return [] as string[]
+    })
+    .finally(() => {
+      _skillFlight.delete(slug)
+    })
+
+  _skillFlight.set(slug, promise)
+  return promise
+}
+
+/**
+ * For any job whose job_skills are numeric IDs, fetch the detail and replace
+ * them with real string names. Returns a new array (jobs with IDs already
+ * containing strings are passed through unchanged).
+ */
+async function resolveSkillIds(jobs: JobListItem[]): Promise<JobListItem[]> {
+  const needsResolution = jobs.filter(
+    j => j.job_skills?.length > 0 && typeof j.job_skills[0] === 'number'
+  )
+  if (needsResolution.length === 0) return jobs
+
+  const resolved = await Promise.all(
+    needsResolution.map(j => fetchSkillsForSlug(j.slug).then(skills => ({ slug: j.slug, skills })))
+  )
+  const skillMap = new Map(resolved.map(r => [r.slug, r.skills]))
+
+  return jobs.map(j =>
+    typeof j.job_skills?.[0] === 'number'
+      ? { ...j, job_skills: skillMap.get(j.slug) ?? [] }
+      : j
+  )
+}
+
 const fetchJobs = async (params: URLSearchParams) => {
   const url = `${API_BASE_URL}/jobs?${params.toString()}`
   const response = await fetch(url)
@@ -108,6 +177,13 @@ export default function JobsClient() {
     searchParams.forEach((value, key) => {
       params.append(key, value)
     })
+    // If the user hasn't manually selected job types, default to
+    // non-internship types so internship listings don't bleed into this page.
+    if (!params.has('job_type')) {
+      params.append('job_type', 'full-time')
+      params.append('job_type', 'part-time')
+      params.append('job_type', 'contract')
+    }
     return params
   }, [searchParams])
 
@@ -117,9 +193,12 @@ export default function JobsClient() {
     setHasError(false)
 
     fetchJobs(queryParams)
-      .then((result) => {
+      .then(async (result) => {
         if (!isActive) return
-        setData(result)
+        // Resolve numeric skill IDs → real skill names via cached detail fetch
+        const resolvedJobs = await resolveSkillIds(result.result)
+        if (!isActive) return
+        setData({ ...result, result: resolvedJobs })
       })
       .catch(() => {
         if (!isActive) return
@@ -154,9 +233,12 @@ export default function JobsClient() {
     return () => clearInterval(interval)
   }, [])
 
-  // Only show jobs with job_status 'live' and visibility_status 2 or 3
+  // Only show jobs with visibility_status 2 or 3 and exclude internship type
+  // (job_type is also filtered at the API level by default, this is a safety guard)
   const jobs = (data?.result ?? []).filter(
-    job => (job.visibility_status === 2 || job.visibility_status === 3)
+    job =>
+      (job.visibility_status === 2 || job.visibility_status === 3) &&
+      job.job_type !== 'internship'
   )
   const currentPage = data?.page ?? 1
   const totalPages = data?.totalPages ?? 1
