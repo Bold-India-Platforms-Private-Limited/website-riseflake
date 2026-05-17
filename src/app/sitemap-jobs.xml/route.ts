@@ -1,37 +1,30 @@
-import { API_BASE_URL } from '../../lib/config';
-import { NextResponse } from 'next/server';
+import { NextResponse } from 'next/server'
+import { API_BASE_URL } from '../../lib/config'
 
-export const dynamic = 'force-dynamic';
+// Rebuild every hour — job statuses change regularly
+export const revalidate = 3600
 
 export async function GET() {
-  const res = await fetch(`${API_BASE_URL}/jobs?limit=10000`);
-  if (!res.ok) {
-    return new NextResponse('Failed to fetch jobs', { status: 500 });
-  }
-  const data = await res.json();
-  const allowedStatuses = ['live', 'screening', 'interview', 'assessment'];
-  const jobs = (data.result || []).filter((job: any) => job.visibility_status === 2 && allowedStatuses.includes(job.job_status) && !(job.slug && job.slug.startsWith('indexed-jobs')));
-  const today = new Date();
-  const formatDate = (dateStr: string) => {
-    const d = new Date(dateStr);
-    return isNaN(d.getTime()) ? today.toISOString().slice(0, 10) : d.toISOString().slice(0, 10);
-  };
-  const escapeXml = (str: string) =>
-    String(str)
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&apos;');
+  try {
+    // Use the dedicated backend sitemap endpoint — no row-count limit
+    const res = await fetch(`${API_BASE_URL}/jobs-sitemap.xml`, {
+      next: { revalidate: 3600 },
+    })
 
-  const urls = jobs
-    .map((job: any) => `  <url>\n    <loc>https://riseflake.com/jobs/${escapeXml(job.slug)}</loc>\n    <lastmod>${escapeXml(formatDate(job.updated_at || job.created_at))}</lastmod>\n    <changefreq>daily</changefreq>\n    <priority>0.8</priority>\n  </url>`)
-    .join('\n');
-  const xml = `<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n${urls}\n</urlset>`;
-  return new NextResponse(xml, {
-    status: 200,
-    headers: {
-      'Content-Type': 'application/xml',
-    },
-  });
+    if (!res.ok) {
+      return new NextResponse('Failed to fetch jobs sitemap', { status: 502 })
+    }
+
+    const xml = await res.text()
+
+    return new NextResponse(xml, {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/xml; charset=utf-8',
+        'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=86400',
+      },
+    })
+  } catch {
+    return new NextResponse('Failed to generate jobs sitemap', { status: 500 })
+  }
 }

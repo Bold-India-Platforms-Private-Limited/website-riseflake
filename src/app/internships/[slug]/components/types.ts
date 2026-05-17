@@ -7,7 +7,11 @@ export type JobDetail = {
   job_status: string
   workplace_type: number | null
   created_at: string
+  updated_at?: string
   location_name: string | null
+  location_city?: string | null
+  location_state?: string | null
+  location_country?: string | null
   job_vacancy: string | number | null
   job_description: string | null
   eligibility: number | null

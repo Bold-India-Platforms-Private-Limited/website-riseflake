@@ -24,11 +24,10 @@ export const metadata: Metadata = {
     description: 'Discover your next opportunity. Connect with companies and industry professionals on our job portal for career growth.',
     images: [
       {
-        url: 'https://riseflake.com/og-image.webp',
+        url: 'https://riseflake.com/api/og',
         width: 1200,
         height: 630,
         alt: 'Riseflake - Job Portal & Professional Networking Platform',
-        type: 'image/png',
       },
     ],
   },
@@ -38,6 +37,7 @@ export const metadata: Metadata = {
     description: 'A job portal connecting professionals with career opportunities',
     site: '@riseflake',
     creator: '@riseflake',
+    images: ['https://riseflake.com/api/og'],
   },
   robots: {
     index: true,
@@ -53,12 +53,8 @@ export const metadata: Metadata = {
   alternates: {
     canonical: 'https://riseflake.com',
   },
-  verification: {
-    google: 'your-google-site-verification-code',
-    other: {
-      'msvalidate.01': 'your-bing-verification-code',
-    },
-  },
+  // Add Google Search Console & Bing verification tokens here once obtained
+  // verification: { google: 'YOUR_TOKEN', other: { 'msvalidate.01': 'YOUR_BING_TOKEN' } },
 }
 
 export default function RootLayout({
@@ -84,7 +80,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
         <meta httpEquiv="X-UA-Compatible" content="ie=edge" />
-        <link rel="canonical" href="https://riseflake.com" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
 
@@ -101,13 +96,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               url: 'https://riseflake.com',
               logo: 'https://riseflake.com/logo.png',
               description: 'A job portal and professional networking platform for career growth',
-              aggregateRating: {
-                '@type': 'AggregateRating',
-                bestRating: 5,
-                worstRating: 1,
-                ratingValue: 4.5,
-                ratingCount: 500,
-              },
               sameAs: [
                 'https://twitter.com/riseflake',
                 'https://linkedin.com/company/riseflake',
@@ -120,7 +108,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               },
               address: {
                 '@type': 'PostalAddress',
-                addressCountry: 'US',
+                addressCountry: 'IN',
               },
             }),
           }}
@@ -154,7 +142,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 '@type': 'SearchAction',
                 target: {
                   '@type': 'EntryPoint',
-                  urlTemplate: 'https://app.riseflake.com/search?q={search_term_string}',
+                  urlTemplate: 'https://riseflake.com/jobs?position={search_term_string}',
                 },
                 'query-input': 'required name=search_term_string',
               },

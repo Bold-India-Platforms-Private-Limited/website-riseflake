@@ -1,27 +1,87 @@
-import React from 'react';
+import { Smartphone, Bell, ClipboardList, MessageSquare } from 'lucide-react'
+
+const FEATURES = [
+  { icon: Bell,          label: 'Job Alerts' },
+  { icon: ClipboardList, label: 'Applied Jobs' },
+  { icon: MessageSquare, label: 'Recruiter Msg' },
+]
 
 export default function DownloadAppCard() {
   return (
-    <aside className="rounded-3xl border border-slate-200 bg-white p-6 space-y-5 h-fit shadow-sm mt-6">
-      <div>
-        <p className="text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">Download app for realtime notification</p>
-        <h3 className="text-lg font-semibold text-slate-900 mb-1">Mobile App</h3>
-        <p className="text-sm text-slate-600 mb-4">Download Riseflake App</p>
-        <p className="text-xs text-slate-500 mb-2">Realtime job alerts, applied job updates, and recruiter messages.</p>
-        <ul className="text-xs text-slate-500 mb-4 list-disc list-inside space-y-1">
-          <li>Job Alerts</li>
-          <li>Applied Jobs</li>
-          <li>Recruiter Msg</li>
-        </ul>
-        <div className="flex gap-3">
-          <a href="https://play.google.com/store/apps/details?id=com.riseflake.app" target="_blank" rel="noopener noreferrer">
-            <img src="https://riseflake.com/download-on-the-play-store.png" alt="Download on Google Play" className="h-10" />
+    <aside
+      className="rounded-2xl bg-white border border-slate-200 shadow-sm overflow-hidden"
+      aria-label="Download the Riseflake App"
+    >
+      <div className="p-5">
+        {/* Top badge */}
+        <div className="flex items-center gap-2 mb-3">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-indigo-100 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-indigo-700">
+            <span className="h-1.5 w-1.5 rounded-full bg-indigo-500 animate-pulse" />
+            Mobile App
+          </span>
+        </div>
+
+        {/* Heading row */}
+        <div className="flex items-start gap-3 mb-3">
+          <div className="h-11 w-11 flex-shrink-0 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center shadow-sm shadow-indigo-100">
+            <Smartphone className="h-5 w-5 text-white" />
+          </div>
+          <div className="min-w-0 pt-0.5">
+            <h3 className="text-sm font-bold text-slate-900 leading-tight">Download Riseflake App</h3>
+            <p className="text-[11px] text-slate-500 mt-0.5 leading-relaxed">
+              Realtime job alerts, applied job updates, and recruiter messages.
+            </p>
+          </div>
+        </div>
+
+        {/* Feature chips */}
+        <div className="flex flex-wrap gap-1.5 mb-4">
+          {FEATURES.map(({ icon: Icon, label }) => (
+            <span
+              key={label}
+              className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-[11px] font-medium text-slate-600"
+            >
+              <Icon className="h-3 w-3 text-slate-400" />
+              {label}
+            </span>
+          ))}
+        </div>
+
+        {/* Divider */}
+        <div className="border-t border-slate-100 mb-4" />
+
+        {/* Store buttons */}
+        <div className="flex gap-2">
+          <a
+            href="https://play.google.com/store/apps/details?id=com.riseflake.app"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex-1"
+            aria-label="Download Riseflake on Google Play"
+          >
+            <img
+              src="/download-on-the-play-store.png"
+              alt="Download on Google Play"
+              className="h-10 w-full object-contain object-left"
+              loading="lazy"
+            />
           </a>
-          <a href="https://apps.apple.com/app/idYOUR_APP_ID" target="_blank" rel="noopener noreferrer">
-            <img src="https://riseflake.com/download-on-the-app-store.svg" alt="Download on the App Store" className="h-10" />
+          <a
+            href="https://apps.apple.com/in/app/riseflake/id6743671773"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex-1"
+            aria-label="Download Riseflake on the App Store"
+          >
+            <img
+              src="/download-on-the-app-store.svg"
+              alt="Download on the App Store"
+              className="h-10 w-full object-contain object-right"
+              loading="lazy"
+            />
           </a>
         </div>
       </div>
     </aside>
-  );
+  )
 }

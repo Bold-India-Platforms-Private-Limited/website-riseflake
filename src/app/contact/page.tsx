@@ -2,6 +2,7 @@
 import { useEffect } from "react";
 import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
 import { useRouter } from "next/navigation";
+import { Building2, Rocket, FileText, Globe, MapPin, Mail } from "lucide-react";
 import Footer from "../components/Footer";
 
 export default function Contact() {
@@ -41,7 +42,9 @@ export default function Contact() {
 
                 <div className="grid gap-6 sm:grid-cols-2">
                   <div className="flex items-start gap-3 p-4 rounded-xl bg-slate-50 border border-slate-100">
-                    <span className="text-2xl" role="img" aria-label="Company">🏢</span>
+                    <div className="h-9 w-9 flex-shrink-0 rounded-lg bg-blue-100 flex items-center justify-center">
+                      <Building2 className="h-4.5 w-4.5 text-blue-600 h-[18px] w-[18px]" />
+                    </div>
                     <div>
                       <h3 className="font-semibold text-slate-800">Company Name</h3>
                       <p>Bold India Platforms Private Limited</p>
@@ -49,7 +52,9 @@ export default function Contact() {
                   </div>
 
                   <div className="flex items-start gap-3 p-4 rounded-xl bg-slate-50 border border-slate-100">
-                    <span className="text-2xl" role="img" aria-label="Brand">🚀</span>
+                    <div className="h-9 w-9 flex-shrink-0 rounded-lg bg-indigo-100 flex items-center justify-center">
+                      <Rocket className="h-[18px] w-[18px] text-indigo-600" />
+                    </div>
                     <div>
                       <h3 className="font-semibold text-slate-800">Brand Name</h3>
                       <p>RiseFlake</p>
@@ -57,7 +62,9 @@ export default function Contact() {
                   </div>
 
                   <div className="flex items-start gap-3 p-4 rounded-xl bg-slate-50 border border-slate-100">
-                    <span className="text-2xl" role="img" aria-label="CIN">📋</span>
+                    <div className="h-9 w-9 flex-shrink-0 rounded-lg bg-amber-100 flex items-center justify-center">
+                      <FileText className="h-[18px] w-[18px] text-amber-600" />
+                    </div>
                     <div>
                       <h3 className="font-semibold text-slate-800">CIN</h3>
                       <p>U85499PN2025PTC246360</p>
@@ -65,7 +72,9 @@ export default function Contact() {
                   </div>
 
                   <div className="flex items-start gap-3 p-4 rounded-xl bg-slate-50 border border-slate-100">
-                    <span className="text-2xl" role="img" aria-label="Website">🌐</span>
+                    <div className="h-9 w-9 flex-shrink-0 rounded-lg bg-sky-100 flex items-center justify-center">
+                      <Globe className="h-[18px] w-[18px] text-sky-600" />
+                    </div>
                     <div>
                       <h3 className="font-semibold text-slate-800">Company Website</h3>
                       <a href="https://www.boldindia.in" target="_blank" rel="noopener noreferrer" className="text-indigo-600 hover:underline">www.boldindia.in</a>
@@ -73,7 +82,9 @@ export default function Contact() {
                   </div>
 
                   <div className="flex items-start gap-3 p-4 rounded-xl bg-slate-50 border border-slate-100 sm:col-span-2">
-                    <span className="text-2xl" role="img" aria-label="Address">📍</span>
+                    <div className="h-9 w-9 flex-shrink-0 rounded-lg bg-rose-100 flex items-center justify-center">
+                      <MapPin className="h-[18px] w-[18px] text-rose-600" />
+                    </div>
                     <div>
                       <h3 className="font-semibold text-slate-800">Registered Office</h3>
                       <p>Sn 242/1/2 Baner, Tejaswini Soc, DP Road, N.I.A., Pune, Maharashtra 411045, India</p>
@@ -81,7 +92,9 @@ export default function Contact() {
                   </div>
 
                   <div className="flex items-start gap-3 p-4 rounded-xl bg-slate-50 border border-slate-100 sm:col-span-2">
-                    <span className="text-2xl" role="img" aria-label="Email">✉️</span>
+                    <div className="h-9 w-9 flex-shrink-0 rounded-lg bg-emerald-100 flex items-center justify-center">
+                      <Mail className="h-[18px] w-[18px] text-emerald-600" />
+                    </div>
                     <div>
                       <h3 className="font-semibold text-slate-800">Email Us</h3>
                       <div className="flex flex-wrap gap-x-4">

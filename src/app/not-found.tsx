@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { FiHome, FiSearch, FiArrowLeft } from "react-icons/fi";
+import { Search } from "lucide-react";
 import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
 
@@ -31,8 +32,10 @@ export default function NotFound() {
                         </div>
                         <div className="absolute inset-0 flex items-center justify-center">
                             <div className="bg-white/80 backdrop-blur-sm p-4 rounded-2xl shadow-xl border border-white">
-                                <span className="text-5xl md:text-6xl" role="img" aria-label="lost">🔍</span>
+                            <div className="h-16 w-16 rounded-2xl bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center">
+                                <Search className="h-8 w-8 text-white" />
                             </div>
+                        </div>
                         </div>
                     </div>
 

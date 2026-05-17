@@ -1,43 +1,57 @@
-import { NextResponse } from 'next/server';
+import { NextResponse } from 'next/server'
 
-export const dynamic = 'force-dynamic';
+// Static pages rarely change — rebuild once per day
+export const revalidate = 86400
+
+type StaticPage = {
+  url: string
+  changefreq: string
+  priority: string
+  lastmod?: string
+}
+
+const STATIC_PAGES: StaticPage[] = [
+  { url: 'https://riseflake.com/',                    changefreq: 'daily',   priority: '1.0' },
+  { url: 'https://riseflake.com/jobs',                changefreq: 'hourly',  priority: '0.9' },
+  { url: 'https://riseflake.com/internships',         changefreq: 'hourly',  priority: '0.9' },
+  { url: 'https://riseflake.com/companies',           changefreq: 'daily',   priority: '0.7' },
+  { url: 'https://riseflake.com/colleges',            changefreq: 'weekly',  priority: '0.6' },
+  { url: 'https://riseflake.com/indexed-jobs',        changefreq: 'daily',   priority: '0.6' },
+  { url: 'https://riseflake.com/about',               changefreq: 'monthly', priority: '0.5' },
+  { url: 'https://riseflake.com/contact',             changefreq: 'monthly', priority: '0.5' },
+  { url: 'https://riseflake.com/careers',             changefreq: 'monthly', priority: '0.4' },
+  { url: 'https://riseflake.com/support',             changefreq: 'monthly', priority: '0.4' },
+  { url: 'https://riseflake.com/privacy-policy',      changefreq: 'yearly',  priority: '0.3', lastmod: '2026-01-08' },
+  { url: 'https://riseflake.com/terms-of-service',    changefreq: 'yearly',  priority: '0.3', lastmod: '2026-01-08' },
+  { url: 'https://riseflake.com/refund-policy',       changefreq: 'yearly',  priority: '0.3', lastmod: '2026-01-08' },
+  { url: 'https://riseflake.com/trust-and-safety',    changefreq: 'yearly',  priority: '0.3', lastmod: '2026-01-08' },
+  { url: 'https://riseflake.com/disclaimer',          changefreq: 'yearly',  priority: '0.3', lastmod: '2026-01-08' },
+  { url: 'https://riseflake.com/cookie-policy',       changefreq: 'yearly',  priority: '0.3', lastmod: '2026-01-08' },
+  { url: 'https://riseflake.com/delete-account',      changefreq: 'monthly', priority: '0.3' },
+  { url: 'https://riseflake.com/sitemap.html',         changefreq: 'daily',   priority: '0.4' },
+]
 
 export async function GET() {
-  const staticPages = [
-    'https://riseflake.com/',
-    'https://riseflake.com/jobs',
-    'https://riseflake.com/internships',
-    'https://riseflake.com/colleges',
-    'https://riseflake.com/companies',
-    'https://riseflake.com/about',
-    'https://riseflake.com/contact',
-    'https://riseflake.com/privacy-policy',
-  ];
-  const today = new Date().toISOString().slice(0, 10);
-  // Assign changefreq/priority based on type
-  const urlEntries = staticPages.map((url) => {
-    let changefreq = 'monthly';
-    let priority = '0.3';
-    if (url === 'https://riseflake.com/') {
-      changefreq = 'daily';
-      priority = '1.0';
-    } else if (url === 'https://riseflake.com/jobs') {
-      changefreq = 'daily';
-      priority = '0.8';
-    } else if (url === 'https://riseflake.com/internships') {
-      changefreq = 'daily';
-      priority = '0.7';
-    } else if (url === 'https://riseflake.com/companies') {
-      changefreq = 'weekly';
-      priority = '0.6';
-    }
-    return `  <url>\n    <loc>${url}</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>${changefreq}</changefreq>\n    <priority>${priority}</priority>\n  </url>`;
-  }).join('\n');
-  const xml = `<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n${urlEntries}\n</urlset>`;
+  const today = new Date().toISOString().slice(0, 10)
+
+  const urlEntries = STATIC_PAGES.map(({ url, changefreq, priority, lastmod }) =>
+    [
+      '  <url>',
+      `    <loc>${url}</loc>`,
+      `    <lastmod>${lastmod ?? today}</lastmod>`,
+      `    <changefreq>${changefreq}</changefreq>`,
+      `    <priority>${priority}</priority>`,
+      '  </url>',
+    ].join('\n')
+  ).join('\n')
+
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urlEntries}\n</urlset>`
+
   return new NextResponse(xml, {
     status: 200,
     headers: {
-      'Content-Type': 'application/xml',
+      'Content-Type': 'application/xml; charset=utf-8',
+      'Cache-Control': 'public, s-maxage=86400, stale-while-revalidate=172800',
     },
-  });
+  })
 }

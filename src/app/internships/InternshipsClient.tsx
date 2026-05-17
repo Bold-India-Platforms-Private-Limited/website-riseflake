@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
-import { useSearchParams } from 'next/navigation'
+import { useSearchParams, useRouter } from 'next/navigation'
 import FiltersPanel from './components/FiltersPanel'
 import MobileFilters from './components/MobileFilters'
 import InternshipList from './components/InternshipList'
@@ -31,8 +31,9 @@ const fetchInternships = async (params: URLSearchParams) => {
 
 export default function InternshipsClient() {
   const searchParams = useSearchParams()
+  const router = useRouter()
   const [data, setData] = useState<InternshipsResponse | null>(null)
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
   const params = useMemo(() => {
@@ -87,7 +88,7 @@ export default function InternshipsClient() {
               const p = new URLSearchParams(searchParams.toString());
               if (position) { p.set('position', position); } else { p.delete('position'); }
               p.set('page', '1');
-              window.location.search = p.toString();
+              router.push(`/internships?${p.toString()}`);
             }}
             className="flex flex-wrap items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-600 shadow-sm"
           >

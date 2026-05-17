@@ -5,91 +5,99 @@ type TagsSectionProps = {
   tags: string[] | null | undefined
 }
 
-const GRADIENTS = [
-  'bg-gradient-to-r from-pink-400 via-orange-300 to-yellow-400',
-  'bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400',
-  'bg-gradient-to-r from-green-400 via-blue-300 to-purple-400',
-  'bg-gradient-to-r from-yellow-400 via-red-400 to-pink-400',
-  'bg-gradient-to-r from-indigo-400 via-blue-300 to-green-300',
-  'bg-gradient-to-r from-teal-400 via-cyan-300 to-blue-400',
-  'bg-gradient-to-r from-fuchsia-400 via-pink-300 to-rose-400',
-  'bg-gradient-to-r from-emerald-400 via-lime-300 to-yellow-400',
-  'bg-gradient-to-r from-sky-400 via-blue-300 to-indigo-400',
-  'bg-gradient-to-r from-orange-400 via-amber-300 to-yellow-400',
-  'bg-gradient-to-r from-red-400 via-pink-300 to-fuchsia-400',
-  'bg-gradient-to-r from-cyan-400 via-teal-300 to-green-400',
-  'bg-gradient-to-r from-purple-400 via-violet-300 to-indigo-400',
-  'bg-gradient-to-r from-lime-400 via-green-300 to-emerald-400',
-  'bg-gradient-to-r from-amber-400 via-orange-300 to-red-400',
-  'bg-gradient-to-r from-blue-400 via-sky-300 to-cyan-400',
-  'bg-gradient-to-r from-pink-400 via-fuchsia-300 to-purple-400',
-  'bg-gradient-to-r from-green-400 via-emerald-300 to-lime-400',
-  'bg-gradient-to-r from-yellow-400 via-amber-300 to-orange-400',
-  'bg-gradient-to-r from-indigo-400 via-violet-300 to-purple-400',
-];
+// Soft pastel palette: [bg-from, bg-to, text, border]
+const CHIP_PALETTE = [
+  ['from-violet-50', 'to-indigo-50',  'text-violet-700',  'border-violet-200/70'],
+  ['from-sky-50',    'to-blue-50',    'text-sky-700',     'border-sky-200/70'],
+  ['from-emerald-50','to-teal-50',    'text-emerald-700', 'border-emerald-200/70'],
+  ['from-rose-50',   'to-pink-50',    'text-rose-700',    'border-rose-200/70'],
+  ['from-amber-50',  'to-yellow-50',  'text-amber-700',   'border-amber-200/70'],
+  ['from-fuchsia-50','to-purple-50',  'text-fuchsia-700', 'border-fuchsia-200/70'],
+  ['from-cyan-50',   'to-sky-50',     'text-cyan-700',    'border-cyan-200/70'],
+  ['from-lime-50',   'to-green-50',   'text-lime-700',    'border-lime-200/70'],
+  ['from-orange-50', 'to-amber-50',   'text-orange-700',  'border-orange-200/70'],
+  ['from-indigo-50', 'to-blue-50',    'text-indigo-700',  'border-indigo-200/70'],
+]
 
-const FACILITY_ICONS: Record<string, { icon: React.ReactNode; color: string }> = {
-  "Certificate / Experience Letter": { icon: <Award size={16} />, color: 'bg-gradient-to-r from-yellow-400 to-yellow-600' },
-  "ESOPs / Equity": { icon: <TrendingUp size={16} />, color: 'bg-gradient-to-r from-purple-400 to-pink-500' },
-  "Flexible Working Hours": { icon: <Clock size={16} />, color: 'bg-gradient-to-r from-blue-400 to-cyan-400' },
-  "Free Meals / Snacks": { icon: <Utensils size={16} />, color: 'bg-gradient-to-r from-orange-400 to-yellow-500' },
-  "Health Insurance / Mediclaim": { icon: <HeartPulse size={16} />, color: 'bg-gradient-to-r from-pink-400 to-red-500' },
-  "Job Offer on Completion (PPO)": { icon: <FileCheck size={16} />, color: 'bg-gradient-to-r from-green-400 to-emerald-500' },
-  "Laptop / Equipment Provided": { icon: <Laptop size={16} />, color: 'bg-gradient-to-r from-gray-400 to-gray-600' },
-  "Performance Bonus / Incentives": { icon: <Gift size={16} />, color: 'bg-gradient-to-r from-fuchsia-400 to-pink-400' },
-  "Stipend / Salary": { icon: <DollarSign size={16} />, color: 'bg-gradient-to-r from-amber-400 to-yellow-500' },
-  "Training and Mentorship": { icon: <GraduationCap size={16} />, color: 'bg-gradient-to-r from-indigo-400 to-blue-500' },
-  "Travel / Cab Facility": { icon: <Bus size={16} />, color: 'bg-gradient-to-r from-sky-400 to-blue-400' },
-  "Work From Home": { icon: <Home size={16} />, color: 'bg-gradient-to-r from-teal-400 to-green-400' },
-};
-
-function getRandomGradient(idx: number) {
-  // Use tag index for deterministic random, so SSR/CSR match
-  return GRADIENTS[idx % GRADIENTS.length];
+type FacilityEntry = {
+  icon: React.ReactNode
+  bg: string
+  text: string
+  border: string
 }
+
+const FACILITY_MAP: Record<string, FacilityEntry> = {
+  "Certificate / Experience Letter": { icon: <Award size={14} />, bg: 'bg-amber-100',   text: 'text-amber-800',   border: 'border-amber-200' },
+  "ESOPs / Equity":                  { icon: <TrendingUp size={14} />, bg: 'bg-purple-100', text: 'text-purple-800', border: 'border-purple-200' },
+  "Flexible Working Hours":          { icon: <Clock size={14} />,      bg: 'bg-blue-100',   text: 'text-blue-800',   border: 'border-blue-200' },
+  "Free Meals / Snacks":             { icon: <Utensils size={14} />,   bg: 'bg-orange-100', text: 'text-orange-800', border: 'border-orange-200' },
+  "Health Insurance / Mediclaim":    { icon: <HeartPulse size={14} />, bg: 'bg-rose-100',   text: 'text-rose-800',   border: 'border-rose-200' },
+  "Job Offer on Completion (PPO)":   { icon: <FileCheck size={14} />,  bg: 'bg-emerald-100',text: 'text-emerald-800',border: 'border-emerald-200' },
+  "Laptop / Equipment Provided":     { icon: <Laptop size={14} />,     bg: 'bg-slate-100',  text: 'text-slate-700',  border: 'border-slate-200' },
+  "Performance Bonus / Incentives":  { icon: <Gift size={14} />,       bg: 'bg-fuchsia-100',text: 'text-fuchsia-800',border: 'border-fuchsia-200' },
+  "Stipend / Salary":                { icon: <DollarSign size={14} />, bg: 'bg-green-100',  text: 'text-green-800',  border: 'border-green-200' },
+  "Training and Mentorship":         { icon: <GraduationCap size={14} />, bg: 'bg-indigo-100',text: 'text-indigo-800',border: 'border-indigo-200' },
+  "Travel / Cab Facility":           { icon: <Bus size={14} />,        bg: 'bg-sky-100',    text: 'text-sky-800',    border: 'border-sky-200' },
+  "Work From Home":                  { icon: <Home size={14} />,       bg: 'bg-teal-100',   text: 'text-teal-800',   border: 'border-teal-200' },
+}
+
+// Fallback for unrecognised facilities
+const FALLBACK_FACILITY_COLORS = [
+  { bg: 'bg-violet-100', text: 'text-violet-800', border: 'border-violet-200' },
+  { bg: 'bg-cyan-100',   text: 'text-cyan-800',   border: 'border-cyan-200' },
+  { bg: 'bg-lime-100',   text: 'text-lime-800',   border: 'border-lime-200' },
+  { bg: 'bg-pink-100',   text: 'text-pink-800',   border: 'border-pink-200' },
+  { bg: 'bg-amber-100',  text: 'text-amber-800',  border: 'border-amber-200' },
+]
 
 export default function TagsSection({ title, tags }: TagsSectionProps) {
   if (!tags || tags.length === 0) {
     return (
-      <div className="rounded-2xl border border-dashed border-slate-200 bg-white p-6">
-        <h3 className="text-lg font-semibold text-slate-900 mb-2">{title}</h3>
-        <p className="text-sm text-slate-600">Not specified</p>
+      <div className="rounded-2xl border border-dashed border-slate-200 bg-white p-5">
+        <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-400 mb-1">{title}</h3>
+        <p className="text-sm text-slate-500">Not specified</p>
       </div>
     )
   }
 
-  const isFacilities = title.toLowerCase().includes('facil');
+  const isFacilities = title.toLowerCase().includes('benefit') || title.toLowerCase().includes('facil')
 
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-      <h3 className="text-sm font-semibold uppercase tracking-wide text-slate-500 mb-3">{title}</h3>
-      <div className="flex flex-wrap gap-2">
-        {tags.map((tag, idx) => {
-          if (isFacilities && FACILITY_ICONS[tag]) {
-            const { icon, color } = FACILITY_ICONS[tag];
+    <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+      <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-400 mb-3">{title}</h3>
+
+      {isFacilities ? (
+        <div className="flex flex-wrap gap-2">
+          {tags.map((tag, idx) => {
+            const entry = FACILITY_MAP[tag]
+            const { bg, text, border } = entry ?? FALLBACK_FACILITY_COLORS[idx % FALLBACK_FACILITY_COLORS.length]
+            const icon = entry?.icon ?? null
             return (
               <span
                 key={tag}
-                className={`flex items-center gap-1 rounded-full px-3 py-1 text-[12px] font-medium text-white shadow-sm ${color}`}
-                style={{ backgroundClip: 'padding-box' }}
+                className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold border ${bg} ${text} ${border}`}
               >
-                {icon}
+                {icon && <span className="opacity-80">{icon}</span>}
                 {tag}
               </span>
-            );
-          }
-          // fallback to gradient for other tags
-          return (
-            <span
-              key={tag}
-              className={`rounded-full px-2.5 py-1 text-[11px] font-medium text-white shadow-sm ${getRandomGradient(idx)}`}
-              style={{ backgroundClip: 'padding-box' }}
-            >
-              {tag}
-            </span>
-          );
-        })}
-      </div>
+            )
+          })}
+        </div>
+      ) : (
+        <div className="flex flex-wrap gap-2">
+          {tags.map((tag, idx) => {
+            const [from, to, text, border] = CHIP_PALETTE[idx % CHIP_PALETTE.length]
+            return (
+              <span
+                key={tag}
+                className={`inline-flex items-center rounded-full bg-gradient-to-r ${from} ${to} border ${border} px-3 py-1 text-xs font-semibold ${text}`}
+              >
+                {tag}
+              </span>
+            )
+          })}
+        </div>
+      )}
     </div>
   )
 }

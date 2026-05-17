@@ -1,34 +1,29 @@
-import { NextResponse } from 'next/server';
-import { API_BASE_URL } from '../../lib/config';
+import { NextResponse } from 'next/server'
+import { API_BASE_URL } from '../../lib/config'
 
-export const dynamic = 'force-dynamic';
+// 6-hour ISR cache — company count changes slowly
+export const revalidate = 21600
 
 export async function GET() {
-  if (!API_BASE_URL) {
-    return new NextResponse('API_BASE_URL not set', { status: 500 });
-  }
-  const url = `${API_BASE_URL}/companies-sitemap.xml`;
   try {
-    const res = await fetch(url);
+    const res = await fetch(`${API_BASE_URL}/companies-sitemap.xml`, {
+      next: { revalidate: 21600 },
+    })
+
     if (!res.ok) {
-      return new NextResponse('Failed to fetch companies sitemap index', { status: 500 });
+      return new NextResponse('Failed to fetch companies sitemap index', { status: 502 })
     }
-    let xml = await res.text();
-    // Rewrite <loc> URLs to use /sitemap-companies-{batch}.xml routes
-    xml = xml.replace(/<loc>https?:\/\/[^<]*\/companies-sitemap-(\d+)\.xml<\/loc>/g, (_, batch) => {
-      return `<loc>https://riseflake.com/sitemap-companies-${batch}.xml</loc>`;
-    });
-    // Ensure <lastmod>, <changefreq>, <priority> exist after every <loc> in <sitemap> (if not present)
-      // Only <loc> and <lastmod> are valid under <sitemap> according to Google
-      const today = new Date().toISOString().slice(0, 10);
-      xml = xml.replace(/(<loc>[^<]+<\/loc>)(?!\s*<lastmod>)/g, `$1\n    <lastmod>${today}</lastmod>`);
+
+    const xml = await res.text()
+
     return new NextResponse(xml, {
       status: 200,
       headers: {
-        'Content-Type': 'application/xml',
+        'Content-Type': 'application/xml; charset=utf-8',
+        'Cache-Control': 'public, s-maxage=21600, stale-while-revalidate=86400',
       },
-    });
-  } catch (e) {
-    return new NextResponse('Failed to fetch companies sitemap index', { status: 500 });
+    })
+  } catch {
+    return new NextResponse('Failed to fetch companies sitemap index', { status: 500 })
   }
 }

@@ -1,21 +1,29 @@
-import { NextResponse } from 'next/server';
+import { NextResponse } from 'next/server'
 
-export const dynamic = 'force-dynamic';
+// Rebuild daily — sub-sitemaps handle their own freshness
+export const revalidate = 86400
 
 export async function GET() {
-  // Only reference the static sitemap and other sitemaps
-  const today = new Date().toISOString().slice(0, 10);
-  const sitemapEntries = [
-      `  <sitemap>\n    <loc>https://riseflake.com/sitemap-static.xml</loc>\n    <lastmod>${today}</lastmod>\n  </sitemap>`,
-      `  <sitemap>\n    <loc>https://riseflake.com/sitemap-jobs.xml</loc>\n    <lastmod>${today}</lastmod>\n  </sitemap>`,
-      `  <sitemap>\n    <loc>https://riseflake.com/sitemap-internships.xml</loc>\n    <lastmod>${today}</lastmod>\n  </sitemap>`,
-      `  <sitemap>\n    <loc>https://riseflake.com/sitemap-companies.xml</loc>\n    <lastmod>${today}</lastmod>\n  </sitemap>`
-  ].join('\n');
-  const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${sitemapEntries}\n</sitemapindex>`;
+  const today = new Date().toISOString().slice(0, 10)
+
+  const sitemaps = [
+    'https://riseflake.com/sitemap-static.xml',
+    'https://riseflake.com/sitemap-jobs.xml',
+    'https://riseflake.com/sitemap-internships.xml',
+    'https://riseflake.com/sitemap-companies.xml',
+  ]
+
+  const entries = sitemaps
+    .map(loc => `  <sitemap>\n    <loc>${loc}</loc>\n    <lastmod>${today}</lastmod>\n  </sitemap>`)
+    .join('\n')
+
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${entries}\n</sitemapindex>`
+
   return new NextResponse(xml, {
     status: 200,
     headers: {
-      'Content-Type': 'application/xml',
+      'Content-Type': 'application/xml; charset=utf-8',
+      'Cache-Control': 'public, s-maxage=86400, stale-while-revalidate=172800',
     },
-  });
+  })
 }

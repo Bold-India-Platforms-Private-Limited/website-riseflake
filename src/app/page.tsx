@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { FiSearch } from 'react-icons/fi'
+import { Zap, Rocket, Target, Globe, BarChart2, Briefcase, Users, Trophy } from 'lucide-react'
 import Footer from './components/Footer'
 import Navbar from './components/Navbar'
 import AppDownloadSection from './components/AppDownloadSection'
@@ -61,8 +62,9 @@ export default function Home() {
             Riseflake is a job portal and professional networking platform designed for career growth. Discover job opportunities, connect with industry leaders, and find roles that match your skills.
           </p>
 
-          <p className="text-sm text-slate-500 mb-10">
-            ⚡ Browse active job listings from companies hiring now.
+          <p className="text-sm text-slate-500 mb-10 flex items-center justify-center gap-1.5">
+            <Zap className="h-4 w-4 text-indigo-400" />
+            Browse active job listings from companies hiring now.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
@@ -70,9 +72,10 @@ export default function Home() {
               href="https://play.google.com/store/apps/details?id=com.riseflake.app"
               target="_blank"
               rel="noopener noreferrer"
-              className="px-8 py-4 bg-gradient-modern text-white hover:shadow-2xl hover:shadow-indigo-400/50 rounded-full font-bold text-lg transition-all"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-modern text-white hover:shadow-2xl hover:shadow-indigo-400/50 rounded-full font-bold text-lg transition-all"
             >
-              🚀 Start Your Journey
+              <Rocket className="h-5 w-5" />
+              Start Your Journey
             </a>
             <button
               onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}
@@ -276,52 +279,63 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
               {
-                icon: '🎯',
+                icon: Target,
+                gradient: 'from-indigo-500 to-violet-600',
                 title: 'AI-Powered Job Matching',
                 description: 'Our intelligent algorithm matches you with job opportunities based on your skills, experience, and career aspirations. Get personalized recommendations daily.',
                 keywords: 'AI job matching, smart recommendations, personalized jobs',
               },
               {
-                icon: '🌐',
+                icon: Globe,
+                gradient: 'from-sky-500 to-indigo-600',
                 title: 'Professional Networking',
                 description: 'Connect with industry leaders, mentors, and like-minded professionals. Build meaningful relationships that accelerate your career growth and open new doors.',
                 keywords: 'networking, professional connections, industry leaders',
               },
               {
-                icon: '📊',
+                icon: BarChart2,
+                gradient: 'from-emerald-500 to-teal-600',
                 title: 'Career Analytics & Insights',
                 description: 'Track your job search progress with detailed analytics. Get market insights, salary trends, and skill demand forecasts to make informed career decisions.',
                 keywords: 'career analytics, market trends, salary insights',
               },
               {
-                icon: '💼',
+                icon: Briefcase,
+                gradient: 'from-amber-500 to-orange-600',
                 title: 'Verified Job Listings',
                 description: 'Explore verified job opportunities from companies across various industries. Every listing is reviewed for authenticity.',
                 keywords: 'verified jobs, job listings, verified companies',
               },
               {
-                icon: '🤝',
+                icon: Users,
+                gradient: 'from-rose-500 to-pink-600',
                 title: 'Direct Company Access',
                 description: 'Contact hiring managers and recruiters directly. Skip the middleman and establish meaningful professional relationships with decision-makers.',
                 keywords: 'direct hiring, recruiter contact, company access',
               },
               {
-                icon: '🏆',
+                icon: Trophy,
+                gradient: 'from-violet-500 to-purple-600',
                 title: 'Premium Resources & Training',
                 description: 'Access exclusive interview preparation guides, resume templates, and professional development resources. Learn from industry experts.',
                 keywords: 'training resources, interview prep, professional development',
               },
-            ].map((feature, idx) => (
-              <div
-                key={idx}
-                className="group glass rounded-2xl p-8 hover:shadow-xl transition-all hover:bg-white/80"
-              >
-                <div className="text-5xl mb-4 group-hover:scale-110 transition-transform">{feature.icon}</div>
-                <h3 className="text-xl font-bold mb-3 text-slate-900">{feature.title}</h3>
-                <p className="text-slate-600 leading-relaxed mb-4">{feature.description}</p>
-                <p className="text-xs text-slate-400">{feature.keywords}</p>
-              </div>
-            ))}
+            ].map((feature, idx) => {
+              const Icon = feature.icon
+              return (
+                <div
+                  key={idx}
+                  className="group glass rounded-2xl p-8 hover:shadow-xl transition-all hover:bg-white/80"
+                >
+                  <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${feature.gradient} flex items-center justify-center mb-5 group-hover:scale-110 transition-transform shadow-md`}>
+                    <Icon className="h-7 w-7 text-white" />
+                  </div>
+                  <h3 className="text-xl font-bold mb-3 text-slate-900">{feature.title}</h3>
+                  <p className="text-slate-600 leading-relaxed mb-4">{feature.description}</p>
+                  <p className="text-xs text-slate-400">{feature.keywords}</p>
+                </div>
+              )
+            })}
           </div>
         </div>
       </section>
