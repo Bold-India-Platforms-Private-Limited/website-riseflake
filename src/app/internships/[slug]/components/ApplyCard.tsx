@@ -2,25 +2,59 @@
 
 import { useMemo, useState } from 'react'
 import { usePathname } from 'next/navigation'
-import { Users, Calendar, Banknote, ChevronDown, ChevronUp, Gift } from 'lucide-react'
+import { Users, Banknote, ChevronDown, ChevronUp, Gift } from 'lucide-react'
 import type { JobDetail } from './types'
 import { WEBSITE_BASE_URL } from '../../../../lib/config'
 import { formatSalaryInfo } from '../../../../lib/salary'
 
-const formatDate = (value?: string | null) => {
-  if (!value) return null
-  const date = new Date(value)
-  if (Number.isNaN(date.getTime())) return null
-  return new Intl.DateTimeFormat('en-IN', { dateStyle: 'medium' }).format(date)
-}
+const MAX_DEADLINE_DAYS = 90
 
-const deadlineDiff = (value?: string | null) => {
-  if (!value) return null
-  const diff = Math.ceil((new Date(value).getTime() - Date.now()) / 86400000)
+function DeadlineCountdown({ deadline }: { deadline: string }) {
+  const date = new Date(deadline)
+  if (Number.isNaN(date.getTime())) return null
+  const diff = Math.ceil((date.getTime() - Date.now()) / 86400000)
   if (diff < 0) return null
-  if (diff === 0) return 'Closes today!'
-  if (diff <= 7) return `${diff} day${diff === 1 ? '' : 's'} left`
-  return null
+
+  const formatted = new Intl.DateTimeFormat('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }).format(date)
+  const progress = Math.min(Math.max(diff / MAX_DEADLINE_DAYS, 0), 1)
+
+  const radius = 15
+  const circumference = 2 * Math.PI * radius
+  const filled = progress * circumference
+
+  const urgent = diff <= 7
+  const moderate = diff > 7 && diff <= 30
+  const stroke = urgent ? '#ef4444' : moderate ? '#f59e0b' : '#7c3aed'
+  const trackStroke = urgent ? '#fee2e2' : moderate ? '#fef3c7' : '#ede9fe'
+  const badge = urgent
+    ? 'bg-rose-50 border-rose-200 text-rose-700'
+    : moderate
+    ? 'bg-amber-50 border-amber-200 text-amber-700'
+    : 'bg-violet-50 border-violet-200 text-violet-700'
+  const sub = urgent ? 'text-rose-500' : moderate ? 'text-amber-500' : 'text-violet-400'
+
+  const daysLabel =
+    diff === 0 ? 'Closes today!' : `${diff} day${diff === 1 ? '' : 's'} left`
+
+  return (
+    <div className={`flex items-center gap-3 rounded-xl border px-3 py-2.5 ${badge}`}>
+      <svg width="38" height="38" viewBox="0 0 38 38" className="flex-shrink-0 -rotate-90">
+        <circle cx="19" cy="19" r={radius} fill="none" stroke={trackStroke} strokeWidth="4.5" />
+        <circle
+          cx="19" cy="19" r={radius}
+          fill="none"
+          stroke={stroke}
+          strokeWidth="4.5"
+          strokeLinecap="round"
+          strokeDasharray={`${filled} ${circumference}`}
+        />
+      </svg>
+      <div className="min-w-0">
+        <p className="text-sm font-bold leading-tight">{daysLabel}</p>
+        <p className={`text-[11px] font-medium mt-0.5 ${sub}`}>Apply by {formatted}</p>
+      </div>
+    </div>
+  )
 }
 
 function ShareButtons({ title, url }: { title: string; url: string }) {
@@ -99,7 +133,7 @@ function ShareButtons({ title, url }: { title: string; url: string }) {
 
 export default function ApplyCard({ job }: { job: JobDetail }) {
   const pathname = usePathname()
-  const [incentivesOpen, setIncentivesOpen] = useState(false)
+  const [incentivesOpen, setIncentivesOpen] = useState(true)
 
   const applyHref = useMemo(() => {
     const appBase = WEBSITE_BASE_URL.replace('://', '://app.')
@@ -108,8 +142,6 @@ export default function ApplyCard({ job }: { job: JobDetail }) {
   const shareUrl = `${WEBSITE_BASE_URL}${pathname}`
 
   const stipendInfo = formatSalaryInfo(job)
-  const deadlineDate = formatDate(job.job_deadline)
-  const urgency = deadlineDiff(job.job_deadline)
 
   // Override gradient for internship to use violet
   const gradient = stipendInfo
@@ -173,18 +205,10 @@ export default function ApplyCard({ job }: { job: JobDetail }) {
           </svg>
         </a>
 
-        {urgency && (
-          <div className="flex items-center gap-2 rounded-lg bg-rose-50 border border-rose-100 px-3 py-2 text-xs font-semibold text-rose-700">
-            <svg className="h-3.5 w-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            {urgency} to apply
-          </div>
-        )}
+        {job.job_deadline && <DeadlineCountdown deadline={job.job_deadline} />}
 
         <div className="divide-y divide-slate-100">
           <InfoRow icon={<Users className="h-3.5 w-3.5" />} label="Open roles" value={job.job_vacancy != null ? String(job.job_vacancy) : '—'} />
-          {deadlineDate && <InfoRow icon={<Calendar className="h-3.5 w-3.5" />} label="Deadline" value={deadlineDate} highlight={!!urgency} />}
           {!stipendInfo && (
             <InfoRow icon={<Banknote className="h-3.5 w-3.5" />} label="Stipend" value={job.is_salary_hidden ? 'Confidential' : 'Not disclosed'} />
           )}

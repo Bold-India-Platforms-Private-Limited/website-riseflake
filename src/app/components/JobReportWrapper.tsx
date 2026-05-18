@@ -11,16 +11,21 @@ export default function JobReportWrapper({ jobSlug, isInternship = false }: { jo
     const checkReport = async () => {
       const endpoint = isInternship ? `${API_BASE_URL}/report-internship` : `${API_BASE_URL}/report-job`;
       const idKey = isInternship ? 'internship_id' : 'job_id';
-      const res = await fetch(endpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          [idKey]: Number(jobSlug.split('-').pop() ?? 0) - 1,
-          reason: '__check__'
-        }),
-      });
-      const data = await res.json();
-      setAlreadyReported(data.reportBlocked === true);
+      try {
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            [idKey]: Number(jobSlug.split('-').pop() ?? 0) - 1,
+            reason: '__check__'
+          }),
+        });
+        if (!res.ok) return;
+        const data = await res.json();
+        setAlreadyReported(data.reportBlocked === true);
+      } catch {
+        // backend unreachable — silently skip, report button stays enabled
+      }
     };
     checkReport();
   }, [jobSlug, isInternship]);

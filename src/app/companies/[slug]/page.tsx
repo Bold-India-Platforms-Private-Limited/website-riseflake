@@ -28,9 +28,13 @@ type CompanyResponse = {
 }
 
 const fetchCompany = async (slug: string) => {
-  const response = await fetch(`${API_BASE_URL}/companies/${slug}`, { cache: 'force-cache' })
-  if (!response.ok) return null
-  return (await response.json()) as CompanyResponse
+  try {
+    const response = await fetch(`${API_BASE_URL}/companies/${slug}`, { cache: 'force-cache' })
+    if (!response.ok) return null
+    return (await response.json()) as CompanyResponse
+  } catch {
+    return null
+  }
 }
 
 export async function generateStaticParams() {

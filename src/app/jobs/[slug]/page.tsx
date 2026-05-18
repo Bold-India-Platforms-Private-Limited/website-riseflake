@@ -22,10 +22,14 @@ type JobResponse = {
 }
 
 const fetchJob = async (slug: string) => {
-  const response = await fetch(`${API_BASE_URL}/jobs/${slug}`, { cache: 'force-cache' })
-  if (response.status === 410) return { expired: true }
-  if (!response.ok) return null
-  return (await response.json()) as JobResponse
+  try {
+    const response = await fetch(`${API_BASE_URL}/jobs/${slug}`, { cache: 'force-cache' })
+    if (response.status === 410) return { expired: true }
+    if (!response.ok) return null
+    return (await response.json()) as JobResponse
+  } catch {
+    return null
+  }
 }
 
 export async function generateStaticParams() {

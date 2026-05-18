@@ -22,10 +22,14 @@ type InternshipResponse = {
 }
 
 const fetchInternship = async (slug: string) => {
-  const response = await fetch(`${API_BASE_URL}/internships/${slug}`, { cache: 'force-cache' })
-  if (response.status === 410) return { expired: true }
-  if (!response.ok) return null
-  return (await response.json()) as InternshipResponse
+  try {
+    const response = await fetch(`${API_BASE_URL}/internships/${slug}`, { cache: 'force-cache' })
+    if (response.status === 410) return { expired: true }
+    if (!response.ok) return null
+    return (await response.json()) as InternshipResponse
+  } catch {
+    return null
+  }
 }
 
 export async function generateStaticParams() {
