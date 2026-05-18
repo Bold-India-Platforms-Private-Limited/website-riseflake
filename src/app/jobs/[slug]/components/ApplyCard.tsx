@@ -2,42 +2,10 @@
 
 import { useMemo, useState } from 'react'
 import { usePathname } from 'next/navigation'
-import { Users, Calendar, Banknote } from 'lucide-react'
+import { Users, Calendar, Banknote, ChevronDown, ChevronUp, Gift } from 'lucide-react'
 import type { JobDetail } from './types'
 import { WEBSITE_BASE_URL } from '../../../../lib/config'
-
-const formatLakh = (val: string | null | undefined): string => {
-  const n = parseFloat(val ?? '')
-  if (isNaN(n)) return String(val ?? '')
-  if (n >= 100000) return `${(n / 100000).toFixed(n % 100000 === 0 ? 0 : 1)}L`
-  if (n >= 1000) return `${(n / 1000).toFixed(n % 1000 === 0 ? 0 : 1)}K`
-  return String(n)
-}
-
-const formatSalary = (job: JobDetail): { display: string; isVariable: boolean } | null => {
-  if (job.is_salary_hidden) return null
-  const currency = job.currency ?? '₹'
-  const rawPeriod = job.salary_period?.toLowerCase() ?? ''
-  const period = rawPeriod
-    ? '/' + rawPeriod.replace('monthly', 'mo').replace('yearly', 'yr').replace('annually', 'yr').replace('hourly', 'hr')
-    : ''
-
-  if (job.salary_type === 'FIXED' && job.fixed_amount) {
-    return { display: `${currency}${formatLakh(job.fixed_amount)}${period}`, isVariable: false }
-  }
-
-  const hasRange = job.min_amount && job.max_amount
-  const range = hasRange ? `${currency}${formatLakh(job.min_amount)}–${formatLakh(job.max_amount)}${period}` : ''
-
-  if (job.salary_type === 'VARIABLE') {
-    if (hasRange) return { display: `${range} + variable`, isVariable: true }
-    return { display: 'Variable pay', isVariable: true }
-  }
-
-  if (hasRange) return { display: range, isVariable: false }
-  if (job.is_negotiable) return { display: 'Negotiable', isVariable: false }
-  return null
-}
+import { formatSalaryInfo } from '../../../../lib/salary'
 
 const formatDate = (value?: string | null) => {
   if (!value) return null
@@ -142,13 +110,15 @@ function ShareButtons({ title, url }: { title: string; url: string }) {
 
 export default function ApplyCard({ job }: { job: JobDetail }) {
   const pathname = usePathname()
+  const [incentivesOpen, setIncentivesOpen] = useState(false)
+
   const applyHref = useMemo(() => {
     const appBase = WEBSITE_BASE_URL.replace('://', '://app.')
     return `${appBase}${pathname}`
   }, [pathname])
   const shareUrl = `${WEBSITE_BASE_URL}${pathname}`
 
-  const salaryInfo = formatSalary(job)
+  const salaryInfo = formatSalaryInfo(job)
   const deadlineDate = formatDate(job.job_deadline)
   const urgency = deadlineDiff(job.job_deadline)
 
@@ -156,19 +126,46 @@ export default function ApplyCard({ job }: { job: JobDetail }) {
     <aside className="rounded-2xl border border-slate-200 bg-white overflow-hidden shadow-sm">
       {/* Salary / header */}
       {salaryInfo ? (
-        <div className={`px-5 py-4 bg-gradient-to-r ${salaryInfo.isVariable ? 'from-amber-500 to-orange-500' : 'from-emerald-600 to-teal-600'}`}>
+        <div className={`px-5 py-4 bg-gradient-to-r ${salaryInfo.gradient}`}>
           <p className="text-xs font-semibold uppercase tracking-wide text-white/80">
-            {salaryInfo.isVariable ? 'Variable Salary' : 'Salary'}
+            {salaryInfo.label}
           </p>
           <p className="text-2xl font-bold text-white mt-0.5">{salaryInfo.display}</p>
-          {salaryInfo.isVariable && job.incentive_details && (
-            <p className="text-xs text-white/70 mt-1 leading-snug">{job.incentive_details}</p>
+
+          {/* Incentives toggle button (inside header) */}
+          {salaryInfo.hasIncentives && (
+            <button
+              type="button"
+              onClick={() => setIncentivesOpen((v) => !v)}
+              className="mt-2 inline-flex items-center gap-1 text-xs font-semibold text-white/90 hover:text-white transition-colors"
+            >
+              <Gift className="h-3 w-3" />
+              + Incentives
+              {incentivesOpen ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
+            </button>
           )}
         </div>
       ) : (
         <div className="bg-gradient-to-r from-indigo-600 to-violet-600 px-5 py-4">
           <p className="text-xs font-semibold uppercase tracking-wide text-indigo-100">Apply on Riseflake</p>
           <p className="text-lg font-bold text-white mt-0.5">Submit your application</p>
+        </div>
+      )}
+
+      {/* Incentive details panel */}
+      {salaryInfo?.hasIncentives && incentivesOpen && (
+        <div className="border-b border-amber-100 bg-amber-50 px-5 py-3">
+          <p className="text-[11px] font-semibold uppercase tracking-wide text-amber-700 mb-2">
+            Incentive structure
+          </p>
+          <ul className="space-y-1">
+            {salaryInfo.incentiveItems.map((item) => (
+              <li key={item} className="flex items-start gap-2 text-xs text-amber-900">
+                <Gift className="h-3 w-3 mt-0.5 flex-shrink-0 text-amber-500" />
+                {item}
+              </li>
+            ))}
+          </ul>
         </div>
       )}
 

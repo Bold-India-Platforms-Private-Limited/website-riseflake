@@ -10,6 +10,7 @@ import DownloadAppCard from '../../jobs/[slug]/components/DownloadAppCard'
 import JobReportWrapper from '../../components/JobReportWrapper'
 import type { JobDetail } from './components/types'
 import { API_BASE_URL, WEBSITE_BASE_URL } from '../../../lib/config'
+import { formatSalaryChip } from '../../../lib/salary'
 import React from 'react'
 
 export const dynamicParams = true
@@ -34,11 +35,8 @@ export async function generateStaticParams() {
 // ─── Schema helpers ───────────────────────────────────────────────────────────
 
 const SALARY_UNIT_MAP: Record<string, string> = {
-  monthly: 'MONTH',
-  yearly: 'YEAR',
-  annually: 'YEAR',
-  hourly: 'HOUR',
-  weekly: 'WEEK',
+  MONTH: 'MONTH', YEAR: 'YEAR', HOUR: 'HOUR', WEEK: 'WEEK',
+  monthly: 'MONTH', yearly: 'YEAR', annually: 'YEAR', hourly: 'HOUR', weekly: 'WEEK',
 }
 
 function buildJobPostingSchema(job: JobDetail, canonicalUrl: string) {
@@ -91,12 +89,17 @@ function buildJobPostingSchema(job: JobDetail, canonicalUrl: string) {
     const unitText = SALARY_UNIT_MAP[job.salary_period?.toLowerCase() ?? ''] ?? 'MONTH'
     const currency = job.currency ?? 'INR'
 
-    if (job.salary_type === 'FIXED' && job.fixed_amount) {
+    if ((job.salary_type === 'FIXED' || job.salary_type === 'FIXED_INCENTIVE') && job.fixed_amount) {
       schema.baseSalary = {
         '@type': 'MonetaryAmount',
         currency,
         value: { '@type': 'QuantitativeValue', value: parseFloat(job.fixed_amount), unitText },
       }
+      if (job.salary_type === 'FIXED_INCENTIVE' && job.incentive_details) {
+        schema.jobBenefits = job.incentive_details
+      }
+    } else if (job.salary_type === 'UNPAID') {
+      schema.jobBenefits = 'Unpaid / Voluntary position'
     } else if (job.min_amount && job.max_amount) {
       schema.baseSalary = {
         '@type': 'MonetaryAmount',
@@ -178,13 +181,7 @@ export async function generateMetadata(
   const title = `${internship.position} Internship at ${internship.company_name} — ${location} | Riseflake`
   const description = `Internship: ${internship.position} at ${internship.company_name} in ${location}${expPart}. ${internship.job_skills?.slice(0, 4).join(', ')}. Apply on Riseflake — India's job portal for students & freshers.`
 
-  const ogStipend = (() => {
-    if (internship.is_salary_hidden) return ''
-    const c = internship.currency ?? '₹'
-    if (internship.salary_type === 'FIXED' && internship.fixed_amount) return `${c}${internship.fixed_amount}`
-    if (internship.min_amount && internship.max_amount) return `${c}${internship.min_amount}–${internship.max_amount}`
-    return ''
-  })()
+  const ogStipend = formatSalaryChip(internship) ?? ''
   const ogImageUrl = `${WEBSITE_BASE_URL}/api/og?type=internship` +
     `&title=${encodeURIComponent(internship.position)}` +
     `&company=${encodeURIComponent(internship.company_name ?? '')}` +
@@ -225,14 +222,6 @@ export async function generateMetadata(
 }
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
-
-const formatLakh = (val: string | null | undefined): string => {
-  const n = parseFloat(val ?? '')
-  if (isNaN(n)) return String(val ?? '')
-  if (n >= 100000) return `${(n / 100000).toFixed(n % 100000 === 0 ? 0 : 1)}L`
-  if (n >= 1000) return `${(n / 1000).toFixed(n % 1000 === 0 ? 0 : 1)}K`
-  return String(n)
-}
 
 function HighlightCell({ icon, label, value, accent, iconColor }: { icon: React.ReactNode; label: string; value: string; accent?: string; iconColor?: string }) {
   return (
@@ -339,11 +328,7 @@ export default async function InternshipDetailsPage(
                     value={
                       internship.is_salary_hidden
                         ? 'Confidential'
-                        : internship.salary_type === 'FIXED' && internship.fixed_amount
-                          ? `${internship.currency ?? '₹'}${formatLakh(internship.fixed_amount)}${internship.salary_period ? `/${internship.salary_period.toLowerCase()}` : ''}`
-                          : internship.min_amount && internship.max_amount
-                            ? `${internship.currency ?? '₹'}${formatLakh(internship.min_amount)}–${formatLakh(internship.max_amount)}`
-                            : internship.is_negotiable ? 'Negotiable' : 'Not disclosed'
+                        : formatSalaryChip(internship) ?? 'Not disclosed'
                     }
                   />
                   <HighlightCell icon={<GraduationCap className="h-4 w-4" />} label="Type" accent="bg-amber-50" iconColor="text-amber-500" value="Internship" />

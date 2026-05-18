@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { Users, Briefcase, Globe, Home, Building2, BadgeCheck, GraduationCap, Calendar, MapPin, ArrowRight } from 'lucide-react'
+import { Users, Briefcase, Globe, Home, Building2, BadgeCheck, GraduationCap, Calendar, MapPin, ArrowRight, Banknote } from 'lucide-react'
 import Navbar from '../../components/Navbar'
 import ApplyCard from './components/ApplyCard'
 import JobDescription from './components/JobDescription'
@@ -10,6 +10,7 @@ import DownloadAppCard from './components/DownloadAppCard'
 import JobReportWrapper from '../../components/JobReportWrapper'
 import type { JobDetail } from './components/types'
 import { API_BASE_URL, WEBSITE_BASE_URL } from '../../../lib/config'
+import { formatSalaryChip } from '../../../lib/salary'
 import React from 'react'
 
 export const dynamicParams = true
@@ -41,12 +42,11 @@ const EMPLOYMENT_TYPE_MAP: Record<string, string> = {
   freelance: 'OTHER',
 }
 
+// salary_period is stored uppercase in DB (MONTH/YEAR/HOUR/WEEK) — schema.org uses same values
 const SALARY_UNIT_MAP: Record<string, string> = {
-  monthly: 'MONTH',
-  yearly: 'YEAR',
-  annually: 'YEAR',
-  hourly: 'HOUR',
-  weekly: 'WEEK',
+  MONTH: 'MONTH', YEAR: 'YEAR', HOUR: 'HOUR', WEEK: 'WEEK',
+  // legacy lowercase variants
+  monthly: 'MONTH', yearly: 'YEAR', annually: 'YEAR', hourly: 'HOUR', weekly: 'WEEK',
 }
 
 function buildJobPostingSchema(job: JobDetail, canonicalUrl: string) {
@@ -99,12 +99,17 @@ function buildJobPostingSchema(job: JobDetail, canonicalUrl: string) {
     const unitText = SALARY_UNIT_MAP[job.salary_period?.toLowerCase() ?? ''] ?? 'MONTH'
     const currency = job.currency ?? 'INR'
 
-    if (job.salary_type === 'FIXED' && job.fixed_amount) {
+    if ((job.salary_type === 'FIXED' || job.salary_type === 'FIXED_INCENTIVE') && job.fixed_amount) {
       schema.baseSalary = {
         '@type': 'MonetaryAmount',
         currency,
         value: { '@type': 'QuantitativeValue', value: parseFloat(job.fixed_amount), unitText },
       }
+      if (job.salary_type === 'FIXED_INCENTIVE' && job.incentive_details) {
+        schema.jobBenefits = job.incentive_details
+      }
+    } else if (job.salary_type === 'UNPAID') {
+      schema.jobBenefits = 'Unpaid / Voluntary position'
     } else if (job.min_amount && job.max_amount) {
       schema.baseSalary = {
         '@type': 'MonetaryAmount',
@@ -186,13 +191,7 @@ export async function generateMetadata(
   const title = `${job.position} at ${job.company_name} — ${location} | Riseflake`
   const description = `Hiring: ${job.position} at ${job.company_name} in ${location}${expPart}. ${job.job_type} role. ${job.job_skills?.slice(0, 4).join(', ')}. Apply on Riseflake — India's job portal for students & freshers.`
 
-  const ogSalary = (() => {
-    if (job.is_salary_hidden) return ''
-    const c = job.currency ?? '₹'
-    if (job.salary_type === 'FIXED' && job.fixed_amount) return `${c}${job.fixed_amount}`
-    if (job.min_amount && job.max_amount) return `${c}${job.min_amount}–${job.max_amount}`
-    return ''
-  })()
+  const ogSalary = formatSalaryChip(job) ?? ''
   const ogImageUrl = `${WEBSITE_BASE_URL}/api/og?type=job` +
     `&title=${encodeURIComponent(job.position)}` +
     `&company=${encodeURIComponent(job.company_name ?? '')}` +
@@ -319,6 +318,13 @@ export default async function JobDetailsPage(
                       job.experience_min != null || job.experience_max != null
                         ? `${job.experience_min ?? 0}–${job.experience_max ?? ''}${job.experience_max ? '' : '+'} yrs`
                         : 'Any level'
+                    }
+                  />
+                  <HighlightCell icon={<Banknote className="h-4 w-4" />} label="Salary" accent="bg-emerald-50" iconColor="text-emerald-500"
+                    value={
+                      job.is_salary_hidden
+                        ? 'Confidential'
+                        : formatSalaryChip(job) ?? 'Not disclosed'
                     }
                   />
                   <HighlightCell

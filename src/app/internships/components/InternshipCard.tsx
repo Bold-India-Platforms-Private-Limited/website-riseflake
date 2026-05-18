@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
+import { formatSalaryChip } from '../../../lib/salary'
 
 export type JobListItem = {
   slug: string
@@ -32,30 +33,6 @@ export type JobListItem = {
 
 const ACTIVE_STATUSES = new Set(['live', 'screening', 'interview', 'assessment'])
 
-const formatLakh = (val: string | null | undefined): string => {
-  const n = parseFloat(val ?? '')
-  if (isNaN(n)) return String(val ?? '')
-  if (n >= 100000) return `${(n / 100000).toFixed(n % 100000 === 0 ? 0 : 1)}L`
-  if (n >= 1000) return `${(n / 1000).toFixed(n % 1000 === 0 ? 0 : 1)}K`
-  return String(n)
-}
-
-const formatStipendDisplay = (job: JobListItem): string | null => {
-  if (job.is_salary_hidden) return null
-  const currency = job.currency ?? '₹'
-  const rawPeriod = job.salary_period?.toLowerCase() ?? ''
-  const period = rawPeriod
-    ? '/' + rawPeriod.replace('monthly', 'mo').replace('yearly', 'yr').replace('annually', 'yr').replace('hourly', 'hr').replace('weekly', 'wk')
-    : ''
-  if (job.salary_type === 'FIXED' && job.fixed_amount) {
-    return `${currency}${formatLakh(job.fixed_amount)}${period}`
-  }
-  if (job.min_amount && job.max_amount) {
-    return `${currency}${formatLakh(job.min_amount)}–${formatLakh(job.max_amount)}${period}`
-  }
-  if (job.is_negotiable) return 'Negotiable'
-  return null
-}
 
 const formatExperience = (min?: number | null, max?: number | null): string | null => {
   if (min == null && max == null) return null
@@ -95,7 +72,7 @@ const workplaceLabel = (val?: number | null) => {
 
 export default function InternshipCard({ job }: { job: JobListItem }) {
   const location = job.location_name ?? 'Remote'
-  const stipendDisplay = formatStipendDisplay(job)
+  const stipendDisplay = formatSalaryChip(job)
   const expDisplay = formatExperience(job.experience_min, job.experience_max)
   const deadlineDisplay = formatDeadline(job.job_deadline)
   const postedDisplay = formatPostedDate(job.created_at)
