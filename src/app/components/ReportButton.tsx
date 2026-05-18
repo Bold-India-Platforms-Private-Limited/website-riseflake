@@ -30,7 +30,6 @@ const ReportButton: React.FC<ReportButtonProps> = ({ jobSlug, isInternship, alre
   const [reason, setReason] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState(false);
 
   const id = extractId(jobSlug);
   const endpoint = isInternship ? `${API_BASE_URL}/report-internship` : `${API_BASE_URL}/report-job`;
@@ -48,7 +47,6 @@ const ReportButton: React.FC<ReportButtonProps> = ({ jobSlug, isInternship, alre
       });
       const data = await res.json();
       if (data.status) {
-        setSuccess(true);
         onReported();
         setOpen(false);
       } else {
@@ -65,7 +63,6 @@ const ReportButton: React.FC<ReportButtonProps> = ({ jobSlug, isInternship, alre
     setOpen(false);
     setReason('');
     setError('');
-    setSuccess(false);
   };
 
   return (
