@@ -346,9 +346,9 @@ export default async function InternshipDetailsPage(
                 </div>
               </section>
 
-              <JobDescription html={internship.job_description} />
               <TagsSection title="Skills" tags={internship.job_skills} />
               <TagsSection title="Facilities" tags={internship.job_facilities} />
+              <JobDescription html={internship.job_description} />
               <JobReportWrapper jobSlug={internship.slug} isInternship />
             </div>
 

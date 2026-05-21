@@ -15,7 +15,6 @@ function DeadlineCountdown({ deadline }: { deadline: string }) {
   const diff = Math.ceil((date.getTime() - Date.now()) / 86400000)
   if (diff < 0) return null
 
-  const formatted = new Intl.DateTimeFormat('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }).format(date)
   const progress = Math.min(Math.max(diff / MAX_DEADLINE_DAYS, 0), 1)
 
   const radius = 15
@@ -32,7 +31,6 @@ function DeadlineCountdown({ deadline }: { deadline: string }) {
     : moderate
     ? 'bg-amber-50 border-amber-200 text-amber-700'
     : 'bg-indigo-50 border-indigo-200 text-indigo-700'
-  const sub = urgent ? 'text-rose-500' : moderate ? 'text-amber-500' : 'text-indigo-400'
 
   const daysLabel =
     diff === 0 ? 'Closes today!' : `${diff} day${diff === 1 ? '' : 's'} left`
@@ -51,10 +49,7 @@ function DeadlineCountdown({ deadline }: { deadline: string }) {
           strokeDasharray={`${filled} ${circumference}`}
         />
       </svg>
-      <div className="min-w-0">
-        <p className="text-sm font-bold leading-tight">{daysLabel}</p>
-        <p className={`text-[11px] font-medium mt-0.5 ${sub}`}>Apply by {formatted}</p>
-      </div>
+      <p className="text-sm font-bold leading-tight">{daysLabel}</p>
     </div>
   )
 }

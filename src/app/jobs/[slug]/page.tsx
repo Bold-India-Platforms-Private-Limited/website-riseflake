@@ -357,8 +357,6 @@ export default async function JobDetailsPage(
                 </div>
               </section>
 
-              <JobDescription html={job.job_description} />
-
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <TagsSection title="Categories" tags={job.categories} />
                 <TagsSection title="Skills required" tags={job.job_skills} />
@@ -367,6 +365,8 @@ export default async function JobDetailsPage(
               {job.job_facilities?.length > 0 && (
                 <TagsSection title="Benefits & Facilities" tags={job.job_facilities} />
               )}
+
+              <JobDescription html={job.job_description} />
 
               <JobReportWrapper jobSlug={job.slug} />
             </div>
