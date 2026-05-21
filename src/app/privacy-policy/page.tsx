@@ -43,8 +43,8 @@ const PrivacyPolicy = () => {
 
                             <div className="space-y-8 px-6 py-6 text-[15px] leading-relaxed text-slate-600 sm:text-base">
     <section>
-        <p className="mb-2"><strong>Version 1.0</strong></p>
-        <p><strong>Last Updated:</strong> March 05, 2026 &nbsp;|&nbsp; <strong>Effective Date:</strong> March 05, 2026</p>
+        <p className="mb-2"><strong>Version 1.1</strong></p>
+        <p><strong>Last Updated:</strong> May 21, 2026 &nbsp;|&nbsp; <strong>Effective Date:</strong> May 21, 2026</p>
     </section>
 
     <section>
@@ -175,6 +175,31 @@ const PrivacyPolicy = () => {
             <li>If you sign in using a third-party service (e.g., Google), we may receive your name, email, and profile picture as authorized by you</li>
             <li>Information provided by recruiters or employers about candidates, where applicable and with proper consent</li>
         </ul>
+
+        <h3 className="text-lg font-medium text-slate-800 mt-6 mb-2">4.4 Device Contacts (Android App Only)</h3>
+        <p>
+            When you use the <strong>Networking</strong> or <strong>Chat</strong> features in the RiseFlake Android app, we request access to your device contacts. This permission is optional — you may decline it and still use the rest of the app.
+        </p>
+        <p className="mt-2 font-semibold">What we access:</p>
+        <ul className="list-disc pl-5 mt-1">
+            <li>Contact names and associated phone numbers / email addresses stored on your device</li>
+        </ul>
+        <p className="mt-2 font-semibold">Why we use it:</p>
+        <ul className="list-disc pl-5 mt-1">
+            <li>To identify which of your contacts are already registered on RiseFlake</li>
+            <li>To show you relevant professional connection suggestions (colleagues, classmates, HRs, recruiters)</li>
+            <li>To help you grow your professional network faster by surfacing people you already know</li>
+        </ul>
+        <p className="mt-2 font-semibold">What we do NOT do:</p>
+        <ul className="list-disc pl-5 mt-1">
+            <li>We do <strong>not</strong> upload your raw contact list to our servers</li>
+            <li>We do <strong>not</strong> share your contacts with third parties</li>
+            <li>We do <strong>not</strong> use contact data for advertising</li>
+            <li>Contact data is processed on-device or via a one-way hashed matching process and is never stored in identifiable form</li>
+        </ul>
+        <p className="mt-2">
+            You can revoke contacts permission at any time through your device Settings → Apps → Riseflake → Permissions. Revoking permission disables connection suggestions but does not affect your existing connections or any other feature.
+        </p>
     </section>
 
     <section>
