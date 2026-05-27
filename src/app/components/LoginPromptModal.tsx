@@ -19,9 +19,10 @@
  */
 
 import { useEffect, useRef, useState } from 'react'
+import { appendUTMsToUrl } from '../../utils/utmUtils'
 
-const APP_LOGIN_URL = 'https://app.riseflake.com/home'
-const STORAGE_KEY = 'rf_modal_close_count'
+const APP_LOGIN_BASE = 'https://app.riseflake.com/home'
+const STORAGE_KEY    = 'rf_modal_close_count'
 const MAX_CLOSABLE = 2          // close button visible for first N dismissals
 const DELAY_MIN_MS = 15_000     // 15 seconds
 const DELAY_MAX_MS = 30_000     // 30 seconds
@@ -45,13 +46,17 @@ function incrementCloseCount(): number {
 }
 
 export default function LoginPromptModal() {
-  const [visible, setVisible] = useState(false)
+  const [visible,    setVisible]    = useState(false)
   const [closesUsed, setClosesUsed] = useState(0)
+  const [loginUrl,   setLoginUrl]   = useState(APP_LOGIN_BASE)
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
     const count = getCloseCount()
     setClosesUsed(count)
+
+    // Build login URL with any captured UTMs so attribution flows through
+    setLoginUrl(appendUTMsToUrl(APP_LOGIN_BASE))
 
     const delay =
       DELAY_MIN_MS + Math.random() * (DELAY_MAX_MS - DELAY_MIN_MS)
@@ -135,7 +140,7 @@ export default function LoginPromptModal() {
           </p>
 
           <a
-            href={APP_LOGIN_URL}
+            href={loginUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 active:scale-95"

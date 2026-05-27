@@ -1,6 +1,10 @@
 import './globals.css'
 import type { Metadata } from 'next'
 import Script from 'next/script'
+import dynamic from 'next/dynamic'
+
+// UTM capture: client-only, no SSR — invisible to crawlers
+const UTMCapture = dynamic(() => import('./components/UTMCapture'), { ssr: false })
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://riseflake.com'),
@@ -161,6 +165,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     />
   </noscript>
   {/* End Google Tag Manager (noscript) */}
+  {/* UTM attribution capture — client-only, zero SSR impact */}
+  <UTMCapture />
   {children}
 </body>
     </html>
