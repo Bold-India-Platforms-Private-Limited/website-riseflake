@@ -1,8 +1,9 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { FiSearch } from 'react-icons/fi'
+import { Briefcase as BriefcaseIcon, GraduationCap } from 'lucide-react'
 import { Zap, Rocket, Target, Globe, BarChart2, Briefcase, Users, Trophy } from 'lucide-react'
 import Footer from './components/Footer'
 import Navbar from './components/Navbar'
@@ -16,13 +17,48 @@ import Assessment from './components/Assessment'
 import DownloadTheApp from './components/DownloadTheApp'
 import ContactSection from './components/ContactSection'
 
+const JOB_SUGGESTIONS = [
+  'Data Analyst', 'Software Engineer', 'Product Manager', 'UI/UX Designer',
+  'Frontend Developer', 'Backend Developer', 'Full Stack Developer',
+  'Business Development', 'Digital Marketing', 'Sales Executive',
+  'HR Manager', 'DevOps Engineer', 'Machine Learning Engineer', 'Content Writer',
+]
+
+const INTERNSHIP_SUGGESTIONS = [
+  'Data Science Intern', 'Software Development Intern', 'Marketing Intern',
+  'UI/UX Intern', 'HR Intern', 'Content Writing Intern',
+  'Finance Intern', 'Business Analyst Intern', 'Graphic Design Intern',
+  'Research Intern', 'Social Media Intern', 'Operations Intern',
+]
+
 export default function Home() {
   const router = useRouter()
   const [openIndex, setOpenIndex] = useState<number | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
+  const [showSuggestions, setShowSuggestions] = useState(false)
+  const [suggTab, setSuggTab] = useState<'jobs' | 'internships'>('jobs')
+  const searchWrapperRef = useRef<HTMLDivElement>(null)
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (searchWrapperRef.current && !searchWrapperRef.current.contains(e.target as Node)) {
+        setShowSuggestions(false)
+      }
+    }
+    document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [])
+
+  const handleChipClick = (label: string) => {
+    setSearchQuery(label)
+    setShowSuggestions(false)
+    router.push(`/jobs?position=${encodeURIComponent(label)}`)
+  }
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+    setShowSuggestions(false)
     const trimmed = searchQuery.trim()
     if (trimmed) {
       router.push(`/jobs?position=${encodeURIComponent(trimmed)}`)
@@ -87,40 +123,100 @@ export default function Home() {
 
           <div className="flex justify-center gap-8 text-sm text-slate-600 mb-12">
             <div>
-              <p className="font-bold text-2xl text-slate-900">–</p>
+              <p className="font-bold text-2xl text-slate-900">3L+</p>
               <p>Active Users</p>
             </div>
             <div className="w-px bg-slate-300"></div>
             <div>
-              <p className="font-bold text-2xl text-slate-900">–</p>
+              <p className="font-bold text-2xl text-slate-900">5K+</p>
               <p>Job Listings</p>
             </div>
             <div className="w-px bg-slate-300"></div>
             <div>
-              <p className="font-bold text-2xl text-slate-900">–</p>
+              <p className="font-bold text-2xl text-slate-900">92%</p>
               <p>Success Rate</p>
             </div>
           </div>
 
           {/* Search Bar */}
-          <form onSubmit={handleSearchSubmit} className="max-w-3xl mx-auto mb-12">
-            <div className="relative flex items-center gap-3 rounded-full border-2 border-slate-200 bg-white shadow-lg hover:border-indigo-300 transition-colors">
-              <FiSearch className="absolute left-6 h-5 w-5 text-slate-400" />
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Enter Job Role"
-                className="flex-1 pl-14 pr-2 py-4 text-base text-slate-700 bg-transparent focus:outline-none placeholder:text-slate-400"
-              />
-              <button
-                type="submit"
-                className="px-4 py-2 mr-2 bg-gradient-modern text-white rounded-full font-semibold text-base whitespace-nowrap"
-              >
-                Search
-              </button>
-            </div>
-          </form>
+          <div ref={searchWrapperRef} className="relative max-w-3xl mx-auto mb-12">
+            <form onSubmit={handleSearchSubmit}>
+              <div className="relative flex items-center gap-3 rounded-full border-2 border-slate-200 bg-white shadow-lg hover:border-indigo-300 transition-colors">
+                <FiSearch className="absolute left-6 h-5 w-5 text-slate-400" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onFocus={() => setShowSuggestions(true)}
+                  placeholder="Search jobs, internships, roles…"
+                  autoComplete="off"
+                  className="flex-1 pl-14 pr-2 py-4 text-base text-slate-700 bg-transparent focus:outline-none placeholder:text-slate-400"
+                />
+                <button
+                  type="submit"
+                  className="px-4 py-2 mr-2 bg-gradient-modern text-white rounded-full font-semibold text-base whitespace-nowrap"
+                >
+                  Search
+                </button>
+              </div>
+            </form>
+
+            {/* Suggestions dropdown */}
+            {showSuggestions && (
+              <div className="absolute left-0 right-0 top-[calc(100%+8px)] bg-white rounded-2xl shadow-2xl border border-slate-100 p-4 z-50 text-left animate-in fade-in slide-in-from-top-2 duration-150">
+
+                {/* Tabs */}
+                <div className="flex gap-2 mb-3">
+                  <button
+                    type="button"
+                    onMouseDown={(e) => e.preventDefault()}
+                    onClick={() => setSuggTab('jobs')}
+                    className={`flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-600 border transition-all ${
+                      suggTab === 'jobs'
+                        ? 'bg-indigo-50 border-indigo-300 text-indigo-600'
+                        : 'border-slate-200 text-slate-400 hover:border-indigo-200 hover:text-indigo-500'
+                    }`}
+                  >
+                    <BriefcaseIcon className="h-3.5 w-3.5" />
+                    Jobs
+                  </button>
+                  <button
+                    type="button"
+                    onMouseDown={(e) => e.preventDefault()}
+                    onClick={() => setSuggTab('internships')}
+                    className={`flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-600 border transition-all ${
+                      suggTab === 'internships'
+                        ? 'bg-indigo-50 border-indigo-300 text-indigo-600'
+                        : 'border-slate-200 text-slate-400 hover:border-indigo-200 hover:text-indigo-500'
+                    }`}
+                  >
+                    <GraduationCap className="h-3.5 w-3.5" />
+                    Internships
+                  </button>
+                </div>
+
+                <div className="h-px bg-slate-100 mb-3" />
+
+                <p className="text-[11px] font-700 tracking-widest uppercase text-slate-400 mb-2.5">
+                  {suggTab === 'jobs' ? 'Popular Job Searches' : 'Popular Internship Searches'}
+                </p>
+
+                <div className="flex flex-wrap gap-2">
+                  {(suggTab === 'jobs' ? JOB_SUGGESTIONS : INTERNSHIP_SUGGESTIONS).map((label) => (
+                    <button
+                      key={label}
+                      type="button"
+                      onMouseDown={(e) => e.preventDefault()}
+                      onClick={() => handleChipClick(label)}
+                      className="px-3.5 py-1.5 rounded-full border border-slate-200 bg-slate-50 text-slate-700 text-sm font-500 hover:bg-indigo-50 hover:border-indigo-300 hover:text-indigo-600 transition-all hover:-translate-y-px hover:shadow-sm"
+                    >
+                      {label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
 
           {/* Partners Section */}
           <div className="text-center">
