@@ -1,7 +1,32 @@
 
+import type { Metadata } from 'next';
 import CollegeDetailClient from './CollegeDetailClient';
 
 export const revalidate = 3600; // ISR: 1 hour
+
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'https://api.riseflake.com/api/v1/website';
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  try {
+    const res = await fetch(`${API_BASE}/colleges/${slug}`, { next: { revalidate: 3600 } });
+    if (res.ok) {
+      const json = await res.json();
+      const college = json.result;
+      if (college) {
+        return {
+          title: `${college.college_name} | Riseflake`,
+          description: `View jobs, internships, and opportunities from ${college.college_name} on Riseflake.`,
+          alternates: { canonical: `https://riseflake.com/colleges/${slug}` },
+        };
+      }
+    }
+  } catch { /* fallback below */ }
+  return {
+    title: 'College Details | Riseflake',
+    alternates: { canonical: `https://riseflake.com/colleges/${slug}` },
+  };
+}
 
 // SSR wrapper to inject canonical and schema.org College JSON-LD
 export default async function CollegeDetailPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -10,7 +35,7 @@ export default async function CollegeDetailPage({ params }: { params: Promise<{ 
   // Fetch college details for SEO
   let college: any = null;
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/colleges/${slug}`);
+    const res = await fetch(`${API_BASE}/colleges/${slug}`, { next: { revalidate: 3600 } });
     if (res.ok) {
       const json = await res.json();
       college = json.result;
@@ -32,12 +57,13 @@ export default async function CollegeDetailPage({ params }: { params: Promise<{ 
 
   return (
     <>
-      <head>
-        <link rel="canonical" href={canonicalUrl} />
-        {collegeSchema && (
-          <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(collegeSchema) }} />
-        )}
-      </head>
+      {collegeSchema && (
+        <script
+          type="application/ld+json"
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(collegeSchema) }}
+        />
+      )}
       <CollegeDetailClient slug={slug} />
     </>
   );

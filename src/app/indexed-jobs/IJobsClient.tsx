@@ -86,6 +86,7 @@ const IJobsClient = () => {
       if (search) params.set("search", search);
       const apiUrl = `${API_URL}?${params.toString()}`;
       const res = await fetch(apiUrl);
+      if (!res.ok) throw new Error(`API error ${res.status}`);
       const data = await res.json();
       setJobs(data.result || []);
       setTotal(data.total || 0);
@@ -132,11 +133,18 @@ const IJobsClient = () => {
 
   const handleApply = (applyUrl: string) => {
     if (/^mailto:/i.test(applyUrl)) {
-      window.open(applyUrl, "_blank");
+      window.open(applyUrl, "_blank", "noopener,noreferrer");
     } else if (/^[\w.+-]+@[\w.-]+\.[a-zA-Z]{2,}$/.test(applyUrl)) {
-      window.open(`mailto:${applyUrl}`, "_blank");
+      window.open(`mailto:${applyUrl}`, "_blank", "noopener,noreferrer");
     } else {
-      window.open(applyUrl, "_blank");
+      try {
+        const parsed = new URL(applyUrl);
+        if (parsed.protocol === 'http:' || parsed.protocol === 'https:') {
+          window.open(applyUrl, "_blank", "noopener,noreferrer");
+        }
+      } catch {
+        // invalid URL — silently ignore
+      }
     }
   };
 

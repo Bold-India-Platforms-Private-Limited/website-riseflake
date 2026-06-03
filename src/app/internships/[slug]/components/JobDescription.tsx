@@ -12,7 +12,8 @@ export default function JobDescription({ html }: { html?: string | null }) {
         ALLOWED_TAGS: [
           'p', 'b', 'i', 'u', 'strong', 'em', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ul', 'ol', 'li', 'blockquote', 'code', 'pre', 'span', 'div',
         ],
-        ALLOWED_ATTR: ['style', 'class', 'align'],
+        ALLOWED_ATTR: ['align'],
+        FORBID_ATTR: ['style', 'class'],
       })
       setSanitizedHTML(clean)
     }

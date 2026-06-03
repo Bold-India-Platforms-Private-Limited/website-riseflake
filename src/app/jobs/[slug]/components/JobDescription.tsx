@@ -31,7 +31,8 @@ export default function JobDescription({ html }: { html?: string | null }) {
           'span',
           'div',
         ],
-        ALLOWED_ATTR: ['style', 'class', 'align'],
+        ALLOWED_ATTR: ['align'],
+        FORBID_ATTR: ['style', 'class'],
       })
       setSanitizedHTML(clean)
     }

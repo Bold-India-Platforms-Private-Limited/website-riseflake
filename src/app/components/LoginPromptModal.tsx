@@ -27,6 +27,25 @@ const MAX_CLOSABLE = 2          // close button visible for first N dismissals
 const DELAY_MIN_MS = 15_000     // 15 seconds
 const DELAY_MAX_MS = 30_000     // 30 seconds
 
+const AUTH_CHECK_URL = (() => {
+  const base = process.env.NEXT_PUBLIC_API_BASE_URL ?? ''
+  // Convert /api/v1/website → /api/v1/auth/me
+  return base.replace(/\/website$/, '') + '/auth/me'
+})()
+
+async function isUserLoggedIn(): Promise<boolean> {
+  try {
+    const res = await fetch(AUTH_CHECK_URL, {
+      method: 'GET',
+      credentials: 'include',
+      cache: 'no-store',
+    })
+    return res.ok
+  } catch {
+    return false
+  }
+}
+
 function getCloseCount(): number {
   try {
     return parseInt(localStorage.getItem(STORAGE_KEY) ?? '0', 10) || 0
@@ -58,14 +77,21 @@ export default function LoginPromptModal() {
     // Build login URL with any captured UTMs so attribution flows through
     setLoginUrl(appendUTMsToUrl(APP_LOGIN_BASE))
 
-    const delay =
-      DELAY_MIN_MS + Math.random() * (DELAY_MAX_MS - DELAY_MIN_MS)
+    let cancelled = false
 
-    timerRef.current = setTimeout(() => {
-      setVisible(true)
-    }, delay)
+    isUserLoggedIn().then((loggedIn) => {
+      if (cancelled || loggedIn) return
+
+      const delay =
+        DELAY_MIN_MS + Math.random() * (DELAY_MAX_MS - DELAY_MIN_MS)
+
+      timerRef.current = setTimeout(() => {
+        setVisible(true)
+      }, delay)
+    })
 
     return () => {
+      cancelled = true
       if (timerRef.current) clearTimeout(timerRef.current)
     }
   }, [])
