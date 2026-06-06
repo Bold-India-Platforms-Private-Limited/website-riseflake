@@ -1,11 +1,16 @@
-import type { Metadata } from 'next';
+import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Careers at Riseflake - Join Our Team | Job Portal & Networking Platform',
-  description: 'Explore career opportunities at Riseflake. Help us build the next generation job portal and professional networking platform.',
+  title: 'Careers at Riseflake - Join Our Team in India',
+  description: 'Explore career opportunities at Riseflake. Join our team and help build India\'s leading job portal and professional networking platform. We\'re hiring engineers, designers, marketers and more.',
+  openGraph: {
+    locale: 'en_IN',
+    url: 'https://riseflake.com/careers',
+    images: [{ url: '/og-image.webp', width: 1200, height: 630 }],
+  },
   alternates: { canonical: 'https://riseflake.com/careers' },
-};
+}
 
 export default function CareersLayout({ children }: { children: React.ReactNode }) {
-  return <>{children}</>;
+  return <>{children}</>
 }

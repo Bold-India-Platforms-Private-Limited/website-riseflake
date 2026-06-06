@@ -1,16 +1,29 @@
 import './globals.css'
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import Script from 'next/script'
-// Client-only components (UTMCapture + LoginPromptModal) are loaded via a
-// 'use client' wrapper — next/dynamic with ssr:false is not allowed in
-// Server Components (the root layout is a Server Component).
 import ClientOnly from './components/ClientOnly'
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+}
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://riseflake.com'),
-  title: 'Riseflake - Job Portal & Professional Networking Platform',
-  description: 'A platform for job seekers and professional networking. Discover curated job opportunities, connect with industry leaders, and accelerate your career growth.',
-  keywords: 'job portal, professional networking, career growth, find jobs, job search, hiring platform, job marketplace, LinkedIn alternative, career opportunities, professional development',
+  title: {
+    default: 'Riseflake - Job Portal & Professional Networking Platform in India',
+    template: '%s | Riseflake',
+  },
+  description: 'Riseflake is India\'s job portal and professional networking platform. Find jobs, internships, and career opportunities in Bangalore, Mumbai, Delhi, Hyderabad, Pune, Chennai. Connect with top companies and grow your career.',
+  keywords: [
+    'job portal india', 'jobs in india', 'find jobs', 'professional networking india',
+    'jobs in bangalore', 'jobs in mumbai', 'jobs in delhi', 'jobs in hyderabad', 'jobs in pune',
+    'fresher jobs india', 'software engineer jobs india', 'internships india',
+    'career opportunities india', 'job search india', 'hiring platform india',
+    'job marketplace india', 'linkedin alternative india', 'professional development india',
+    'campus placements', 'it jobs india', 'startup jobs india', 'remote jobs india',
+  ],
   authors: [{ name: 'Riseflake Team' }],
   creator: 'Riseflake',
   publisher: 'Riseflake',
@@ -21,27 +34,27 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: 'website',
-    locale: 'en_US',
+    locale: 'en_IN',
     url: 'https://riseflake.com',
-    siteName: 'Riseflake - Job Portal & Professional Networking',
-    title: 'Riseflake - Job Portals & Professional Networking',
-    description: 'Discover your next opportunity. Connect with companies and industry professionals on our job portal for career growth.',
+    siteName: 'Riseflake',
+    title: 'Riseflake - Job Portal & Professional Networking in India',
+    description: 'Discover your next opportunity in India. Find jobs and internships across Bangalore, Mumbai, Delhi, Hyderabad and more. Connect with top Indian companies on Riseflake.',
     images: [
       {
-        url: 'https://riseflake.com/api/og',
+        url: '/og-image.webp',
         width: 1200,
         height: 630,
-        alt: 'Riseflake - Job Portal & Professional Networking Platform',
+        alt: 'Riseflake - Job Portal & Professional Networking Platform in India',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Riseflake - Job Portal for Career Growth',
-    description: 'A job portal connecting professionals with career opportunities',
+    title: 'Riseflake - India\'s Job Portal & Professional Networking',
+    description: 'Find jobs, internships and network with professionals across India',
     site: '@riseflake',
     creator: '@riseflake',
-    images: ['https://riseflake.com/api/og'],
+    images: ['/og-image.webp'],
   },
   robots: {
     index: true,
@@ -57,7 +70,6 @@ export const metadata: Metadata = {
   alternates: {
     canonical: 'https://riseflake.com',
   },
-  // Add Google Search Console & Bing verification tokens here once obtained
   // verification: { google: 'YOUR_TOKEN', other: { 'msvalidate.01': 'YOUR_BING_TOKEN' } },
 }
 
@@ -67,9 +79,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
+    <html lang="en-IN">
       <head>
-        {/* Google Tag Manager - must be as high in head as possible */}
         <Script id="gtm-script" strategy="afterInteractive">
           {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -77,18 +88,20 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
 })(window,document,'script','dataLayer','GTM-TQ2SSCRW');`}
         </Script>
-        {/* End Google Tag Manager */}
 
         <link rel="preconnect" href="https://www.googletagmanager.com" />
         <meta name="google-adsense-account" content="ca-pub-7464304182231148" />
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
         <meta httpEquiv="X-UA-Compatible" content="ie=edge" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
 
+        {/* India geo targeting */}
+        <meta name="geo.region" content="IN" />
+        <meta name="geo.placename" content="India" />
+        <meta name="ICBM" content="20.5937, 78.9629" />
+
         <link rel="icon" href="/favicon.ico" />
-        
+
         {/* Structured Data - Organization */}
         <script
           type="application/ld+json"
@@ -98,42 +111,33 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               '@type': 'Organization',
               name: 'Riseflake',
               url: 'https://riseflake.com',
-              logo: 'https://riseflake.com/logo.png',
-              description: 'A job portal and professional networking platform for career growth',
+              logo: 'https://riseflake.com/logo.webp',
+              description: 'India\'s job portal and professional networking platform for career growth',
               sameAs: [
                 'https://twitter.com/riseflake',
                 'https://linkedin.com/company/riseflake',
-                'https://github.com/riseflake',
+                'https://instagram.com/riseflake',
               ],
               contactPoint: {
                 '@type': 'ContactPoint',
                 contactType: 'Customer Service',
                 email: 'support@riseflake.com',
+                areaServed: 'IN',
+                availableLanguage: ['English', 'Hindi'],
               },
               address: {
                 '@type': 'PostalAddress',
                 addressCountry: 'IN',
               },
+              foundingLocation: {
+                '@type': 'Place',
+                name: 'India',
+              },
             }),
           }}
         />
 
-        {/* Structured Data - Job Portal */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              '@context': 'https://schema.org',
-              '@type': 'JobPortal',
-              name: 'Riseflake',
-              url: 'https://riseflake.com',
-              description: 'Job portal and professional networking platform with AI-powered recommendations',
-              image: 'https://riseflake.com/og-image.png',
-            }),
-          }}
-        />
-
-        {/* Structured Data - Website */}
+        {/* Structured Data - JobPosting site search */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -142,33 +146,41 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               '@type': 'WebSite',
               name: 'Riseflake',
               url: 'https://riseflake.com',
-              potentialAction: {
-                '@type': 'SearchAction',
-                target: {
-                  '@type': 'EntryPoint',
-                  urlTemplate: 'https://riseflake.com/jobs?position={search_term_string}',
+              description: 'India\'s job portal and professional networking platform',
+              potentialAction: [
+                {
+                  '@type': 'SearchAction',
+                  target: {
+                    '@type': 'EntryPoint',
+                    urlTemplate: 'https://riseflake.com/jobs?position={search_term_string}',
+                  },
+                  'query-input': 'required name=search_term_string',
                 },
-                'query-input': 'required name=search_term_string',
-              },
+                {
+                  '@type': 'SearchAction',
+                  target: {
+                    '@type': 'EntryPoint',
+                    urlTemplate: 'https://riseflake.com/internships?position={search_term_string}',
+                  },
+                  'query-input': 'required name=search_term_string',
+                },
+              ],
             }),
           }}
         />
       </head>
-    <body className="bg-gradient-subtle text-slate-900 antialiased">
-  {/* Google Tag Manager (noscript) - immediately after opening body tag */}
-  <noscript>
-    <iframe
-      src="https://www.googletagmanager.com/ns.html?id=GTM-TQ2SSCRW"
-      height="0"
-      width="0"
-      style={{ display: 'none', visibility: 'hidden' }}
-    />
-  </noscript>
-  {/* End Google Tag Manager (noscript) */}
-  {/* Client-only components: UTM capture + login prompt modal */}
-  <ClientOnly />
-  {children}
-</body>
+      <body className="bg-gradient-subtle text-slate-900 antialiased">
+        <noscript>
+          <iframe
+            src="https://www.googletagmanager.com/ns.html?id=GTM-TQ2SSCRW"
+            height="0"
+            width="0"
+            style={{ display: 'none', visibility: 'hidden' }}
+          />
+        </noscript>
+        <ClientOnly />
+        {children}
+      </body>
     </html>
   )
 }

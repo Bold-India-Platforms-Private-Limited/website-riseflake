@@ -1,9 +1,23 @@
-export const metadata = {
-  title: 'Colleges | Riseflake - Explore Educational Institutions',
-  description: 'Browse and discover colleges, universities, and educational institutions. Find the right place for your academic journey on Riseflake.',
-  keywords: 'colleges, universities, education, academic institutions, riseflake',
-};
+import type { Metadata } from 'next';
 import { Suspense } from 'react';
+
+export const metadata: Metadata = {
+  title: 'Top Colleges & Universities in India | Riseflake',
+  description: 'Browse top colleges, universities, and educational institutions across India on Riseflake. Explore IITs, NITs, IIMs, engineering, management and arts colleges. Discover campus placement records and hiring partners.',
+  keywords: [
+    'colleges in india', 'universities in india', 'top colleges india', 'iit', 'nit', 'iim',
+    'engineering colleges india', 'management colleges india', 'campus placements india',
+    'college placement records', 'riseflake colleges',
+  ],
+  openGraph: {
+    locale: 'en_IN',
+    url: 'https://riseflake.com/colleges',
+    title: 'Top Colleges & Universities in India | Riseflake',
+    description: 'Explore top colleges and universities across India with placement records and hiring partners.',
+    images: [{ url: '/og-image.webp', width: 1200, height: 630 }],
+  },
+  alternates: { canonical: 'https://riseflake.com/colleges' },
+};
 import Navbar from '../components/Navbar';
 import CollegesClient from './CollegesClient';
 import LoginPromptModal from '../components/LoginPromptModalLoader'
