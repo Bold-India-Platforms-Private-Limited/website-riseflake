@@ -28,7 +28,9 @@ const STATIC_PAGES: StaticPage[] = [
   { url: 'https://riseflake.com/disclaimer',          changefreq: 'yearly',  priority: '0.3', lastmod: '2026-01-08' },
   { url: 'https://riseflake.com/cookie-policy',       changefreq: 'yearly',  priority: '0.3', lastmod: '2026-01-08' },
   { url: 'https://riseflake.com/delete-account',      changefreq: 'monthly', priority: '0.3' },
-  { url: 'https://riseflake.com/sitemap.html',         changefreq: 'daily',   priority: '0.4' },
+  { url: 'https://riseflake.com/sitemap.html',        changefreq: 'daily',   priority: '0.4' },
+  // Profile network page — crawlable landing, links out to individual /in/* pages
+  { url: 'https://riseflake.com/network',             changefreq: 'daily',   priority: '0.7' },
 ]
 
 export async function GET() {

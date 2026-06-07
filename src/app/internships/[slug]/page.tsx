@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { Users, Briefcase, Banknote, Globe, Home, Building2, GraduationCap, MapPin, ArrowRight } from 'lucide-react'
+import { Users, Briefcase, Banknote, Globe, Home, Building2, GraduationCap, MapPin } from 'lucide-react'
 import Navbar from '../../components/Navbar'
 import ApplyCard from './components/ApplyCard'
 import JobDescription from './components/JobDescription'
@@ -23,10 +23,19 @@ type InternshipResponse = {
 
 const fetchInternship = async (slug: string) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/internships/${slug}`, { cache: 'force-cache' })
+    const response = await fetch(`${API_BASE_URL}/internships/${slug}`, {
+      next: { revalidate: 900 },
+    })
     if (response.status === 410) return { expired: true }
     if (!response.ok) return null
-    return (await response.json()) as InternshipResponse
+    const data = (await response.json()) as InternshipResponse
+    // Treat deadline-expired internships as expired on the frontend too
+    if (data.result?.job_deadline) {
+      const deadline = new Date(data.result.job_deadline)
+      deadline.setHours(23, 59, 59, 999)
+      if (deadline < new Date()) return { expired: true }
+    }
+    return data
   } catch {
     return null
   }
@@ -173,7 +182,11 @@ export async function generateMetadata(
   const internship = (data && 'result' in data) ? (data as InternshipResponse).result : undefined
 
   if (!internship) {
-    return { title: 'Internship Not Found | Riseflake', description: 'This internship is no longer available.' }
+    return {
+      title: 'Internship Not Found | Riseflake',
+      description: 'This internship is no longer available.',
+      robots: { index: false, follow: false },
+    }
   }
 
   const location = internship.location_name ?? 'Remote'
@@ -248,25 +261,9 @@ export default async function InternshipDetailsPage(
   const data = await fetchInternship(slug)
 
   if (data && 'expired' in data && data.expired) {
-    return (
-      <>
-        <Navbar bgTransparent />
-        <main className="px-4 sm:px-6 lg:px-8 py-12 bg-slate-100 min-h-screen">
-          <div className="max-w-[1200px] mx-auto text-center py-24">
-            <div className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-rose-100 mb-6">
-              <svg className="h-8 w-8 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
-            <h1 className="text-3xl font-bold text-slate-800 mb-4">Internship No Longer Available</h1>
-            <p className="text-lg text-slate-500 mb-8">This internship has expired or been removed.</p>
-            <a href="/internships" className="inline-flex items-center gap-2 rounded-xl bg-[#414FEA] px-6 py-3 text-sm font-semibold text-white hover:shadow-lg transition">
-              Browse Open Internships <ArrowRight className="h-4 w-4" />
-            </a>
-          </div>
-        </main>
-      </>
-    )
+    // SEO: return 404 so Google deindexes expired internship URLs.
+    // Never return 200 for expired content — it wastes crawl budget and hurts ranking.
+    notFound()
   }
 
   if (!data || !('status' in data) || !('result' in data) || !data.status || !data.result) {

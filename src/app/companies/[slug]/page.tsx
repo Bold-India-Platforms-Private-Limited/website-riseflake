@@ -29,7 +29,9 @@ type CompanyResponse = {
 
 const fetchCompany = async (slug: string) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/companies/${slug}`, { cache: 'force-cache' })
+    const response = await fetch(`${API_BASE_URL}/companies/${slug}`, {
+      next: { revalidate: 3600 }, // respect ISR — don't bypass with force-cache
+    })
     if (!response.ok) return null
     return (await response.json()) as CompanyResponse
   } catch {
@@ -141,13 +143,23 @@ export default async function CompanyDetailsPage({ params }: PageProps) {
     name: company.company_name,
     url: canonicalUrl,
     ...(company.company_logo ? { logo: company.company_logo } : {}),
+    ...(company.website ? { sameAs: [company.website, `https://app.riseflake.com/companies/${company.slug}`] } : { sameAs: [`https://app.riseflake.com/companies/${company.slug}`] }),
     description: [
       company.organization_type && `${company.organization_type}`,
       company.industry_type && `operating in ${company.industry_type}`,
     ]
       .filter(Boolean)
       .join(', '),
-    sameAs: [`https://app.riseflake.com/companies/${company.slug}`],
+  }
+
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: WEBSITE_BASE_URL },
+      { '@type': 'ListItem', position: 2, name: 'Companies', item: `${WEBSITE_BASE_URL}/companies` },
+      { '@type': 'ListItem', position: 3, name: company.company_name, item: canonicalUrl },
+    ],
   }
 
   const initials = company.company_name.slice(0, 2).toUpperCase()
@@ -157,6 +169,10 @@ export default async function CompanyDetailsPage({ params }: PageProps) {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
 
       <Navbar bgTransparent />

@@ -1,70 +1,161 @@
+import type { Metadata } from 'next'
+import { notFound } from 'next/navigation'
+import CollegeDetailClient from './CollegeDetailClient'
+import { API_BASE_URL, WEBSITE_BASE_URL } from '../../../lib/config'
 
-import type { Metadata } from 'next';
-import CollegeDetailClient from './CollegeDetailClient';
+export const revalidate = 3600
+export const dynamicParams = true
 
-export const revalidate = 3600; // ISR: 1 hour
-
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'https://api.riseflake.com/api/v1/website';
-
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
-  const { slug } = await params;
-  try {
-    const res = await fetch(`${API_BASE}/colleges/${slug}`, { next: { revalidate: 3600 } });
-    if (res.ok) {
-      const json = await res.json();
-      const college = json.result;
-      if (college) {
-        return {
-          title: `${college.college_name} | Riseflake`,
-          description: `View jobs, internships, and opportunities from ${college.college_name} on Riseflake.`,
-          alternates: { canonical: `https://riseflake.com/colleges/${slug}` },
-        };
-      }
-    }
-  } catch { /* fallback below */ }
-  return {
-    title: 'College Details | Riseflake',
-    alternates: { canonical: `https://riseflake.com/colleges/${slug}` },
-  };
+type PageProps = {
+  params: Promise<{ slug: string }>
 }
 
-// SSR wrapper to inject canonical and schema.org College JSON-LD
-export default async function CollegeDetailPage({ params }: { params: Promise<{ slug: string }> }) {
-  const resolvedParams = await params;
-  const slug = resolvedParams.slug;
-  // Fetch college details for SEO
-  let college: any = null;
+interface CollegeDetail {
+  college_name: string
+  college_logo?: string | null
+  city?: string | null
+  state?: string | null
+  country?: string | null
+  slug: string
+  university_type?: string | null
+  affiliated_university?: string | null
+  website?: string | null
+}
+
+async function fetchCollege(slug: string): Promise<CollegeDetail | null> {
   try {
-    const res = await fetch(`${API_BASE}/colleges/${slug}`, { next: { revalidate: 3600 } });
-    if (res.ok) {
-      const json = await res.json();
-      college = json.result;
+    const res = await fetch(`${API_BASE_URL}/colleges/${slug}`, {
+      next: { revalidate: 3600 },
+    })
+    if (!res.ok) return null
+    const json = await res.json()
+    return json.result ?? null
+  } catch {
+    return null
+  }
+}
+
+export async function generateStaticParams() {
+  return []
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { slug } = await params
+  const college = await fetchCollege(slug)
+
+  if (!college) {
+    return {
+      title: 'College Not Found | Riseflake',
+      description: 'This college profile could not be found on Riseflake.',
+      robots: { index: false },
     }
-  } catch (error) {
-    console.error('Error fetching college details:', error);
   }
 
-  const canonicalUrl = `https://riseflake.com/colleges/${slug}`;
-  const collegeSchema = college ? {
-    "@context": "https://schema.org/",
-    "@type": "CollegeOrUniversity",
+  const { college_name, city, state, country, university_type } = college
+
+  const locationParts = [city, state, country].filter(Boolean)
+  const locationStr = locationParts.join(', ')
+
+  const title = `${college_name} — Jobs, Internships & Placements | Riseflake`
+  const description = [
+    `Explore ${college_name} on Riseflake.`,
+    locationStr ? `Located in ${locationStr}.` : '',
+    university_type ? `${university_type}.` : '',
+    'View job openings, internships, alumni network and placement opportunities.',
+  ].filter(Boolean).join(' ').slice(0, 160)
+
+  const ogImageUrl =
+    `${WEBSITE_BASE_URL}/api/og?type=college` +
+    `&company=${encodeURIComponent(college_name)}` +
+    `&logo=${encodeURIComponent(college.college_logo ?? '')}` +
+    (locationStr ? `&subtitle=${encodeURIComponent(locationStr)}` : '')
+
+  const canonicalUrl = `${WEBSITE_BASE_URL}/colleges/${slug}`
+
+  return {
+    title,
+    description,
+    keywords: [
+      `${college_name} jobs`,
+      `${college_name} internships`,
+      `${college_name} placements`,
+      `${college_name} alumni`,
+      locationStr,
+      university_type ?? '',
+      'college placements india',
+      'riseflake colleges',
+    ].filter(Boolean),
+    openGraph: {
+      title,
+      description,
+      url: canonicalUrl,
+      siteName: 'Riseflake',
+      type: 'website',
+      images: [{ url: ogImageUrl, width: 1200, height: 630, alt: `${college_name} on Riseflake` }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [ogImageUrl],
+    },
+    alternates: { canonical: canonicalUrl },
+    robots: { index: true, follow: true },
+  }
+}
+
+export default async function CollegeDetailPage({ params }: PageProps) {
+  const { slug } = await params
+  const college = await fetchCollege(slug)
+
+  if (!college) notFound()
+
+  const canonicalUrl = `${WEBSITE_BASE_URL}/colleges/${slug}`
+  const locationParts = [college.city, college.state, college.country].filter(Boolean)
+  const locationStr = locationParts.join(', ')
+
+  // JSON-LD: CollegeOrUniversity schema — helps Google understand and rich-display the page
+  const collegeSchema = {
+    '@context': 'https://schema.org/',
+    '@type': 'CollegeOrUniversity',
     name: college.college_name,
     url: canonicalUrl,
-    logo: college.college_logo || undefined,
-    description: `View detailed information about ${college.college_name} on Riseflake.`,
-    // Add more fields as needed
-  } : null;
+    ...(college.college_logo ? { logo: college.college_logo } : {}),
+    ...(locationStr
+      ? {
+          address: {
+            '@type': 'PostalAddress',
+            ...(college.city ? { addressLocality: college.city } : {}),
+            ...(college.state ? { addressRegion: college.state } : {}),
+            ...(college.country ? { addressCountry: college.country } : {}),
+          },
+        }
+      : {}),
+    ...(college.website ? { sameAs: [college.website] } : {}),
+    description: `${college.college_name} on Riseflake — view job openings, internships, and alumni.`,
+  }
+
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: WEBSITE_BASE_URL },
+      { '@type': 'ListItem', position: 2, name: 'Colleges', item: `${WEBSITE_BASE_URL}/colleges` },
+      { '@type': 'ListItem', position: 3, name: college.college_name, item: canonicalUrl },
+    ],
+  }
 
   return (
     <>
-      {collegeSchema && (
-        <script
-          type="application/ld+json"
-          suppressHydrationWarning
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(collegeSchema) }}
-        />
-      )}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(collegeSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
       <CollegeDetailClient slug={slug} />
     </>
-  );
+  )
 }

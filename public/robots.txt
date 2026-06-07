@@ -8,6 +8,8 @@
 # ------------------------------------------
 User-agent: *
 Allow: /
+Allow: /in/
+Allow: /network
 
 # Block sensitive / private areas
 Disallow: /api/
@@ -20,6 +22,8 @@ Disallow: /resume/
 # ------------------------------------------
 User-agent: Googlebot
 Allow: /
+Allow: /in/
+Allow: /network
 
 # ------------------------------------------
 # Bing
@@ -95,3 +99,4 @@ Disallow: /
 # Sitemaps
 # ------------------------------------------
 Sitemap: https://riseflake.com/sitemap.xml
+Sitemap: https://riseflake.com/sitemap-users.xml

@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { Users, Briefcase, Globe, Home, Building2, BadgeCheck, GraduationCap, Calendar, MapPin, ArrowRight, Banknote } from 'lucide-react'
+import { Users, Briefcase, Globe, Home, Building2, BadgeCheck, GraduationCap, Calendar, MapPin, Banknote } from 'lucide-react'
 import Navbar from '../../components/Navbar'
 import ApplyCard from './components/ApplyCard'
 import JobDescription from './components/JobDescription'
@@ -14,7 +14,7 @@ import { formatSalaryChip } from '../../../lib/salary'
 import React from 'react'
 
 export const dynamicParams = true
-export const revalidate = 900
+export const revalidate = 900   // ISR: rebuild every 15 min
 
 type JobResponse = {
   status: boolean
@@ -23,10 +23,20 @@ type JobResponse = {
 
 const fetchJob = async (slug: string) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/jobs/${slug}`, { cache: 'force-cache' })
+    // Use ISR revalidate — never force-cache (that bypasses ISR and keeps stale content forever)
+    const response = await fetch(`${API_BASE_URL}/jobs/${slug}`, {
+      next: { revalidate: 900 },
+    })
     if (response.status === 410) return { expired: true }
     if (!response.ok) return null
-    return (await response.json()) as JobResponse
+    const data = (await response.json()) as JobResponse
+    // If the job deadline has passed, treat as expired on the frontend too
+    if (data.result?.job_deadline) {
+      const deadline = new Date(data.result.job_deadline)
+      deadline.setHours(23, 59, 59, 999) // end of deadline day
+      if (deadline < new Date()) return { expired: true }
+    }
+    return data
   } catch {
     return null
   }
@@ -183,7 +193,11 @@ export async function generateMetadata(
   const job = (data && 'result' in data) ? (data as JobResponse).result : undefined
 
   if (!job) {
-    return { title: 'Job Not Found | Riseflake', description: 'This job is no longer available.' }
+    return {
+      title: 'Job Not Found | Riseflake',
+      description: 'This job is no longer available.',
+      robots: { index: false, follow: false },
+    }
   }
 
   const location = job.location_name ?? 'Remote'
@@ -244,25 +258,10 @@ export default async function JobDetailsPage(
   const data = await fetchJob(slug)
 
   if (data && 'expired' in data && data.expired) {
-    return (
-      <>
-        <Navbar bgTransparent />
-        <main className="px-4 sm:px-6 lg:px-8 py-12 bg-slate-100 min-h-screen">
-          <div className="max-w-[1200px] mx-auto text-center py-24">
-            <div className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-rose-100 mb-6">
-              <svg className="h-8 w-8 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
-            <h1 className="text-3xl font-bold text-slate-800 mb-4">Job No Longer Available</h1>
-            <p className="text-lg text-slate-500 mb-8">This job posting has expired or been removed.</p>
-            <a href="/jobs" className="inline-flex items-center gap-2 rounded-xl bg-[#414FEA] px-6 py-3 text-sm font-semibold text-white hover:shadow-lg transition">
-              Browse Open Jobs <ArrowRight className="h-4 w-4" />
-            </a>
-          </div>
-        </main>
-      </>
-    )
+    // SEO: trigger Next.js notFound() which returns HTTP 404.
+    // Google will deindex this URL on next crawl.
+    // A 200 "expired" page is far worse — Google keeps it indexed and it wastes crawl budget.
+    notFound()
   }
 
   if (!data || !('status' in data) || !('result' in data) || !data.status || !data.result) {
