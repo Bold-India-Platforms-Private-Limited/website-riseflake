@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { notFound } from 'next/navigation'
+import { notFound, permanentRedirect } from 'next/navigation'
 import Link from 'next/link'
 import Navbar from '../../components/Navbar'
 import { API_BASE_URL, WEBSITE_BASE_URL } from '../../../lib/config'
@@ -8,6 +8,7 @@ import { API_BASE_URL, WEBSITE_BASE_URL } from '../../../lib/config'
 
 interface PublicProfile {
   username: string
+  profile_slug: string   // canonical slug: "sapna-singh-sapn18564"
   full_name: string
   headline: string | null
   location: string | null
@@ -18,10 +19,10 @@ interface PublicProfile {
 
 // ─── Data fetching ────────────────────────────────────────────────────────────
 
-async function getProfile(username: string): Promise<PublicProfile | null> {
+async function getProfile(slug: string): Promise<PublicProfile | null> {
   try {
     const res = await fetch(
-      `${API_BASE_URL}/users/${encodeURIComponent(username)}`,
+      `${API_BASE_URL}/users/${encodeURIComponent(slug)}`,
       { next: { revalidate: 3600 } }
     )
     if (res.status === 404) return null
@@ -36,10 +37,10 @@ async function getProfile(username: string): Promise<PublicProfile | null> {
 // ─── Metadata ─────────────────────────────────────────────────────────────────
 
 export async function generateMetadata(
-  { params }: { params: Promise<{ username: string }> }
+  { params }: { params: Promise<{ slug: string }> }
 ): Promise<Metadata> {
-  const { username } = await params
-  const profile = await getProfile(username)
+  const { slug } = await params
+  const profile = await getProfile(slug)
 
   if (!profile) {
     return {
@@ -48,7 +49,7 @@ export async function generateMetadata(
     }
   }
 
-  const { full_name, headline, location, current_company, college } = profile
+  const { full_name, headline, location, current_company, college, profile_slug } = profile
 
   const orgSnippet = current_company
     ? `at ${current_company}`
@@ -58,7 +59,6 @@ export async function generateMetadata(
 
   const locationSnippet = location ? `, based in ${location}` : ''
 
-  // Rich description — filled with all indexable keywords
   const description = (
     headline
       ? `${headline}${orgSnippet ? ` ${orgSnippet}` : ''}${locationSnippet}.`
@@ -66,7 +66,8 @@ export async function generateMetadata(
   ).slice(0, 160)
 
   const title = `${full_name} – ${headline ?? 'Professional'} | Riseflake`
-  const url = `${WEBSITE_BASE_URL}/in/${username}`
+  // Always use the canonical (current-name) slug for metadata
+  const canonicalUrl = `${WEBSITE_BASE_URL}/in/${profile_slug}`
 
   return {
     title,
@@ -85,9 +86,8 @@ export async function generateMetadata(
     openGraph: {
       title,
       description,
-      url,
+      url: canonicalUrl,
       siteName: 'Riseflake',
-      // OG type "profile" tells Google/Facebook this is a person page
       type: 'profile',
       images: [{ url: `${WEBSITE_BASE_URL}/api/og`, width: 1200, height: 630 }],
     },
@@ -97,8 +97,8 @@ export async function generateMetadata(
       description,
       images: [`${WEBSITE_BASE_URL}/api/og`],
     },
-    alternates: { canonical: url },
-    // Tell bots this page IS indexable
+    // Canonical always points to the name-slug URL — even if user renamed
+    alternates: { canonical: canonicalUrl },
     robots: {
       index: true,
       follow: true,
@@ -110,25 +110,33 @@ export async function generateMetadata(
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default async function UserProfilePage(
-  { params }: { params: Promise<{ username: string }> }
+  { params }: { params: Promise<{ slug: string }> }
 ) {
-  const { username } = await params
-  const profile = await getProfile(username)
+  const { slug } = await params
+  const profile = await getProfile(slug)
 
   if (!profile) notFound()
+
+  // ── 301 redirect when slug is stale (name changed or old username-only URL) ─
+  // Examples that redirect:
+  //   /in/sapn18564          → /in/sapna-singh-sapn18564   (old format)
+  //   /in/old-name-sapn18564 → /in/new-name-sapn18564      (after name change)
+  if (slug !== profile.profile_slug) {
+    permanentRedirect(`/in/${profile.profile_slug}`)
+  }
 
   const { full_name, headline, location, current_company, college, updated_at } = profile
 
   const displayOrg = current_company ?? college ?? null
   const appProfileUrl = `https://app.riseflake.com/network/${profile.username}`
-  const profileUrl = `${WEBSITE_BASE_URL}/in/${profile.username}`
+  const canonicalUrl = `${WEBSITE_BASE_URL}/in/${profile.profile_slug}`
 
   // ── JSON-LD Person schema — Google rich results ───────────────────────────
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Person',
     name: full_name,
-    url: profileUrl,
+    url: canonicalUrl,
     ...(headline ? { jobTitle: headline } : {}),
     ...(current_company
       ? { worksFor: { '@type': 'Organization', name: current_company } }
