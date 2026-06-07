@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { notFound, permanentRedirect } from 'next/navigation'
+import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import Navbar from '../../components/Navbar'
 import { API_BASE_URL, WEBSITE_BASE_URL } from '../../../lib/config'
@@ -117,14 +117,9 @@ export default async function UserProfilePage(
 
   if (!profile) notFound()
 
-  // ── 301 redirect when slug is stale (name changed or old username-only URL) ─
-  // Examples that redirect:
-  //   /in/sapn18564          → /in/sapna-singh-sapn18564   (old format)
-  //   /in/old-name-sapn18564 → /in/new-name-sapn18564      (after name change)
-  if (slug !== profile.profile_slug) {
-    permanentRedirect(`/in/${profile.profile_slug}`)
-  }
-
+  // No redirect — any valid slug (old format, old name) renders the page.
+  // The canonical tag in generateMetadata always points to profile_slug,
+  // so Google consolidates to the correct URL without extra backend calls.
   const { full_name, headline, location, current_company, college, updated_at } = profile
 
   const displayOrg = current_company ?? college ?? null
