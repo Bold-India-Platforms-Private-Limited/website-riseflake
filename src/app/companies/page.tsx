@@ -39,26 +39,7 @@ export default function CompaniesPage() {
     <>
       <Navbar bgTransparent />
       <main className="min-h-screen bg-slate-50">
-        {/* Hero */}
-        <section className="relative overflow-hidden bg-white border-b border-slate-100 pt-24 pb-12 px-4 sm:px-6 lg:px-8">
-          <div className="pointer-events-none absolute inset-0">
-            <div className="absolute -top-24 -right-24 h-80 w-80 rounded-full bg-indigo-100/60 blur-3xl" />
-            <div className="absolute bottom-0 left-0 h-56 w-56 rounded-full bg-violet-100/50 blur-3xl" />
-          </div>
-          <div className="relative max-w-3xl mx-auto text-center">
-            <span className="inline-block rounded-full bg-indigo-50 border border-indigo-200 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-indigo-600 mb-4">
-              Company Directory
-            </span>
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900 leading-tight">
-              Discover Where You&apos;ll<br className="hidden sm:block" /> Do Your Best Work
-            </h1>
-            <p className="mt-4 text-base sm:text-lg text-slate-500 max-w-xl mx-auto">
-              Explore verified employer profiles — from fast-growing startups to industry-leading enterprises across India.
-            </p>
-          </div>
-        </section>
-
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-8">
           <Suspense
             fallback={
               <div className="rounded-2xl border border-slate-200 bg-white p-8 text-center text-sm text-slate-500 shadow-sm">

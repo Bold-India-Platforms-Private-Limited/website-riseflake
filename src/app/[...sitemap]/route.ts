@@ -60,18 +60,27 @@ export async function GET(_req: Request, context: RouteContext): Promise<Respons
   const batch = match[2]
   const { backendPath, cacheSeconds } = SITEMAP_TYPES[type]
 
+  const EMPTY_URLSET = `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"></urlset>`
+
   try {
     const res = await fetch(backendPath(batch), {
       next: { revalidate: cacheSeconds },
+      signal: AbortSignal.timeout(15_000), // 15 s — batch queries can be slower
     })
 
     if (res.status === 404) return new NextResponse(null, { status: 404 })
     if (!res.ok) {
-      return new NextResponse(`Failed to fetch ${type} sitemap batch ${batch}`, { status: 502 })
+      console.error(`[sitemap-${type}-${batch}] backend returned ${res.status}`)
+      return new NextResponse(EMPTY_URLSET, {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/xml; charset=utf-8',
+          'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=120',
+        },
+      })
     }
 
     const xml = await res.text()
-
     return new NextResponse(xml, {
       status: 200,
       headers: {
@@ -79,7 +88,14 @@ export async function GET(_req: Request, context: RouteContext): Promise<Respons
         'Cache-Control': `public, s-maxage=${cacheSeconds}, stale-while-revalidate=86400`,
       },
     })
-  } catch {
-    return new NextResponse(`Failed to fetch ${type} sitemap batch ${batch}`, { status: 500 })
+  } catch (err) {
+    console.error(`[sitemap-${type}-${batch}] fetch failed:`, err)
+    return new NextResponse(EMPTY_URLSET, {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/xml; charset=utf-8',
+        'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=120',
+      },
+    })
   }
 }

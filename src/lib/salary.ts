@@ -137,7 +137,7 @@ export function formatSalaryInfo(job: {
   }
 
   // ── FIXED ─────────────────────────────────────────────────────────────────
-  if (type === 'FIXED' && job.fixed_amount) {
+  if (type === 'FIXED' && job.fixed_amount && parseFloat(job.fixed_amount) > 0) {
     return {
       display: `${sym}${formatAmount(job.fixed_amount)}${period}`,
       label: 'Salary',
@@ -148,7 +148,7 @@ export function formatSalaryInfo(job: {
   }
 
   // ── FIXED_INCENTIVE ───────────────────────────────────────────────────────
-  if (type === 'FIXED_INCENTIVE' && job.fixed_amount) {
+  if (type === 'FIXED_INCENTIVE' && job.fixed_amount && parseFloat(job.fixed_amount) > 0) {
     const items = parseIncentiveDetails(job.incentive_details)
     return {
       display: `${sym}${formatAmount(job.fixed_amount)}${period}`,
@@ -204,7 +204,7 @@ export function formatSalaryChip(job: {
   const type   = job.salary_type?.toUpperCase()
 
   if (type === 'UNPAID') return 'Unpaid'
-  if ((type === 'FIXED' || type === 'FIXED_INCENTIVE') && job.fixed_amount) {
+  if ((type === 'FIXED' || type === 'FIXED_INCENTIVE') && job.fixed_amount && parseFloat(job.fixed_amount) > 0) {
     const suffix = type === 'FIXED_INCENTIVE' ? ' + incentives' : ''
     return `${sym}${formatAmount(job.fixed_amount)}${period}${suffix}`
   }

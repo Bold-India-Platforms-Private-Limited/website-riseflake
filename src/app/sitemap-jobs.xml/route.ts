@@ -1,22 +1,30 @@
 import { NextResponse } from 'next/server'
 import { API_BASE_URL } from '../../lib/config'
 
-// Rebuild every hour — job statuses change regularly
 export const revalidate = 3600
+
+const EMPTY_URLSET = `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"></urlset>`
 
 export async function GET() {
   try {
-    // Use the dedicated backend sitemap endpoint — no row-count limit
     const res = await fetch(`${API_BASE_URL}/jobs-sitemap.xml`, {
       next: { revalidate: 3600 },
+      signal: AbortSignal.timeout(10_000), // 10 s hard timeout
     })
 
     if (!res.ok) {
-      return new NextResponse('Failed to fetch jobs sitemap', { status: 502 })
+      console.error(`[sitemap-jobs] backend returned ${res.status}`)
+      // Return empty sitemap — never return an error string as XML
+      return new NextResponse(EMPTY_URLSET, {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/xml; charset=utf-8',
+          'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=120', // short TTL on error
+        },
+      })
     }
 
     const xml = await res.text()
-
     return new NextResponse(xml, {
       status: 200,
       headers: {
@@ -24,7 +32,14 @@ export async function GET() {
         'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=86400',
       },
     })
-  } catch {
-    return new NextResponse('Failed to generate jobs sitemap', { status: 500 })
+  } catch (err) {
+    console.error('[sitemap-jobs] fetch failed:', err)
+    return new NextResponse(EMPTY_URLSET, {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/xml; charset=utf-8',
+        'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=120',
+      },
+    })
   }
 }

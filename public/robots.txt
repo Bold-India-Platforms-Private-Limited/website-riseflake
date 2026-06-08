@@ -1,6 +1,5 @@
 # ==========================================
 # RiseFlake Robots.txt
-# Production Optimized – SEO + AI Controlled
 # ==========================================
 
 # ------------------------------------------
@@ -10,30 +9,37 @@ User-agent: *
 Allow: /
 Allow: /in/
 Allow: /network
-
-# Block sensitive / private areas
 Disallow: /api/
 Disallow: /dashboard/
 Disallow: /_next/
 Disallow: /resume/
 
 # ------------------------------------------
-# Google (Allow full crawl & render)
+# Google – explicit block list (Googlebot ignores Crawl-delay; keep it clean)
 # ------------------------------------------
 User-agent: Googlebot
 Allow: /
 Allow: /in/
 Allow: /network
+Disallow: /api/
+Disallow: /dashboard/
+Disallow: /_next/
+Disallow: /resume/
 
 # ------------------------------------------
-# Bing
+# Bing (Crawl-delay only works for Bing, not Google)
 # ------------------------------------------
 User-agent: Bingbot
 Allow: /
-Crawl-delay: 1
+Allow: /in/
+Allow: /network
+Disallow: /api/
+Disallow: /dashboard/
+Disallow: /_next/
+Disallow: /resume/
 
 # ------------------------------------------
-# AI Crawlers – Allow crawling but prevent training via Content Signals
+# AI Crawlers – allowed to crawl
 # ------------------------------------------
 User-agent: GPTBot
 Allow: /
@@ -99,4 +105,3 @@ Disallow: /
 # Sitemaps
 # ------------------------------------------
 Sitemap: https://riseflake.com/sitemap.xml
-Sitemap: https://riseflake.com/sitemap-users.xml
