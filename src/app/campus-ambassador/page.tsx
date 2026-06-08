@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
-import { Trophy, Award, BadgeCheck, Gift, Star, Zap, ArrowRight, GraduationCap, ChevronRight } from 'lucide-react'
+import { Trophy, Award, BadgeCheck, Gift, Star, Zap, ArrowRight, GraduationCap } from 'lucide-react'
 
 const APPLY_URL = 'https://app.riseflake.com/dashboard/campus-ambassador'
 
