@@ -19,6 +19,7 @@ const links = {
     { label: 'Contact Us', href: '/contact' },
     { label: 'About Us', href: '/about' },
     { label: 'Careers', href: '/careers' },
+    { label: 'Campus Ambassador', href: '/campus-ambassador' },
     { label: 'Disclaimer', href: '/disclaimer' },
   ],
   quickLinks: [

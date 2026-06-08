@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { FiSearch } from 'react-icons/fi'
 import { Briefcase as BriefcaseIcon, GraduationCap } from 'lucide-react'
-import { Zap, Rocket, Target, Globe, BarChart2, Briefcase, Users, Trophy } from 'lucide-react'
+import { Zap, Rocket, Target, Globe, BarChart2, Briefcase, Users, Trophy, Star, BadgeCheck, Gift } from 'lucide-react'
 import Footer from './components/Footer'
 import Navbar from './components/Navbar'
 import AppDownloadSection from './components/AppDownloadSection'
@@ -247,7 +247,56 @@ export default function Home() {
 
       <Brands />
 
+      {/* ── Campus Ambassador Banner ── */}
+      <section className="px-4 py-10 sm:py-14">
+        <div className="mx-auto max-w-5xl">
+          <a
+            href="/campus-ambassador"
+            className="group relative flex flex-col sm:flex-row items-center gap-6 sm:gap-8 overflow-hidden rounded-3xl bg-gradient-to-r from-violet-600 via-indigo-600 to-blue-600 p-7 sm:p-10 shadow-2xl shadow-indigo-500/25 transition-all hover:-translate-y-0.5 hover:shadow-indigo-500/40"
+          >
+            {/* decorative blobs */}
+            <div className="pointer-events-none absolute inset-0">
+              <div className="absolute -top-16 -right-16 h-56 w-56 rounded-full bg-white/10 blur-3xl" />
+              <div className="absolute -bottom-12 left-1/3 h-40 w-40 rounded-full bg-pink-400/15 blur-2xl" />
+            </div>
 
+            {/* emoji */}
+            <div className="relative z-10 flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl bg-white/15 backdrop-blur text-5xl shadow-inner">
+              🎓
+            </div>
+
+            {/* text */}
+            <div className="relative z-10 flex-1 text-center sm:text-left">
+              <div className="mb-1.5 inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-xs font-bold text-white/90 backdrop-blur">
+                <Star className="h-3 w-3 text-yellow-300" />
+                Student Program · 100% Free
+              </div>
+              <h2 className="mt-2 text-2xl font-extrabold text-white sm:text-3xl leading-tight">
+                Become a Campus Ambassador
+              </h2>
+              <p className="mt-1.5 text-sm text-white/80 max-w-xl leading-relaxed">
+                Represent Riseflake at your college, share your link, and earn real rewards — CA badges, verified certificates, cash &amp; premium gifts.
+              </p>
+              <div className="mt-3 flex flex-wrap items-center justify-center sm:justify-start gap-3 text-xs text-white/70">
+                <span className="flex items-center gap-1"><Trophy className="h-3.5 w-3.5 text-yellow-300" />100+ signups → CA Badge</span>
+                <span className="h-3 w-px bg-white/30" />
+                <span className="flex items-center gap-1"><BadgeCheck className="h-3.5 w-3.5 text-blue-200" />150+ → Verified Certificate</span>
+                <span className="h-3 w-px bg-white/30" />
+                <span className="flex items-center gap-1"><Gift className="h-3.5 w-3.5 text-pink-300" />Top performers → iPhone / MacBook</span>
+              </div>
+            </div>
+
+            {/* CTA */}
+            <div className="relative z-10 flex shrink-0 flex-col items-center gap-2">
+              <span className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-bold text-violet-700 shadow-lg transition-all group-hover:shadow-xl">
+                <Zap className="h-4 w-4" />
+                Apply Now
+              </span>
+              <span className="text-xs text-white/60">2–3 day review</span>
+            </div>
+          </a>
+        </div>
+      </section>
 
       <Categories />
 
