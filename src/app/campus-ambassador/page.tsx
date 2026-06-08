@@ -1,6 +1,5 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import { Trophy, Award, BadgeCheck, Gift, Star, Zap, ArrowRight, GraduationCap } from 'lucide-react'
@@ -80,8 +79,6 @@ const TERMS = [
 ]
 
 export default function CampusAmbassadorPage() {
-  const router = useRouter()
-
   return (
     <>
       <Navbar />
