@@ -53,6 +53,13 @@ const SALARY_UNIT_MAP: Record<string, string> = {
 }
 
 function buildJobPostingSchema(job: JobDetail, canonicalUrl: string) {
+  // validThrough: use deadline if present, else 90 days from posting date
+  const validThrough = job.job_deadline
+    ? new Date(job.job_deadline).toISOString()
+    : job.created_at
+    ? new Date(new Date(job.created_at).getTime() + 90 * 86_400_000).toISOString()
+    : undefined
+
   const schema: Record<string, unknown> = {
     '@context': 'https://schema.org/',
     '@type': 'JobPosting',
@@ -60,17 +67,18 @@ function buildJobPostingSchema(job: JobDetail, canonicalUrl: string) {
     description: job.job_description ?? `Apply for ${job.position} internship at ${job.company_name} on Riseflake.`,
     datePosted: job.created_at ? new Date(job.created_at).toISOString().slice(0, 10) : undefined,
     dateModified: job.updated_at ? new Date(job.updated_at).toISOString().slice(0, 10) : undefined,
-    validThrough: job.job_deadline ? new Date(job.job_deadline).toISOString() : undefined,
+    validThrough,
     employmentType: 'INTERN',
     url: canonicalUrl,
     hiringOrganization: {
       '@type': 'Organization',
       name: job.company_name,
       ...(job.company_logo ? { logo: job.company_logo } : {}),
+      sameAs: `https://riseflake.com/companies`,
     },
   }
 
-  // jobLocation / jobLocationType
+  // jobLocation — always required; remote gets TELECOMMUTE flag too
   if (job.workplace_type === 1) {
     schema.jobLocationType = 'TELECOMMUTE'
     schema.jobLocation = {
@@ -80,7 +88,8 @@ function buildJobPostingSchema(job: JobDetail, canonicalUrl: string) {
         addressCountry: job.location_country ?? 'IN',
       },
     }
-  } else if (job.location_city || job.location_state || job.location_country) {
+  } else if (job.workplace_type === 2) {
+    schema.jobLocationType = 'TELECOMMUTE'
     schema.jobLocation = {
       '@type': 'Place',
       address: {
@@ -93,40 +102,46 @@ function buildJobPostingSchema(job: JobDetail, canonicalUrl: string) {
   } else {
     schema.jobLocation = {
       '@type': 'Place',
-      address: { '@type': 'PostalAddress', addressCountry: 'IN' },
+      address: {
+        '@type': 'PostalAddress',
+        ...(job.location_city ? { addressLocality: job.location_city } : {}),
+        ...(job.location_state ? { addressRegion: job.location_state } : {}),
+        addressCountry: job.location_country ?? 'IN',
+      },
     }
   }
 
-  // baseSalary (stipend)
-  if (!job.is_salary_hidden) {
-    const unitText = SALARY_UNIT_MAP[job.salary_period?.toLowerCase() ?? ''] ?? 'MONTH'
-    const currency = job.currency ?? 'INR'
+  // baseSalary (stipend) — guard against zero amounts
+  const unitText = SALARY_UNIT_MAP[job.salary_period?.toLowerCase() ?? ''] ?? 'MONTH'
+  const currency = job.currency ?? 'INR'
+  const type = job.salary_type?.toUpperCase()
 
-    if ((job.salary_type === 'FIXED' || job.salary_type === 'FIXED_INCENTIVE') && job.fixed_amount) {
-      schema.baseSalary = {
-        '@type': 'MonetaryAmount',
-        currency,
-        value: { '@type': 'QuantitativeValue', value: parseFloat(job.fixed_amount), unitText },
-      }
-      if (job.salary_type === 'FIXED_INCENTIVE' && job.incentive_details) {
-        schema.jobBenefits = job.incentive_details
-      }
-    } else if (job.salary_type === 'UNPAID') {
-      schema.jobBenefits = 'Unpaid / Voluntary position'
-    } else if (job.min_amount && job.max_amount) {
-      schema.baseSalary = {
-        '@type': 'MonetaryAmount',
-        currency,
-        value: {
-          '@type': 'QuantitativeValue',
-          minValue: parseFloat(job.min_amount),
-          maxValue: parseFloat(job.max_amount),
-          unitText,
-        },
-      }
-    } else if (job.is_negotiable) {
-      schema.jobBenefits = 'Stipend negotiable'
+  if (job.is_salary_hidden) {
+    schema.jobBenefits = 'Stipend: Confidential'
+  } else if (type === 'UNPAID') {
+    schema.jobBenefits = 'Unpaid / Voluntary position'
+  } else if ((type === 'FIXED' || type === 'FIXED_INCENTIVE') && job.fixed_amount && parseFloat(job.fixed_amount) > 0) {
+    schema.baseSalary = {
+      '@type': 'MonetaryAmount',
+      currency,
+      value: { '@type': 'QuantitativeValue', value: parseFloat(job.fixed_amount), unitText },
     }
+    if (type === 'FIXED_INCENTIVE' && job.incentive_details) {
+      schema.jobBenefits = job.incentive_details
+    }
+  } else if (type === 'RANGE' && job.min_amount && job.max_amount) {
+    schema.baseSalary = {
+      '@type': 'MonetaryAmount',
+      currency,
+      value: {
+        '@type': 'QuantitativeValue',
+        minValue: parseFloat(job.min_amount),
+        maxValue: parseFloat(job.max_amount),
+        unitText,
+      },
+    }
+  } else if (job.is_negotiable) {
+    schema.jobBenefits = 'Stipend negotiable'
   }
 
   // experienceRequirements
@@ -142,9 +157,10 @@ function buildJobPostingSchema(job: JobDetail, canonicalUrl: string) {
     schema.skills = job.job_skills.join(', ')
   }
 
-  // jobBenefits from facilities
+  // jobBenefits from facilities (append, don't overwrite)
   if (job.job_facilities?.length) {
-    schema.jobBenefits = job.job_facilities.join(', ')
+    const fac = job.job_facilities.join(', ')
+    schema.jobBenefits = schema.jobBenefits ? `${schema.jobBenefits}. ${fac}` : fac
   }
 
   // openings

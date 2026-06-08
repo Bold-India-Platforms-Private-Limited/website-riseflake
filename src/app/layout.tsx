@@ -17,6 +17,7 @@ export const metadata: Metadata = {
   },
   description: 'Riseflake is India\'s job portal and professional networking platform. Find jobs, internships, and career opportunities in Bangalore, Mumbai, Delhi, Hyderabad, Pune, Chennai. Connect with top companies and grow your career.',
   keywords: [
+    'riseflake', 'rise flake', 'riseflake jobs', 'riseflake job portal',
     'job portal india', 'jobs in india', 'find jobs', 'professional networking india',
     'jobs in bangalore', 'jobs in mumbai', 'jobs in delhi', 'jobs in hyderabad', 'jobs in pune',
     'fresher jobs india', 'software engineer jobs india', 'internships india',
