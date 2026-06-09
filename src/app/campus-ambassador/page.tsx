@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import { Trophy, Award, BadgeCheck, Gift, Star, Zap, ArrowRight, GraduationCap } from 'lucide-react'
@@ -174,6 +175,22 @@ export default function CampusAmbassadorPage() {
                 </div>
               ))}
             </div>
+          </div>
+        </section>
+
+        {/* ── Refer & Win Banner ── */}
+        <section className="px-4 py-10 sm:py-14">
+          <div className="mx-auto max-w-3xl">
+            <a href={APPLY_URL} target="_blank" rel="noopener noreferrer" className="block">
+              <Image
+                src="/refer-win-banner.webp"
+                alt="Refer & Win — Apple Watch, MacBook, iPhone & More"
+                width={900}
+                height={600}
+                className="w-full rounded-3xl shadow-2xl shadow-indigo-200/50 transition-transform duration-300 hover:-translate-y-1 hover:shadow-indigo-300/60"
+                priority
+              />
+            </a>
           </div>
         </section>
 
