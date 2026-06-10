@@ -8,6 +8,7 @@ export async function GET() {
 
   const sitemaps = [
     'https://riseflake.com/sitemap-static.xml',
+    'https://riseflake.com/sitemap-blogs.xml',
     'https://riseflake.com/sitemap-jobs.xml',
     'https://riseflake.com/sitemap-internships.xml',
     'https://riseflake.com/sitemap-companies.xml',

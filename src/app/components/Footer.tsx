@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import type { AnchorHTMLAttributes, ReactNode } from 'react'
 import { BASE_ASSETS_URL } from '../../lib/config'
 
-type SectionKey = 'resources' | 'company' | 'quickLinks'
+type SectionKey = 'resources' | 'company' | 'quickLinks' | 'explore'
 
 const BRAND_NAME = 'Riseflake'
 
@@ -14,6 +14,14 @@ const links = {
     { label: 'Login & Register', href: '/' },
     { label: 'HTML Sitemap', href: '/sitemap.html' },
     { label: 'XML Sitemap', href: '/sitemap.xml' },
+  ],
+  explore: [
+    { label: 'Blog', href: '/blog' },
+    { label: 'Career Tips', href: '/blog?category=career-tips' },
+    { label: 'Tech & Engineering', href: '/blog?category=tech-engineering' },
+    { label: 'Campus Life', href: '/blog?category=campus-life' },
+    { label: 'Internship Guides', href: '/blog?category=internships' },
+    { label: 'Company Spotlights', href: '/blog?category=company-spotlights' },
   ],
   company: [
     { label: 'Contact Us', href: '/contact' },
@@ -104,6 +112,7 @@ export default function Footer() {
     resources: false,
     company: false,
     quickLinks: false,
+    explore: false,
   })
 
   const logosContainerRef = useRef<HTMLDivElement | null>(null)
@@ -188,7 +197,7 @@ export default function Footer() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-8 lg:col-span-3">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4 sm:gap-8 lg:col-span-3">
             <div className="border-b border-gray-200 pb-3 sm:border-b-0 sm:pb-0">
               <div
                 className="flex cursor-pointer items-center justify-between sm:cursor-auto"
@@ -250,6 +259,31 @@ export default function Footer() {
               <div className={isMobile && !expandedSections.quickLinks ? 'hidden sm:block' : ''}>
                 <ul className="space-y-3">
                   {links.quickLinks.map((link) => (
+                    <li key={link.href}>
+                      <FooterLink href={link.href}>{link.label}</FooterLink>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            <div className="border-b border-gray-200 pb-3 sm:border-b-0 sm:pb-0">
+              <div
+                className="flex cursor-pointer items-center justify-between sm:cursor-auto"
+                onClick={() => isMobile && toggleSection('explore')}
+              >
+                <h4 className="mb-2 text-sm font-medium text-gray-800 sm:mb-6">
+                  <a href="/blog" className="hover:text-indigo-600 transition-colors">Blog</a>
+                </h4>
+                {isMobile && (
+                  <span className="text-lg text-gray-500 sm:hidden">
+                    {expandedSections.explore ? '−' : '+'}
+                  </span>
+                )}
+              </div>
+              <div className={isMobile && !expandedSections.explore ? 'hidden sm:block' : ''}>
+                <ul className="space-y-3">
+                  {links.explore.map((link) => (
                     <li key={link.href}>
                       <FooterLink href={link.href}>{link.label}</FooterLink>
                     </li>
