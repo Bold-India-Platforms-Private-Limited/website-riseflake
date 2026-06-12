@@ -11,8 +11,8 @@ export const revalidate = 300 // ISR: 5 min
 
 type SearchParams = { category?: string; tag?: string; search?: string; page?: string }
 
-export async function generateMetadata({ searchParams }: { searchParams: SearchParams }): Promise<Metadata> {
-  const { category, tag, search, page } = searchParams
+export async function generateMetadata({ searchParams }: { searchParams: Promise<SearchParams> }): Promise<Metadata> {
+  const { category, tag, search, page } = await searchParams
   const pageNum = parseInt(page || '1')
 
   // Base canonical always points to /blog (page 1, no filters) — avoids duplicate indexing
@@ -267,22 +267,23 @@ function BlogCard({ post, featured = false }: { post: BlogPost; featured?: boole
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
-export default async function BlogPage({ searchParams }: { searchParams: SearchParams }) {
+export default async function BlogPage({ searchParams }: { searchParams: Promise<SearchParams> }) {
+  const resolvedParams = await searchParams
   const params: Record<string, string> = {}
-  if (searchParams.category) params.category = searchParams.category
-  if (searchParams.tag)      params.tag      = searchParams.tag
-  if (searchParams.search)   params.search   = searchParams.search
-  if (searchParams.page)     params.page     = searchParams.page
+  if (resolvedParams.category) params.category = resolvedParams.category
+  if (resolvedParams.tag)      params.tag      = resolvedParams.tag
+  if (resolvedParams.search)   params.search   = resolvedParams.search
+  if (resolvedParams.page)     params.page     = resolvedParams.page
 
   const [{ blogs, total }, categories] = await Promise.all([
     fetchBlogs(params),
     fetchCategories(),
   ])
 
-  const currentPage    = Math.max(1, parseInt(searchParams.page || '1'))
+  const currentPage    = Math.max(1, parseInt(resolvedParams.page || '1'))
   const totalPages     = Math.ceil(total / 12)
-  const activeCategory = searchParams.category || ''
-  const isFiltered     = !!(searchParams.category || searchParams.tag || searchParams.search)
+  const activeCategory = resolvedParams.category || ''
+  const isFiltered     = !!(resolvedParams.category || resolvedParams.tag || resolvedParams.search)
 
   // Feature the first post on unfiltered page 1
   const featuredPost = (!isFiltered && currentPage === 1 && blogs.length > 0) ? blogs[0] : null
@@ -335,10 +336,10 @@ export default async function BlogPage({ searchParams }: { searchParams: SearchP
           )}
 
           {/* Active filter indicator */}
-          {searchParams.tag && (
+          {resolvedParams.tag && (
             <div className="flex items-center gap-2 mb-6">
               <span className="text-sm text-gray-500">Filtering by tag:</span>
-              <span className="text-sm font-semibold text-blue-700 bg-blue-50 px-3 py-0.5 rounded-full">#{searchParams.tag}</span>
+              <span className="text-sm font-semibold text-blue-700 bg-blue-50 px-3 py-0.5 rounded-full">#{resolvedParams.tag}</span>
               <Link href="/blog" className="text-xs text-gray-400 hover:text-red-500 transition-colors">✕ Clear</Link>
             </div>
           )}

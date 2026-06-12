@@ -8,6 +8,22 @@ const nextConfig = {
         hostname: 'assets.riseflake.com',
         pathname: '/**',
       },
+      // Blog cover images can be hosted on various CDNs via admin upload
+      {
+        protocol: 'https',
+        hostname: '**.amazonaws.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: '**.riseflake.com',
+        pathname: '/**',
+      },
     ],
   },
   eslint: {

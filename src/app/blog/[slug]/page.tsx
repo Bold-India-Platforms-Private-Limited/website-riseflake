@@ -84,8 +84,9 @@ export async function generateStaticParams() {
 
 // ─── Metadata ─────────────────────────────────────────────────────────────────
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const blog = await fetchBlog(params.slug)
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params
+  const blog = await fetchBlog(slug)
   if (!blog) return { title: 'Post Not Found | Riseflake Blog', robots: { index: false, follow: false } }
 
   const canonicalUrl = `${WEBSITE_BASE_URL}/blog/${blog.slug}`
@@ -220,8 +221,9 @@ function RelatedCard({ post }: { post: BlogPost }) {
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
-export default async function BlogPostPage({ params }: { params: { slug: string } }) {
-  const blog = await fetchBlog(params.slug)
+export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params
+  const blog = await fetchBlog(slug)
   if (!blog) notFound()
 
   const canonicalUrl   = `${WEBSITE_BASE_URL}/blog/${blog.slug}`

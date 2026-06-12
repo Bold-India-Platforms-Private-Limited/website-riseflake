@@ -26,19 +26,19 @@ const cities: City[] = [
   },
   {
     name: 'Mumbai',
-    image: '/city/mumbai.jpg',
+    image: '/city/mumbai.webp',
     gradientClass: 'bg-[linear-gradient(135deg,#f093fb_0%,#f5576c_100%)]',
     jobs: '15.8K',
   },
   {
     name: 'Chennai',
-    image: '/city/chennai.jpg',
+    image: '/city/chennai.webp',
     gradientClass: 'bg-[linear-gradient(135deg,#4ade80_0%,#22c55e_100%)]',
     jobs: '7.3K',
   },
   {
     name: 'Hyderabad',
-    image: '/city/hydrabad.jpg',
+    image: '/city/hydrabad.webp',
     gradientClass: 'bg-[linear-gradient(135deg,#a8edea_0%,#fed6e3_100%)]',
     jobs: '9.6K',
   },

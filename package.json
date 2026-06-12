@@ -5,8 +5,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build:resume": "cd resume && cp ../.env .env || true && npm install --include=dev --no-package-lock && npm run build",
-    "prebuild": "npm run build:resume && rm -rf public/resume && cp -R resume/out public/resume && node scripts/fix-resume-paths.js",
+    "build:resume": "bash scripts/build-resume.sh",
+    "prebuild": "bash scripts/build-resume.sh",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
