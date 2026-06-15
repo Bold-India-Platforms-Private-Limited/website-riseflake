@@ -52,7 +52,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params
   const data = await fetchCompany(slug)
-  const company = data?.result
+  const company = data && 'result' in data ? data.result : undefined
 
   if (!company) {
     return {
@@ -137,11 +137,13 @@ export default async function CompanyDetailsPage({ params }: PageProps) {
   const { slug } = await params
   const data = await fetchCompany(slug)
 
-  if (!data?.status || !data.result) {
+  const companyData = data && 'result' in data ? data : null
+
+  if (!companyData?.status || !companyData.result) {
     notFound()
   }
 
-  const company = data.result
+  const company = companyData.result
   const canonicalUrl = `${WEBSITE_BASE_URL}/companies/${company.slug}`
 
   const orgSchema = {
