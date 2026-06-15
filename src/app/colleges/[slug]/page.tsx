@@ -27,10 +27,15 @@ async function fetchCollege(slug: string): Promise<CollegeDetail | null> {
     const res = await fetch(`${API_BASE_URL}/colleges/${slug}`, {
       next: { revalidate: 3600 },
     })
-    if (!res.ok) return null
+    if (res.status === 404) return null
+    if (!res.ok) {
+      console.error(`[colleges] fetch failed for "${slug}": HTTP ${res.status}`)
+      return null
+    }
     const json = await res.json()
     return json.result ?? null
-  } catch {
+  } catch (err) {
+    console.error(`[colleges] fetch error for "${slug}":`, err)
     return null
   }
 }
@@ -47,7 +52,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     return {
       title: 'College Not Found | Riseflake',
       description: 'This college profile could not be found on Riseflake.',
-      robots: { index: false },
+      robots: { index: false, follow: false },
     }
   }
 

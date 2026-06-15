@@ -121,7 +121,8 @@ export default function ApplyCard({ job }: { job: JobDetail }) {
   const salaryInfo = formatSalaryInfo(job)
 
   // Openings display
-  const openings = job.job_vacancy != null && job.job_vacancy !== '' ? Number(job.job_vacancy) : null
+  const _v = Number(job.job_vacancy)
+  const openings = job.job_vacancy != null && job.job_vacancy !== '' && !isNaN(_v) ? _v : null
 
   return (
     <>

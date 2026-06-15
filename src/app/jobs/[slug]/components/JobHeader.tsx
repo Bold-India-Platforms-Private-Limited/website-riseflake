@@ -28,7 +28,9 @@ const formatDate = (v?: string | null) => {
 
 const formatDeadlineDays = (v?: string | null) => {
   if (!v) return null
-  const diff = Math.ceil((new Date(v).getTime() - Date.now()) / 86400000)
+  const d = new Date(v)
+  if (isNaN(d.getTime())) return null
+  const diff = Math.ceil((d.getTime() - Date.now()) / 86400000)
   if (diff < 0) return 'Expired'
   if (diff === 0) return 'Closes today'
   if (diff === 1) return '1 day left'

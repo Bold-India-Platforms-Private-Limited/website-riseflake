@@ -28,7 +28,11 @@ const fetchJob = async (slug: string) => {
       next: { revalidate: 900 },
     })
     if (response.status === 410) return { expired: true }
-    if (!response.ok) return null
+    if (response.status === 404) return null
+    if (!response.ok) {
+      console.error(`[jobs] fetch failed for "${slug}": HTTP ${response.status}`)
+      return null
+    }
     const data = (await response.json()) as JobResponse
     // If the job deadline has passed, treat as expired on the frontend too
     if (data.result?.job_deadline) {
@@ -37,7 +41,8 @@ const fetchJob = async (slug: string) => {
       if (deadline < new Date()) return { expired: true }
     }
     return data
-  } catch {
+  } catch (err) {
+    console.error(`[jobs] fetch error for "${slug}":`, err)
     return null
   }
 }

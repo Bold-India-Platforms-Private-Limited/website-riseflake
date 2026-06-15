@@ -49,10 +49,15 @@ async function fetchBlog(slug: string): Promise<BlogDetail | null> {
     const res = await fetch(`${BLOG_API_URL}/blogs/public/${slug}`, {
       next: { revalidate: 600 },
     })
-    if (!res.ok) return null
+    if (res.status === 404) return null
+    if (!res.ok) {
+      console.error(`[blog] fetch failed for "${slug}": HTTP ${res.status}`)
+      return null
+    }
     const data = await res.json()
     return data.blog ?? null
-  } catch {
+  } catch (err) {
+    console.error(`[blog] fetch error for "${slug}":`, err)
     return null
   }
 }
@@ -105,7 +110,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       url:           canonicalUrl,
       siteName:      'Riseflake',
       type:          'article',
-      publishedTime: blog.published_at ?? undefined,
+      publishedTime: blog.published_at ?? blog.updated_at,
       modifiedTime:  blog.updated_at,
       authors:       [`${WEBSITE_BASE_URL}/blog?author=${encodeURIComponent(blog.author_name)}`],
       images: blog.cover_image_url
@@ -125,7 +130,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     robots: { index: true, follow: true, googleBot: { index: true, follow: true, 'max-image-preview': 'large', 'max-snippet': -1 } },
     other: {
       'article:author':        blog.author_name,
-      'article:published_time': blog.published_at ?? '',
+      'article:published_time': blog.published_at ?? blog.updated_at,
       'article:modified_time':  blog.updated_at,
       'article:section':        blog.category_name ?? 'General',
       'article:tag':            blog.tags.map((t) => t.name).join(','),
@@ -161,7 +166,7 @@ function buildArticleSchema(blog: BlogDetail, canonicalUrl: string) {
         height:   60,
       },
     },
-    datePublished:    blog.published_at ?? undefined,
+    datePublished:    blog.published_at ?? blog.updated_at,
     dateModified:     blog.updated_at,
     mainEntityOfPage: { '@type': 'WebPage', '@id': canonicalUrl },
     url:              canonicalUrl,
@@ -319,7 +324,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                       </time>
                     )}
                     {blog.read_time_minutes && <span>{blog.read_time_minutes} min read</span>}
-                    <span>{blog.view_count.toLocaleString()} views</span>
+                    <span>{(blog.view_count ?? 0).toLocaleString()} views</span>
                   </div>
 
                   {/* Excerpt as lead */}

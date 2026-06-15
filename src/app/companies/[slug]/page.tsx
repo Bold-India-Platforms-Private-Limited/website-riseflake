@@ -30,11 +30,17 @@ type CompanyResponse = {
 const fetchCompany = async (slug: string) => {
   try {
     const response = await fetch(`${API_BASE_URL}/companies/${slug}`, {
-      next: { revalidate: 3600 }, // respect ISR — don't bypass with force-cache
+      next: { revalidate: 3600 },
     })
-    if (!response.ok) return null
+    if (response.status === 404) return null
+    if (response.status === 410) return { gone: true } as const
+    if (!response.ok) {
+      console.error(`[companies] fetch failed for "${slug}": HTTP ${response.status}`)
+      return null
+    }
     return (await response.json()) as CompanyResponse
-  } catch {
+  } catch (err) {
+    console.error(`[companies] fetch error for "${slug}":`, err)
     return null
   }
 }

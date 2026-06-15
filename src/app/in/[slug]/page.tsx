@@ -20,13 +20,14 @@ interface PublicProfile {
 
 // ─── Data fetching ────────────────────────────────────────────────────────────
 
-async function getProfile(slug: string): Promise<PublicProfile | null> {
+async function getProfile(slug: string): Promise<PublicProfile | null | 'gone'> {
   try {
     const res = await fetch(
       `${API_BASE_URL}/users/${encodeURIComponent(slug)}`,
       { next: { revalidate: 3600 } }
     )
     if (res.status === 404) return null
+    if (res.status === 410) return 'gone'
     if (!res.ok) return null
     const data = await res.json()
     return data.status ? (data.result as PublicProfile) : null
@@ -43,10 +44,10 @@ export async function generateMetadata(
   const { slug } = await params
   const profile = await getProfile(slug)
 
-  if (!profile) {
+  if (!profile || profile === 'gone') {
     return {
       title: 'Profile not found | Riseflake',
-      robots: { index: false },
+      robots: { index: false, follow: false },
     }
   }
 
@@ -118,16 +119,19 @@ export default async function UserProfilePage(
   const { slug } = await params
   const profile = await getProfile(slug)
 
-  if (!profile) notFound()
+  // null = never existed (404), 'gone' = deactivated (410 upstream) — both show not-found
+  if (!profile || profile === 'gone') notFound()
+
+  const safeProfile = profile as PublicProfile
 
   // No redirect — any valid slug (old format, old name) renders the page.
   // The canonical tag in generateMetadata always points to profile_slug,
   // so Google consolidates to the correct URL without extra backend calls.
-  const { full_name, headline, location, current_company, college, updated_at, profile_photo_url } = profile
+  const { full_name, headline, location, current_company, college, updated_at, profile_photo_url } = safeProfile
 
   const displayOrg = current_company ?? college ?? null
-  const appProfileUrl = `https://app.riseflake.com/network/${profile.username}`
-  const canonicalUrl = `${WEBSITE_BASE_URL}/in/${profile.profile_slug}`
+  const appProfileUrl = `https://app.riseflake.com/network/${safeProfile.username}`
+  const canonicalUrl = `${WEBSITE_BASE_URL}/in/${safeProfile.profile_slug}`
 
   // ── JSON-LD Person schema — Google rich results ───────────────────────────
   const jsonLd = {

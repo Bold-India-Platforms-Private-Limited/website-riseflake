@@ -18,13 +18,15 @@ export async function GET() {
     // return empty sitemap on error
   }
 
+  const today = new Date().toISOString().slice(0, 10)
   const entries = slugs.map(({ slug, updated_at }) => {
-    const lastmod = updated_at ? new Date(updated_at).toISOString().slice(0, 10) : new Date().toISOString().slice(0, 10)
+    const d = updated_at ? new Date(updated_at) : null
+    const lastmod = d && !isNaN(d.getTime()) ? d.toISOString().slice(0, 10) : today
     return `  <url>\n    <loc>${WEBSITE_BASE_URL}/blog/${slug}</loc>\n    <lastmod>${lastmod}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.7</priority>\n  </url>`
   })
 
   // Also include the blog index page
-  const indexEntry = `  <url>\n    <loc>${WEBSITE_BASE_URL}/blog</loc>\n    <lastmod>${new Date().toISOString().slice(0, 10)}</lastmod>\n    <changefreq>daily</changefreq>\n    <priority>0.8</priority>\n  </url>`
+  const indexEntry = `  <url>\n    <loc>${WEBSITE_BASE_URL}/blog</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>daily</changefreq>\n    <priority>0.8</priority>\n  </url>`
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${indexEntry}\n${entries.join('\n')}\n</urlset>`
 
