@@ -15,6 +15,7 @@ interface PublicProfile {
   current_company: string | null
   college: string | null
   updated_at: string
+  profile_photo_url: string | null
 }
 
 // ─── Data fetching ────────────────────────────────────────────────────────────
@@ -49,7 +50,7 @@ export async function generateMetadata(
     }
   }
 
-  const { full_name, headline, location, current_company, college, profile_slug } = profile
+  const { full_name, headline, location, current_company, college, profile_slug, profile_photo_url } = profile
 
   const orgSnippet = current_company
     ? `at ${current_company}`
@@ -89,13 +90,15 @@ export async function generateMetadata(
       url: canonicalUrl,
       siteName: 'Riseflake',
       type: 'profile',
-      images: [{ url: `${WEBSITE_BASE_URL}/api/og`, width: 1200, height: 630 }],
+      images: profile_photo_url
+        ? [{ url: profile_photo_url, width: 400, height: 400, alt: `${full_name} profile photo` }]
+        : [{ url: `${WEBSITE_BASE_URL}/api/og`, width: 1200, height: 630 }],
     },
     twitter: {
-      card: 'summary_large_image',
+      card: profile_photo_url ? 'summary' : 'summary_large_image',
       title,
       description,
-      images: [`${WEBSITE_BASE_URL}/api/og`],
+      images: profile_photo_url ? [profile_photo_url] : [`${WEBSITE_BASE_URL}/api/og`],
     },
     // Canonical always points to the name-slug URL — even if user renamed
     alternates: { canonical: canonicalUrl },
@@ -120,7 +123,7 @@ export default async function UserProfilePage(
   // No redirect — any valid slug (old format, old name) renders the page.
   // The canonical tag in generateMetadata always points to profile_slug,
   // so Google consolidates to the correct URL without extra backend calls.
-  const { full_name, headline, location, current_company, college, updated_at } = profile
+  const { full_name, headline, location, current_company, college, updated_at, profile_photo_url } = profile
 
   const displayOrg = current_company ?? college ?? null
   const appProfileUrl = `https://app.riseflake.com/network/${profile.username}`
@@ -132,6 +135,7 @@ export default async function UserProfilePage(
     '@type': 'Person',
     name: full_name,
     url: canonicalUrl,
+    ...(profile_photo_url ? { image: profile_photo_url } : {}),
     ...(headline ? { jobTitle: headline } : {}),
     ...(current_company
       ? { worksFor: { '@type': 'Organization', name: current_company } }
@@ -170,16 +174,27 @@ export default async function UserProfilePage(
             <div className="h-28 bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600" />
 
             <div className="px-6 pb-8">
-              {/* Avatar — initial letter, no private photo exposed */}
+              {/* Avatar */}
               <div className="-mt-11 mb-5">
-                <div
-                  className="w-20 h-20 rounded-full border-4 border-white shadow-md
-                             bg-indigo-100 flex items-center justify-center
-                             text-3xl font-bold text-indigo-700 select-none"
-                  aria-label={`${full_name} avatar`}
-                >
-                  {full_name.charAt(0).toUpperCase()}
-                </div>
+                {profile_photo_url ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={profile_photo_url}
+                    alt={`${full_name} profile photo`}
+                    width={80}
+                    height={80}
+                    className="w-20 h-20 rounded-full border-4 border-white shadow-md object-cover"
+                  />
+                ) : (
+                  <div
+                    className="w-20 h-20 rounded-full border-4 border-white shadow-md
+                               bg-indigo-100 flex items-center justify-center
+                               text-3xl font-bold text-indigo-700 select-none"
+                    aria-label={`${full_name} avatar`}
+                  >
+                    {full_name.charAt(0).toUpperCase()}
+                  </div>
+                )}
               </div>
 
               {/* Name — H1, primary keyword */}

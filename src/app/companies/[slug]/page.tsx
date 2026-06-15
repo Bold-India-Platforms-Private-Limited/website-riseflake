@@ -52,6 +52,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     return {
       title: 'Company Not Found | Riseflake',
       description: 'This company profile could not be found on Riseflake.',
+      robots: { index: false, follow: false },
     }
   }
 
