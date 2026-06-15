@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { FiHome, FiSearch, FiArrowLeft } from "react-icons/fi";
+import { FiHome, FiSearch, FiArrowLeft, FiRefreshCw } from "react-icons/fi";
 import { Search } from "lucide-react";
 import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
@@ -54,6 +54,13 @@ export default function NotFound() {
                             <FiHome className="text-lg" />
                             Back to Home
                         </Link>
+                        <button
+                            onClick={() => window.location.reload()}
+                            className="w-full sm:w-auto flex items-center justify-center gap-2 bg-white text-slate-700 border border-slate-200 px-8 py-3.5 rounded-xl font-bold hover:bg-slate-50 transition"
+                        >
+                            <FiRefreshCw className="text-lg" />
+                            Refresh Page
+                        </button>
                         <Link
                             href="/jobs"
                             className="w-full sm:w-auto flex items-center justify-center gap-2 bg-white text-slate-700 border border-slate-200 px-8 py-3.5 rounded-xl font-bold hover:bg-slate-50 transition"
