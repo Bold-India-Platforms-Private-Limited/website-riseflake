@@ -318,11 +318,27 @@ export default async function CompanyDetailsPage({ params }: PageProps) {
 
               {/* About */}
               <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-                <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500 mb-3">About</h2>
+                <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500 mb-3">About {company.company_name}</h2>
                 <p className="text-sm text-slate-600 leading-relaxed">
-                  This company profile is maintained on Riseflake. Visit the platform to explore current openings,
-                  culture insights, and growth opportunities at {company.company_name}.
+                  <strong>{company.company_name}</strong>
+                  {company.organization_type ? ` is a ${company.organization_type}` : ' is a company'}
+                  {company.industry_type ? ` operating in the ${company.industry_type} sector` : ''}.
+                  {' '}This profile is listed on Riseflake — India&apos;s job portal and professional networking platform.
+                  {' '}Visit the platform to explore current job openings, internships, company culture, and hiring opportunities at {company.company_name}.
                 </p>
+                {company.website && (
+                  <p className="mt-2 text-sm text-slate-500">
+                    Official website:{' '}
+                    <a
+                      href={company.website.startsWith('http') ? company.website : `https://${company.website}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sky-600 hover:underline break-all"
+                    >
+                      {company.website}
+                    </a>
+                  </p>
+                )}
                 <a
                   href={`https://app.riseflake.com/companies/${company.slug}`}
                   className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-indigo-600 hover:text-indigo-800 hover:underline"

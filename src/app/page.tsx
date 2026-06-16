@@ -248,8 +248,8 @@ export default function Home() {
       <Brands />
 
       {/* ── Campus Ambassador Banner ── */}
-      <section className="px-4 py-10 sm:py-14">
-        <div className="mx-auto max-w-5xl">
+      <section className="px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
+        <div className="mx-auto max-w-[1200px]">
           <a
             href="/campus-ambassador"
             className="group relative flex flex-col sm:flex-row items-center gap-6 sm:gap-8 overflow-hidden rounded-3xl bg-gradient-to-r from-violet-600 via-indigo-600 to-blue-600 p-7 sm:p-10 shadow-2xl shadow-indigo-500/25 transition-all hover:-translate-y-0.5 hover:shadow-indigo-500/40"

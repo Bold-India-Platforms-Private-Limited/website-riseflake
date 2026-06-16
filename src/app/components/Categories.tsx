@@ -80,7 +80,7 @@ const Categories: React.FC = () => {
   );
 
   return (
-    <div className="max-w-7xl mx-auto px-4 mb-20 mt-8 md:px-12">
+    <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 mb-20 mt-8">
       <div className="mb-8 md:mb-10">
         <h2 className="text-2xl md:text-4xl font-bold text-slate-900 tracking-tight">
           Categories

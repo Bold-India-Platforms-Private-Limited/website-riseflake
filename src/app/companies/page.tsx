@@ -32,6 +32,7 @@ export const metadata: Metadata = {
     images: ['https://riseflake.com/api/og'],
   },
   alternates: { canonical: 'https://riseflake.com/companies' },
+  robots: { index: true, follow: true },
 }
 
 export default function CompaniesPage() {

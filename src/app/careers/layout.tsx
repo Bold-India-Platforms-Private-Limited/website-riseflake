@@ -9,6 +9,7 @@ export const metadata: Metadata = {
     images: [{ url: '/og-image.webp', width: 1200, height: 630 }],
   },
   alternates: { canonical: 'https://riseflake.com/careers' },
+  robots: { index: true, follow: true },
 }
 
 export default function CareersLayout({ children }: { children: React.ReactNode }) {

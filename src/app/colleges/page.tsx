@@ -17,6 +17,7 @@ export const metadata: Metadata = {
     images: [{ url: '/og-image.webp', width: 1200, height: 630 }],
   },
   alternates: { canonical: 'https://riseflake.com/colleges' },
+  robots: { index: true, follow: true },
 };
 import Navbar from '../components/Navbar';
 import CollegesClient from './CollegesClient';

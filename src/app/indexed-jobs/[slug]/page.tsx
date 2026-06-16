@@ -31,6 +31,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
           description,
           alternates: { canonical: `${WEBSITE_BASE_URL}/indexed-jobs/${slug}` },
           openGraph: { title, description, url: `${WEBSITE_BASE_URL}/indexed-jobs/${slug}` },
+          robots: { index: false, follow: true },
         };
       }
     }
@@ -39,6 +40,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title: `${readableTitle} | Riseflake iJobs`,
     alternates: { canonical: `${WEBSITE_BASE_URL}/indexed-jobs/${slug}` },
+    robots: { index: false, follow: true },
   };
 }
 

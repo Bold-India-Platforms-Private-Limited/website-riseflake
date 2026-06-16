@@ -19,6 +19,7 @@ export const metadata: Metadata = {
     siteName: 'Riseflake',
     type: 'website',
   },
+  robots: { index: true, follow: true },
 }
 
 export default function CampusAmbassadorLayout({ children }: { children: React.ReactNode }) {

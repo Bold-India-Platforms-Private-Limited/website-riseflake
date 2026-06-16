@@ -4,6 +4,7 @@ export const metadata: Metadata = {
   title: 'Cookie Policy | Riseflake',
   description: 'Understand how Riseflake uses cookies and similar technologies to improve your experience.',
   alternates: { canonical: 'https://riseflake.com/cookie-policy' },
+  robots: { index: true, follow: true },
 };
 
 export default function CookiePolicyLayout({ children }: { children: React.ReactNode }) {
