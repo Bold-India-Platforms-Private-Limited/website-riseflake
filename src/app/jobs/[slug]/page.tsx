@@ -64,8 +64,26 @@ const EMPLOYMENT_TYPE_MAP: Record<string, string> = {
 // salary_period is stored uppercase in DB (MONTH/YEAR/HOUR/WEEK) — schema.org uses same values
 const SALARY_UNIT_MAP: Record<string, string> = {
   MONTH: 'MONTH', YEAR: 'YEAR', HOUR: 'HOUR', WEEK: 'WEEK',
-  // legacy lowercase variants
   monthly: 'MONTH', yearly: 'YEAR', annually: 'YEAR', hourly: 'HOUR', weekly: 'WEEK',
+}
+
+// Strip HTML tags for schema.org description — Google requires plain text, not HTML.
+// Preserves newlines from <br>, <p>, <li> so the text stays readable.
+function stripHtml(html: string | null | undefined): string {
+  if (!html) return ''
+  return html
+    .replace(/<br\s*\/?>/gi, '\n')
+    .replace(/<\/p>/gi, '\n')
+    .replace(/<\/li>/gi, '\n')
+    .replace(/<[^>]+>/g, '')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/\n{3,}/g, '\n\n')
+    .trim()
 }
 
 function buildJobPostingSchema(job: JobDetail, canonicalUrl: string) {
@@ -77,21 +95,39 @@ function buildJobPostingSchema(job: JobDetail, canonicalUrl: string) {
     ? new Date(new Date(job.created_at).getTime() + 90 * 86_400_000).toISOString()
     : undefined
 
+  // description must be plain text — Google rejects HTML tags in JobPosting schema
+  const plainDescription = stripHtml(job.job_description)
+    || `Apply for ${job.position} at ${job.company_name} on Riseflake — India's job portal for students and freshers.`
+
+  // hiringOrganization.sameAs: company's own page on Riseflake, then their website
+  const companySameAs: string[] = []
+  if (job.company_slug) companySameAs.push(`https://riseflake.com/companies/${job.company_slug}`)
+  if (job.company_website) companySameAs.push(job.company_website)
+
   const schema: Record<string, unknown> = {
     '@context': 'https://schema.org/',
     '@type': 'JobPosting',
     title: job.position,
-    description: job.job_description ?? `Apply for ${job.position} at ${job.company_name} on Riseflake.`,
+    description: plainDescription,
     datePosted: job.created_at ? new Date(job.created_at).toISOString().slice(0, 10) : undefined,
     dateModified: job.updated_at ? new Date(job.updated_at).toISOString().slice(0, 10) : undefined,
     validThrough,
     employmentType: EMPLOYMENT_TYPE_MAP[job.job_type?.toLowerCase()] ?? 'OTHER',
     url: canonicalUrl,
+    // directApply: false — users are redirected to app.riseflake.com to complete the application
+    directApply: false,
+    // identifier: Google uses this to deduplicate job postings across syndication
+    identifier: {
+      '@type': 'PropertyValue',
+      name: 'Riseflake',
+      value: job.job_id ? `riseflake-job-${job.job_id}` : job.slug,
+    },
     hiringOrganization: {
       '@type': 'Organization',
       name: job.company_name,
       ...(job.company_logo ? { logo: job.company_logo } : {}),
-      sameAs: `https://riseflake.com/companies`,
+      ...(companySameAs.length === 1 ? { sameAs: companySameAs[0] } : {}),
+      ...(companySameAs.length > 1 ? { sameAs: companySameAs } : {}),
     },
   }
 

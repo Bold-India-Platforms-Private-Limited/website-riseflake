@@ -62,6 +62,7 @@ export default function InternshipsClient() {
     jobTypes: searchParams.getAll('job_type'),
     workplaceTypes: searchParams.getAll('workplace_type'),
     experience: searchParams.get('experience') ?? '',
+    minStipend: searchParams.get('min_stipend') ?? '',
   }), [searchParams])
 
   const currentPage = data?.page ?? 1;

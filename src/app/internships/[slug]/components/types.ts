@@ -1,8 +1,11 @@
 export type JobDetail = {
+  job_id?: number | null
   slug: string
   position: string
   company_name: string
   company_logo: string | null
+  company_slug?: string | null
+  company_website?: string | null
   job_type: string
   job_status: string
   workplace_type: number | null

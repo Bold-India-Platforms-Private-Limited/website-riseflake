@@ -20,6 +20,10 @@ interface CollegeDetail {
   university_type?: string | null
   affiliated_university?: string | null
   website?: string | null
+  college_type?: string | null
+  management_type?: number | string | null
+  ownership_type?: number | string | null
+  location_category?: number | string | null
 }
 
 async function fetchCollege(slug: string): Promise<CollegeDetail | null> {
@@ -160,7 +164,7 @@ export default async function CollegeDetailPage({ params }: PageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
-      <CollegeDetailClient slug={slug} />
+      <CollegeDetailClient college={college} />
     </>
   )
 }

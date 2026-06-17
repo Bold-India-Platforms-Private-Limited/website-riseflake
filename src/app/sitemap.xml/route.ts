@@ -12,6 +12,8 @@ export async function GET() {
     'https://riseflake.com/sitemap-jobs.xml',
     'https://riseflake.com/sitemap-internships.xml',
     'https://riseflake.com/sitemap-companies.xml',
+    'https://riseflake.com/sitemap-hackathons.xml',
+    'https://riseflake.com/sitemap-colleges.xml',
     'https://riseflake.com/sitemap-users.xml',
   ]
 
