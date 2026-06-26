@@ -79,6 +79,10 @@ export async function generateMetadata(
     ? `Find remote internship opportunities in India for students and freshers. Browse verified online internships in software, marketing, design, and more. Apply free on Riseflake.`
     : `Find internships in ${cityLabel} for students and freshers. Paid and stipend-based internships across IT, marketing, finance, design, and more. Apply free on Riseflake.`
 
+  // Noindex empty city pages to avoid Google "soft 404" flags
+  const internships = await fetchInternshipsByCity(city)
+  const shouldIndex = internships.length > 0
+
   return {
     title,
     description,
@@ -88,7 +92,7 @@ export async function generateMetadata(
     keywords: isRemote
       ? 'remote internships india, online internships 2025, work from home internships, virtual internships india, riseflake internships'
       : `internships in ${cityLabel.toLowerCase()}, ${cityLabel.toLowerCase()} internships 2025, student internships ${cityLabel.toLowerCase()}, paid internships ${cityLabel.toLowerCase()}, riseflake ${cityLabel.toLowerCase()}`,
-    robots: { index: true, follow: true },
+    robots: { index: shouldIndex, follow: true },
   }
 }
 

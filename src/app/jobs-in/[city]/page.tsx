@@ -81,6 +81,10 @@ export async function generateMetadata(
     ? `Find remote work-from-home jobs in India. Browse verified full-time and part-time remote openings across software, marketing, design, and more. Apply free on Riseflake.`
     : `Find jobs in ${cityLabel} for freshers and experienced professionals. Browse verified full-time, part-time, and contract openings across IT, marketing, finance, and more. Apply free on Riseflake.`
 
+  // Noindex empty city pages to avoid Google "soft 404" flags
+  const jobs = await fetchJobsByCity(city)
+  const shouldIndex = jobs.length > 0
+
   return {
     title,
     description,
@@ -90,7 +94,7 @@ export async function generateMetadata(
     keywords: isRemote
       ? 'remote jobs india, work from home jobs, remote work 2025, online jobs india, riseflake remote'
       : `jobs in ${cityLabel.toLowerCase()}, ${cityLabel.toLowerCase()} jobs 2025, freshers jobs ${cityLabel.toLowerCase()}, hiring in ${cityLabel.toLowerCase()}, riseflake ${cityLabel.toLowerCase()}`,
-    robots: { index: true, follow: true },
+    robots: { index: shouldIndex, follow: true },
   }
 }
 

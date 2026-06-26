@@ -71,6 +71,11 @@ export async function generateMetadata(
   // Always use the canonical (current-name) slug for metadata
   const canonicalUrl = `${WEBSITE_BASE_URL}/in/${profile_slug}`
 
+  // Thin profiles (no headline, no company, no college) produce stub pages that
+  // Google flags as low-quality and refuses to index anyway — noindex them to
+  // save crawl budget and avoid "crawled — currently not indexed" warnings.
+  const hasMeaningfulContent = !!(headline || current_company || college)
+
   return {
     title,
     description,
@@ -104,9 +109,9 @@ export async function generateMetadata(
     // Canonical always points to the name-slug URL — even if user renamed
     alternates: { canonical: canonicalUrl },
     robots: {
-      index: true,
+      index: hasMeaningfulContent,
       follow: true,
-      googleBot: { index: true, follow: true },
+      googleBot: { index: hasMeaningfulContent, follow: true },
     },
   }
 }
