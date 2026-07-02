@@ -3,16 +3,16 @@
 import Image from 'next/image'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
-import { Trophy, Award, BadgeCheck, Gift, Star, Zap, ArrowRight, GraduationCap, CheckCircle2, Users, Clock } from 'lucide-react'
+import { CreditCard, IndianRupee, BadgeCheck, Gift, Star, Zap, ArrowRight, GraduationCap, CheckCircle2, Users, Clock } from 'lucide-react'
 
 const APPLY_URL = 'https://app.riseflake.com/dashboard/campus-ambassador'
 
 const MILESTONES = [
   {
-    icon: <Trophy className="h-6 w-6" />,
+    icon: <CreditCard className="h-6 w-6" />,
     signups: '100+',
-    reward: 'CA Badge',
-    desc: 'Official digital badge shareable on LinkedIn and your resume.',
+    reward: 'Campus Ambassador ID Card',
+    desc: 'Official CA ID Card — shareable on LinkedIn and your resume.',
     color: 'text-amber-600',
     bg: 'bg-amber-50',
     border: 'border-amber-200',
@@ -21,7 +21,7 @@ const MILESTONES = [
   },
   {
     icon: <BadgeCheck className="h-6 w-6" />,
-    signups: '150+',
+    signups: '300+',
     reward: 'Verified Certificate',
     desc: 'Digitally-signed PDF certificate — perfect for your portfolio.',
     color: 'text-blue-600',
@@ -31,10 +31,10 @@ const MILESTONES = [
     dot: 'bg-blue-400',
   },
   {
-    icon: <Award className="h-6 w-6" />,
-    signups: 'Top Performer',
-    reward: 'Cash Reward',
-    desc: 'Selected by Riseflake based on referral quality and performance.',
+    icon: <IndianRupee className="h-6 w-6" />,
+    signups: '15,000+',
+    reward: '₹15,000 Cash Reward',
+    desc: 'Onboard 15,000 unique users in a month to earn ₹15,000 cash.',
     color: 'text-emerald-600',
     bg: 'bg-emerald-50',
     border: 'border-emerald-200',
@@ -43,7 +43,7 @@ const MILESTONES = [
   },
   {
     icon: <Gift className="h-6 w-6" />,
-    signups: 'Elite',
+    signups: 'Elite Performer',
     reward: 'iPhone / MacBook / AirPods',
     desc: 'Premium gifts awarded to the very best campus ambassadors.',
     color: 'text-violet-600',
@@ -73,8 +73,9 @@ const TERMS = [
   'Each new user who registers using your unique CA link with a verified email counts as one registration.',
   'Duplicate accounts, self-referrals, bots, or any fraud results in permanent disqualification.',
   'Rewards are subject to verification. Riseflake audits registrations before awarding any reward.',
-  '100+ registrations: Campus Ambassador Badge (digital, shareable on LinkedIn).',
-  '150+ registrations: Verified Certificate of Achievement (digitally signed PDF).',
+  '100+ registrations: Campus Ambassador ID Card (digital, shareable on LinkedIn).',
+  '300+ registrations: Verified Certificate of Achievement (digitally signed PDF).',
+  'When you onboard 15,000 unique new users monthly via college/student WhatsApp groups, community WhatsApp groups, LinkedIn posts, and other methods, you will receive ₹15,000.',
   'Cash rewards and premium gifts are awarded exclusively to top performers at Riseflake\'s sole discretion.',
   'Riseflake reserves the right to select, verify, and publicly disclose top performers.',
   'Rewards are non-transferable and cannot be exchanged for cash (except the cash reward tier).',
@@ -118,19 +119,24 @@ export default function CampusAmbassadorPage() {
                 </h1>
 
                 <p className="mb-8 text-lg text-white/85 leading-relaxed max-w-lg">
-                  Represent Riseflake at your college, share your unique referral link, and earn real rewards —
-                  CA badges, verified certificates, cash &amp; premium gifts.
+                  Represent Riseflake at your college, share your unique referral link, and start earning
+                  up to <strong className="text-white">₹15,000 per month</strong> — plus your official CA ID Card,
+                  verified certificates &amp; premium gifts.
                 </p>
 
                 {/* Quick milestone chips */}
                 <div className="mb-8 flex flex-col gap-2.5">
                   <div className="flex items-center gap-2.5 text-sm text-white/90">
                     <Star className="h-4 w-4 text-yellow-300 shrink-0" />
-                    <span><strong className="text-white">100+ signups</strong> → Official CA Badge</span>
+                    <span><strong className="text-white">100+ signups</strong> → Official CA ID Card</span>
                   </div>
                   <div className="flex items-center gap-2.5 text-sm text-white/90">
                     <BadgeCheck className="h-4 w-4 text-blue-200 shrink-0" />
-                    <span><strong className="text-white">150+ signups</strong> → Verified Certificate</span>
+                    <span><strong className="text-white">300+ signups</strong> → Verified Certificate</span>
+                  </div>
+                  <div className="flex items-center gap-2.5 text-sm text-white/90">
+                    <IndianRupee className="h-4 w-4 text-emerald-300 shrink-0" />
+                    <span><strong className="text-white">15,000+ signups/month</strong> → ₹15,000 Cash Reward</span>
                   </div>
                   <div className="flex items-center gap-2.5 text-sm text-white/90">
                     <Gift className="h-4 w-4 text-pink-300 shrink-0" />

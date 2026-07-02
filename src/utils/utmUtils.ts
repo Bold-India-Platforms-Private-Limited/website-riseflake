@@ -64,6 +64,13 @@ function _detectFromReferrer(referrer: string): Pick<Attribution, 'utm_source' |
     const url  = new URL(referrer)
     const host = url.hostname.toLowerCase()
 
+    // Same-origin navigation (clicking between our own pages) is not a referral —
+    // without this, browsing from page to page on our own site keeps overwriting
+    // real attribution with a bogus "self-referral" source.
+    if (typeof window !== 'undefined' && host === window.location.hostname.toLowerCase()) {
+      return null
+    }
+
     // Google: distinguish Jobs vs organic search
     if (/google\./i.test(host)) {
       const ibp = url.searchParams.get('ibp') ?? ''

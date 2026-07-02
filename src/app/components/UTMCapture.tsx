@@ -5,11 +5,15 @@
  *
  * On every page load it:
  *   1. Reads UTM params from the current URL and saves them to localStorage.
- *   2. Patches every existing <a href="…app.riseflake.com…"> on the page
- *      to carry the UTM params forward.
- *   3. Installs a click interceptor that injects UTMs into any link to
- *      app.riseflake.com at click-time (catches dynamic / dropdown links that
- *      weren't in the DOM when step 2 ran).
+ *   2. Installs a click interceptor that injects UTMs into any link to
+ *      app.riseflake.com at click-time.
+ *
+ * UTMs are injected only at click-time, never by mutating rendered <a href>
+ * attributes ahead of time — doing that used to fight React's hydration
+ * (server HTML has no localStorage access, so a client-side patch of the
+ * same DOM nodes React manages produces a hydration mismatch on any
+ * subsequent render of that tree). Click-time injection carries the exact
+ * same attribution forward with none of that risk.
  *
  * Nothing is rendered — this returns null.
  */
@@ -32,22 +36,8 @@ export default function UTMCapture() {
     // ── 1. Capture UTMs from the current page URL ──────────────────────────
     captureUTMs()
 
-    // ── 2. Patch all existing links to app.riseflake.com ──────────────────
-    function patchStaticLinks() {
-      const attr = getStoredUTMs()
-      if (!attr) return
-      document.querySelectorAll<HTMLAnchorElement>('a[href]').forEach(a => {
-        if (isAppLink(a.href)) {
-          a.href = appendUTMsToUrl(a.href, attr)
-        }
-      })
-    }
-
-    patchStaticLinks()
-    // Run a second pass after a short delay to catch client-hydrated links
-    const t = setTimeout(patchStaticLinks, 400)
-
-    // ── 3. Click interceptor for dynamic links (dropdowns, modals, etc.) ──
+    // ── 2. Click interceptor — injects UTMs into any app.riseflake.com link
+    //      at the moment it's clicked (nav links, dropdowns, modals, etc.) ──
     function handleClick(e: MouseEvent) {
       const anchor = (e.target as Element).closest<HTMLAnchorElement>('a[href]')
       if (!anchor) return
@@ -77,7 +67,6 @@ export default function UTMCapture() {
     document.addEventListener('click', handleClick, true)   // capture phase
 
     return () => {
-      clearTimeout(t)
       document.removeEventListener('click', handleClick, true)
     }
   }, [])

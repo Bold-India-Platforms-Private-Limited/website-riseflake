@@ -1,9 +1,9 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Campus Ambassador Program – Riseflake | Earn Rewards & Certificates',
+  title: 'Campus Ambassador Program – Riseflake | Earn ₹15,000/Month & Rewards',
   description:
-    'Join the Riseflake Campus Ambassador Program. Represent Riseflake at your college, grow your network, and earn real rewards — badges, verified certificates, cash and premium gifts.',
+    'Join the Riseflake Campus Ambassador Program. Represent Riseflake at your college, grow your network, and earn up to ₹15,000 per month — plus your official CA ID Card, verified certificates and premium gifts.',
   keywords: [
     'campus ambassador',
     'riseflake campus ambassador',
@@ -11,6 +11,8 @@ export const metadata: Metadata = {
     'earn rewards college',
     'campus referral program',
     'certificate student program',
+    'earn money as a student',
+    'campus ambassador ID card',
   ],
   openGraph: {
     title: 'Campus Ambassador Program – Riseflake',
