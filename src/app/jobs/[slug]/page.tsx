@@ -257,7 +257,7 @@ export async function generateMetadata(
 
   if (!job) {
     return {
-      title: 'Job Not Found | Riseflake',
+      title: 'Job Not Found',
       description: 'This job is no longer available.',
       robots: { index: false, follow: false },
     }
@@ -269,7 +269,7 @@ export async function generateMetadata(
     : ''
   const canonicalUrl = `${WEBSITE_BASE_URL}/jobs/${job.slug}`
 
-  const title = `${job.position} at ${job.company_name} — ${location} | Riseflake`
+  const title = `${job.position} at ${job.company_name} — ${location}`
   const description = `Hiring: ${job.position} at ${job.company_name} in ${location}${expPart}. ${job.job_type} role. ${job.job_skills?.slice(0, 4).join(', ')}. Apply on Riseflake — India's job portal for students & freshers.`
 
   const ogSalary = formatSalaryChip(job) ?? ''

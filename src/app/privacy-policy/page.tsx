@@ -36,7 +36,7 @@ const PrivacyPolicy = () => {
                                 >
                                     <FiArrowLeft color="black" />
                                 </button>
-                                <h1 className="text-lg font-semibold text-slate-900">Privacy Policy</h1>
+                                <p className="text-lg font-semibold text-slate-900">Privacy Policy</p>
                             </div>
 
                             <div className="h-px w-full bg-slate-200 md:hidden"></div>

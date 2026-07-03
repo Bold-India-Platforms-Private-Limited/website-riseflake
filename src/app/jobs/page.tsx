@@ -7,7 +7,7 @@ import LoginPromptModal from '../components/LoginPromptModalLoader'
 import { WEBSITE_BASE_URL } from '../../lib/config'
 
 export const metadata: Metadata = {
-  title: 'Jobs in India — Full-time, Part-time & Contract | Riseflake',
+  title: 'Jobs in India — Full-time, Part-time & Contract',
   description:
     'Browse thousands of full-time, part-time and contract jobs across India. Filter by role, location, salary and skills. Apply free on Riseflake — India\'s job portal for students, freshers & professionals.',
   alternates: { canonical: `${WEBSITE_BASE_URL}/jobs` },

@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { Suspense } from 'react';
 
 export const metadata: Metadata = {
-  title: 'Top Colleges & Universities in India | Riseflake',
+  title: 'Top Colleges & Universities in India',
   description: 'Browse top colleges, universities, and educational institutions across India on Riseflake. Explore IITs, NITs, IIMs, engineering, management and arts colleges. Discover campus placement records and hiring partners.',
   keywords: [
     'colleges in india', 'universities in india', 'top colleges india', 'iit', 'nit', 'iim',

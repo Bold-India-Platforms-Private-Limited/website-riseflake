@@ -5,7 +5,7 @@ import CompaniesClient from './CompaniesClient'
 import LoginPromptModal from '../components/LoginPromptModalLoader'
 
 export const metadata: Metadata = {
-  title: 'Top Companies Hiring | Riseflake',
+  title: 'Top Companies Hiring',
   description:
     'Browse verified company profiles on Riseflake. Discover startups, enterprises, and top employers across India — explore their culture, open roles, and hiring teams.',
   keywords: [

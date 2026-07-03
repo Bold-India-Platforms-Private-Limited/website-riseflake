@@ -24,7 +24,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       const data = await res.json();
       const job = Array.isArray(data.result) ? data.result[0] : data.result;
       if (job) {
-        const title = `${job.job_title} at ${job.company_name} | Riseflake iJobs`;
+        const title = `${job.job_title} at ${job.company_name}`;
         const description = `Apply for ${job.job_title} at ${job.company_name}. ${job.location ? `Location: ${job.location}.` : ''} Find more jobs on Riseflake.`;
         return {
           title,
@@ -38,7 +38,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   } catch { /* fallback below */ }
   const readableTitle = unslugifyTitle(slug);
   return {
-    title: `${readableTitle} | Riseflake iJobs`,
+    title: readableTitle,
     alternates: { canonical: `${WEBSITE_BASE_URL}/indexed-jobs/${slug}` },
     robots: { index: false, follow: true },
   };

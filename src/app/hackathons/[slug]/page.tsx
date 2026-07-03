@@ -178,7 +178,7 @@ export async function generateMetadata(
 
   if (!h) {
     return {
-      title: 'Hackathon Not Found | Riseflake',
+      title: 'Hackathon Not Found',
       description: 'This hackathon could not be found.',
       robots: { index: false, follow: false },
     }
@@ -187,7 +187,7 @@ export async function generateMetadata(
   const canonicalUrl = `${WEBSITE_BASE_URL}/hackathons/${h.slug}`
   const prizeStr = h.total_prize_pool ? ` | ₹${formatPrize(Number(h.total_prize_pool))} Prize Pool` : ''
   const modeStr = h.mode ? ` | ${h.mode.charAt(0).toUpperCase() + h.mode.slice(1)}` : ''
-  const title = `${h.title}${prizeStr}${modeStr} | Riseflake Hackathons`
+  const title = `${h.title}${prizeStr}${modeStr}`
   const description = (
     h.short_description ??
     h.tagline ??

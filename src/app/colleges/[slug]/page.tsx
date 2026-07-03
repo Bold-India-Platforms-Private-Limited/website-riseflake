@@ -54,7 +54,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   if (!college) {
     return {
-      title: 'College Not Found | Riseflake',
+      title: 'College Not Found',
       description: 'This college profile could not be found on Riseflake.',
       robots: { index: false, follow: false },
     }
@@ -65,7 +65,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const locationParts = [city, state, country].filter(Boolean)
   const locationStr = locationParts.join(', ')
 
-  const title = `${college_name} — Jobs, Internships & Placements | Riseflake`
+  const title = `${college_name} — Jobs, Internships & Placements`
   const description = [
     `Explore ${college_name} on Riseflake.`,
     locationStr ? `Located in ${locationStr}.` : '',

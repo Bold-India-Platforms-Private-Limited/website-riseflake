@@ -28,7 +28,7 @@ export default function Support() {
               <button className="flex h-9 w-9 items-center justify-center rounded-full text-slate-700 hover:bg-slate-100" onClick={() => router.back()} aria-label="Go back">
                 <FiArrowLeft color="black" />
               </button>
-              <h1 className="text-lg font-semibold text-slate-900">Support</h1>
+              <p className="text-lg font-semibold text-slate-900">Support</p>
             </div>
             <div className="h-px w-full bg-slate-200 md:hidden"></div>
             <div className="flex flex-col min-h-[60vh] justify-between space-y-8 px-6 py-10 text-[15px] leading-relaxed text-slate-600 sm:text-base">

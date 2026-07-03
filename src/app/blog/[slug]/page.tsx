@@ -92,7 +92,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params
   const blog = await fetchBlog(slug)
-  if (!blog) return { title: 'Post Not Found | Riseflake Blog', robots: { index: false, follow: false } }
+  if (!blog) return { title: 'Post Not Found | Blog', robots: { index: false, follow: false } }
 
   const canonicalUrl = `${WEBSITE_BASE_URL}/blog/${blog.slug}`
   const title        = blog.meta_title || blog.title
@@ -100,7 +100,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const keywords     = blog.tags.map((t) => t.name).join(', ')
 
   return {
-    title:       `${title} | Riseflake Blog`,
+    title:       `${title} | Blog`,
     description,
     keywords:    keywords || 'riseflake, career, blog',
     alternates:  { canonical: canonicalUrl },

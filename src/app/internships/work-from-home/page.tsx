@@ -9,7 +9,7 @@ import { formatSalaryChip } from '../../../lib/salary'
 export const revalidate = 1800
 
 export const metadata: Metadata = {
-  title: 'Work from Home Internships 2025 — Remote Internships in India | Riseflake',
+  title: 'Work from Home Internships 2025 — Remote Internships in India',
   description:
     'Find verified work from home and remote internships in India for students and freshers. Browse paid online internships in software, marketing, design, data science and more. Apply free on Riseflake.',
   alternates: { canonical: `${WEBSITE_BASE_URL}/internships/work-from-home` },

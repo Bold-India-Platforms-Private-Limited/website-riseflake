@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Disclaimer | Riseflake',
+  title: 'Disclaimer',
   description: 'Read the Riseflake disclaimer regarding the accuracy and completeness of information on our platform.',
   alternates: { canonical: 'https://riseflake.com/disclaimer' },
   robots: { index: true, follow: true },

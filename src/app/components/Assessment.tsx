@@ -269,9 +269,9 @@ export default function Assessment() {
 
           {/* ── Header ── */}
           <div className="relative z-10 mb-[150px] max-md:mb-8">
-            <h1 className="text-[42px] font-bold text-[#111827] text-center mb-3 max-md:text-2xl max-md:mb-2">
+            <h2 className="text-[42px] font-bold text-[#111827] text-center mb-3 max-md:text-2xl max-md:mb-2">
               Intelligent platform for career opportunity matching
-            </h1>
+            </h2>
             <p className="text-[18px] text-[#4b5563] text-center mb-16 max-md:text-sm max-md:mb-6">
               Full-stack Features / AI Tools For College, Students, Companies, Recruiter's
             </p>

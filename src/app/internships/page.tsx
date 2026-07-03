@@ -6,7 +6,7 @@ import MobileFilters from './components/MobileFilters'
 import LoginPromptModal from '../components/LoginPromptModalLoader'
 
 export const metadata: Metadata = {
-  title: 'Internships in India 2025 | Riseflake — Find Verified Internships',
+  title: 'Internships in India 2025 — Find Verified Internships',
   description: 'Browse 1000s of internship opportunities across India. Filter by location, domain, and stipend. Apply directly on Riseflake.',
   keywords: 'internships, internship search, internship in India, paid internships, work from home internship, summer internship, IT internship, MBA internship, engineering internship, riseflake',
   alternates: {

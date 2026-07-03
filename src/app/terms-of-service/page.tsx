@@ -38,7 +38,7 @@ const TermsOfService = () => {
                             >
                                 <FiArrowLeft color="black" />
                             </button>
-                            <h1 className="text-lg font-semibold text-slate-900">Terms of Service</h1>
+                            <p className="text-lg font-semibold text-slate-900">Terms of Service</p>
                         </div>
 
                         <div className="h-px w-full bg-slate-200 md:hidden"></div>

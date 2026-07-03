@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'About Riseflake - India\'s Job Portal & Professional Networking Platform',
+  title: 'About Us - India\'s Job Portal & Professional Networking Platform',
   description: 'Learn about Riseflake — India\'s job portal and professional networking platform helping students, freshers and professionals find their next career opportunity. Our mission is to connect talent with opportunity across India.',
   openGraph: {
     locale: 'en_IN',

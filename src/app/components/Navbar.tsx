@@ -86,7 +86,7 @@ export default function Navbar({ bgTransparent = false }: { bgTransparent?: bool
               <div className="flex h-7 w-7 items-center justify-center rounded-lg border border-slate-200/50 bg-white/80 backdrop-blur">
                 <img src="/logo.webp" alt="Riseflake logo" className="h-5 w-5 object-contain" />
               </div>
-              <h1 className="text-xl font-semibold text-slate-900 hidden sm:block">Riseflake</h1>
+              <span className="text-xl font-semibold text-slate-900 hidden sm:block">Riseflake</span>
             </a>
 
             {/* Main Center Menu */}

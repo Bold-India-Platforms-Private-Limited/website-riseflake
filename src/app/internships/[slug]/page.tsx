@@ -433,7 +433,7 @@ export async function generateMetadata(
   const domainInfo = DOMAIN_MAP[slug]
   if (domainInfo) {
     const canonicalUrl = `${WEBSITE_BASE_URL}/internships/${slug}`
-    const title = `${domainInfo.label} Internships in India 2025 — Students & Freshers | Riseflake`
+    const title = `${domainInfo.label} Internships in India 2025 — Students & Freshers`
     return {
       title,
       description: domainInfo.description,
@@ -450,7 +450,7 @@ export async function generateMetadata(
 
   if (!internship) {
     return {
-      title: 'Internship Not Found | Riseflake',
+      title: 'Internship Not Found',
       description: 'This internship is no longer available.',
       robots: { index: false, follow: false },
     }
@@ -462,7 +462,7 @@ export async function generateMetadata(
     : ''
   const canonicalUrl = `${WEBSITE_BASE_URL}/internships/${internship.slug}`
 
-  const title = `${internship.position} Internship at ${internship.company_name} — ${location} | Riseflake`
+  const title = `${internship.position} Internship at ${internship.company_name} — ${location}`
   const description = `Internship: ${internship.position} at ${internship.company_name} in ${location}${expPart}. ${internship.job_skills?.slice(0, 4).join(', ')}. Apply on Riseflake — India's job portal for students & freshers.`
 
   const ogStipend = formatSalaryChip(internship) ?? ''

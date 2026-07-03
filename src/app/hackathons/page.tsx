@@ -8,7 +8,7 @@ import { BLOG_API_URL, WEBSITE_BASE_URL } from '../../lib/config'
 export const revalidate = 1800
 
 export const metadata: Metadata = {
-  title: 'Hackathons & Coding Competitions in India 2025 | Riseflake',
+  title: 'Hackathons & Coding Competitions in India 2025',
   description:
     'Find upcoming hackathons, coding competitions, and innovation challenges in India. Register free, win prizes, and build real projects. Discover the best hackathons for students and developers on Riseflake.',
   alternates: { canonical: `${WEBSITE_BASE_URL}/hackathons` },

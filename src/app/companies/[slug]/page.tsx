@@ -56,13 +56,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   if (!company) {
     return {
-      title: 'Company Not Found | Riseflake',
+      title: 'Company Not Found',
       description: 'This company profile could not be found on Riseflake.',
       robots: { index: false, follow: false },
     }
   }
 
-  const title = `${company.company_name} — Jobs, Profile & Culture | Riseflake`
+  const title = `${company.company_name} — Jobs, Profile & Culture`
   const description = [
     `Explore ${company.company_name} on Riseflake.`,
     company.organization_type && `A ${company.organization_type}`,

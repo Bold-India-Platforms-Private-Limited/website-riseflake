@@ -46,7 +46,7 @@ export async function generateMetadata(
 
   if (!profile || profile === 'gone') {
     return {
-      title: 'Profile not found | Riseflake',
+      title: 'Profile not found',
       robots: { index: false, follow: false },
     }
   }
@@ -67,7 +67,7 @@ export async function generateMetadata(
       : `${full_name} is a professional on Riseflake${orgSnippet ? ` ${orgSnippet}` : ''}${locationSnippet}.`
   ).slice(0, 160)
 
-  const title = `${full_name} – ${headline ?? 'Professional'} | Riseflake`
+  const title = `${full_name} – ${headline ?? 'Professional'}`
   // Always use the canonical (current-name) slug for metadata
   const canonicalUrl = `${WEBSITE_BASE_URL}/in/${profile_slug}`
 

@@ -24,7 +24,7 @@ export async function generateMetadata({ searchParams }: { searchParams: Promise
   const isPaginated = pageNum > 1
 
   // Build contextual title / description
-  let title       = 'Blog — Career Advice, Tech Insights & Campus Life | Riseflake'
+  let title       = 'Blog — Career Advice, Tech Insights & Campus Life'
   let description = 'Expert articles on career tips, internships, tech engineering, campus life and company spotlights from the Riseflake team.'
 
   if (category) {
@@ -34,13 +34,13 @@ export async function generateMetadata({ searchParams }: { searchParams: Promise
       const data = res.ok ? await res.json() : { categories: [] }
       const cat  = (data.categories ?? []).find((c: { slug: string; name: string }) => c.slug === category)
       if (cat) {
-        title       = `${cat.name} — Blog | Riseflake`
+        title       = `${cat.name} — Blog`
         description = `Browse all ${cat.name} articles on Riseflake Blog. Career advice, guides and insights for students and professionals.`
       }
     } catch { /* use default */ }
   }
 
-  if (isPaginated) title = `${title.replace(' | Riseflake', '')} — Page ${pageNum} | Riseflake`
+  if (isPaginated) title = `${title} — Page ${pageNum}`
 
   return {
     title,
@@ -49,7 +49,7 @@ export async function generateMetadata({ searchParams }: { searchParams: Promise
     // Canonical always points to base /blog — paginated & filtered pages consolidate link equity here
     alternates: { canonical: canonicalUrl },
     openGraph: {
-      title: title.replace(' | Riseflake', ''),
+      title,
       description,
       url: canonicalUrl,
       siteName: 'Riseflake',
@@ -60,7 +60,7 @@ export async function generateMetadata({ searchParams }: { searchParams: Promise
     twitter: {
       card: 'summary_large_image',
       site: '@riseflake',
-      title: title.replace(' | Riseflake', ''),
+      title,
       description,
       images: [`${WEBSITE_BASE_URL}/og-blog-default.png`],
     },

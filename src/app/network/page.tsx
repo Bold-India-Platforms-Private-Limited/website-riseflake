@@ -8,7 +8,7 @@ export const revalidate = 3600
 // ─── Metadata ─────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
-  title: 'Professional Network | Riseflake',
+  title: 'Professional Network',
   description:
     'Discover students, freshers, and early-career professionals on Riseflake — India\'s professional network. Browse profiles by name, company, or college.',
   keywords: [

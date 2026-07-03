@@ -7,7 +7,7 @@ import { API_BASE_URL } from '../../lib/config'
 export const revalidate = 3600
 
 export const metadata: Metadata = {
-  title: 'Sitemap | Riseflake — All Pages & Sections',
+  title: 'Sitemap — All Pages & Sections',
   description: 'Full sitemap of Riseflake. Find all jobs, internships, companies, colleges, and static pages in one place.',
   alternates: { canonical: 'https://riseflake.com/sitemap.html' },
   robots: { index: true, follow: true },
