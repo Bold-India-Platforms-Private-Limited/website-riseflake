@@ -4,6 +4,7 @@ import Navbar from '../components/Navbar'
 import InternshipsClient from './InternshipsClient'
 import MobileFilters from './components/MobileFilters'
 import LoginPromptModal from '../components/LoginPromptModalLoader'
+import { hreflangAlternates } from '../../lib/config'
 
 export const metadata: Metadata = {
   title: 'Internships in India 2025 — Find Verified Internships',
@@ -11,6 +12,7 @@ export const metadata: Metadata = {
   keywords: 'internships, internship search, internship in India, paid internships, work from home internship, summer internship, IT internship, MBA internship, engineering internship, riseflake',
   alternates: {
     canonical: 'https://riseflake.com/internships',
+    ...hreflangAlternates('https://riseflake.com/internships'),
   },
   openGraph: {
     type: 'website',

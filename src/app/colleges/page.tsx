@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
+import { hreflangAlternates } from '../../lib/config';
 
 export const metadata: Metadata = {
   title: 'Top Colleges & Universities in India',
@@ -16,7 +17,7 @@ export const metadata: Metadata = {
     description: 'Explore top colleges and universities across India with placement records and hiring partners.',
     images: [{ url: '/og-image.webp', width: 1200, height: 630 }],
   },
-  alternates: { canonical: 'https://riseflake.com/colleges' },
+  alternates: { canonical: 'https://riseflake.com/colleges', ...hreflangAlternates('https://riseflake.com/colleges') },
   robots: { index: true, follow: true },
 };
 import Navbar from '../components/Navbar';

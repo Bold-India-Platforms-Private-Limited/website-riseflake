@@ -2,14 +2,14 @@ import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
 import { Briefcase, GraduationCap, Building2, School, Globe, Home, FileText, ClipboardList, Info, Users, Mail, Rocket, HelpCircle, ScrollText, Lock, CreditCard, Shield, AlertTriangle, Cookie, Trash2, ExternalLink } from 'lucide-react'
 import Navbar from '../components/Navbar'
-import { API_BASE_URL } from '../../lib/config'
+import { API_BASE_URL, hreflangAlternates } from '../../lib/config'
 
 export const revalidate = 3600
 
 export const metadata: Metadata = {
   title: 'Sitemap — All Pages & Sections',
   description: 'Full sitemap of Riseflake. Find all jobs, internships, companies, colleges, and static pages in one place.',
-  alternates: { canonical: 'https://riseflake.com/sitemap.html' },
+  alternates: { canonical: 'https://riseflake.com/sitemap.html', ...hreflangAlternates('https://riseflake.com/sitemap.html') },
   robots: { index: true, follow: true },
 }
 

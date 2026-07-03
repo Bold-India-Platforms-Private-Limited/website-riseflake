@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { MapPin, Briefcase, Building2, ArrowRight } from 'lucide-react'
 import Navbar from '../../components/Navbar'
 import Footer from '../../components/Footer'
-import { API_BASE_URL, WEBSITE_BASE_URL } from '../../../lib/config'
+import { API_BASE_URL, WEBSITE_BASE_URL, hreflangAlternates } from '../../../lib/config'
 import { formatSalaryChip } from '../../../lib/salary'
 
 export const dynamicParams = true
@@ -86,7 +86,7 @@ export async function generateMetadata(
   return {
     title,
     description,
-    alternates: { canonical: canonicalUrl },
+    alternates: { canonical: canonicalUrl, ...hreflangAlternates(canonicalUrl) },
     openGraph: { title, description, url: canonicalUrl, siteName: 'Riseflake', type: 'website' },
     twitter: { card: 'summary', title, description },
     keywords: isRemote

@@ -2,6 +2,7 @@ import './globals.css'
 import type { Metadata, Viewport } from 'next'
 import Script from 'next/script'
 import ClientOnly from './components/ClientOnly'
+import { hreflangAlternates } from '../lib/config'
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -70,6 +71,7 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: 'https://riseflake.com',
+    ...hreflangAlternates('https://riseflake.com'),
   },
   // verification: { google: 'YOUR_TOKEN', other: { 'msvalidate.01': 'YOUR_BING_TOKEN' } },
 }

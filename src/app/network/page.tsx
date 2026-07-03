@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import Navbar from '../components/Navbar'
-import { WEBSITE_BASE_URL } from '../../lib/config'
+import { WEBSITE_BASE_URL, hreflangAlternates } from '../../lib/config'
 
 export const revalidate = 3600
 
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     description: 'Discover professionals on Riseflake — India\'s student & early-career network.',
     images: [`${WEBSITE_BASE_URL}/api/og`],
   },
-  alternates: { canonical: `${WEBSITE_BASE_URL}/network` },
+  alternates: { canonical: `${WEBSITE_BASE_URL}/network`, ...hreflangAlternates(`${WEBSITE_BASE_URL}/network`) },
   robots: { index: true, follow: true },
 }
 

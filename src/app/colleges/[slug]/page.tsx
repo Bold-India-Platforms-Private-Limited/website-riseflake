@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import CollegeDetailClient from './CollegeDetailClient'
-import { API_BASE_URL, WEBSITE_BASE_URL } from '../../../lib/config'
+import { API_BASE_URL, WEBSITE_BASE_URL, hreflangAlternates } from '../../../lib/config'
 
 export const revalidate = 3600
 export const dynamicParams = true
@@ -108,7 +108,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description,
       images: [ogImageUrl],
     },
-    alternates: { canonical: canonicalUrl },
+    alternates: { canonical: canonicalUrl, ...hreflangAlternates(canonicalUrl) },
     robots: { index: true, follow: true },
   }
 }

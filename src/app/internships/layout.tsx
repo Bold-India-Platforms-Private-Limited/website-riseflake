@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { hreflangAlternates } from '../../lib/config'
 
 export const metadata: Metadata = {
   title: 'Internships in India - Find Paid & Unpaid Internships',
@@ -29,6 +30,7 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: 'https://riseflake.com/internships',
+    ...hreflangAlternates('https://riseflake.com/internships'),
   },
 }
 

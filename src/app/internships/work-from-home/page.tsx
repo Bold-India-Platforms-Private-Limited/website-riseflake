@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { Home, Building2, ArrowRight, Wifi } from 'lucide-react'
 import Navbar from '../../components/Navbar'
 import Footer from '../../components/Footer'
-import { API_BASE_URL, WEBSITE_BASE_URL } from '../../../lib/config'
+import { API_BASE_URL, WEBSITE_BASE_URL, hreflangAlternates } from '../../../lib/config'
 import { formatSalaryChip } from '../../../lib/salary'
 
 export const revalidate = 1800
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   title: 'Work from Home Internships 2025 — Remote Internships in India',
   description:
     'Find verified work from home and remote internships in India for students and freshers. Browse paid online internships in software, marketing, design, data science and more. Apply free on Riseflake.',
-  alternates: { canonical: `${WEBSITE_BASE_URL}/internships/work-from-home` },
+  alternates: { canonical: `${WEBSITE_BASE_URL}/internships/work-from-home`, ...hreflangAlternates(`${WEBSITE_BASE_URL}/internships/work-from-home`) },
   openGraph: {
     title: 'Work from Home Internships 2025 | Riseflake',
     description: 'Browse verified remote internship opportunities for students across India. Paid work from home internships in all domains.',

@@ -17,3 +17,17 @@ export const BLOG_API_URL =
 
 export const WEBSITE_BASE_URL = 'https://riseflake.com'
 export const BASE_ASSETS_URL = 'https://assets.riseflake.com/images'
+
+/**
+ * Self-referencing hreflang for a given canonical URL — riseflake.com only ever
+ * serves English/India content, so 'en-IN' and 'x-default' both point at the same URL.
+ * Spread into `alternates` alongside `canonical` on every indexable page.
+ */
+export function hreflangAlternates(url: string) {
+  return {
+    languages: {
+      'en-IN': url,
+      'x-default': url,
+    },
+  }
+}

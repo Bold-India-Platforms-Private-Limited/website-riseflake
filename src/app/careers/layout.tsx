@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { hreflangAlternates } from '../../lib/config'
 
 export const metadata: Metadata = {
   title: 'Careers - Join Our Team in India',
@@ -8,7 +9,7 @@ export const metadata: Metadata = {
     url: 'https://riseflake.com/careers',
     images: [{ url: '/og-image.webp', width: 1200, height: 630 }],
   },
-  alternates: { canonical: 'https://riseflake.com/careers' },
+  alternates: { canonical: 'https://riseflake.com/careers', ...hreflangAlternates('https://riseflake.com/careers') },
   robots: { index: true, follow: true },
 }
 
