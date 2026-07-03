@@ -51,6 +51,15 @@ const jsonLd = {
   isPartOf: { '@type': 'WebSite', name: 'Riseflake', url: 'https://riseflake.com' },
 }
 
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: WEBSITE_BASE_URL },
+    { '@type': 'ListItem', position: 2, name: 'Network', item: `${WEBSITE_BASE_URL}/network` },
+  ],
+}
+
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function NetworkPage() {
@@ -61,6 +70,10 @@ export default function NetworkPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
 
       <main className="min-h-screen bg-slate-50 pt-20">

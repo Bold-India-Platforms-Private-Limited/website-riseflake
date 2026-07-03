@@ -35,9 +35,22 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 }
 
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://riseflake.com' },
+    { '@type': 'ListItem', position: 2, name: 'Companies', item: 'https://riseflake.com/companies' },
+  ],
+}
+
 export default function CompaniesPage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
       <Navbar bgTransparent />
       <main className="min-h-screen bg-slate-50">
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-8">

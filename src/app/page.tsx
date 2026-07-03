@@ -89,7 +89,7 @@ export default function Home() {
           </div>
 
           <h1 className="text-6xl sm:text-7xl lg:text-8xl font-bold mb-6 leading-tight">
-            <span className="text-gradient">Rise Above</span>
+            <span className="text-gradient">Rise Above</span>{' '}
             <br />
             <span className="text-slate-900">Your Career Limits</span>
           </h1>

@@ -5,19 +5,62 @@ export const runtime = 'edge'
 
 export async function GET(req: NextRequest) {
   const p = req.nextUrl.searchParams
-  const type     = p.get('type') || 'default'   // job | internship | default
+  const type     = p.get('type') || 'default'   // job | internship | app | default
   const title    = p.get('title') || 'Find Your Dream Job'
   const company  = p.get('company') || ''
   const location = p.get('location') || 'India'
   const salary   = p.get('salary') || ''
   const jobType  = p.get('jobType') || ''
   const logo     = p.get('logo') || ''
+  const subtitle = p.get('subtitle') || ''
 
   const isInternship = type === 'internship'
+  const isApp        = type === 'app'
   const accentFrom   = isInternship ? '#7c3aed' : '#4f46e5'
   const accentTo     = isInternship ? '#4f46e5' : '#0ea5e9'
   const typeLabel    = isInternship ? 'INTERNSHIP' : 'JOB'
   const salaryLabel  = isInternship ? 'Stipend' : 'Salary'
+
+  // ── Simple branded card for app.riseflake.com auth pages (login/register) ──
+  if (isApp) {
+    return new ImageResponse(
+      (
+        <div
+          style={{
+            width: 1200,
+            height: 630,
+            backgroundColor: '#f8fafc',
+            display: 'flex',
+            flexDirection: 'column',
+            fontFamily: 'system-ui, -apple-system, sans-serif',
+          }}
+        >
+          <div style={{ height: 8, background: 'linear-gradient(90deg, #4f46e5, #0ea5e9)', width: '100%', display: 'flex' }} />
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '40px 80px', textAlign: 'center' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 48 }}>
+              <div style={{ width: 52, height: 52, background: 'linear-gradient(135deg, #4f46e5, #0ea5e9)', borderRadius: 14, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <div style={{ width: 26, height: 26, background: 'white', borderRadius: 6, display: 'flex' }} />
+              </div>
+              <span style={{ fontSize: 36, fontWeight: 800, color: '#0f172a', letterSpacing: '-0.5px' }}>Riseflake</span>
+            </div>
+            <div style={{ fontSize: 52, fontWeight: 800, color: '#0f172a', lineHeight: 1.2, letterSpacing: '-1px', maxWidth: 960, display: 'flex' }}>
+              {title}
+            </div>
+            {subtitle && (
+              <div style={{ fontSize: 24, color: '#64748b', fontWeight: 500, marginTop: 20, maxWidth: 800, display: 'flex' }}>
+                {subtitle}
+              </div>
+            )}
+          </div>
+          <div style={{ height: 72, background: 'white', borderTop: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 64px' }}>
+            <span style={{ fontSize: 16, color: '#94a3b8', fontWeight: 500 }}>India&apos;s #1 job platform for students &amp; freshers</span>
+            <span style={{ fontSize: 18, fontWeight: 700, color: '#4f46e5' }}>app.riseflake.com</span>
+          </div>
+        </div>
+      ),
+      { width: 1200, height: 630 }
+    )
+  }
 
   return new ImageResponse(
     (

@@ -70,10 +70,6 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: 'https://riseflake.com',
-    languages: {
-      'en-IN': 'https://riseflake.com',
-      'x-default': 'https://riseflake.com',
-    },
   },
   // verification: { google: 'YOUR_TOKEN', other: { 'msvalidate.01': 'YOUR_BING_TOKEN' } },
 }
