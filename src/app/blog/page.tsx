@@ -3,7 +3,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
-import { BLOG_API_URL, WEBSITE_BASE_URL } from '../../lib/config'
+import { BLOG_API_URL, WEBSITE_BASE_URL, hreflangAlternates } from '../../lib/config'
 
 export const revalidate = 300 // ISR: 5 min
 
@@ -47,7 +47,7 @@ export async function generateMetadata({ searchParams }: { searchParams: Promise
     description,
     keywords: 'riseflake blog, career tips india, internship advice, tech articles, campus life, job search tips, freshers guide',
     // Canonical always points to base /blog — paginated & filtered pages consolidate link equity here
-    alternates: { canonical: canonicalUrl },
+    alternates: { canonical: canonicalUrl, ...hreflangAlternates(canonicalUrl) },
     openGraph: {
       title,
       description,

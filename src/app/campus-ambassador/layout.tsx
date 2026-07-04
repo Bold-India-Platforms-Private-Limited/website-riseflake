@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { hreflangAlternates } from '../../lib/config'
 
 export const metadata: Metadata = {
   title: 'Campus Ambassador Program — Earn ₹15,000/Month & Rewards',
@@ -21,6 +22,7 @@ export const metadata: Metadata = {
     siteName: 'Riseflake',
     type: 'website',
   },
+  alternates: { canonical: 'https://riseflake.com/campus-ambassador', ...hreflangAlternates('https://riseflake.com/campus-ambassador') },
   robots: { index: true, follow: true },
 }
 

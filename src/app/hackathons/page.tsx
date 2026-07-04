@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { Calendar, MapPin, Users, Trophy, IndianRupee, Globe } from 'lucide-react'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
-import { BLOG_API_URL, WEBSITE_BASE_URL } from '../../lib/config'
+import { BLOG_API_URL, WEBSITE_BASE_URL, hreflangAlternates } from '../../lib/config'
 
 export const revalidate = 1800
 
@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   title: 'Hackathons & Coding Competitions in India 2025',
   description:
     'Find upcoming hackathons, coding competitions, and innovation challenges in India. Register free, win prizes, and build real projects. Discover the best hackathons for students and developers on Riseflake.',
-  alternates: { canonical: `${WEBSITE_BASE_URL}/hackathons` },
+  alternates: { canonical: `${WEBSITE_BASE_URL}/hackathons`, ...hreflangAlternates(`${WEBSITE_BASE_URL}/hackathons`) },
   openGraph: {
     title: 'Hackathons & Coding Competitions in India 2025 | Riseflake',
     description:

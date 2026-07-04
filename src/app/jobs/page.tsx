@@ -4,13 +4,13 @@ import Navbar from '../components/Navbar'
 import JobsClient from './JobsClient'
 import MobileFilters from './components/MobileFilters'
 import LoginPromptModal from '../components/LoginPromptModalLoader'
-import { WEBSITE_BASE_URL } from '../../lib/config'
+import { WEBSITE_BASE_URL, hreflangAlternates } from '../../lib/config'
 
 export const metadata: Metadata = {
   title: 'Jobs in India — Full-time, Part-time & Contract',
   description:
     'Browse thousands of full-time, part-time and contract jobs across India. Filter by role, location, salary and skills. Apply free on Riseflake — India\'s job portal for students, freshers & professionals.',
-  alternates: { canonical: `${WEBSITE_BASE_URL}/jobs` },
+  alternates: { canonical: `${WEBSITE_BASE_URL}/jobs`, ...hreflangAlternates(`${WEBSITE_BASE_URL}/jobs`) },
   openGraph: {
     title: 'Jobs in India | Riseflake',
     description: 'Find verified job openings across India. Filter by location, salary, experience and skills. Apply on Riseflake.',

@@ -4,7 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import Navbar from '../../components/Navbar'
 import Footer from '../../components/Footer'
-import { BLOG_API_URL, WEBSITE_BASE_URL } from '../../../lib/config'
+import { BLOG_API_URL, WEBSITE_BASE_URL, hreflangAlternates } from '../../../lib/config'
 
 export const dynamicParams = true
 export const revalidate = 600 // ISR: rebuild every 10 min
@@ -103,7 +103,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     title:       `${title} | Blog`,
     description,
     keywords:    keywords || 'riseflake, career, blog',
-    alternates:  { canonical: canonicalUrl },
+    alternates:  { canonical: canonicalUrl, ...hreflangAlternates(canonicalUrl) },
     openGraph: {
       title,
       description,

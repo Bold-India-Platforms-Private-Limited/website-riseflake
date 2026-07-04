@@ -3,6 +3,7 @@ import { Suspense } from 'react'
 import Navbar from '../components/Navbar'
 import CompaniesClient from './CompaniesClient'
 import LoginPromptModal from '../components/LoginPromptModalLoader'
+import { hreflangAlternates } from '../../lib/config'
 
 export const metadata: Metadata = {
   title: 'Top Companies Hiring',
@@ -31,7 +32,7 @@ export const metadata: Metadata = {
     description: 'Browse verified company profiles and explore open positions across India.',
     images: ['https://riseflake.com/api/og'],
   },
-  alternates: { canonical: 'https://riseflake.com/companies' },
+  alternates: { canonical: 'https://riseflake.com/companies', ...hreflangAlternates('https://riseflake.com/companies') },
   robots: { index: true, follow: true },
 }
 

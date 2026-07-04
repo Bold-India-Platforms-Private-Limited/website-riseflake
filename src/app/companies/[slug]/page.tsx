@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation'
 import { Building2, Factory, Globe, Users, ExternalLink, ChevronRight } from 'lucide-react'
 import Navbar from '../../components/Navbar'
 import ShareCard from './ShareCard'
-import { API_BASE_URL, WEBSITE_BASE_URL } from '../../../lib/config'
+import { API_BASE_URL, WEBSITE_BASE_URL, hreflangAlternates } from '../../../lib/config'
 
 export const dynamicParams = true
 export const revalidate = 3600
@@ -103,7 +103,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description,
       images: [ogImageUrl],
     },
-    alternates: { canonical: `${WEBSITE_BASE_URL}/companies/${slug}` },
+    alternates: { canonical: `${WEBSITE_BASE_URL}/companies/${slug}`, ...hreflangAlternates(`${WEBSITE_BASE_URL}/companies/${slug}`) },
   }
 }
 

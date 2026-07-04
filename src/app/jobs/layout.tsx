@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { hreflangAlternates } from '../../lib/config'
 
 export const metadata: Metadata = {
   title: 'Jobs in India - Find Full-Time & Part-Time Jobs',
@@ -27,6 +28,7 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: 'https://riseflake.com/jobs',
+    ...hreflangAlternates('https://riseflake.com/jobs'),
   },
 }
 

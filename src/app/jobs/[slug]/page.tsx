@@ -9,7 +9,7 @@ import TagsSection from './components/TagsSection'
 import DownloadAppCard from './components/DownloadAppCard'
 import JobReportWrapper from '../../components/JobReportWrapper'
 import type { JobDetail } from './components/types'
-import { API_BASE_URL, WEBSITE_BASE_URL } from '../../../lib/config'
+import { API_BASE_URL, WEBSITE_BASE_URL, hreflangAlternates } from '../../../lib/config'
 import { formatSalaryChip } from '../../../lib/salary'
 import React from 'react'
 
@@ -284,7 +284,7 @@ export async function generateMetadata(
   return {
     title,
     description,
-    alternates: { canonical: canonicalUrl },
+    alternates: { canonical: canonicalUrl, ...hreflangAlternates(canonicalUrl) },
     openGraph: {
       title,
       description,

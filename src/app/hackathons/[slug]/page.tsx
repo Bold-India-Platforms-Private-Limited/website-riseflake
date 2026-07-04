@@ -8,7 +8,7 @@ import {
 } from 'lucide-react'
 import Navbar from '../../components/Navbar'
 import Footer from '../../components/Footer'
-import { BLOG_API_URL, WEBSITE_BASE_URL } from '../../../lib/config'
+import { BLOG_API_URL, WEBSITE_BASE_URL, hreflangAlternates } from '../../../lib/config'
 
 export const dynamicParams = true
 export const revalidate = 1800
@@ -197,7 +197,7 @@ export async function generateMetadata(
   return {
     title,
     description,
-    alternates: { canonical: canonicalUrl },
+    alternates: { canonical: canonicalUrl, ...hreflangAlternates(canonicalUrl) },
     openGraph: {
       title,
       description,
