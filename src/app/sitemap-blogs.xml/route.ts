@@ -9,6 +9,7 @@ export async function GET() {
   try {
     const res = await fetch(`${BLOG_API_URL}/blogs/public/slugs`, {
       next: { revalidate: 3600 },
+      signal: AbortSignal.timeout(10_000),
     })
     if (res.ok) {
       const data = await res.json()
