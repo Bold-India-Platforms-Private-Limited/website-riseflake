@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { notFound } from 'next/navigation'
+import { notFound, permanentRedirect } from 'next/navigation'
 import Link from 'next/link'
 import Navbar from '../../components/Navbar'
 import { API_BASE_URL, WEBSITE_BASE_URL, hreflangAlternates } from '../../../lib/config'
@@ -129,9 +129,16 @@ export default async function UserProfilePage(
 
   const safeProfile = profile as PublicProfile
 
-  // No redirect — any valid slug (old format, old name) renders the page.
-  // The canonical tag in generateMetadata always points to profile_slug,
-  // so Google consolidates to the correct URL without extra backend calls.
+  // 301/308 to the canonical name-slug URL when accessed via the bare
+  // username (old format) or a stale name-slug (user renamed since).
+  // A real redirect — not just a <link rel="canonical"> hint — is what
+  // resolves "Duplicate without user-selected canonical" in Search Console:
+  // canonical tags are only a suggestion Google may ignore when two live,
+  // fully-indexable URLs both return 200 for the same content.
+  if (slug !== safeProfile.profile_slug) {
+    permanentRedirect(`/in/${safeProfile.profile_slug}`)
+  }
+
   const { full_name, headline, location, current_company, college, updated_at, profile_photo_url } = safeProfile
 
   const displayOrg = current_company ?? college ?? null
