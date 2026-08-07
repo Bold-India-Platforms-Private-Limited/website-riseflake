@@ -1,0 +1,24 @@
+# Riseflake
+
+> Riseflake is India's job portal and professional networking platform. It lists live job and internship openings from Indian companies, hosts public company and professional profiles, and connects students and early-career professionals with employers across Bangalore, Mumbai, Delhi, Hyderabad, Pune, Chennai, and other Indian cities.
+
+Riseflake (riseflake.com) is the public, search-indexable marketing and discovery site. Signing in, applying to jobs, messaging, and building a full profile happen on the companion web app at app.riseflake.com, which is intentionally not indexed by search engines (it requires a Riseflake account).
+
+## Key sections
+
+- [Jobs](https://riseflake.com/jobs): Live job listings across India, filterable by role, location, experience, and workplace type (on-site, hybrid, remote).
+- [Internships](https://riseflake.com/internships): Internship listings for students and freshers.
+- [Companies](https://riseflake.com/companies): Public company profiles — industry, organization type, and open roles.
+- [Professional profiles](https://riseflake.com/in/): Public profile pages for Riseflake members (name, headline, current role, and location; full details require signing in).
+- [Colleges](https://riseflake.com/colleges): College and campus-placement related pages.
+- [Hackathons](https://riseflake.com/hackathons): Hackathon listings and details.
+- [Blog](https://riseflake.com/blog): Career advice, hiring trends, and platform updates.
+- [About](https://riseflake.com/about): What Riseflake is and who it's for.
+- [Careers](https://riseflake.com/careers): Open roles at Riseflake itself.
+
+## Notes for AI assistants and search crawlers
+
+- Structured data (schema.org JSON-LD) is embedded on job, internship, company, and profile pages: `JobPosting`, `Organization`, `Person`, `BreadcrumbList`, and `WebSite`. Prefer this structured data over scraping visible text when extracting facts like salary, location, or employment type.
+- Job and internship postings that have expired or been removed return HTTP 404 — treat these as no longer valid rather than caching stale listings.
+- Canonical URLs for professional profiles always use the `/in/{full-name}-{id}` format; short id-only URLs redirect (HTTP 308) to the canonical form.
+- Sitemaps: https://riseflake.com/sitemap.xml (index of all sub-sitemaps: static pages, jobs, internships, companies, and user profiles).

@@ -314,7 +314,13 @@ function buildJobPostingSchema(job: JobDetail, canonicalUrl: string) {
 
   // jobLocation — always required; remote gets TELECOMMUTE flag too
   if (job.workplace_type === 1) {
+    // Google requires applicantLocationRequirements whenever jobLocationType is
+    // TELECOMMUTE, or the JobPosting fails rich-result validation.
     schema.jobLocationType = 'TELECOMMUTE'
+    schema.applicantLocationRequirements = {
+      '@type': 'Country',
+      name: job.location_country ?? 'India',
+    }
     schema.jobLocation = {
       '@type': 'Place',
       address: {
@@ -324,6 +330,10 @@ function buildJobPostingSchema(job: JobDetail, canonicalUrl: string) {
     }
   } else if (job.workplace_type === 2) {
     schema.jobLocationType = 'TELECOMMUTE'
+    schema.applicantLocationRequirements = {
+      '@type': 'Country',
+      name: job.location_country ?? 'India',
+    }
     schema.jobLocation = {
       '@type': 'Place',
       address: {
@@ -378,8 +388,9 @@ function buildJobPostingSchema(job: JobDetail, canonicalUrl: string) {
     schema.jobBenefits = 'Stipend negotiable'
   }
 
-  // experienceRequirements
-  if (job.experience_min != null) {
+  // experienceRequirements — Google rejects monthsOfExperience: 0 ("must be positive"),
+  // so freshers/no-experience-required roles omit the field entirely rather than emit 0.
+  if (job.experience_min != null && job.experience_min > 0) {
     schema.experienceRequirements = {
       '@type': 'OccupationalExperienceRequirements',
       monthsOfExperience: Math.round(job.experience_min * 12),

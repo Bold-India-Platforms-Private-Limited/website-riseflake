@@ -28,6 +28,7 @@ Disallow: /resume/
 
 # ------------------------------------------
 # Bing (Crawl-delay only works for Bing, not Google)
+# Bing also powers Yahoo Search and Microsoft Copilot's web results.
 # ------------------------------------------
 User-agent: Bingbot
 Allow: /
@@ -39,24 +40,54 @@ Disallow: /_next/
 Disallow: /resume/
 
 # ------------------------------------------
-# AI Crawlers – allowed to crawl
+# Yahoo (own crawler, used alongside Bing's index)
+# ------------------------------------------
+User-agent: Slurp
+Allow: /
+Allow: /in/
+Allow: /resume/ats-checker
+Disallow: /api/
+Disallow: /dashboard/
+Disallow: /_next/
+Disallow: /resume/
+
+# ------------------------------------------
+# AI Crawlers & AI-answer-engine bots – allowed to crawl
+# Covers Google AI Mode/AI Overviews, ChatGPT (search + browsing), Claude,
+# Perplexity, Bing/Copilot (via Bingbot above), Meta AI, and Amazon/Apple's
+# on-device AI indexes.
 # ------------------------------------------
 User-agent: GPTBot
 Allow: /
 
-User-agent: Google-Extended
+User-agent: OAI-SearchBot
 Allow: /
 
 User-agent: ChatGPT-User
 Allow: /
 
+User-agent: Google-Extended
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
 User-agent: Claude-Web
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: Claude-User
 Allow: /
 
 User-agent: anthropic-ai
 Allow: /
 
 User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
 Allow: /
 
 User-agent: CohereBot
@@ -66,6 +97,12 @@ User-agent: Amazonbot
 Allow: /
 
 User-agent: Applebot-Extended
+Allow: /
+
+User-agent: Meta-ExternalAgent
+Allow: /
+
+User-agent: Meta-ExternalFetcher
 Allow: /
 
 # ------------------------------------------
