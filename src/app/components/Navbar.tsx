@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
-import { Menu, X, ChevronRight, ChevronDown, Building2, GraduationCap, Briefcase, Cloud, FileText, Search, FileCheck, Star, BookOpen } from 'lucide-react'
+import { Menu, X, ChevronRight, ChevronDown, Building2, GraduationCap, Briefcase, Cloud, FileText, FileCheck, Star, BookOpen } from 'lucide-react'
 
 export default function Navbar({ bgTransparent = false }: { bgTransparent?: boolean }) {
   const pathname = usePathname()
@@ -16,12 +16,12 @@ export default function Navbar({ bgTransparent = false }: { bgTransparent?: bool
   const activeTab =
     pathname === '/jobs'
       ? '/jobs'
-      : pathname === '/indexed-jobs'
-        ? '/indexed-jobs'
-        : pathname === '/companies'
-          ? '/companies'
-          : pathname === '/colleges'
-            ? '/colleges'
+      : pathname === '/companies'
+        ? '/companies'
+        : pathname === '/colleges'
+          ? '/colleges'
+          : pathname === '/in/people' || pathname.startsWith('/in/')
+            ? '/in/people'
             : null
 
   const isActive = (href: string) =>
@@ -127,6 +127,15 @@ export default function Navbar({ bgTransparent = false }: { bgTransparent?: bool
               >
                 Colleges
               </a>
+              <Link
+                href="/in/people"
+                className={`rounded-lg px-2 xl:px-3 py-2 text-sm font-medium transition-all duration-500 whitespace-nowrap ${activeTab === '/in/people'
+                  ? 'bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 text-white scale-105 shadow-md shadow-indigo-500/20'
+                  : 'bg-transparent text-slate-700 hover:bg-white/60 hover:text-slate-900'
+                  }`}
+              >
+                People
+              </Link>
               <a
                 href="https://app.riseflake.com/chat"
                 className={`flex items-center rounded-lg px-2 xl:px-3 py-2 text-sm font-medium transition-all duration-500 whitespace-nowrap bg-transparent text-slate-700 hover:bg-white/60 hover:text-slate-900`}
@@ -137,12 +146,6 @@ export default function Navbar({ bgTransparent = false }: { bgTransparent?: bool
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
                 </span>
               </a>
-              <a
-                href="https://app.riseflake.com/network"
-                className={`rounded-lg px-2 xl:px-3 py-2 text-sm font-medium transition-all duration-500 whitespace-nowrap bg-transparent text-slate-700 hover:bg-white/60 hover:text-slate-900`}
-              >
-                Networking
-              </a>
 
               {/* More Dropdown */}
               <div className="relative group shrink-0 ml-1">
@@ -150,10 +153,6 @@ export default function Navbar({ bgTransparent = false }: { bgTransparent?: bool
                   More <ChevronDown className="h-4 w-4" />
                 </button>
                 <div className="absolute top-full right-0 mt-3 w-56 rounded-2xl bg-white/95 backdrop-blur-xl p-2 shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 border border-slate-100 flex flex-col gap-1">
-                  <Link href="/indexed-jobs" className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-indigo-600 transition-colors">
-                    <Search className="h-4 w-4 text-slate-400" />
-                    iJobs
-                  </Link>
                   <a href="https://app.riseflake.com/login-recruiter" className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-indigo-600 transition-colors">
                     <Briefcase className="h-4 w-4 text-slate-400" />
                     List Your Jobs
@@ -428,6 +427,17 @@ export default function Navbar({ bgTransparent = false }: { bgTransparent?: bool
                 <span>Colleges</span>
                 <ChevronRight className="h-5 w-5 opacity-70" />
               </Link>
+              <Link
+                href="/in/people"
+                className={`flex items-center justify-between rounded-xl px-4 py-3 text-base font-medium transition ${isActive('/in/people')
+                  ? 'bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 text-white shadow'
+                  : 'text-slate-700 hover:bg-slate-100'
+                  }`}
+                onClick={() => setOpen(false)}
+              >
+                <span>People</span>
+                <ChevronRight className="h-5 w-5 opacity-70" />
+              </Link>
 
               <a
                 href="https://app.riseflake.com/chat"
@@ -441,14 +451,6 @@ export default function Navbar({ bgTransparent = false }: { bgTransparent?: bool
                   </span>
                   <span>Chat</span>
                 </div>
-                <ChevronRight className="h-5 w-5 opacity-70" />
-              </a>
-              <a
-                href="https://app.riseflake.com/network"
-                className="flex items-center justify-between rounded-xl px-4 py-3 text-base font-medium transition text-slate-700 hover:bg-slate-100"
-                onClick={() => setOpen(false)}
-              >
-                <span>Networking</span>
                 <ChevronRight className="h-5 w-5 opacity-70" />
               </a>
 
@@ -508,20 +510,6 @@ export default function Navbar({ bgTransparent = false }: { bgTransparent?: bool
                 More
               </div>
 
-              <Link
-                href="/indexed-jobs"
-                className={`flex items-center justify-between rounded-xl px-4 py-3 text-base font-medium transition ${isActive('/indexed-jobs')
-                  ? 'bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 text-white shadow'
-                  : 'text-slate-700 hover:bg-slate-100'
-                  }`}
-                onClick={() => setOpen(false)}
-              >
-                <div className="flex items-center gap-3">
-                  <Search className="h-5 w-5 text-slate-400" />
-                  <span>iJobs</span>
-                </div>
-                <ChevronRight className="h-5 w-5 opacity-50" />
-              </Link>
               <a
                 href="https://app.riseflake.com/login-recruiter"
                 className="flex items-center justify-between rounded-xl px-4 py-3 text-base font-medium transition text-slate-700 hover:bg-slate-100"

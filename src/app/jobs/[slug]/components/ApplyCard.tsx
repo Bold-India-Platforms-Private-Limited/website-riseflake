@@ -1,11 +1,20 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import { Gift, ChevronDown, ChevronUp } from 'lucide-react'
 import type { JobDetail } from './types'
-import { WEBSITE_BASE_URL } from '../../../../lib/config'
+import { WEBSITE_BASE_URL, APP_BASE_URL, resolveAppBaseUrl } from '../../../../lib/config'
 import { formatSalaryInfo } from '../../../../lib/salary'
+
+// Literal gradient classes (keep here, not in lib/salary.ts — Tailwind only scans
+// pages/components/app for class names, so classes written in lib/ get purged).
+const SALARY_TONE_GRADIENT = {
+  pay: 'from-emerald-600 to-teal-600',
+  incentive: 'from-amber-500 to-orange-500',
+  unpaid: 'from-slate-500 to-slate-600',
+  negotiable: 'from-indigo-500 to-violet-600',
+} as const
 
 // ─── Deadline badge ────────────────────────────────────────────────────────────
 function DeadlineBadge({ deadline }: { deadline: string }) {
@@ -112,10 +121,12 @@ export default function ApplyCard({ job }: { job: JobDetail }) {
   const pathname = usePathname()
   const [incentivesOpen, setIncentivesOpen] = useState(false)
 
-  const applyHref = useMemo(() => {
-    const appBase = WEBSITE_BASE_URL.replace('://', '://app.')
-    return `${appBase}${pathname}`
-  }, [pathname])
+  // Hand off to the web app's job page with ?apply=1 — it opens the apply flow
+  // (sign in + phone capture, or straight to confirm if already signed in).
+  // Starts from the SSR-safe base, then swaps to the local dev app on localhost.
+  const [appBase, setAppBase] = useState(APP_BASE_URL)
+  useEffect(() => { setAppBase(resolveAppBaseUrl()) }, [])
+  const applyHref = useMemo(() => `${appBase}${pathname}?apply=1`, [appBase, pathname])
 
   const shareUrl   = `${WEBSITE_BASE_URL}${pathname}`
   const salaryInfo = formatSalaryInfo(job)
@@ -134,7 +145,7 @@ export default function ApplyCard({ job }: { job: JobDetail }) {
 
           {/* Salary / header strip */}
           {salaryInfo ? (
-            <div className={`bg-gradient-to-br ${salaryInfo.gradient} px-5 pt-5 pb-4`}>
+            <div className={`bg-gradient-to-br ${SALARY_TONE_GRADIENT[salaryInfo.tone]} px-5 pt-5 pb-4`}>
               <p className="text-[11px] font-semibold uppercase tracking-widest text-white/60">{salaryInfo.label}</p>
               <p className="mt-1 text-2xl font-bold text-white">{salaryInfo.display}</p>
               {salaryInfo.hasIncentives && (

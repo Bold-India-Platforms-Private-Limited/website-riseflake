@@ -145,9 +145,6 @@ export default async function SitemapHtmlPage() {
                 <TreeInfo label={`${fmt(collegeCount)} college pages`} />
               </TreeBranch>
 
-              {/* Indexed Jobs */}
-              <TreeLeafTop href="/indexed-jobs" icon={<ClipboardList className="h-4 w-4" />} label="Indexed Jobs" desc="External job listings aggregated from the web" />
-
               {/* Company section */}
               <TreeBranch icon={<Info className="h-4 w-4" />} label="About Riseflake" defaultOpen={false}>
                 <TreeLeaf href="/about" label="About us" icon={<Users className="h-3 w-3" />} />
@@ -304,19 +301,6 @@ function TreeBranch({
           {children}
         </ul>
       </details>
-    </li>
-  )
-}
-
-function TreeLeafTop({ href, icon, label, desc }: { href: string; icon: ReactNode; label: string; desc?: string }) {
-  return (
-    <li className="relative pl-5 before:absolute before:left-2 before:top-0 before:bottom-0 before:w-px before:bg-slate-200">
-      <div className="flex items-center gap-2 py-1.5">
-        <div className="h-3.5 w-3.5 flex-shrink-0" />
-        <span className="flex-shrink-0 text-slate-500">{icon}</span>
-        <a href={href} className="text-sm font-semibold text-slate-800 hover:text-indigo-600 transition-colors">{label}</a>
-        {desc && <span className="text-xs text-slate-400 hidden sm:inline">— {desc}</span>}
-      </div>
     </li>
   )
 }

@@ -7,7 +7,6 @@ import { ChevronLeft, ChevronRight } from 'lucide-react'
 type City = {
   name: string
   image: string
-  gradientClass: string
   jobs: string
 }
 
@@ -15,37 +14,31 @@ const cities: City[] = [
   {
     name: 'Bengaluru',
     image: '/city/bengloru.webp',
-    gradientClass: 'bg-[linear-gradient(135deg,#667eea_0%,#764ba2_100%)]',
     jobs: '12.5K',
   },
   {
     name: 'Pune',
     image: '/city/pune.webp',
-    gradientClass: 'bg-[linear-gradient(135deg,#4facfe_0%,#00f2fe_100%)]',
     jobs: '8.2K',
   },
   {
     name: 'Mumbai',
     image: '/city/mumbai.webp',
-    gradientClass: 'bg-[linear-gradient(135deg,#f093fb_0%,#f5576c_100%)]',
     jobs: '15.8K',
   },
   {
     name: 'Chennai',
     image: '/city/chennai.webp',
-    gradientClass: 'bg-[linear-gradient(135deg,#4ade80_0%,#22c55e_100%)]',
     jobs: '7.3K',
   },
   {
     name: 'Hyderabad',
     image: '/city/hydrabad.webp',
-    gradientClass: 'bg-[linear-gradient(135deg,#a8edea_0%,#fed6e3_100%)]',
     jobs: '9.6K',
   },
   {
     name: 'Gurugram',
-    image: '/city/gurugram.avif',
-    gradientClass: 'bg-[linear-gradient(135deg,#fbc2eb_0%,#a6c1ee_100%)]',
+    image: '/city/gurugram.webp',
     jobs: '11.2K',
   },
 ]
@@ -146,17 +139,11 @@ export default function CityCategories() {
                       />
                     )}
                     {failedImages[index] && (
-                      <div
-                        className={`${city.gradientClass} absolute inset-0 flex items-center justify-center rounded-full text-[clamp(2.25rem,4vw,2.75rem)] font-bold text-white`}
-                      >
+                      <div className="absolute inset-0 flex items-center justify-center rounded-full bg-slate-700 text-[clamp(2.25rem,4vw,2.75rem)] font-bold text-white">
                         {city.name.charAt(0)}
                       </div>
                     )}
 
-                    <div className="pointer-events-none absolute -left-1/2 -top-1/2 h-[200%] w-[200%] animate-[spin_8s_linear_infinite] bg-[radial-gradient(circle,rgba(255,255,255,0.3)_0%,transparent_70%)]" />
-                    <div
-                      className={`${city.gradientClass} pointer-events-none absolute -inset-2 blur-[15px] opacity-20 transition-opacity duration-300 group-hover:opacity-40`}
-                    />
                   </div>
 
                   <div className="text-center text-[clamp(0.9rem,2vw,1rem)] font-bold text-slate-900 transition-transform duration-300 group-hover:scale-105 group-hover:text-indigo-500">
@@ -192,7 +179,7 @@ export default function CityCategories() {
                 key={`${city.name}-dot`}
                 className={`h-2 rounded-full transition-all duration-300 ${
                   isActive
-                    ? 'w-6 bg-[linear-gradient(135deg,#667eea_0%,#764ba2_100%)]'
+                    ? 'w-6 bg-slate-700'
                     : 'w-2 bg-slate-300'
                 }`}
               />

@@ -103,8 +103,12 @@ export type SalaryInfo = {
   hasIncentives: boolean
   /** Parsed list of incentive labels (only set when hasIncentives) */
   incentiveItems: string[]
-  /** Gradient class for the ApplyCard header */
-  gradient: string
+  /**
+   * Header colour tone. The ApplyCard maps this to a literal Tailwind gradient
+   * class — do NOT return raw class names here: this file is not in Tailwind's
+   * `content` globs, so class names written here get purged (white-on-white).
+   */
+  tone: 'pay' | 'incentive' | 'unpaid' | 'negotiable'
 }
 
 export function formatSalaryInfo(job: {
@@ -132,7 +136,7 @@ export function formatSalaryInfo(job: {
       label: 'Compensation',
       hasIncentives: false,
       incentiveItems: [],
-      gradient: 'from-slate-500 to-slate-600',
+      tone: 'unpaid',
     }
   }
 
@@ -143,7 +147,7 @@ export function formatSalaryInfo(job: {
       label: 'Salary',
       hasIncentives: false,
       incentiveItems: [],
-      gradient: 'from-emerald-600 to-teal-600',
+      tone: 'pay',
     }
   }
 
@@ -155,7 +159,7 @@ export function formatSalaryInfo(job: {
       label: items.length > 0 ? 'Salary + Incentives' : 'Salary',
       hasIncentives: items.length > 0,
       incentiveItems: items,
-      gradient: 'from-amber-500 to-orange-500',
+      tone: 'incentive',
     }
   }
 
@@ -166,7 +170,7 @@ export function formatSalaryInfo(job: {
       label: 'Salary Range',
       hasIncentives: false,
       incentiveItems: [],
-      gradient: 'from-emerald-600 to-teal-600',
+      tone: 'pay',
     }
   }
 
@@ -177,7 +181,7 @@ export function formatSalaryInfo(job: {
       label: 'Salary',
       hasIncentives: false,
       incentiveItems: [],
-      gradient: 'from-indigo-500 to-violet-600',
+      tone: 'negotiable',
     }
   }
 

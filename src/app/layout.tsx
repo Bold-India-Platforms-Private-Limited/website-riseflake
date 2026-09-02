@@ -114,7 +114,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               '@type': 'Organization',
               name: 'Riseflake',
               url: 'https://riseflake.com',
-              logo: 'https://riseflake.com/logo.webp',
+              logo: 'https://assets.riseflake.com/logo.webp',
               description: 'India\'s job portal and professional networking platform for career growth',
               sameAs: [
                 'https://twitter.com/riseflake',
