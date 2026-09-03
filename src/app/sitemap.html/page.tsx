@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
-import { Briefcase, GraduationCap, Building2, School, Globe, Home, FileText, ClipboardList, Info, Users, Mail, Rocket, HelpCircle, ScrollText, Lock, CreditCard, Shield, AlertTriangle, Cookie, Trash2, ExternalLink } from 'lucide-react'
+import { Briefcase, GraduationCap, Building2, School, Globe, Home, FileText, ClipboardList, Info, Users, Mail, Rocket, HelpCircle, ScrollText, Lock, CreditCard, Shield, AlertTriangle, Cookie, Trash2, ExternalLink, Newspaper, Trophy, Network } from 'lucide-react'
 import Navbar from '../components/Navbar'
 import { API_BASE_URL, hreflangAlternates } from '../../lib/config'
 
@@ -192,6 +192,45 @@ export default async function SitemapHtmlPage() {
                 <TreeInfo label={`${fmt(peopleCount)} public candidate profiles · role & city landing pages auto-generated`} />
               </TreeBranch>
 
+              {/* Hackathons */}
+              <TreeBranch
+                icon={<Trophy className="h-4 w-4" />}
+                label="Hackathons"
+                href="/hackathons"
+                badge="live"
+                badgeColor="violet"
+                defaultOpen={false}
+              >
+                <TreeLeaf href="/hackathons" label="Browse all hackathons" icon={<ExternalLink className="h-3 w-3" />} />
+                <TreeLeaf href="/sitemap-hackathons.xml" label="Hackathons XML sitemap (auto-updated)" icon={<FileText className="h-3 w-3" />} muted />
+                <TreeInfo label="Every hackathon detail page · auto-indexed via XML sitemap" />
+              </TreeBranch>
+
+              {/* Blog */}
+              <TreeBranch
+                icon={<Newspaper className="h-4 w-4" />}
+                label="Blog"
+                href="/blog"
+                defaultOpen={false}
+              >
+                <TreeLeaf href="/blog" label="All articles & career guides" icon={<ExternalLink className="h-3 w-3" />} />
+                <TreeLeaf href="/sitemap-blogs.xml" label="Blog XML sitemap (auto-updated)" icon={<FileText className="h-3 w-3" />} muted />
+                <TreeInfo label="Every published post · auto-indexed via XML sitemap" />
+              </TreeBranch>
+
+              {/* Profiles & network */}
+              <TreeBranch
+                icon={<Network className="h-4 w-4" />}
+                label="Profiles & Network"
+                href="/network"
+                defaultOpen={false}
+              >
+                <TreeLeaf href="/network" label="Profile network — crawlable hub for /in/* pages" icon={<ExternalLink className="h-3 w-3" />} />
+                <TreeLeaf href="/campus-ambassador" label="Campus Ambassador programme" icon={<Rocket className="h-3 w-3" />} />
+                <TreeLeaf href="/sitemap-users.xml" label="Member profiles XML sitemap index" icon={<FileText className="h-3 w-3" />} muted />
+                <TreeInfo label="Individual /in/{username} profile pages · batched XML sitemaps" />
+              </TreeBranch>
+
               {/* Company section */}
               <TreeBranch icon={<Info className="h-4 w-4" />} label="About Riseflake" defaultOpen={false}>
                 <TreeLeaf href="/about" label="About us" icon={<Users className="h-3 w-3" />} />
@@ -233,9 +272,14 @@ export default async function SitemapHtmlPage() {
               <XmlCard href="/sitemap-internships-facets.xml" title="Internships Faceted Sitemap" desc="Role, city, company, stipend, month & workplace landing pages" />
               <XmlCard href="/sitemap-companies.xml" title="Companies Sitemap Index" desc={`${fmt(companyCount)} companies across batches of 1,000`} />
               <XmlCard href="/sitemap-companies-facets.xml" title="Companies Faceted Sitemap" desc="Industry, size, type & hiring landing pages" />
+              <XmlCard href="/sitemap-colleges.xml" title="Colleges Sitemap Index" desc={`${fmt(collegeCount)} college profile pages · refreshes daily`} />
+              <XmlCard href="/sitemap-colleges-facets.xml" title="Colleges Faceted Sitemap" desc="Discipline, state & city landing pages" />
               <XmlCard href="/sitemap-people.xml" title="People Sitemap Index" desc={`${fmt(peopleCount)} public candidate profiles · refreshes hourly`} />
               <XmlCard href="/sitemap-people-directory.xml" title="People Directory Sitemap" desc="Role, city & skill landing pages · auto-generated" />
-              <XmlCard href="/sitemap-static.xml" title="Static Pages Sitemap" desc="Static pages · refreshes daily" />
+              <XmlCard href="/sitemap-users.xml" title="Members Sitemap Index" desc="Public member profiles · batched XML sitemaps" />
+              <XmlCard href="/sitemap-blogs.xml" title="Blog Sitemap" desc="Every published article · refreshes hourly" />
+              <XmlCard href="/sitemap-hackathons.xml" title="Hackathons Sitemap" desc="Every hackathon detail page · refreshes hourly" />
+              <XmlCard href="/sitemap-static.xml" title="Static Pages Sitemap" desc="Core pages, discovery hubs & city landing pages · refreshes daily" />
             </div>
 
             <div className="mt-6 flex items-start gap-2 rounded-xl bg-slate-800 px-4 py-3">

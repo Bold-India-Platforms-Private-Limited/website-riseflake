@@ -10,6 +10,25 @@ type StaticPage = {
   lastmod?: string
 }
 
+// Programmatic city pages — kept byte-identical with the CITIES arrays in
+// src/app/jobs-in/[city]/page.tsx and src/app/internships-in/[city]/page.tsx.
+// Every slug here is pre-rendered (generateStaticParams) and indexable; empty
+// city pages self-noindex, so it is safe to list the full set.
+const PROGRAMMATIC_CITIES = [
+  'bangalore', 'mumbai', 'delhi', 'hyderabad', 'pune', 'chennai',
+  'kolkata', 'ahmedabad', 'jaipur', 'surat', 'lucknow', 'kanpur',
+  'nagpur', 'indore', 'bhopal', 'noida', 'gurgaon', 'chandigarh',
+  'coimbatore', 'kochi', 'remote',
+]
+const TIER_1_CITIES = new Set(['bangalore', 'mumbai', 'delhi', 'hyderabad', 'pune', 'remote'])
+
+const cityPages = (segment: 'jobs-in' | 'internships-in'): StaticPage[] =>
+  PROGRAMMATIC_CITIES.map((city) => ({
+    url: `https://riseflake.com/${segment}/${city}`,
+    changefreq: 'daily',
+    priority: TIER_1_CITIES.has(city) ? '0.8' : '0.7',
+  }))
+
 const STATIC_PAGES: StaticPage[] = [
   { url: 'https://riseflake.com/',                    changefreq: 'daily',   priority: '1.0' },
   { url: 'https://riseflake.com/jobs',                changefreq: 'hourly',  priority: '0.9' },
@@ -20,6 +39,8 @@ const STATIC_PAGES: StaticPage[] = [
   { url: 'https://riseflake.com/contact',             changefreq: 'monthly', priority: '0.5' },
   { url: 'https://riseflake.com/careers',             changefreq: 'monthly', priority: '0.4' },
   { url: 'https://riseflake.com/support',             changefreq: 'monthly', priority: '0.4' },
+  // Human-readable sitemap — indexable hub that links every section
+  { url: 'https://riseflake.com/sitemap.html',        changefreq: 'weekly',  priority: '0.4' },
   { url: 'https://riseflake.com/privacy-policy',      changefreq: 'yearly',  priority: '0.3', lastmod: '2026-01-08' },
   { url: 'https://riseflake.com/terms-of-service',    changefreq: 'yearly',  priority: '0.3', lastmod: '2026-01-08' },
   { url: 'https://riseflake.com/refund-policy',       changefreq: 'yearly',  priority: '0.3', lastmod: '2026-01-08' },
@@ -52,28 +73,11 @@ const STATIC_PAGES: StaticPage[] = [
   { url: 'https://riseflake.com/internships/human-resources',     changefreq: 'daily',   priority: '0.7' },
   { url: 'https://riseflake.com/internships/sales',               changefreq: 'daily',   priority: '0.7' },
   { url: 'https://riseflake.com/internships/operations',          changefreq: 'daily',   priority: '0.7' },
-  // Programmatic SEO — Jobs in [City]
-  { url: 'https://riseflake.com/jobs-in/bangalore',   changefreq: 'daily',   priority: '0.8' },
-  { url: 'https://riseflake.com/jobs-in/mumbai',      changefreq: 'daily',   priority: '0.8' },
-  { url: 'https://riseflake.com/jobs-in/delhi',       changefreq: 'daily',   priority: '0.8' },
-  { url: 'https://riseflake.com/jobs-in/hyderabad',   changefreq: 'daily',   priority: '0.8' },
-  { url: 'https://riseflake.com/jobs-in/pune',        changefreq: 'daily',   priority: '0.8' },
-  { url: 'https://riseflake.com/jobs-in/chennai',     changefreq: 'daily',   priority: '0.7' },
-  { url: 'https://riseflake.com/jobs-in/kolkata',     changefreq: 'daily',   priority: '0.7' },
-  { url: 'https://riseflake.com/jobs-in/ahmedabad',   changefreq: 'daily',   priority: '0.7' },
-  { url: 'https://riseflake.com/jobs-in/jaipur',      changefreq: 'daily',   priority: '0.7' },
-  { url: 'https://riseflake.com/jobs-in/noida',       changefreq: 'daily',   priority: '0.7' },
-  { url: 'https://riseflake.com/jobs-in/gurgaon',     changefreq: 'daily',   priority: '0.7' },
-  { url: 'https://riseflake.com/jobs-in/remote',      changefreq: 'daily',   priority: '0.8' },
-  // Programmatic SEO — Internships in [City]
-  { url: 'https://riseflake.com/internships-in/bangalore', changefreq: 'daily', priority: '0.8' },
-  { url: 'https://riseflake.com/internships-in/mumbai',    changefreq: 'daily', priority: '0.8' },
-  { url: 'https://riseflake.com/internships-in/delhi',     changefreq: 'daily', priority: '0.8' },
-  { url: 'https://riseflake.com/internships-in/hyderabad', changefreq: 'daily', priority: '0.7' },
-  { url: 'https://riseflake.com/internships-in/pune',      changefreq: 'daily', priority: '0.7' },
-  { url: 'https://riseflake.com/internships-in/chennai',   changefreq: 'daily', priority: '0.7' },
-  { url: 'https://riseflake.com/internships-in/noida',     changefreq: 'daily', priority: '0.7' },
-  { url: 'https://riseflake.com/internships-in/remote',    changefreq: 'daily', priority: '0.8' },
+  // Programmatic SEO — Jobs in [City] / Internships in [City].
+  // Generated from PROGRAMMATIC_CITIES so this list can never drift from the
+  // pages' own generateStaticParams again.
+  ...cityPages('jobs-in'),
+  ...cityPages('internships-in'),
 ]
 
 export async function GET() {
