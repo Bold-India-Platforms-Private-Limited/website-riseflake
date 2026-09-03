@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" role="img" aria-label="Engineering Colleges and AI Placements in 2026">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#b45309"/>
+      <stop offset="1" stop-color="#be123c"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#g)"/>
+  <circle cx="1030" cy="500" r="230" fill="#ffffff" opacity="0.06"/>
+  <circle cx="140" cy="110" r="150" fill="#ffffff" opacity="0.05"/>
+  <text x="80" y="120" font-family="Segoe UI, Arial, sans-serif" font-size="24" fill="#fed7aa" letter-spacing="4">RISEFLAKE BLOG &#183; TECH &amp; ENGINEERING</text>
+  <text x="80" y="290" font-family="Segoe UI, Arial, sans-serif" font-size="62" font-weight="700" fill="#ffffff">
+    <tspan x="80" dy="0">Engineering Colleges</tspan>
+    <tspan x="80" dy="78">&amp; AI/ML Placements</tspan>
+    <tspan x="80" dy="78">in 2026</tspan>
+  </text>
+  <text x="80" y="580" font-family="Segoe UI, Arial, sans-serif" font-size="26" fill="#fecdd3">Branches &#183; skills &#183; ROI &#183; placement prep</text>
+</svg>

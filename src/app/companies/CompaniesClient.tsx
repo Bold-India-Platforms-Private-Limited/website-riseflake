@@ -308,7 +308,7 @@ export default function CompaniesClient() {
             totalItems={totalCompanies}
             pageSize={Number.isNaN(pageSize) ? 20 : pageSize}
             baseQuery={queryParams}
-            limitOptionPreset={[20, 30, 50, 100, 200, 500, 1000]}
+            limitOptionPreset={[20, 30, 50, 100]}
           />
         </div>
       )}

@@ -5,30 +5,34 @@ import InternshipsClient from './InternshipsClient'
 import MobileFilters from './components/MobileFilters'
 import LoginPromptModal from '../components/LoginPromptModalLoader'
 import { hreflangAlternates } from '../../lib/config'
+import { currentPeriod } from '../../lib/period'
 
-export const metadata: Metadata = {
-  title: 'Internships in India 2025 — Find Verified Internships',
-  description: 'Browse 1000s of internship opportunities across India. Filter by location, domain, and stipend. Apply directly on Riseflake.',
-  keywords: 'internships, internship search, internship in India, paid internships, work from home internship, summer internship, IT internship, MBA internship, engineering internship, riseflake',
-  alternates: {
-    canonical: 'https://riseflake.com/internships',
-    ...hreflangAlternates('https://riseflake.com/internships'),
-  },
-  openGraph: {
-    type: 'website',
-    url: 'https://riseflake.com/internships',
-    siteName: 'Riseflake',
-    title: 'Internships in India 2025 | Riseflake',
-    description: 'Browse verified internship opportunities across India. Filter by location, domain, and stipend on Riseflake.',
-    images: [{ url: 'https://riseflake.com/og-image.webp', width: 1200, height: 630, alt: 'Riseflake Internships' }],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Internships in India 2025 | Riseflake',
-    description: 'Browse verified internship opportunities across India on Riseflake.',
-    site: '@riseflake',
-    creator: '@riseflake',
-  },
+export function generateMetadata(): Metadata {
+  const { monthYear } = currentPeriod()
+  return {
+    title: `Internships in India ${monthYear} — Find Verified Internships`,
+    description: `Browse 1000s of internship opportunities across India (updated ${monthYear}). Filter by location, domain, and stipend. Apply directly on Riseflake.`,
+    keywords: 'internships, internship search, internship in India, paid internships, work from home internship, summer internship, IT internship, MBA internship, engineering internship, riseflake',
+    alternates: {
+      canonical: 'https://riseflake.com/internships',
+      ...hreflangAlternates('https://riseflake.com/internships'),
+    },
+    openGraph: {
+      type: 'website',
+      url: 'https://riseflake.com/internships',
+      siteName: 'Riseflake',
+      title: `Internships in India ${monthYear} | Riseflake`,
+      description: 'Browse verified internship opportunities across India. Filter by location, domain, and stipend on Riseflake.',
+      images: [{ url: 'https://riseflake.com/og-image.webp', width: 1200, height: 630, alt: 'Riseflake Internships' }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `Internships in India ${monthYear} | Riseflake`,
+      description: 'Browse verified internship opportunities across India on Riseflake.',
+      site: '@riseflake',
+      creator: '@riseflake',
+    },
+  }
 }
 
 const breadcrumbSchema = {

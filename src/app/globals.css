@@ -230,6 +230,123 @@ button:hover {
   margin-bottom: 0.6rem;
 }
 
+/* ─── Blog article body (renders CMS + static post HTML) ───── */
+.blog-article {
+  font-size: 1.0625rem;
+  line-height: 1.8;
+  color: #334155;
+}
+
+.blog-article > *:first-child { margin-top: 0; }
+
+.blog-article p { margin: 0 0 1.25rem; }
+
+.blog-article h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.3;
+  margin: 2.5rem 0 1rem;
+  scroll-margin-top: 5rem;
+}
+
+.blog-article h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.35;
+  margin: 1.75rem 0 0.65rem;
+  scroll-margin-top: 5rem;
+}
+
+.blog-article h4 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 1.5rem 0 0.5rem;
+}
+
+.blog-article a {
+  color: #4f46e5;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.blog-article a:hover { text-decoration: underline; }
+
+.blog-article strong { color: #0f172a; font-weight: 700; }
+
+.blog-article ul,
+.blog-article ol {
+  margin: 0 0 1.25rem;
+  padding-left: 1.5rem;
+}
+
+.blog-article ul { list-style: disc; }
+.blog-article ol { list-style: decimal; }
+.blog-article li { margin: 0.4rem 0; padding-left: 0.25rem; }
+.blog-article li::marker { color: #6366f1; }
+
+.blog-article blockquote {
+  border-left: 4px solid #a5b4fc;
+  background: #f8f9ff;
+  margin: 1.5rem 0;
+  padding: 0.85rem 1.1rem;
+  border-radius: 0 0.5rem 0.5rem 0;
+  color: #475569;
+  font-style: italic;
+}
+
+.blog-article code {
+  background: #f1f5f9;
+  padding: 0.1rem 0.4rem;
+  border-radius: 0.35rem;
+  font-size: 0.88em;
+  color: #4f46e5;
+}
+
+.blog-article pre {
+  background: #0f172a;
+  color: #f8fafc;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  overflow-x: auto;
+  margin: 1.25rem 0;
+}
+
+.blog-article img {
+  border-radius: 0.75rem;
+  margin: 1.5rem 0;
+}
+
+.blog-article table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  font-size: 0.95rem;
+}
+
+.blog-article th,
+.blog-article td {
+  border: 1px solid #e2e8f0;
+  padding: 0.6rem 0.85rem;
+  text-align: left;
+}
+
+.blog-article th { background: #f8fafc; font-weight: 700; color: #0f172a; }
+
+.blog-article hr { margin: 2rem 0; border: 0; border-top: 1px solid #e2e8f0; }
+
+.blog-article .blog-callout {
+  margin: 2rem 0;
+  padding: 1.1rem 1.25rem;
+  background: linear-gradient(135deg, #eef2ff 0%, #faf5ff 100%);
+  border: 1px solid #e0e7ff;
+  border-radius: 0.9rem;
+}
+
+.blog-article .blog-callout p { margin: 0; }
+
 /* ─── Interactive sitemap tree ─────────────────────────────── */
 details > summary { list-style: none; }
 details > summary::-webkit-details-marker { display: none; }

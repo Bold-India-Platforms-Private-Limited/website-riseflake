@@ -64,6 +64,25 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 }
 
+type DirTarget = { slug: string; label: string; count: number }
+type DirCombo = DirTarget & { role_slug: string; city_slug: string }
+type DirIndex = { roles: DirTarget[]; cities: DirTarget[]; combos: DirCombo[]; skills: DirTarget[] }
+
+const EMPTY_DIR: DirIndex = { roles: [], cities: [], combos: [], skills: [] }
+
+async function getDirectoryIndex(): Promise<DirIndex> {
+  try {
+    const res = await fetch(`${API_BASE_URL}/people/directory`)
+    if (!res.ok) return EMPTY_DIR
+    const json = await res.json()
+    return json?.status ? { ...EMPTY_DIR, ...json } : EMPTY_DIR
+  } catch {
+    return EMPTY_DIR
+  }
+}
+
+const cityCase = (s: string) => s.replace(/[-_]/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
+
 async function getInitialData(): Promise<{
   items: PersonCardData[]
   cursor: string | null
@@ -107,7 +126,7 @@ const breadcrumbSchema = {
 }
 
 export default async function PeopleDirectoryPage() {
-  const { items, cursor, facets } = await getInitialData()
+  const [{ items, cursor, facets }, dir] = await Promise.all([getInitialData(), getDirectoryIndex()])
 
   const collectionSchema = {
     '@context': 'https://schema.org',
@@ -173,6 +192,75 @@ export default async function PeopleDirectoryPage() {
           >
             <PeopleClient initialItems={items} initialCursor={cursor} facets={facets} />
           </Suspense>
+
+          {/* Browse-by internal links — crawl entry points into the landing pages */}
+          {dir.combos.length > 0 && (
+            <section className="mt-12">
+              <h2 className="text-base font-semibold text-slate-900">Popular searches</h2>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {dir.combos.map((c) => (
+                  <a
+                    key={c.slug}
+                    href={`/in/people/${c.slug}`}
+                    className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-600 transition-colors hover:border-indigo-300 hover:text-indigo-600"
+                  >
+                    {c.label} ({c.count})
+                  </a>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {dir.roles.length > 0 && (
+            <section className="mt-8">
+              <h2 className="text-base font-semibold text-slate-900">Browse candidates by role</h2>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {dir.roles.map((r) => (
+                  <a
+                    key={r.slug}
+                    href={`/in/people/${r.slug}`}
+                    className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-600 transition-colors hover:border-indigo-300 hover:text-indigo-600"
+                  >
+                    {r.label} ({r.count})
+                  </a>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {dir.cities.length > 0 && (
+            <section className="mt-8">
+              <h2 className="text-base font-semibold text-slate-900">Browse candidates by city</h2>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {dir.cities.map((c) => (
+                  <a
+                    key={c.slug}
+                    href={`/in/people/${c.slug}`}
+                    className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-600 transition-colors hover:border-indigo-300 hover:text-indigo-600"
+                  >
+                    {cityCase(c.label)} ({c.count})
+                  </a>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {dir.skills.length > 0 && (
+            <section className="mt-8">
+              <h2 className="text-base font-semibold text-slate-900">Browse candidates by skill</h2>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {dir.skills.map((s) => (
+                  <a
+                    key={s.slug}
+                    href={`/in/people/${s.slug}`}
+                    className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-600 transition-colors hover:border-indigo-300 hover:text-indigo-600"
+                  >
+                    {cityCase(s.label)} ({s.count})
+                  </a>
+                ))}
+              </div>
+            </section>
+          )}
 
           <footer className="mt-10 rounded-2xl px-6 py-4 text-center text-xs text-slate-500">
             <p>

@@ -6,6 +6,9 @@ import Navbar from '../../components/Navbar'
 import Footer from '../../components/Footer'
 import { API_BASE_URL, WEBSITE_BASE_URL, hreflangAlternates } from '../../../lib/config'
 import { formatSalaryChip } from '../../../lib/salary'
+import { currentPeriod } from '../../../lib/period'
+import FacetChips from '../../components/seo/FacetChips'
+import FaqBlock from '../../components/seo/FaqJsonLd'
 
 export const dynamicParams = true
 export const revalidate = 3600
@@ -57,6 +60,22 @@ async function fetchInternshipsByCity(city: string): Promise<Internship[]> {
   }
 }
 
+type Combo = { slug: string; label: string; count?: number; city_slug?: string }
+
+async function fetchRoleCombosForCity(city: string): Promise<Combo[]> {
+  try {
+    const res = await fetch(`${API_BASE_URL}/internships/directory`, {
+      next: { revalidate: 3600 },
+      signal: AbortSignal.timeout(8_000),
+    })
+    if (!res.ok) return []
+    const data = await res.json()
+    return (data.combos ?? []).filter((c: Combo) => c.city_slug === city)
+  } catch {
+    return []
+  }
+}
+
 export async function generateStaticParams() {
   return CITIES.map(city => ({ city }))
 }
@@ -70,11 +89,12 @@ export async function generateMetadata(
   }
 
   const cityLabel = titleCase(city)
+  const { year } = currentPeriod()
   const canonicalUrl = `${WEBSITE_BASE_URL}/internships-in/${city}`
   const isRemote = city === 'remote'
   const title = isRemote
-    ? 'Remote Internships in India 2025 — Work from Home | Riseflake'
-    : `Internships in ${cityLabel} 2025 — Paid & Unpaid | Riseflake`
+    ? `Remote Internships in India ${year} — Work from Home`
+    : `Internships in ${cityLabel} ${year} — Paid & Unpaid`
   const description = isRemote
     ? `Find remote internship opportunities in India for students and freshers. Browse verified online internships in software, marketing, design, and more. Apply free on Riseflake.`
     : `Find internships in ${cityLabel} for students and freshers. Paid and stipend-based internships across IT, marketing, finance, design, and more. Apply free on Riseflake.`
@@ -90,8 +110,8 @@ export async function generateMetadata(
     openGraph: { title, description, url: canonicalUrl, siteName: 'Riseflake', type: 'website' },
     twitter: { card: 'summary', title, description },
     keywords: isRemote
-      ? 'remote internships india, online internships 2025, work from home internships, virtual internships india, riseflake internships'
-      : `internships in ${cityLabel.toLowerCase()}, ${cityLabel.toLowerCase()} internships 2025, student internships ${cityLabel.toLowerCase()}, paid internships ${cityLabel.toLowerCase()}, riseflake ${cityLabel.toLowerCase()}`,
+      ? 'remote internships india, online internships, work from home internships, virtual internships india, riseflake internships'
+      : `internships in ${cityLabel.toLowerCase()}, ${cityLabel.toLowerCase()} internships, student internships ${cityLabel.toLowerCase()}, paid internships ${cityLabel.toLowerCase()}, riseflake ${cityLabel.toLowerCase()}`,
     robots: { index: shouldIndex, follow: true },
   }
 }
@@ -104,8 +124,13 @@ export default async function InternshipsInCityPage(
 
   const cityLabel = titleCase(city)
   const isRemote = city === 'remote'
-  const internships = await fetchInternshipsByCity(city)
+  const { year, monthYear } = currentPeriod()
+  const [internships, roleCombos] = await Promise.all([
+    fetchInternshipsByCity(city),
+    isRemote ? Promise.resolve([] as Combo[]) : fetchRoleCombosForCity(city),
+  ])
   const canonicalUrl = `${WEBSITE_BASE_URL}/internships-in/${city}`
+  const now = new Date().toISOString()
 
   const breadcrumbSchema = {
     '@context': 'https://schema.org',
@@ -117,9 +142,48 @@ export default async function InternshipsInCityPage(
     ],
   }
 
+  const collectionSchema = internships.length > 0 ? {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: `Internships in ${cityLabel} ${year}`,
+    description: `Verified internship openings in ${cityLabel} on Riseflake, updated ${monthYear}.`,
+    url: canonicalUrl,
+    datePublished: now,
+    dateModified: now,
+    isPartOf: { '@type': 'WebSite', name: 'Riseflake', url: WEBSITE_BASE_URL },
+    mainEntity: {
+      '@type': 'ItemList',
+      numberOfItems: internships.length,
+      itemListElement: internships.slice(0, 25).map((it, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        url: `${WEBSITE_BASE_URL}/internships/${it.slug}`,
+        name: it.company_name ? `${it.position} at ${it.company_name}` : it.position,
+      })),
+    },
+  } : null
+
+  const faqs = [
+    {
+      question: `How many internships are available in ${cityLabel}?`,
+      answer: `Riseflake lists verified internship openings in ${cityLabel} from registered companies, refreshed continuously as of ${monthYear}. Open any listing for the full description, eligibility and stipend.`,
+    },
+    {
+      question: `Are internships in ${cityLabel} paid?`,
+      answer: `Many are. Each card shows the stipend where the employer has disclosed it. Use the stipend filter on the main internships page to see paid roles only.`,
+    },
+    {
+      question: `Can students from outside ${cityLabel} apply?`,
+      answer: `Remote and hybrid roles accept applicants from anywhere in India. On-site roles are open to candidates who can commute to or relocate to ${cityLabel}.`,
+    },
+  ]
+
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      {collectionSchema && (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionSchema) }} />
+      )}
 
       <Navbar bgTransparent />
 
@@ -218,23 +282,41 @@ export default async function InternshipsInCityPage(
             </div>
           )}
 
+          {/* Role-in-city landing pages */}
+          {roleCombos.length > 0 && (
+            <FacetChips
+              title={`Internships in ${cityLabel} by role`}
+              chips={roleCombos.map(c => ({ slug: c.slug, label: c.label.replace(/ Internships in .+$/, ''), count: c.count }))}
+              hrefBase="/internships/browse"
+              seeAllHref="/internships/browse"
+            />
+          )}
+
+          {/* FAQ */}
+          <FaqBlock faqs={faqs} />
+
           {/* SEO content */}
           <section className="mt-12 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
             <h2 className="text-lg font-bold text-slate-900 mb-3">
-              {isRemote ? 'Remote Internships for Indian Students — 2025' : `Internships in ${cityLabel} — 2025 Guide`}
+              {isRemote ? `Remote Internships for Indian Students — ${year}` : `Internships in ${cityLabel} — ${year} Guide`}
             </h2>
             <p className="text-sm text-slate-600 leading-relaxed">
               {isRemote
                 ? `Riseflake lists hundreds of verified remote internship opportunities for students and freshers across India. Find online internships in software development, digital marketing, data science, UI/UX design, content writing, human resources, and more. All internships are posted by verified companies and recruiters.`
                 : `Riseflake is India's trusted internship portal for college students and freshers. Find verified internship openings in ${cityLabel} across IT, software, marketing, finance, design, HR, operations, and more. Paid internships with stipends and valuable work experience to build your resume.`}
             </p>
-            <div className="mt-4 flex items-center gap-3">
+            <div className="mt-4 flex flex-wrap items-center gap-3">
               <Link href="/internships" className="text-sm text-indigo-600 hover:underline font-medium flex items-center gap-1">
                 Browse all internships <ArrowRight className="h-4 w-4" />
               </Link>
-              <Link href="/jobs" className="text-sm text-indigo-600 hover:underline font-medium flex items-center gap-1">
-                Browse full-time jobs <ArrowRight className="h-4 w-4" />
+              <Link href="/internships/browse" className="text-sm text-indigo-600 hover:underline font-medium flex items-center gap-1">
+                Internships by role, company &amp; stipend <ArrowRight className="h-4 w-4" />
               </Link>
+              {!isRemote && (
+                <Link href={`/jobs-in/${city}`} className="text-sm text-indigo-600 hover:underline font-medium flex items-center gap-1">
+                  Jobs in {cityLabel} <ArrowRight className="h-4 w-4" />
+                </Link>
+              )}
             </div>
           </section>
         </div>

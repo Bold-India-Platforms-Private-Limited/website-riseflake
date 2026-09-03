@@ -5,6 +5,12 @@ import Link from 'next/link'
 import Navbar from '../../components/Navbar'
 import Footer from '../../components/Footer'
 import { BLOG_API_URL, WEBSITE_BASE_URL, hreflangAlternates } from '../../../lib/config'
+import {
+  getStaticBlogPost,
+  getStaticBlogRelated,
+  isStaticBlogSlug,
+  STATIC_BLOG_POSTS,
+} from '../../../lib/staticBlogPosts'
 
 export const dynamicParams = true
 export const revalidate = 600 // ISR: rebuild every 10 min
@@ -45,6 +51,10 @@ type BlogPost = {
 // ─── Data fetching ────────────────────────────────────────────────────────────
 
 async function fetchBlog(slug: string): Promise<BlogDetail | null> {
+  // Static, hand-written posts live in the codebase — serve them without a network call.
+  const staticPost = getStaticBlogPost(slug)
+  if (staticPost) return staticPost
+
   try {
     const res = await fetch(`${BLOG_API_URL}/blogs/public/${slug}`, {
       next: { revalidate: 600 },
@@ -77,13 +87,15 @@ async function fetchRelated(categorySlug: string | null, excludeSlug: string): P
 // ─── Static params ────────────────────────────────────────────────────────────
 
 export async function generateStaticParams() {
+  const staticParams = STATIC_BLOG_POSTS.map((p) => ({ slug: p.slug }))
   try {
     const res = await fetch(`${BLOG_API_URL}/blogs/public/slugs`, { next: { revalidate: 600 } })
-    if (!res.ok) return []
+    if (!res.ok) return staticParams
     const data = await res.json()
-    return (data.slugs ?? []).map((s: { slug: string }) => ({ slug: s.slug }))
+    const apiParams = (data.slugs ?? []).map((s: { slug: string }) => ({ slug: s.slug }))
+    return [...staticParams, ...apiParams]
   } catch {
-    return []
+    return staticParams
   }
 }
 
@@ -241,7 +253,9 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
   const [articleSchema, breadcrumbSchema, related] = await Promise.all([
     Promise.resolve(buildArticleSchema(blog, canonicalUrl)),
     Promise.resolve(buildBreadcrumbSchema(blog, canonicalUrl)),
-    fetchRelated(blog.category_slug, blog.slug),
+    isStaticBlogSlug(blog.slug)
+      ? Promise.resolve(getStaticBlogRelated(blog.slug, 3) as BlogPost[])
+      : fetchRelated(blog.category_slug, blog.slug),
   ])
 
   return (
@@ -354,7 +368,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
                   {/* Body content — prose styles for readability + SEO */}
                   <div
-                    className="prose prose-base max-w-none
+                    className="blog-article prose prose-base max-w-none
                       prose-headings:font-bold prose-headings:text-gray-900 prose-headings:scroll-mt-20
                       prose-h2:text-xl prose-h2:mt-8 prose-h2:mb-3
                       prose-h3:text-lg prose-h3:mt-6 prose-h3:mb-2

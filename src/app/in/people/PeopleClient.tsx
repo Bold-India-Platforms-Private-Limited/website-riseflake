@@ -1,6 +1,7 @@
 'use client'
 
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { API_BASE_URL } from '../../../lib/config'
 import PersonCard, { type PersonCardData } from './components/PersonCard'
 
@@ -13,15 +14,19 @@ export type Facets = {
   experience: { value: string; label: string }[]
 }
 
-type Filters = {
+export type Filters = {
   type: string
   experience: string
   location: string
   role: string
   skill: string
+  q: string
 }
 
-const EMPTY: Filters = { type: '', experience: '', location: '', role: '', skill: '' }
+/** Which filter a landing page has already locked in (its dropdown is hidden). */
+export type LockedFilter = 'location' | 'role' | 'skill' | null
+
+const EMPTY: Filters = { type: '', experience: '', location: '', role: '', skill: '', q: '' }
 
 function buildQuery(f: Filters, cursor?: string | null) {
   const p = new URLSearchParams()
@@ -30,6 +35,7 @@ function buildQuery(f: Filters, cursor?: string | null) {
   if (f.location) p.set('location', f.location)
   if (f.role) p.set('role', f.role)
   if (f.skill) p.set('skill', f.skill)
+  if (f.q) p.set('q', f.q)
   if (cursor) p.set('cursor', cursor)
   p.set('limit', '24')
   return p.toString()
@@ -41,12 +47,38 @@ export default function PeopleClient({
   initialItems,
   initialCursor,
   facets,
+  initialFilters,
+  lockedFilter = null,
+  syncUrl = true,
 }: {
   initialItems: PersonCardData[]
   initialCursor: string | null
   facets: Facets
+  initialFilters?: Partial<Filters>
+  lockedFilter?: LockedFilter
+  /** Push filter state to the query string (off for landing pages that keep a clean canonical). */
+  syncUrl?: boolean
 }) {
-  const [filters, setFilters] = useState<Filters>(EMPTY)
+  const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+
+  const seeded = useMemo<Filters>(() => {
+    const fromUrl: Partial<Filters> = syncUrl
+      ? {
+          type: searchParams.get('type') ?? '',
+          experience: searchParams.get('experience') ?? '',
+          location: searchParams.get('location') ?? '',
+          role: searchParams.get('role') ?? '',
+          skill: searchParams.get('skill') ?? '',
+          q: searchParams.get('q') ?? '',
+        }
+      : {}
+    return { ...EMPTY, ...fromUrl, ...initialFilters }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  const [filters, setFilters] = useState<Filters>(seeded)
   const [items, setItems] = useState<PersonCardData[]>(initialItems)
   const [cursor, setCursor] = useState<string | null>(initialCursor)
   const [loading, setLoading] = useState(false)
@@ -75,15 +107,30 @@ export default function PeopleClient({
   )
 
   // Re-query whenever filters change (skip the very first mount — SSR gave us page 1).
+  // Debounced so typing in the name box doesn't hammer the API.
   useEffect(() => {
     if (firstRender.current) {
       firstRender.current = false
       return
     }
-    fetchPage(filters, null, false)
-  }, [filters, fetchPage])
+    const t = setTimeout(() => {
+      fetchPage(filters, null, false)
+      if (syncUrl) {
+        const qs = new URLSearchParams()
+        Object.entries(filters).forEach(([k, v]) => {
+          if (v) qs.set(k, v)
+        })
+        const str = qs.toString()
+        router.replace(str ? `${pathname}?${str}` : pathname, { scroll: false })
+      }
+    }, 350)
+    return () => clearTimeout(t)
+  }, [filters, fetchPage, pathname, router, syncUrl])
 
-  const activeCount = Object.values(filters).filter(Boolean).length
+  // Active filters shown to the user — the locked one is implied by the page, not a chip.
+  const activeCount = Object.entries(filters).filter(
+    ([k, v]) => Boolean(v) && k !== lockedFilter
+  ).length
 
   const Select = ({
     label,
@@ -117,6 +164,16 @@ export default function PeopleClient({
     <section className="space-y-6">
       {/* Filters */}
       <div className="flex flex-wrap items-end gap-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+        <label className="flex flex-col gap-1 text-xs font-medium text-slate-500">
+          Search by name
+          <input
+            type="search"
+            value={filters.q}
+            onChange={(e) => setFilters((f) => ({ ...f, q: e.target.value }))}
+            placeholder="e.g. Vaishnavi Nazare"
+            className="min-w-[12rem] rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 shadow-sm focus:border-indigo-400 focus:outline-none"
+          />
+        </label>
         <Select
           label="Profile type"
           value={filters.type}
@@ -129,37 +186,45 @@ export default function PeopleClient({
           onChange={(v) => setFilters((f) => ({ ...f, experience: v }))}
           options={facets.experience.map((t) => ({ value: t.value, label: t.label }))}
         />
-        <Select
-          label="Location"
-          value={filters.location}
-          onChange={(v) => setFilters((f) => ({ ...f, location: v }))}
-          options={facets.cities.map((c) => ({
-            value: c.value,
-            label: `${titleCase(c.value)} (${c.count})`,
-          }))}
-        />
-        <Select
-          label="Role"
-          value={filters.role}
-          onChange={(v) => setFilters((f) => ({ ...f, role: v }))}
-          options={facets.roles.map((r) => ({
-            value: r.value,
-            label: `${r.value} (${r.count})`,
-          }))}
-        />
-        <Select
-          label="Skill"
-          value={filters.skill}
-          onChange={(v) => setFilters((f) => ({ ...f, skill: v }))}
-          options={facets.skills.map((s) => ({
-            value: s.value,
-            label: `${titleCase(s.value)} (${s.count})`,
-          }))}
-        />
+        {lockedFilter !== 'location' && (
+          <Select
+            label="Location"
+            value={filters.location}
+            onChange={(v) => setFilters((f) => ({ ...f, location: v }))}
+            options={facets.cities.map((c) => ({
+              value: c.value,
+              label: `${titleCase(c.value)} (${c.count})`,
+            }))}
+          />
+        )}
+        {lockedFilter !== 'role' && (
+          <Select
+            label="Role"
+            value={filters.role}
+            onChange={(v) => setFilters((f) => ({ ...f, role: v }))}
+            options={facets.roles.map((r) => ({
+              value: r.value,
+              label: `${r.value} (${r.count})`,
+            }))}
+          />
+        )}
+        {lockedFilter !== 'skill' && (
+          <Select
+            label="Skill"
+            value={filters.skill}
+            onChange={(v) => setFilters((f) => ({ ...f, skill: v }))}
+            options={facets.skills.map((s) => ({
+              value: s.value,
+              label: `${titleCase(s.value)} (${s.count})`,
+            }))}
+          />
+        )}
         {activeCount > 0 && (
           <button
             type="button"
-            onClick={() => setFilters(EMPTY)}
+            onClick={() =>
+              setFilters((f) => ({ ...EMPTY, ...(initialFilters ?? {}), q: '', ...pickLocked(f, lockedFilter) }))
+            }
             className="rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50"
           >
             Clear ({activeCount})
@@ -201,4 +266,10 @@ export default function PeopleClient({
       )}
     </section>
   )
+}
+
+/** Keep the page's locked filter value when the user hits "Clear". */
+function pickLocked(f: Filters, locked: LockedFilter): Partial<Filters> {
+  if (!locked) return {}
+  return { [locked]: f[locked] }
 }

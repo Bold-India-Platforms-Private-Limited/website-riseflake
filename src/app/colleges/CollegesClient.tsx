@@ -244,7 +244,7 @@ export default function CollegesClient() {
             totalItems={totalColleges}
             pageSize={Number.isNaN(pageSize) ? 20 : pageSize}
             baseQuery={queryParams}
-            limitOptionPreset={[20, 50, 100, 500, 1000, 2000, 5000]}
+            limitOptionPreset={[20, 50, 100]}
           />
         </div>
       )}

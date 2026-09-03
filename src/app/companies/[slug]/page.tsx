@@ -1,8 +1,13 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { Building2, Factory, Globe, Users, ExternalLink, ChevronRight } from 'lucide-react'
+import { Building2, Factory, Globe, Users, ExternalLink, ChevronRight, ArrowRight } from 'lucide-react'
 import Navbar from '../../components/Navbar'
+import Footer from '../../components/Footer'
 import ShareCard from './ShareCard'
+import SeoListingCard from '../../components/seo/SeoListingCard'
+import type { SeoListingItem } from '../../components/seo/SeoListingCard'
+import { slugifyFacet } from '../../../lib/facets'
 import { API_BASE_URL, WEBSITE_BASE_URL, hreflangAlternates } from '../../../lib/config'
 
 export const dynamicParams = true
@@ -42,6 +47,20 @@ const fetchCompany = async (slug: string) => {
   } catch (err) {
     console.error(`[companies] fetch error for "${slug}":`, err)
     return null
+  }
+}
+
+async function fetchCompanyJobs(companyName: string): Promise<{ jobs: SeoListingItem[]; total: number }> {
+  try {
+    const res = await fetch(
+      `${API_BASE_URL}/jobs?company_name=${encodeURIComponent(companyName)}&limit=6`,
+      { next: { revalidate: 3600 }, signal: AbortSignal.timeout(8_000) },
+    )
+    if (!res.ok) return { jobs: [], total: 0 }
+    const data = await res.json()
+    return { jobs: data.result ?? [], total: data.total ?? (data.result?.length ?? 0) }
+  } catch {
+    return { jobs: [], total: 0 }
   }
 }
 
@@ -145,6 +164,9 @@ export default async function CompanyDetailsPage({ params }: PageProps) {
 
   const company = companyData.result
   const canonicalUrl = `${WEBSITE_BASE_URL}/companies/${company.slug}`
+  const { jobs: companyJobs, total: companyJobsTotal } = await fetchCompanyJobs(company.company_name)
+  const industrySlug = company.industry_type ? slugifyFacet(company.industry_type) : null
+  const orgTypeSlug = company.organization_type ? slugifyFacet(company.organization_type) : null
 
   const orgSchema = {
     '@context': 'https://schema.org/',
@@ -374,8 +396,59 @@ export default async function CompanyDetailsPage({ params }: PageProps) {
               <ShareCard slug={company.slug} companyName={company.company_name} />
             </aside>
           </div>
+
+          {/* Jobs at this company — internal links to job detail pages */}
+          {companyJobs.length > 0 && (
+            <section className="mt-8 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-bold text-slate-900">
+                  Jobs at {company.company_name}
+                  {companyJobsTotal > 0 && <span className="ml-2 text-sm font-normal text-slate-400">{companyJobsTotal} open</span>}
+                </h2>
+                <Link
+                  href={`/jobs/browse/jobs-at-${company.slug}`}
+                  className="text-xs text-indigo-600 hover:underline font-medium flex items-center gap-1"
+                >
+                  See all <ArrowRight className="h-3 w-3" />
+                </Link>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {companyJobs.map((job) => (
+                  <SeoListingCard key={job.slug} item={job} hrefBase="/jobs" />
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* Related company directory pages */}
+          <section className="mt-8 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+            <h2 className="text-sm font-bold uppercase tracking-wide text-slate-500 mb-3">Explore more companies</h2>
+            <div className="flex flex-wrap gap-2">
+              {industrySlug && (
+                <Link href={`/companies/browse/${industrySlug}-companies`} className="text-xs px-3 py-1.5 rounded-full border border-slate-200 bg-white text-slate-600 hover:border-indigo-300 hover:text-indigo-600">
+                  {company.industry_type} companies
+                </Link>
+              )}
+              {orgTypeSlug && (
+                <Link href={`/companies/browse/${orgTypeSlug}-companies`} className="text-xs px-3 py-1.5 rounded-full border border-slate-200 bg-white text-slate-600 hover:border-indigo-300 hover:text-indigo-600">
+                  {company.organization_type} companies
+                </Link>
+              )}
+              <Link href="/companies/browse/hiring-companies" className="text-xs px-3 py-1.5 rounded-full border border-slate-200 bg-white text-slate-600 hover:border-indigo-300 hover:text-indigo-600">
+                Companies hiring now
+              </Link>
+              <Link href="/companies/browse" className="text-xs px-3 py-1.5 rounded-full border border-slate-200 bg-white text-slate-600 hover:border-indigo-300 hover:text-indigo-600">
+                Browse all companies
+              </Link>
+              <Link href="/jobs" className="text-xs px-3 py-1.5 rounded-full border border-slate-200 bg-white text-slate-600 hover:border-indigo-300 hover:text-indigo-600">
+                Browse all jobs
+              </Link>
+            </div>
+          </section>
         </div>
       </main>
+
+      <Footer />
     </>
   )
 }

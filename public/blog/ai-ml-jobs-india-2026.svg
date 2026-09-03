@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" role="img" aria-label="AI and Machine Learning Jobs in India 2026">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#4338ca"/>
+      <stop offset="1" stop-color="#7c3aed"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#g)"/>
+  <circle cx="1040" cy="120" r="220" fill="#ffffff" opacity="0.06"/>
+  <circle cx="150" cy="560" r="160" fill="#ffffff" opacity="0.05"/>
+  <text x="80" y="120" font-family="Segoe UI, Arial, sans-serif" font-size="24" fill="#c7d2fe" letter-spacing="4">RISEFLAKE BLOG &#183; TECH &amp; ENGINEERING</text>
+  <text x="80" y="300" font-family="Segoe UI, Arial, sans-serif" font-size="66" font-weight="700" fill="#ffffff">
+    <tspan x="80" dy="0">AI &amp; Machine Learning</tspan>
+    <tspan x="80" dy="82">Jobs in India &#183; 2026</tspan>
+  </text>
+  <text x="80" y="560" font-family="Segoe UI, Arial, sans-serif" font-size="26" fill="#ddd6fe">Roles &#183; Salaries &#183; Skills &#183; Hiring trends</text>
+</svg>

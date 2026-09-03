@@ -5,29 +5,33 @@ import Navbar from '../../components/Navbar'
 import Footer from '../../components/Footer'
 import { API_BASE_URL, WEBSITE_BASE_URL, hreflangAlternates } from '../../../lib/config'
 import { formatSalaryChip } from '../../../lib/salary'
+import { currentPeriod } from '../../../lib/period'
 
 export const revalidate = 1800
 
-export const metadata: Metadata = {
-  title: 'Work from Home Internships 2025 — Remote Internships in India',
-  description:
-    'Find verified work from home and remote internships in India for students and freshers. Browse paid online internships in software, marketing, design, data science and more. Apply free on Riseflake.',
-  alternates: { canonical: `${WEBSITE_BASE_URL}/internships/work-from-home`, ...hreflangAlternates(`${WEBSITE_BASE_URL}/internships/work-from-home`) },
-  openGraph: {
-    title: 'Work from Home Internships 2025 | Riseflake',
-    description: 'Browse verified remote internship opportunities for students across India. Paid work from home internships in all domains.',
-    url: `${WEBSITE_BASE_URL}/internships/work-from-home`,
-    siteName: 'Riseflake',
-    type: 'website',
-  },
-  twitter: {
-    card: 'summary',
-    title: 'Work from Home Internships 2025 | Riseflake',
-    description: 'Browse paid remote internships for Indian students on Riseflake.',
-  },
-  keywords:
-    'work from home internships 2025, remote internships india, online internships for students, virtual internships, wfh internship, paid remote internship india, riseflake internships',
-  robots: { index: true, follow: true },
+export function generateMetadata(): Metadata {
+  const { monthYear } = currentPeriod()
+  return {
+    title: `Work from Home Internships ${monthYear} — Remote Internships in India`,
+    description:
+      `Find verified work from home and remote internships in India for students and freshers (updated ${monthYear}). Browse paid online internships in software, marketing, design, data science and more. Apply free on Riseflake.`,
+    alternates: { canonical: `${WEBSITE_BASE_URL}/internships/work-from-home`, ...hreflangAlternates(`${WEBSITE_BASE_URL}/internships/work-from-home`) },
+    openGraph: {
+      title: `Work from Home Internships ${monthYear} | Riseflake`,
+      description: 'Browse verified remote internship opportunities for students across India. Paid work from home internships in all domains.',
+      url: `${WEBSITE_BASE_URL}/internships/work-from-home`,
+      siteName: 'Riseflake',
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary',
+      title: `Work from Home Internships ${monthYear} | Riseflake`,
+      description: 'Browse paid remote internships for Indian students on Riseflake.',
+    },
+    keywords:
+      'work from home internships, remote internships india, online internships for students, virtual internships, wfh internship, paid remote internship india, riseflake internships',
+    robots: { index: true, follow: true },
+  }
 }
 
 const breadcrumbSchema = {
@@ -83,6 +87,7 @@ const DOMAINS = [
 ]
 
 export default async function WFHInternshipsPage() {
+  const { year } = currentPeriod()
   const internships = await fetchWFHInternships()
 
   return (
@@ -197,21 +202,27 @@ export default async function WFHInternshipsPage() {
           )}
 
           {internships.length > 0 && (
-            <div className="mt-6 text-center">
+            <div className="mt-6 text-center flex flex-wrap justify-center gap-4">
               <Link
-                href="/internships?workplace_type=1"
+                href="/internships"
                 className="inline-flex items-center gap-2 text-sm text-indigo-600 hover:underline font-medium"
               >
-                View all remote internships <ArrowRight className="h-4 w-4" />
+                View all internships <ArrowRight className="h-4 w-4" />
+              </Link>
+              <Link
+                href="/internships/browse"
+                className="inline-flex items-center gap-2 text-sm text-indigo-600 hover:underline font-medium"
+              >
+                Browse internships by role, city &amp; stipend <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
           )}
 
           {/* SEO content */}
           <section className="mt-12 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-            <h2 className="text-lg font-bold text-slate-900 mb-3">Work from Home Internships for Students — 2025</h2>
+            <h2 className="text-lg font-bold text-slate-900 mb-3">Work from Home Internships for Students — {year}</h2>
             <p className="text-sm text-slate-600 leading-relaxed">
-              Riseflake lists hundreds of verified remote and work-from-home internship opportunities for students and freshers across India. Whether you are pursuing B.Tech, BCA, MBA, BBA, B.Com, or any other degree, you can find online internships that fit your schedule. Remote internships in 2025 span across software development, web development, digital marketing, data science, graphic design, content writing, human resources, and more.
+              Riseflake lists hundreds of verified remote and work-from-home internship opportunities for students and freshers across India. Whether you are pursuing B.Tech, BCA, MBA, BBA, B.Com, or any other degree, you can find online internships that fit your schedule. Remote internships in {year} span across software development, web development, digital marketing, data science, graphic design, content writing, human resources, and more.
             </p>
             <p className="mt-3 text-sm text-slate-600 leading-relaxed">
               Most work-from-home internships on Riseflake offer a monthly stipend. Use the stipend filter on the internships page to find paid opportunities that match your expectations. All internships are posted directly by verified companies and recruiters — apply in one click with your Riseflake profile.

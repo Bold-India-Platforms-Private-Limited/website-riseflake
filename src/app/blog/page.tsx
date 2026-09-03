@@ -4,6 +4,7 @@ import Image from 'next/image'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import { BLOG_API_URL, WEBSITE_BASE_URL, hreflangAlternates } from '../../lib/config'
+import { getStaticBlogSummaries } from '../../lib/staticBlogPosts'
 
 export const revalidate = 300 // ISR: 5 min
 
@@ -281,13 +282,25 @@ export default async function BlogPage({ searchParams }: { searchParams: Promise
   ])
 
   const currentPage    = Math.max(1, parseInt(resolvedParams.page || '1'))
-  const totalPages     = Math.ceil(total / 12)
   const activeCategory = resolvedParams.category || ''
   const isFiltered     = !!(resolvedParams.category || resolvedParams.tag || resolvedParams.search)
 
+  // Merge in the hand-written static posts. They only appear on page 1 and are
+  // hidden on tag / search views (which are thin, noindex pages anyway).
+  const staticSummaries =
+    !resolvedParams.tag && !resolvedParams.search && currentPage === 1
+      ? getStaticBlogSummaries(resolvedParams.category)
+      : []
+  const mergedBlogs = [
+    ...staticSummaries,
+    ...blogs.filter((b) => !staticSummaries.some((s) => s.slug === b.slug)),
+  ]
+  const mergedTotal = total + staticSummaries.length
+  const totalPages  = Math.ceil(mergedTotal / 12)
+
   // Feature the first post on unfiltered page 1
-  const featuredPost = (!isFiltered && currentPage === 1 && blogs.length > 0) ? blogs[0] : null
-  const gridPosts    = featuredPost ? blogs.slice(1) : blogs
+  const featuredPost = (!isFiltered && currentPage === 1 && mergedBlogs.length > 0) ? mergedBlogs[0] : null
+  const gridPosts    = featuredPost ? mergedBlogs.slice(1) : mergedBlogs
 
   return (
     <>
@@ -345,7 +358,7 @@ export default async function BlogPage({ searchParams }: { searchParams: Promise
           )}
 
           {/* Blog grid */}
-          {blogs.length === 0 ? (
+          {mergedBlogs.length === 0 ? (
             <div className="text-center py-20 text-gray-400">
               <p className="text-4xl mb-3">📭</p>
               <p className="text-lg font-semibold text-gray-600">No posts found</p>

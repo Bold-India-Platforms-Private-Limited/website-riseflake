@@ -9,10 +9,12 @@ import JobDescription from './components/JobDescription'
 import JobHeader from './components/JobHeader'
 import TagsSection from './components/TagsSection'
 import DownloadAppCard from '../../jobs/[slug]/components/DownloadAppCard'
+import SimilarListings from '../../jobs/[slug]/components/SimilarListings'
 import JobReportWrapper from '../../components/JobReportWrapper'
 import type { JobDetail } from './components/types'
 import { API_BASE_URL, WEBSITE_BASE_URL, hreflangAlternates } from '../../../lib/config'
 import { formatSalaryChip } from '../../../lib/salary'
+import { currentPeriod } from '../../../lib/period'
 import React from 'react'
 
 export const dynamicParams = true
@@ -27,7 +29,7 @@ const DOMAIN_MAP: Record<string, { label: string; category: string; description:
     label: 'Software Development',
     category: 'Software Development',
     description: 'Browse verified software development internships for students and freshers in India. Gain real coding experience with top startups and tech companies.',
-    keywords: 'software development internship india, coding internship, programming internship, developer internship 2025, software engineer intern',
+    keywords: 'software development internship india, coding internship, programming internship, develope$1 $2, software engineer intern',
   },
   'web-development': {
     label: 'Web Development',
@@ -39,7 +41,7 @@ const DOMAIN_MAP: Record<string, { label: string; category: string; description:
     label: 'Marketing',
     category: 'Marketing',
     description: 'Discover marketing internships in India for students. Learn digital marketing, social media, SEO, and brand strategy with growing companies.',
-    keywords: 'marketing internship india, digital marketing internship, social media intern, SEO internship, brand marketing intern 2025',
+    keywords: 'marketing internship india, digital marketing internship, social media intern, SEO internship, brand marketin$1 $2',
   },
   'data-science': {
     label: 'Data Science',
@@ -51,7 +53,7 @@ const DOMAIN_MAP: Record<string, { label: string; category: string; description:
     label: 'Design',
     category: 'Design',
     description: 'Browse design internships in India — UI/UX, graphic design, product design, and visual design. Build your portfolio with real projects.',
-    keywords: 'design internship india, UI UX internship, graphic design internship, product design intern, figma internship 2025',
+    keywords: 'design internship india, UI UX internship, graphic design internship, product design intern, figm$1 $2',
   },
   'finance': {
     label: 'Finance',
@@ -63,25 +65,25 @@ const DOMAIN_MAP: Record<string, { label: string; category: string; description:
     label: 'Content Writing',
     category: 'Content Writing',
     description: 'Browse content writing internships in India. Work as a content writer, copywriter, or editor with media companies, startups, and agencies.',
-    keywords: 'content writing internship india, copywriting internship, blog writing intern, content creator intern 2025',
+    keywords: 'content writing internship india, copywriting internship, blog writing intern, content creato$1 $2',
   },
   'human-resources': {
     label: 'Human Resources',
     category: 'Human Resources',
     description: 'Find HR internships in India. Learn recruitment, talent management, payroll, and employee engagement with real companies.',
-    keywords: 'HR internship india, human resources internship, recruitment intern, talent acquisition internship 2025',
+    keywords: 'HR internship india, human resources internship, recruitment intern, talent acquisitio$1 $2',
   },
   'sales': {
     label: 'Sales',
     category: 'Sales',
     description: 'Discover sales internships in India. Learn business development, inside sales, and client management with fast-growing companies.',
-    keywords: 'sales internship india, business development internship, inside sales intern, BD internship 2025',
+    keywords: 'sales internship india, business development internship, inside sales intern, B$1 $2',
   },
   'operations': {
     label: 'Operations',
     category: 'Operations',
     description: 'Find operations internships in India. Work in supply chain, logistics, project management, and business operations.',
-    keywords: 'operations internship india, supply chain internship, logistics intern, project management internship 2025',
+    keywords: 'operations internship india, supply chain internship, logistics intern, project managemen$1 $2',
   },
 }
 
@@ -195,7 +197,7 @@ async function renderDomainPage(slug: string) {
             </>
           )}
           <section className="mt-12 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-            <h2 className="text-lg font-bold text-slate-900 mb-3">{info.label} Internships for Students — 2025 Guide</h2>
+            <h2 className="text-lg font-bold text-slate-900 mb-3">{info.label} Internships for Students — {currentPeriod().year} Guide</h2>
             <p className="text-sm text-slate-600 leading-relaxed">{info.description}</p>
             <p className="mt-3 text-sm text-slate-600 leading-relaxed">Riseflake lists verified {info.label.toLowerCase()} internship opportunities posted directly by recruiters and companies. Many offer monthly stipends and can be done remotely. Create your free Riseflake profile to apply in one click.</p>
             <div className="mt-4 flex flex-wrap gap-4">
@@ -444,7 +446,7 @@ export async function generateMetadata(
   const domainInfo = DOMAIN_MAP[slug]
   if (domainInfo) {
     const canonicalUrl = `${WEBSITE_BASE_URL}/internships/${slug}`
-    const title = `${domainInfo.label} Internships in India 2025 — Students & Freshers`
+    const title = `${domainInfo.label} Internships in India ${currentPeriod().year} — Students & Freshers`
     return {
       title,
       description: domainInfo.description,
@@ -636,6 +638,7 @@ export default async function InternshipDetailsPage(
             <div className="lg:col-span-1 space-y-6">
               <ApplyCard job={internship} />
               <DownloadAppCard />
+              <SimilarListings slug={internship.slug} categories={internship.categories} isInternship />
             </div>
           </div>
 

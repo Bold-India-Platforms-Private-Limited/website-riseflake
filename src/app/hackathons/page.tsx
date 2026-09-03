@@ -4,30 +4,34 @@ import { Calendar, MapPin, Users, Trophy, IndianRupee, Globe } from 'lucide-reac
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import { BLOG_API_URL, WEBSITE_BASE_URL, hreflangAlternates } from '../../lib/config'
+import { currentPeriod } from '../../lib/period'
 
 export const revalidate = 1800
 
-export const metadata: Metadata = {
-  title: 'Hackathons & Coding Competitions in India 2025',
-  description:
-    'Find upcoming hackathons, coding competitions, and innovation challenges in India. Register free, win prizes, and build real projects. Discover the best hackathons for students and developers on Riseflake.',
-  alternates: { canonical: `${WEBSITE_BASE_URL}/hackathons`, ...hreflangAlternates(`${WEBSITE_BASE_URL}/hackathons`) },
-  openGraph: {
-    title: 'Hackathons & Coding Competitions in India 2025 | Riseflake',
+export function generateMetadata(): Metadata {
+  const { year } = currentPeriod()
+  return {
+    title: `Hackathons & Coding Competitions in India ${year}`,
     description:
-      'Discover upcoming hackathons, coding contests, and innovation challenges. Win prizes and build your portfolio.',
-    url: `${WEBSITE_BASE_URL}/hackathons`,
-    siteName: 'Riseflake',
-    type: 'website',
-  },
-  twitter: {
-    card: 'summary',
-    title: 'Hackathons & Competitions in India | Riseflake',
-    description: 'Find and register for the best hackathons in India — free, open to students and developers.',
-  },
-  keywords:
-    'hackathons india 2025, coding competitions, innovation challenges, student hackathons, online hackathons, prize money hackathons, riseflake hackathons',
-  robots: { index: true, follow: true },
+      'Find upcoming hackathons, coding competitions, and innovation challenges in India. Register free, win prizes, and build real projects. Discover the best hackathons for students and developers on Riseflake.',
+    alternates: { canonical: `${WEBSITE_BASE_URL}/hackathons`, ...hreflangAlternates(`${WEBSITE_BASE_URL}/hackathons`) },
+    openGraph: {
+      title: `Hackathons & Coding Competitions in India ${year} | Riseflake`,
+      description:
+        'Discover upcoming hackathons, coding contests, and innovation challenges. Win prizes and build your portfolio.',
+      url: `${WEBSITE_BASE_URL}/hackathons`,
+      siteName: 'Riseflake',
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary',
+      title: 'Hackathons & Competitions in India | Riseflake',
+      description: 'Find and register for the best hackathons in India — free, open to students and developers.',
+    },
+    keywords:
+      'hackathons india, coding competitions, innovation challenges, student hackathons, online hackathons, prize money hackathons, riseflake hackathons',
+    robots: { index: true, follow: true },
+  }
 }
 
 const breadcrumbSchema = {

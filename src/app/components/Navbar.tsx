@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { Menu, X, ChevronRight, ChevronDown, Building2, GraduationCap, Briefcase, Cloud, FileText, FileCheck, Star, BookOpen } from 'lucide-react'
+import BrowseMegaMenu from './BrowseMegaMenu'
 
 export default function Navbar({ bgTransparent = false }: { bgTransparent?: boolean }) {
   const pathname = usePathname()
@@ -91,33 +92,50 @@ export default function Navbar({ bgTransparent = false }: { bgTransparent?: bool
 
             {/* Main Center Menu */}
             <nav className="hidden lg:flex items-center gap-1 xl:gap-2 rounded-lg p-1 bg-transparent shrink">
-              <a
-                href="/jobs"
-                className={`rounded-lg px-2 xl:px-3 py-2 text-sm font-medium transition-all duration-500 whitespace-nowrap ${activeTab === '/jobs'
-                  ? 'bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 text-white scale-105 shadow-md shadow-indigo-500/20'
-                  : 'bg-transparent text-slate-700 hover:bg-white/60 hover:text-slate-900'
-                  }`}
-              >
-                Jobs
-              </a>
-              <a
-                href="/internships"
-                className={`rounded-lg px-2 xl:px-3 py-2 text-sm font-medium transition-all duration-500 whitespace-nowrap ${pathname === '/internships'
-                  ? 'bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 text-white scale-105 shadow-md shadow-indigo-500/20'
-                  : 'bg-transparent text-slate-700 hover:bg-white/60 hover:text-slate-900'
-                  }`}
-              >
-                Internships
-              </a>
-              <a
-                href="/companies"
-                className={`rounded-lg px-2 xl:px-3 py-2 text-sm font-medium transition-all duration-500 whitespace-nowrap ${activeTab === '/companies'
-                  ? 'bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 text-white scale-105 shadow-md shadow-indigo-500/20'
-                  : 'bg-transparent text-slate-700 hover:bg-white/60 hover:text-slate-900'
-                  }`}
-              >
-                Companies
-              </a>
+              <div className="relative group shrink-0">
+                <a
+                  href="/jobs"
+                  className={`inline-block rounded-lg px-2 xl:px-3 py-2 text-sm font-medium transition-all duration-500 whitespace-nowrap ${activeTab === '/jobs'
+                    ? 'bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 text-white scale-105 shadow-md shadow-indigo-500/20'
+                    : 'bg-transparent text-slate-700 hover:bg-white/60 hover:text-slate-900'
+                    }`}
+                >
+                  Jobs
+                </a>
+                <BrowseMegaMenu vertical="jobs" />
+              </div>
+              <div className="relative group shrink-0">
+                <a
+                  href="/internships"
+                  className={`inline-block rounded-lg px-2 xl:px-3 py-2 text-sm font-medium transition-all duration-500 whitespace-nowrap ${pathname === '/internships'
+                    ? 'bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 text-white scale-105 shadow-md shadow-indigo-500/20'
+                    : 'bg-transparent text-slate-700 hover:bg-white/60 hover:text-slate-900'
+                    }`}
+                >
+                  Internships
+                </a>
+                <BrowseMegaMenu vertical="internships" />
+              </div>
+              <div className="relative group shrink-0">
+                <a
+                  href="/companies"
+                  className={`inline-block rounded-lg px-2 xl:px-3 py-2 text-sm font-medium transition-all duration-500 whitespace-nowrap ${activeTab === '/companies'
+                    ? 'bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 text-white scale-105 shadow-md shadow-indigo-500/20'
+                    : 'bg-transparent text-slate-700 hover:bg-white/60 hover:text-slate-900'
+                    }`}
+                >
+                  Companies
+                </a>
+                <div className="absolute left-1/2 -translate-x-1/2 top-full pt-3 w-64 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                  <div className="rounded-2xl bg-white p-3 shadow-2xl border border-slate-200 flex flex-col gap-1">
+                    <Link href="/companies" className="rounded-xl px-3 py-2 text-sm text-slate-600 hover:bg-slate-50 hover:text-indigo-600">All companies</Link>
+                    <Link href="/companies/browse" className="rounded-xl px-3 py-2 text-sm text-slate-600 hover:bg-slate-50 hover:text-indigo-600">Browse by industry &amp; size</Link>
+                    <Link href="/companies/browse/hiring-companies" className="rounded-xl px-3 py-2 text-sm text-slate-600 hover:bg-slate-50 hover:text-indigo-600">Companies hiring now</Link>
+                    <Link href="/companies/browse/companies-hiring-in-bangalore" className="rounded-xl px-3 py-2 text-sm text-slate-600 hover:bg-slate-50 hover:text-indigo-600">Companies hiring by city</Link>
+                    <Link href="/companies/browse/companies-hiring-for-software-development" className="rounded-xl px-3 py-2 text-sm text-slate-600 hover:bg-slate-50 hover:text-indigo-600">Companies hiring by role</Link>
+                  </div>
+                </div>
+              </div>
               <a
                 href="/colleges"
                 className={`rounded-lg px-2 xl:px-3 py-2 text-sm font-medium transition-all duration-500 whitespace-nowrap ${activeTab === '/colleges'
@@ -395,6 +413,13 @@ export default function Navbar({ bgTransparent = false }: { bgTransparent?: bool
                 <ChevronRight className="h-5 w-5 opacity-70" />
               </Link>
               <Link
+                href="/jobs/browse"
+                className="rounded-xl px-4 py-2 text-sm text-slate-500 hover:bg-slate-100"
+                onClick={() => setOpen(false)}
+              >
+                Browse jobs by city, role, company &amp; salary →
+              </Link>
+              <Link
                 href="/internships"
                 className={`flex items-center justify-between rounded-xl px-4 py-3 text-base font-medium transition ${isActive('/internships')
                   ? 'bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 text-white shadow'
@@ -404,6 +429,13 @@ export default function Navbar({ bgTransparent = false }: { bgTransparent?: bool
               >
                 <span>Internships</span>
                 <ChevronRight className="h-5 w-5 opacity-70" />
+              </Link>
+              <Link
+                href="/internships/browse"
+                className="rounded-xl px-4 py-2 text-sm text-slate-500 hover:bg-slate-100"
+                onClick={() => setOpen(false)}
+              >
+                Browse internships by city, role &amp; stipend →
               </Link>
               <Link
                 href="/companies"

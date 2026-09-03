@@ -30,10 +30,18 @@ const STATIC_PAGES: StaticPage[] = [
   { url: 'https://riseflake.com/campus-ambassador',   changefreq: 'monthly', priority: '0.5' },
   // Profile network page — crawlable landing, links out to individual /in/* pages
   { url: 'https://riseflake.com/network',             changefreq: 'daily',   priority: '0.7' },
+  // People directory — SEO hub for /in/people/* role & city landing pages
+  { url: 'https://riseflake.com/in/people',           changefreq: 'daily',   priority: '0.7' },
   // Hackathons listing
   { url: 'https://riseflake.com/hackathons',          changefreq: 'daily',   priority: '0.8' },
   // Internship SEO pages
   { url: 'https://riseflake.com/internships/work-from-home',      changefreq: 'daily',   priority: '0.9' },
+  // Faceted discovery hubs — individual facet URLs live in the count-gated
+  // sitemap-{jobs,internships}-facets.xml
+  { url: 'https://riseflake.com/internships/browse',             changefreq: 'daily',   priority: '0.8' },
+  { url: 'https://riseflake.com/jobs/browse',                    changefreq: 'daily',   priority: '0.8' },
+  { url: 'https://riseflake.com/companies/browse',               changefreq: 'daily',   priority: '0.7' },
+  { url: 'https://riseflake.com/colleges/browse',                changefreq: 'weekly',  priority: '0.7' },
   { url: 'https://riseflake.com/internships/software-development', changefreq: 'daily',   priority: '0.8' },
   { url: 'https://riseflake.com/internships/web-development',     changefreq: 'daily',   priority: '0.8' },
   { url: 'https://riseflake.com/internships/marketing',           changefreq: 'daily',   priority: '0.8' },

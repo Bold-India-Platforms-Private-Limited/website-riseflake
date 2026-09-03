@@ -3,7 +3,9 @@ import { API_BASE_URL } from '../../lib/config'
 
 export const revalidate = 3600
 
-const EMPTY_URLSET = `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"></urlset>`
+// This endpoint returns a <sitemapindex> (→ sitemap-jobs-1.xml, -2.xml, …).
+// On backend failure serve a valid-but-empty index, never an error string.
+const EMPTY_URLSET = `<?xml version="1.0" encoding="UTF-8"?><sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"></sitemapindex>`
 
 export async function GET() {
   try {

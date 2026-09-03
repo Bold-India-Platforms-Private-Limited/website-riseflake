@@ -7,6 +7,7 @@ import JobDescription from './components/JobDescription'
 import JobHeader from './components/JobHeader'
 import TagsSection from './components/TagsSection'
 import DownloadAppCard from './components/DownloadAppCard'
+import SimilarListings from './components/SimilarListings'
 import JobReportWrapper from '../../components/JobReportWrapper'
 import type { JobDetail } from './components/types'
 import { API_BASE_URL, WEBSITE_BASE_URL, hreflangAlternates } from '../../../lib/config'
@@ -447,6 +448,7 @@ export default async function JobDetailsPage(
             <div className="lg:sticky lg:top-24 space-y-6">
               <ApplyCard job={job} />
               <DownloadAppCard />
+              <SimilarListings slug={job.slug} categories={job.categories} />
             </div>
           </div>
         </div>

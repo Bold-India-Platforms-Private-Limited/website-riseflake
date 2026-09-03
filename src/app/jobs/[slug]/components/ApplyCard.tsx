@@ -125,8 +125,23 @@ export default function ApplyCard({ job }: { job: JobDetail }) {
   // (sign in + phone capture, or straight to confirm if already signed in).
   // Starts from the SSR-safe base, then swaps to the local dev app on localhost.
   const [appBase, setAppBase] = useState(APP_BASE_URL)
-  useEffect(() => { setAppBase(resolveAppBaseUrl()) }, [])
-  const applyHref = useMemo(() => `${appBase}${pathname}?apply=1`, [appBase, pathname])
+  const [utmQs, setUtmQs] = useState('')
+  useEffect(() => {
+    setAppBase(resolveAppBaseUrl())
+    try {
+      const raw = localStorage.getItem('rf_attribution')
+      if (raw) {
+        const a = JSON.parse(raw) as Record<string, string>
+        const p = new URLSearchParams()
+        for (const k of ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'ref']) {
+          if (a[k]) p.set(k, a[k])
+        }
+        const s = p.toString()
+        if (s) setUtmQs(`&${s}`)
+      }
+    } catch { /* localStorage unavailable */ }
+  }, [])
+  const applyHref = useMemo(() => `${appBase}${pathname}?apply=1${utmQs}`, [appBase, pathname, utmQs])
 
   const shareUrl   = `${WEBSITE_BASE_URL}${pathname}`
   const salaryInfo = formatSalaryInfo(job)

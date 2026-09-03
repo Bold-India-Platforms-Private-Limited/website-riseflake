@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { BLOG_API_URL, WEBSITE_BASE_URL } from '../../lib/config'
+import { STATIC_BLOG_SITEMAP_ENTRIES } from '../../lib/staticBlogPosts'
 
 export const revalidate = 3600 // rebuild hourly
 
@@ -17,6 +18,12 @@ export async function GET() {
     }
   } catch {
     // return empty sitemap on error
+  }
+
+  // Hand-written static posts are always present (no backend dependency).
+  const seen = new Set(slugs.map((s) => s.slug))
+  for (const e of STATIC_BLOG_SITEMAP_ENTRIES) {
+    if (!seen.has(e.slug)) slugs.push(e)
   }
 
   const today = new Date().toISOString().slice(0, 10)

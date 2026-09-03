@@ -6,6 +6,9 @@ import Navbar from '../../components/Navbar'
 import Footer from '../../components/Footer'
 import { API_BASE_URL, WEBSITE_BASE_URL, hreflangAlternates } from '../../../lib/config'
 import { formatSalaryChip } from '../../../lib/salary'
+import { currentPeriod } from '../../../lib/period'
+import FacetChips from '../../components/seo/FacetChips'
+import FaqBlock from '../../components/seo/FaqJsonLd'
 
 export const dynamicParams = true
 export const revalidate = 3600
@@ -59,6 +62,22 @@ async function fetchJobsByCity(city: string): Promise<Job[]> {
   }
 }
 
+type Combo = { slug: string; label: string; count?: number; city_slug?: string }
+
+async function fetchRoleCombosForCity(city: string): Promise<Combo[]> {
+  try {
+    const res = await fetch(`${API_BASE_URL}/jobs/directory`, {
+      next: { revalidate: 3600 },
+      signal: AbortSignal.timeout(8_000),
+    })
+    if (!res.ok) return []
+    const data = await res.json()
+    return (data.combos ?? []).filter((c: Combo) => c.city_slug === city)
+  } catch {
+    return []
+  }
+}
+
 export async function generateStaticParams() {
   return CITIES.map(city => ({ city }))
 }
@@ -72,11 +91,12 @@ export async function generateMetadata(
   }
 
   const cityLabel = titleCase(city)
+  const { year } = currentPeriod()
   const canonicalUrl = `${WEBSITE_BASE_URL}/jobs-in/${city}`
   const isRemote = city === 'remote'
   const title = isRemote
-    ? 'Remote Jobs in India 2025 — Work from Home | Riseflake'
-    : `Jobs in ${cityLabel} 2025 — Freshers & Experienced | Riseflake`
+    ? `Remote Jobs in India ${year} — Work from Home`
+    : `Jobs in ${cityLabel} ${year} — Freshers & Experienced`
   const description = isRemote
     ? `Find remote work-from-home jobs in India. Browse verified full-time and part-time remote openings across software, marketing, design, and more. Apply free on Riseflake.`
     : `Find jobs in ${cityLabel} for freshers and experienced professionals. Browse verified full-time, part-time, and contract openings across IT, marketing, finance, and more. Apply free on Riseflake.`
@@ -92,8 +112,8 @@ export async function generateMetadata(
     openGraph: { title, description, url: canonicalUrl, siteName: 'Riseflake', type: 'website' },
     twitter: { card: 'summary', title, description },
     keywords: isRemote
-      ? 'remote jobs india, work from home jobs, remote work 2025, online jobs india, riseflake remote'
-      : `jobs in ${cityLabel.toLowerCase()}, ${cityLabel.toLowerCase()} jobs 2025, freshers jobs ${cityLabel.toLowerCase()}, hiring in ${cityLabel.toLowerCase()}, riseflake ${cityLabel.toLowerCase()}`,
+      ? 'remote jobs india, work from home jobs, remote work, online jobs india, riseflake remote'
+      : `jobs in ${cityLabel.toLowerCase()}, ${cityLabel.toLowerCase()} jobs, freshers jobs ${cityLabel.toLowerCase()}, hiring in ${cityLabel.toLowerCase()}, riseflake ${cityLabel.toLowerCase()}`,
     robots: { index: shouldIndex, follow: true },
   }
 }
@@ -106,8 +126,13 @@ export default async function JobsInCityPage(
 
   const cityLabel = titleCase(city)
   const isRemote = city === 'remote'
-  const jobs = await fetchJobsByCity(city)
+  const { year, monthYear } = currentPeriod()
+  const [jobs, roleCombos] = await Promise.all([
+    fetchJobsByCity(city),
+    isRemote ? Promise.resolve([] as Combo[]) : fetchRoleCombosForCity(city),
+  ])
   const canonicalUrl = `${WEBSITE_BASE_URL}/jobs-in/${city}`
+  const now = new Date().toISOString()
 
   const breadcrumbSchema = {
     '@context': 'https://schema.org',
@@ -119,9 +144,48 @@ export default async function JobsInCityPage(
     ],
   }
 
+  const collectionSchema = jobs.length > 0 ? {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: `Jobs in ${cityLabel} ${year}`,
+    description: `Verified job openings in ${cityLabel} on Riseflake, updated ${monthYear}.`,
+    url: canonicalUrl,
+    datePublished: now,
+    dateModified: now,
+    isPartOf: { '@type': 'WebSite', name: 'Riseflake', url: WEBSITE_BASE_URL },
+    mainEntity: {
+      '@type': 'ItemList',
+      numberOfItems: jobs.length,
+      itemListElement: jobs.slice(0, 25).map((it, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        url: `${WEBSITE_BASE_URL}/jobs/${it.slug}`,
+        name: it.company_name ? `${it.position} at ${it.company_name}` : it.position,
+      })),
+    },
+  } : null
+
+  const faqs = [
+    {
+      question: `How many jobs are available in ${cityLabel}?`,
+      answer: `Riseflake lists verified job openings in ${cityLabel} from registered employers, refreshed continuously as of ${monthYear}. Open any listing for the full description, eligibility and salary.`,
+    },
+    {
+      question: `What types of jobs are listed for ${cityLabel}?`,
+      answer: `Full-time, part-time and contract roles across IT, software, marketing, finance, sales, operations, design and more — for both freshers and experienced professionals.`,
+    },
+    {
+      question: `Is it free to apply for jobs in ${cityLabel} on Riseflake?`,
+      answer: `Yes. Applying is always free for candidates. Every listing shows the real hiring company and role.`,
+    },
+  ]
+
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      {collectionSchema && (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionSchema) }} />
+      )}
 
       <Navbar bgTransparent />
 
@@ -220,23 +284,41 @@ export default async function JobsInCityPage(
             </div>
           )}
 
+          {/* Role-in-city landing pages */}
+          {roleCombos.length > 0 && (
+            <FacetChips
+              title={`Jobs in ${cityLabel} by role`}
+              chips={roleCombos.map(c => ({ slug: c.slug, label: c.label.replace(/ Jobs in .+$/, ''), count: c.count }))}
+              hrefBase="/jobs/browse"
+              seeAllHref="/jobs/browse"
+            />
+          )}
+
+          {/* FAQ */}
+          <FaqBlock faqs={faqs} />
+
           {/* SEO content block */}
           <section className="mt-12 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
             <h2 className="text-lg font-bold text-slate-900 mb-3">
-              {isRemote ? 'Remote Jobs in India — Work from Anywhere' : `About Jobs in ${cityLabel}`}
+              {isRemote ? `Remote Jobs in India ${year} — Work from Anywhere` : `About Jobs in ${cityLabel} — ${year}`}
             </h2>
             <p className="text-sm text-slate-600 leading-relaxed">
               {isRemote
                 ? `Riseflake lists hundreds of verified remote and work-from-home job opportunities across India. Whether you are a fresher, a student, or an experienced professional, you can find remote roles in software development, digital marketing, data science, graphic design, content writing, and more. All remote jobs on Riseflake are posted directly by verified recruiters.`
                 : `Riseflake is India's trusted job portal for students and freshers. We list verified job openings in ${cityLabel} across industries including information technology, banking, finance, healthcare, education, retail, and manufacturing. Whether you are a recent graduate or an experienced professional looking for a new role in ${cityLabel}, Riseflake helps you find and apply to the right opportunities — completely free.`}
             </p>
-            <div className="mt-4 flex items-center gap-3">
+            <div className="mt-4 flex flex-wrap items-center gap-3">
               <Link href="/jobs" className="text-sm text-indigo-600 hover:underline font-medium flex items-center gap-1">
                 Browse all jobs <ArrowRight className="h-4 w-4" />
               </Link>
-              <Link href="/internships" className="text-sm text-indigo-600 hover:underline font-medium flex items-center gap-1">
-                Browse internships <ArrowRight className="h-4 w-4" />
+              <Link href="/jobs/browse" className="text-sm text-indigo-600 hover:underline font-medium flex items-center gap-1">
+                Jobs by role, company &amp; salary <ArrowRight className="h-4 w-4" />
               </Link>
+              {!isRemote && (
+                <Link href={`/internships-in/${city}`} className="text-sm text-indigo-600 hover:underline font-medium flex items-center gap-1">
+                  Internships in {cityLabel} <ArrowRight className="h-4 w-4" />
+                </Link>
+              )}
             </div>
           </section>
         </div>

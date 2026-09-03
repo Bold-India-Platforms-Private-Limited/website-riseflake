@@ -17,11 +17,10 @@ const links = {
   ],
   explore: [
     { label: 'Blog', href: '/blog' },
-    { label: 'Career Tips', href: '/blog?category=career-tips' },
     { label: 'Tech & Engineering', href: '/blog?category=tech-engineering' },
-    { label: 'Campus Life', href: '/blog?category=campus-life' },
-    { label: 'Internship Guides', href: '/blog?category=internships' },
-    { label: 'Company Spotlights', href: '/blog?category=company-spotlights' },
+    { label: 'Career Tips', href: '/blog?category=career-tips' },
+    { label: 'Browse Colleges', href: '/colleges/browse' },
+    { label: 'Engineering Colleges', href: '/colleges/browse/engineering-colleges-in-india' },
   ],
   company: [
     { label: 'Contact Us', href: '/contact' },
@@ -385,24 +384,24 @@ export default function Footer() {
           <div className="mb-8 mt-8">
             <h3 className="mb-4 mt-4 text-base font-semibold text-gray-800">Location based jobs</h3>
             <div className="grid grid-cols-1 gap-x-5 gap-y-3 text-sm text-gray-600 sm:grid-cols-2 lg:grid-cols-4">
-              <FooterLink href="/jobs">Jobs in Kolkata</FooterLink>
-              <FooterLink href="/jobs">Jobs in Coimbatore</FooterLink>
-              <FooterLink href="/jobs">Jobs in Lucknow</FooterLink>
-              <FooterLink href="/jobs">Jobs in Indore</FooterLink>
-              <FooterLink href="/jobs">Jobs in Ahmedabad</FooterLink>
-              <FooterLink href="/jobs">Jobs in Nagpur</FooterLink>
-              <FooterLink href="/jobs">Jobs in Chandigarh</FooterLink>
-              <FooterLink href="/jobs">Jobs in Jaipur</FooterLink>
-              <FooterLink href="/jobs">Jobs in Cochin</FooterLink>
-              <FooterLink href="/jobs">Jobs in Surat</FooterLink>
-              <FooterLink href="/jobs">Jobs in Bangalore</FooterLink>
-              <FooterLink href="/jobs">Jobs in Delhi</FooterLink>
-              <FooterLink href="/jobs">Jobs in Hyderabad</FooterLink>
-              <FooterLink href="/jobs">Jobs in Mumbai</FooterLink>
-              <FooterLink href="/jobs">Jobs in Pune</FooterLink>
-              <FooterLink href="/jobs">Jobs in Chennai</FooterLink>
-              <FooterLink href="/jobs">Jobs in Noida</FooterLink>
-              <FooterLink href="/jobs">Jobs in Gurgaon</FooterLink>
+              <FooterLink href="/jobs-in/kolkata">Jobs in Kolkata</FooterLink>
+              <FooterLink href="/jobs-in/coimbatore">Jobs in Coimbatore</FooterLink>
+              <FooterLink href="/jobs-in/lucknow">Jobs in Lucknow</FooterLink>
+              <FooterLink href="/jobs-in/indore">Jobs in Indore</FooterLink>
+              <FooterLink href="/jobs-in/ahmedabad">Jobs in Ahmedabad</FooterLink>
+              <FooterLink href="/jobs-in/nagpur">Jobs in Nagpur</FooterLink>
+              <FooterLink href="/jobs-in/chandigarh">Jobs in Chandigarh</FooterLink>
+              <FooterLink href="/jobs-in/jaipur">Jobs in Jaipur</FooterLink>
+              <FooterLink href="/jobs-in/kochi">Jobs in Kochi</FooterLink>
+              <FooterLink href="/jobs-in/surat">Jobs in Surat</FooterLink>
+              <FooterLink href="/jobs-in/bangalore">Jobs in Bangalore</FooterLink>
+              <FooterLink href="/jobs-in/delhi">Jobs in Delhi</FooterLink>
+              <FooterLink href="/jobs-in/hyderabad">Jobs in Hyderabad</FooterLink>
+              <FooterLink href="/jobs-in/mumbai">Jobs in Mumbai</FooterLink>
+              <FooterLink href="/jobs-in/pune">Jobs in Pune</FooterLink>
+              <FooterLink href="/jobs-in/chennai">Jobs in Chennai</FooterLink>
+              <FooterLink href="/jobs-in/noida">Jobs in Noida</FooterLink>
+              <FooterLink href="/jobs-in/gurgaon">Jobs in Gurgaon</FooterLink>
             </div>
           </div>
 
@@ -414,84 +413,101 @@ export default function Footer() {
               <div>
                 <h4 className="mb-3 text-sm font-semibold text-gray-800">Skill based jobs</h4>
                 <div className="grid grid-cols-1 gap-x-5 gap-y-3 text-sm text-gray-600 sm:grid-cols-2 lg:grid-cols-4">
-                  <FooterLink href="#">Data Entry Jobs</FooterLink>
-                  <FooterLink href="#">Content Writing Jobs</FooterLink>
-                  <FooterLink href="#">AI Engineering Jobs</FooterLink>
-                  <FooterLink href="#">Digital Marketing Jobs</FooterLink>
-                  <FooterLink href="#">Data Analyst Jobs</FooterLink>
-                  <FooterLink href="#">Business Analyst Jobs</FooterLink>
-                  <FooterLink href="#">Data Scientist Jobs</FooterLink>
-                  <FooterLink href="#">Software Engineer Jobs</FooterLink>
-                  <FooterLink href="#">Data Engineer Jobs</FooterLink>
-                  <FooterLink href="#">Product Manager Jobs</FooterLink>
-                  <FooterLink href="#">Financial Analyst Jobs</FooterLink>
-                  <FooterLink href="#">Analyst Jobs</FooterLink>
-                  <FooterLink href="#">Management Trainee Jobs</FooterLink>
-                  <FooterLink href="#">Accounts Jobs</FooterLink>
-                  <FooterLink href="#">HR Jobs</FooterLink>
-                  <FooterLink href="#">Finance Jobs</FooterLink>
-                  <FooterLink href="#">Marketing Jobs</FooterLink>
-                  <FooterLink href="#">Customer Service Jobs</FooterLink>
-                  <FooterLink href="#">Engineering Jobs</FooterLink>
-                  <FooterLink href="#">Graduate Engineer Trainee Jobs</FooterLink>
-                  <FooterLink href="#">Software Development Jobs</FooterLink>
-                  <FooterLink href="#">Sales Jobs</FooterLink>
-                  <FooterLink href="#">Operations Jobs</FooterLink>
-                  <FooterLink href="#">Business Jobs</FooterLink>
+                  <FooterLink href="/jobs/browse/software-development-jobs">Software Development Jobs</FooterLink>
+                  <FooterLink href="/jobs/browse/information-technology-it-jobs">IT Jobs</FooterLink>
+                  <FooterLink href="/jobs/browse/web-developer-jobs">Web Developer Jobs</FooterLink>
+                  <FooterLink href="/jobs/browse/full-stack-developer-jobs">Full Stack Developer Jobs</FooterLink>
+                  <FooterLink href="/jobs/browse/ai-ml-engineer-jobs">AI / ML Engineer Jobs</FooterLink>
+                  <FooterLink href="/jobs/browse/devops-engineer-jobs">DevOps Engineer Jobs</FooterLink>
+                  <FooterLink href="/jobs/browse/data-analyst-jobs">Data Analyst Jobs</FooterLink>
+                  <FooterLink href="/jobs/browse/data-scientist-jobs">Data Scientist Jobs</FooterLink>
+                  <FooterLink href="/jobs/browse/data-engineer-jobs">Data Engineer Jobs</FooterLink>
+                  <FooterLink href="/jobs/browse/business-analyst-jobs">Business Analyst Jobs</FooterLink>
+                  <FooterLink href="/jobs/browse/product-manager-jobs">Product Manager Jobs</FooterLink>
+                  <FooterLink href="/jobs/browse/project-manager-jobs">Project Manager Jobs</FooterLink>
+                  <FooterLink href="/jobs/browse/financial-analyst-jobs">Financial Analyst Jobs</FooterLink>
+                  <FooterLink href="/jobs/browse/hr-manager-jobs">HR Manager Jobs</FooterLink>
+                  <FooterLink href="/jobs/browse/digital-marketing-specialist-jobs">Digital Marketing Jobs</FooterLink>
+                  <FooterLink href="/jobs/browse/marketing-manager-jobs">Marketing Manager Jobs</FooterLink>
+                  <FooterLink href="/jobs/browse/graphic-designer-jobs">Graphic Designer Jobs</FooterLink>
+                  <FooterLink href="/jobs/browse/ui-ux-designer-jobs">UI / UX Designer Jobs</FooterLink>
+                  <FooterLink href="/jobs/browse/content-creator-jobs">Content Creator Jobs</FooterLink>
+                  <FooterLink href="/jobs/browse/technical-writer-jobs">Technical Writer Jobs</FooterLink>
+                  <FooterLink href="/jobs/browse/sales-manager-jobs">Sales Manager Jobs</FooterLink>
+                  <FooterLink href="/jobs/browse/operations-manager-jobs">Operations Manager Jobs</FooterLink>
+                  <FooterLink href="/jobs/browse/engineering-jobs">Engineering Jobs</FooterLink>
+                  <FooterLink href="/jobs/browse/mechanical-engineer-jobs">Mechanical Engineer Jobs</FooterLink>
                 </div>
               </div>
 
               <div>
                 <h4 className="mb-3 text-sm font-semibold text-gray-800">Location based internships</h4>
                 <div className="grid grid-cols-1 gap-x-5 gap-y-3 text-sm text-gray-600 sm:grid-cols-2 lg:grid-cols-4">
-                  <FooterLink href="#">Internship in Kolkata</FooterLink>
-                  <FooterLink href="#">Internship in Gurgaon</FooterLink>
-                  <FooterLink href="#">Internship in Coimbatore</FooterLink>
-                  <FooterLink href="#">Internship in Lucknow</FooterLink>
-                  <FooterLink href="#">Internship in Indore</FooterLink>
-                  <FooterLink href="#">Internship in Ahmedabad</FooterLink>
-                  <FooterLink href="#">Internship in Nagpur</FooterLink>
-                  <FooterLink href="#">Internship in Chandigarh</FooterLink>
-                  <FooterLink href="#">Internship in Jaipur</FooterLink>
-                  <FooterLink href="#">Internship in Cochin</FooterLink>
-                  <FooterLink href="#">Internship in Surat</FooterLink>
+                  <FooterLink href="/internships-in/bangalore">Internship in Bangalore</FooterLink>
+                  <FooterLink href="/internships-in/mumbai">Internship in Mumbai</FooterLink>
+                  <FooterLink href="/internships-in/delhi">Internship in Delhi</FooterLink>
+                  <FooterLink href="/internships-in/pune">Internship in Pune</FooterLink>
+                  <FooterLink href="/internships-in/hyderabad">Internship in Hyderabad</FooterLink>
+                  <FooterLink href="/internships-in/chennai">Internship in Chennai</FooterLink>
+                  <FooterLink href="/internships-in/gurgaon">Internship in Gurgaon</FooterLink>
+                  <FooterLink href="/internships-in/noida">Internship in Noida</FooterLink>
+                  <FooterLink href="/internships-in/kolkata">Internship in Kolkata</FooterLink>
+                  <FooterLink href="/internships-in/ahmedabad">Internship in Ahmedabad</FooterLink>
+                  <FooterLink href="/internships-in/jaipur">Internship in Jaipur</FooterLink>
+                  <FooterLink href="/internships-in/remote">Remote Internships</FooterLink>
                 </div>
               </div>
 
               <div>
                 <h4 className="mb-3 text-sm font-semibold text-gray-800">Skill based internships</h4>
                 <div className="grid grid-cols-1 gap-x-5 gap-y-3 text-sm text-gray-600 sm:grid-cols-2 lg:grid-cols-4">
-                  <FooterLink href="#">Accounts Internship</FooterLink>
-                  <FooterLink href="#">Engineering Internship</FooterLink>
-                  <FooterLink href="#">Sales Internship</FooterLink>
-                  <FooterLink href="#">Operations Internship</FooterLink>
-                  <FooterLink href="#">Data Entry Internship</FooterLink>
-                  <FooterLink href="#">Content Writing Internship</FooterLink>
-                  <FooterLink href="#">AI Engineer Internship</FooterLink>
-                  <FooterLink href="#">HR Internship</FooterLink>
-                  <FooterLink href="#">Digital Marketing Internship</FooterLink>
-                  <FooterLink href="#">Finance Internship</FooterLink>
-                  <FooterLink href="#">Research Internship</FooterLink>
-                  <FooterLink href="#">Content Writing Internship</FooterLink>
-                  <FooterLink href="#">Software Development Internship</FooterLink>
-                  <FooterLink href="#">Business Development Internship</FooterLink>
-                  <FooterLink href="#">Marketing Internship</FooterLink>
+                  <FooterLink href="/internships/software-development">Software Development Internship</FooterLink>
+                  <FooterLink href="/internships/web-development">Web Development Internship</FooterLink>
+                  <FooterLink href="/internships/data-science">Data Science Internship</FooterLink>
+                  <FooterLink href="/internships/marketing">Marketing Internship</FooterLink>
+                  <FooterLink href="/internships/design">Design Internship</FooterLink>
+                  <FooterLink href="/internships/finance">Finance Internship</FooterLink>
+                  <FooterLink href="/internships/content-writing">Content Writing Internship</FooterLink>
+                  <FooterLink href="/internships/human-resources">HR Internship</FooterLink>
+                  <FooterLink href="/internships/sales">Sales Internship</FooterLink>
+                  <FooterLink href="/internships/operations">Operations Internship</FooterLink>
+                  <FooterLink href="/internships/browse/ai-ml-engineer-internships">AI / ML Internship</FooterLink>
+                  <FooterLink href="/internships/browse/business-analyst-internships">Business Analyst Internship</FooterLink>
+                  <FooterLink href="/internships/browse/graphic-designer-internships">Graphic Design Internship</FooterLink>
+                  <FooterLink href="/internships/browse/digital-marketing-specialist-internships">Digital Marketing Internship</FooterLink>
+                  <FooterLink href="/internships/work-from-home">Work From Home Internship</FooterLink>
                 </div>
               </div>
 
               <div>
                 <h4 className="mb-3 text-sm font-semibold text-gray-800">Work from Home Jobs</h4>
                 <div className="grid grid-cols-1 gap-x-5 gap-y-3 text-sm text-gray-600 sm:grid-cols-2 lg:grid-cols-4">
-                  <FooterLink href="#">Work from Home Jobs in Bangalore</FooterLink>
-                  <FooterLink href="#">Work from Home Jobs in Chennai</FooterLink>
-                  <FooterLink href="#">Work from Home Jobs in Hyderabad</FooterLink>
-                  <FooterLink href="#">Work from Home Jobs in Delhi</FooterLink>
-                  <FooterLink href="#">Work from Home Jobs in Pune</FooterLink>
-                  <FooterLink href="#">Work from Home Jobs in Kolkata</FooterLink>
-                  <FooterLink href="#">Work from Home Jobs in Mumbai</FooterLink>
-                  <FooterLink href="#">Work from Home Jobs in Coimbatore</FooterLink>
-                  <FooterLink href="#">Work from Home Jobs in Ahmedabad</FooterLink>
-                  <FooterLink href="#">Work from Home Jobs in Gurgaon</FooterLink>
+                  <FooterLink href="/jobs/browse/remote-jobs">All Remote Jobs</FooterLink>
+                  <FooterLink href="/jobs/browse/remote-jobs-in-bangalore">Work from Home Jobs in Bangalore</FooterLink>
+                  <FooterLink href="/jobs/browse/remote-jobs-in-chennai">Work from Home Jobs in Chennai</FooterLink>
+                  <FooterLink href="/jobs/browse/remote-jobs-in-hyderabad">Work from Home Jobs in Hyderabad</FooterLink>
+                  <FooterLink href="/jobs/browse/remote-jobs-in-delhi">Work from Home Jobs in Delhi</FooterLink>
+                  <FooterLink href="/jobs/browse/remote-jobs-in-pune">Work from Home Jobs in Pune</FooterLink>
+                  <FooterLink href="/jobs/browse/remote-jobs-in-mumbai">Work from Home Jobs in Mumbai</FooterLink>
+                  <FooterLink href="/jobs/browse/remote-jobs-in-gurgaon">Work from Home Jobs in Gurgaon</FooterLink>
+                  <FooterLink href="/jobs/browse/remote-jobs-in-noida">Work from Home Jobs in Noida</FooterLink>
+                  <FooterLink href="/internships/work-from-home">Work from Home Internships</FooterLink>
+                </div>
+              </div>
+
+              <div>
+                <h4 className="mb-3 text-sm font-semibold text-gray-800">Companies</h4>
+                <div className="grid grid-cols-1 gap-x-5 gap-y-3 text-sm text-gray-600 sm:grid-cols-2 lg:grid-cols-4">
+                  <FooterLink href="/companies">All companies</FooterLink>
+                  <FooterLink href="/companies/browse">Browse companies by industry &amp; size</FooterLink>
+                  <FooterLink href="/companies/browse/hiring-companies">Companies hiring now</FooterLink>
+                  <FooterLink href="/companies/browse/companies-hiring-for-software-development">Companies hiring software developers</FooterLink>
+                  <FooterLink href="/companies/browse/companies-hiring-for-data-analyst">Companies hiring data analysts</FooterLink>
+                  <FooterLink href="/companies/browse/companies-hiring-for-hr-manager">Companies hiring HR managers</FooterLink>
+                  <FooterLink href="/companies/browse/companies-hiring-for-full-stack-developer">Companies hiring full stack developers</FooterLink>
+                  <FooterLink href="/companies/browse/companies-hiring-in-bangalore">Companies hiring in Bangalore</FooterLink>
+                  <FooterLink href="/companies/browse/companies-hiring-in-pune">Companies hiring in Pune</FooterLink>
+                  <FooterLink href="/companies/browse/companies-hiring-in-mumbai">Companies hiring in Mumbai</FooterLink>
                 </div>
               </div>
 

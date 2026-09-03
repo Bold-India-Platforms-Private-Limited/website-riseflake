@@ -19,6 +19,7 @@ type SitemapType = {
  *   /sitemap-internships-{N}.xml   → backend /internships-sitemap-{N}.xml
  *   /sitemap-companies-{N}.xml     → backend /companies-sitemap-{N}.xml
  *   /sitemap-users-{N}.xml         → backend /users-sitemap-{N}.xml
+ *   /sitemap-people-{N}.xml        → backend /people-sitemap-{N}.xml
  *
  * Adding new types: just add an entry to SITEMAP_TYPES below — no other changes needed.
  */
@@ -39,6 +40,10 @@ const SITEMAP_TYPES: Record<string, SitemapType> = {
     backendPath: (batch) => `${API_BASE_URL}/users-sitemap-${batch}.xml`,
     cacheSeconds: 3600,   // 1 h — new users join constantly
   },
+  people: {
+    backendPath: (batch) => `${API_BASE_URL}/people-sitemap-${batch}.xml`,
+    cacheSeconds: 3600,   // 1 h — curated public profile index
+  },
 }
 
 export async function GET(_req: Request, context: RouteContext): Promise<Response> {
@@ -51,7 +56,7 @@ export async function GET(_req: Request, context: RouteContext): Promise<Respons
   const filename = sitemapArr[0]
 
   // Match: sitemap-{type}-{batchNumber}.xml
-  const match = filename.match(/^sitemap-(jobs|internships|companies|users)-(\d+)\.xml$/)
+  const match = filename.match(/^sitemap-(jobs|internships|companies|users|people)-(\d+)\.xml$/)
   if (!match) {
     return new NextResponse(null, { status: 404 })
   }

@@ -52,6 +52,33 @@ Disallow: /_next/
 Disallow: /resume/
 
 # ------------------------------------------
+# LinkedIn – powers link previews AND LinkedIn's external-apply job feed, which
+# ingests our JobPosting structured data. Give it full access to job / internship
+# pages and the faceted discovery hubs. Do NOT block this bot.
+# ------------------------------------------
+User-agent: LinkedInBot
+Allow: /
+Allow: /jobs/
+Allow: /internships/
+Allow: /in/
+Disallow: /api/
+Disallow: /dashboard/
+Disallow: /_next/
+Disallow: /resume/
+
+# ------------------------------------------
+# Apple – Applebot powers Siri / Spotlight suggestions and Apple's search
+# partnerships. Applebot-Extended (below) governs Apple Intelligence training.
+# ------------------------------------------
+User-agent: Applebot
+Allow: /
+Allow: /in/
+Disallow: /api/
+Disallow: /dashboard/
+Disallow: /_next/
+Disallow: /resume/
+
+# ------------------------------------------
 # AI Crawlers & AI-answer-engine bots – allowed to crawl
 # Covers Google AI Mode/AI Overviews, ChatGPT (search + browsing), Claude,
 # Perplexity, Bing/Copilot (via Bingbot above), Meta AI, and Amazon/Apple's

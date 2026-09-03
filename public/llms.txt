@@ -7,7 +7,9 @@ Riseflake (riseflake.com) is the public, search-indexable marketing and discover
 ## Key sections
 
 - [Jobs](https://riseflake.com/jobs): Live job listings across India, filterable by role, location, experience, and workplace type (on-site, hybrid, remote).
+- [Browse jobs](https://riseflake.com/jobs/browse): Faceted discovery hub — dedicated landing pages for jobs by role, city, company, salary band, month, workplace type, employment type (full-time / part-time / contract) and country, plus role-in-city combinations.
 - [Internships](https://riseflake.com/internships): Internship listings for students and freshers.
+- [Browse internships](https://riseflake.com/internships/browse): Faceted discovery hub — dedicated landing pages for internships by role, city, company, stipend band, month and workplace type, plus role-in-city combinations.
 - [Companies](https://riseflake.com/companies): Public company profiles — industry, organization type, and open roles.
 - [Professional profiles](https://riseflake.com/in/): Public profile pages for Riseflake members (name, headline, current role, and location; full details require signing in).
 - [Colleges](https://riseflake.com/colleges): College and campus-placement related pages.

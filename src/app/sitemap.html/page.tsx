@@ -30,12 +30,24 @@ async function fetchCount(url: string): Promise<number> {
 
 const fmt = (n: number) => n.toLocaleString('en-IN')
 
+async function fetchPeopleCount(): Promise<number> {
+  try {
+    const res = await fetch(`${API_BASE_URL}/people/count`, { next: { revalidate: 3600 } })
+    if (!res.ok) return 0
+    const data = (await res.json()) as { count?: number }
+    return data.count ?? 0
+  } catch {
+    return 0
+  }
+}
+
 export default async function SitemapHtmlPage() {
-  const [jobCount, internshipCount, companyCount, collegeCount] = await Promise.all([
+  const [jobCount, internshipCount, companyCount, collegeCount, peopleCount] = await Promise.all([
     fetchCount(`${API_BASE_URL}/jobs`),
     fetchCount(`${API_BASE_URL}/internships`),
     fetchCount(`${API_BASE_URL}/companies`),
     fetchCount(`${API_BASE_URL}/colleges`),
+    fetchPeopleCount(),
   ])
 
   return (
@@ -96,10 +108,15 @@ export default async function SitemapHtmlPage() {
                 defaultOpen
               >
                 <TreeLeaf href="/jobs" label="Browse all jobs" icon={<ExternalLink className="h-3 w-3" />} />
-                <TreeLeaf href="/jobs?workplace_type=1" label="Remote jobs" icon={<Globe className="h-3 w-3" />} />
-                <TreeLeaf href="/jobs?workplace_type=2" label="Hybrid jobs" icon={<Home className="h-3 w-3" />} />
-                <TreeLeaf href="/jobs?workplace_type=3" label="On-site jobs" icon={<Building2 className="h-3 w-3" />} />
+                <TreeLeaf href="/jobs/browse" label="Browse jobs by role, city, company & salary" icon={<ExternalLink className="h-3 w-3" />} />
+                <TreeLeaf href="/jobs/browse/remote-jobs" label="Remote jobs" icon={<Globe className="h-3 w-3" />} />
+                <TreeLeaf href="/jobs/browse/hybrid-jobs" label="Hybrid jobs" icon={<Home className="h-3 w-3" />} />
+                <TreeLeaf href="/jobs/browse/in-office-jobs" label="In-office jobs" icon={<Building2 className="h-3 w-3" />} />
+                <TreeLeaf href="/jobs/browse/full-time-jobs" label="Full-time jobs" icon={<Briefcase className="h-3 w-3" />} />
+                <TreeLeaf href="/jobs/browse/part-time-jobs" label="Part-time jobs" icon={<Briefcase className="h-3 w-3" />} />
+                <TreeLeaf href="/jobs-in/bangalore" label="Jobs by city (Bangalore, Mumbai, Delhi…)" icon={<Building2 className="h-3 w-3" />} />
                 <TreeLeaf href="/sitemap-jobs.xml" label="XML sitemap (auto-updated)" icon={<FileText className="h-3 w-3" />} muted />
+                <TreeLeaf href="/sitemap-jobs-facets.xml" label="Faceted-page XML sitemap" icon={<FileText className="h-3 w-3" />} muted />
                 <TreeInfo label={`${fmt(jobCount)} individual job pages · auto-indexed via XML sitemap`} />
               </TreeBranch>
 
@@ -113,9 +130,13 @@ export default async function SitemapHtmlPage() {
                 defaultOpen
               >
                 <TreeLeaf href="/internships" label="Browse all internships" icon={<ExternalLink className="h-3 w-3" />} />
-                <TreeLeaf href="/internships?workplace_type=1" label="Work from home internships" icon={<Globe className="h-3 w-3" />} />
-                <TreeLeaf href="/internships?workplace_type=3" label="In-office internships" icon={<Building2 className="h-3 w-3" />} />
+                <TreeLeaf href="/internships/browse" label="Browse internships by role, city, company & stipend" icon={<ExternalLink className="h-3 w-3" />} />
+                <TreeLeaf href="/internships/work-from-home" label="Work from home internships" icon={<Globe className="h-3 w-3" />} />
+                <TreeLeaf href="/internships/browse/in-office-internships" label="In-office internships" icon={<Building2 className="h-3 w-3" />} />
+                <TreeLeaf href="/internships/browse/internships-with-stipend-10000-plus" label="Internships by stipend band" icon={<Briefcase className="h-3 w-3" />} />
+                <TreeLeaf href="/internships-in/bangalore" label="Internships by city (Bangalore, Mumbai, Delhi…)" icon={<Building2 className="h-3 w-3" />} />
                 <TreeLeaf href="/sitemap-internships.xml" label="XML sitemap (auto-updated)" icon={<FileText className="h-3 w-3" />} muted />
+                <TreeLeaf href="/sitemap-internships-facets.xml" label="Faceted-page XML sitemap" icon={<FileText className="h-3 w-3" />} muted />
                 <TreeInfo label={`${fmt(internshipCount)} individual internship pages · auto-indexed via XML sitemap`} />
               </TreeBranch>
 
@@ -129,7 +150,10 @@ export default async function SitemapHtmlPage() {
                 defaultOpen
               >
                 <TreeLeaf href="/companies" label="Browse all companies" icon={<ExternalLink className="h-3 w-3" />} />
+                <TreeLeaf href="/companies/browse" label="Browse companies by industry, size & hiring" icon={<ExternalLink className="h-3 w-3" />} />
+                <TreeLeaf href="/companies/browse/hiring-companies" label="Companies hiring now" icon={<Building2 className="h-3 w-3" />} />
                 <TreeLeaf href="/sitemap-companies.xml" label="Companies sitemap index (auto-updated)" icon={<FileText className="h-3 w-3" />} muted />
+                <TreeLeaf href="/sitemap-companies-facets.xml" label="Company faceted-page sitemap" icon={<FileText className="h-3 w-3" />} muted />
                 <TreeInfo label={`${fmt(companyCount)} company profile pages · batched in XML sitemaps of 1,000`} />
               </TreeBranch>
 
@@ -142,7 +166,30 @@ export default async function SitemapHtmlPage() {
                 badgeColor="amber"
               >
                 <TreeLeaf href="/colleges" label="Browse all colleges" icon={<ExternalLink className="h-3 w-3" />} />
-                <TreeInfo label={`${fmt(collegeCount)} college pages`} />
+                <TreeLeaf href="/colleges/browse" label="Browse colleges by discipline, state & city" icon={<ExternalLink className="h-3 w-3" />} />
+                <TreeLeaf href="/colleges/browse/engineering-colleges-in-india" label="Engineering colleges" icon={<School className="h-3 w-3" />} />
+                <TreeLeaf href="/colleges/browse/medical-colleges-in-india" label="Medical colleges" icon={<School className="h-3 w-3" />} />
+                <TreeLeaf href="/colleges/browse/management-colleges-in-india" label="Management colleges" icon={<School className="h-3 w-3" />} />
+                <TreeLeaf href="/sitemap-colleges.xml" label="Colleges sitemap index (auto-updated)" icon={<FileText className="h-3 w-3" />} muted />
+                <TreeLeaf href="/sitemap-colleges-facets.xml" label="College faceted-page sitemap" icon={<FileText className="h-3 w-3" />} muted />
+                <TreeInfo label={`${fmt(collegeCount)} college pages · batched in XML sitemaps`} />
+              </TreeBranch>
+
+              {/* People directory */}
+              <TreeBranch
+                icon={<Users className="h-4 w-4" />}
+                label="People"
+                href="/in/people"
+                badge={`${fmt(peopleCount)} profiles`}
+                badgeColor="blue"
+              >
+                <TreeLeaf href="/in/people" label="Browse the people directory" icon={<ExternalLink className="h-3 w-3" />} />
+                <TreeLeaf href="/in/people/software-developer" label="Candidates by role — e.g. Software Developer" icon={<Briefcase className="h-3 w-3" />} />
+                <TreeLeaf href="/in/people/pune" label="Candidates by city — e.g. Pune" icon={<Building2 className="h-3 w-3" />} />
+                <TreeLeaf href="/in/people/data-analyst-in-pune" label="Role in city — e.g. Data Analyst in Pune" icon={<Globe className="h-3 w-3" />} />
+                <TreeLeaf href="/sitemap-people.xml" label="Profiles XML sitemap (auto-updated)" icon={<FileText className="h-3 w-3" />} muted />
+                <TreeLeaf href="/sitemap-people-directory.xml" label="Directory landing-pages XML sitemap" icon={<FileText className="h-3 w-3" />} muted />
+                <TreeInfo label={`${fmt(peopleCount)} public candidate profiles · role & city landing pages auto-generated`} />
               </TreeBranch>
 
               {/* Company section */}
@@ -182,8 +229,13 @@ export default async function SitemapHtmlPage() {
               <XmlCard href="/sitemap.xml" title="Sitemap Index" desc="Master index — points to all sub-sitemaps" />
               <XmlCard href="/sitemap-jobs.xml" title="Jobs Sitemap" desc={`${fmt(jobCount)} job URLs · refreshes hourly`} />
               <XmlCard href="/sitemap-internships.xml" title="Internships Sitemap" desc={`${fmt(internshipCount)} internship URLs · refreshes hourly`} />
+              <XmlCard href="/sitemap-jobs-facets.xml" title="Jobs Faceted Sitemap" desc="Role, city, company, salary, month & workplace landing pages" />
+              <XmlCard href="/sitemap-internships-facets.xml" title="Internships Faceted Sitemap" desc="Role, city, company, stipend, month & workplace landing pages" />
               <XmlCard href="/sitemap-companies.xml" title="Companies Sitemap Index" desc={`${fmt(companyCount)} companies across batches of 1,000`} />
-              <XmlCard href="/sitemap-static.xml" title="Static Pages Sitemap" desc="17 static pages · refreshes daily" />
+              <XmlCard href="/sitemap-companies-facets.xml" title="Companies Faceted Sitemap" desc="Industry, size, type & hiring landing pages" />
+              <XmlCard href="/sitemap-people.xml" title="People Sitemap Index" desc={`${fmt(peopleCount)} public candidate profiles · refreshes hourly`} />
+              <XmlCard href="/sitemap-people-directory.xml" title="People Directory Sitemap" desc="Role, city & skill landing pages · auto-generated" />
+              <XmlCard href="/sitemap-static.xml" title="Static Pages Sitemap" desc="Static pages · refreshes daily" />
             </div>
 
             <div className="mt-6 flex items-start gap-2 rounded-xl bg-slate-800 px-4 py-3">
