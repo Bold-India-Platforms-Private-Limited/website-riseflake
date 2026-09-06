@@ -48,7 +48,7 @@ export default function JobDescription({ html }: { html?: string | null }) {
 
   return (
     <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
-      <h2 className="text-xl font-semibold text-slate-900 mb-4">Role overview</h2>
+      <h2 className="text-xl font-semibold text-slate-900 mb-4">Job Description / Ai Overview</h2>
       <div
         className="job-description text-sm text-slate-700 leading-relaxed"
         dangerouslySetInnerHTML={{ __html: sanitizedHTML }}

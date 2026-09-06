@@ -13,7 +13,7 @@ import { ChevronDown, Menu as MenuIcon, X } from 'lucide-react';
 import { useAuthStore } from '@/stores/auth.store';
 import { getCurrentPlan } from '@/lib/authApi';
 import InitialsAvatar from '@/components/common/InitialsAvatar';
-import { COMPANY_LOGO_URLS } from '@/config/companyLogos';
+import { COMPANY_LOGO_URLS, COMPANY_LOGO_NAMES } from '@/config/companyLogos';
 import LoadingOverlay from '@/components/common/LoadingOverlay';
 import LandingNavbar from '@/components/landing/LandingNavbar';
 import LandingFooter from '@/components/landing/LandingFooter';
@@ -300,12 +300,12 @@ const HomeLayout = () => {
                       key={`row1-${i}`}
                       className="flex-shrink-0 bg-white/40 backdrop-blur-md border border-white/40
                        rounded-2xl flex items-center justify-center py-4 px-10
-                       shadow-[0_4px_30px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] 
+                       shadow-[0_4px_30px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)]
                        hover:-translate-y-1 transition-all duration-300 group"
                     >
                       <img
                         src={logo}
-                        alt="company"
+                        alt={`${COMPANY_LOGO_NAMES[i % 23]} logo`}
                         className="h-10 w-auto object-contain transition-all duration-500"
                         loading="lazy"
                       />
@@ -324,12 +324,12 @@ const HomeLayout = () => {
                       key={`row2-${i}`}
                       className="flex-shrink-0 bg-white/40 backdrop-blur-md border border-white/40
                        rounded-2xl flex items-center justify-center py-4 px-10
-                       shadow-[0_4px_30px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] 
+                       shadow-[0_4px_30px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)]
                        hover:-translate-y-1 transition-all duration-300 group"
                     >
                       <img
                         src={logo}
-                        alt="company"
+                        alt={`${COMPANY_LOGO_NAMES[23 + (i % 23)]} logo`}
                         className="h-10 w-auto object-contain transition-all duration-500"
                         loading="lazy"
                       />
@@ -348,12 +348,12 @@ const HomeLayout = () => {
                       key={`row3-${i}`}
                       className="flex-shrink-0 bg-white/40 backdrop-blur-md border border-white/40
                        rounded-2xl flex items-center justify-center py-4 px-10
-                       shadow-[0_4px_30px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] 
+                       shadow-[0_4px_30px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)]
                        hover:-translate-y-1 transition-all duration-300 group"
                     >
                       <img
                         src={logo}
-                        alt="company"
+                        alt={`${COMPANY_LOGO_NAMES[46 + (i % 24)]} logo`}
                         className="h-10 w-auto object-contain transition-all duration-500"
                         loading="lazy"
                       />
