@@ -512,6 +512,13 @@ export default function Footer() {
               </div>
 
               <div>
+                <h4 className="mb-3 text-sm font-semibold text-gray-800">Skills</h4>
+                <div className="grid grid-cols-1 gap-x-5 gap-y-3 text-sm text-gray-600 sm:grid-cols-2 lg:grid-cols-4">
+                  <FooterLink href="/skills">Jobs &amp; internships by skill</FooterLink>
+                </div>
+              </div>
+
+              <div>
                 <h4 className="mb-3 text-sm font-semibold text-gray-800">Mentorships</h4>
                 <div className="grid grid-cols-1 gap-x-5 gap-y-3 text-sm text-gray-600 sm:grid-cols-2 lg:grid-cols-4">
                   <FooterLink href="#">Mentors for CV Review</FooterLink>

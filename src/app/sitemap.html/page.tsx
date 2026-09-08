@@ -274,6 +274,7 @@ export default async function SitemapHtmlPage() {
               <XmlCard href="/sitemap-companies-facets.xml" title="Companies Faceted Sitemap" desc="Industry, size, type & hiring landing pages" />
               <XmlCard href="/sitemap-colleges.xml" title="Colleges Sitemap Index" desc={`${fmt(collegeCount)} college profile pages · refreshes daily`} />
               <XmlCard href="/sitemap-colleges-facets.xml" title="Colleges Faceted Sitemap" desc="Discipline, state & city landing pages" />
+              <XmlCard href="/sitemap-skills.xml" title="Skills Directory Sitemap" desc="Skill landing pages · jobs, internships & companies hiring" />
               <XmlCard href="/sitemap-people.xml" title="People Sitemap Index" desc={`${fmt(peopleCount)} public candidate profiles · refreshes hourly`} />
               <XmlCard href="/sitemap-people-directory.xml" title="People Directory Sitemap" desc="Role, city & skill landing pages · auto-generated" />
               <XmlCard href="/sitemap-users.xml" title="Members Sitemap Index" desc="Public member profiles · batched XML sitemaps" />

@@ -63,6 +63,7 @@ const STATIC_PAGES: StaticPage[] = [
   { url: 'https://riseflake.com/jobs/browse',                    changefreq: 'daily',   priority: '0.8' },
   { url: 'https://riseflake.com/companies/browse',               changefreq: 'daily',   priority: '0.7' },
   { url: 'https://riseflake.com/colleges/browse',                changefreq: 'weekly',  priority: '0.7' },
+  { url: 'https://riseflake.com/skills',                         changefreq: 'daily',   priority: '0.7' },
   { url: 'https://riseflake.com/internships/software-development', changefreq: 'daily',   priority: '0.8' },
   { url: 'https://riseflake.com/internships/web-development',     changefreq: 'daily',   priority: '0.8' },
   { url: 'https://riseflake.com/internships/marketing',           changefreq: 'daily',   priority: '0.8' },

@@ -9,6 +9,7 @@ import { formatSalaryChip } from '../../../lib/salary'
 import { currentPeriod } from '../../../lib/period'
 import FacetChips from '../../components/seo/FacetChips'
 import FaqBlock from '../../components/seo/FaqJsonLd'
+import CrawlablePagination from '../../components/seo/CrawlablePagination'
 
 export const dynamicParams = true
 export const revalidate = 3600
@@ -41,10 +42,13 @@ type Internship = {
   salary_period?: string | null
 }
 
-async function fetchInternshipsByCity(city: string): Promise<Internship[]> {
+type InternshipsPage = { internships: Internship[]; totalPages: number; total: number }
+
+async function fetchInternshipsByCity(city: string, page = 1): Promise<InternshipsPage> {
   try {
     const params = new URLSearchParams({
       limit: '24',
+      page: String(page),
       location: city === 'remote' ? '' : city,
       ...(city === 'remote' ? { workplace_type: '1' } : {}),
     })
@@ -52,11 +56,15 @@ async function fetchInternshipsByCity(city: string): Promise<Internship[]> {
       next: { revalidate: 3600 },
       signal: AbortSignal.timeout(8_000),
     })
-    if (!res.ok) return []
+    if (!res.ok) return { internships: [], totalPages: 0, total: 0 }
     const data = await res.json()
-    return data.result ?? data.internships ?? []
+    return {
+      internships: data.result ?? data.internships ?? [],
+      totalPages: data.totalPages ?? 1,
+      total: data.total ?? (data.result ?? data.internships ?? []).length,
+    }
   } catch {
-    return []
+    return { internships: [], totalPages: 0, total: 0 }
   }
 }
 
@@ -81,27 +89,31 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata(
-  { params }: { params: Promise<{ city: string }> }
+  { params, searchParams }: { params: Promise<{ city: string }>; searchParams: Promise<{ page?: string }> }
 ): Promise<Metadata> {
   const { city } = await params
+  const { page: pageParam } = await searchParams
+  const page = Math.max(parseInt(pageParam || '1', 10) || 1, 1)
   if (!CITIES.includes(city.toLowerCase())) {
     return { title: 'Internships | Riseflake', robots: { index: false, follow: false } }
   }
 
   const cityLabel = titleCase(city)
   const { year } = currentPeriod()
-  const canonicalUrl = `${WEBSITE_BASE_URL}/internships-in/${city}`
+  const baseUrl = `${WEBSITE_BASE_URL}/internships-in/${city}`
+  const canonicalUrl = page > 1 ? `${baseUrl}?page=${page}` : baseUrl
   const isRemote = city === 'remote'
-  const title = isRemote
+  const pageSuffix = page > 1 ? ` — Page ${page}` : ''
+  const title = (isRemote
     ? `Remote Internships in India ${year} — Work from Home`
-    : `Internships in ${cityLabel} ${year} — Paid & Unpaid`
+    : `Internships in ${cityLabel} ${year} — Paid & Unpaid`) + pageSuffix
   const description = isRemote
     ? `Find remote internship opportunities in India for students and freshers. Browse verified online internships in software, marketing, design, and more. Apply free on Riseflake.`
     : `Find internships in ${cityLabel} for students and freshers. Paid and stipend-based internships across IT, marketing, finance, design, and more. Apply free on Riseflake.`
 
-  // Noindex empty city pages to avoid Google "soft 404" flags
-  const internships = await fetchInternshipsByCity(city)
-  const shouldIndex = internships.length > 0
+  // Noindex empty/out-of-range city pages to avoid Google "soft 404" flags
+  const { internships, totalPages } = await fetchInternshipsByCity(city, page)
+  const shouldIndex = internships.length > 0 && page <= totalPages
 
   return {
     title,
@@ -117,19 +129,22 @@ export async function generateMetadata(
 }
 
 export default async function InternshipsInCityPage(
-  { params }: { params: Promise<{ city: string }> }
+  { params, searchParams }: { params: Promise<{ city: string }>; searchParams: Promise<{ page?: string }> }
 ) {
   const { city } = await params
+  const { page: pageParam } = await searchParams
+  const page = Math.max(parseInt(pageParam || '1', 10) || 1, 1)
   if (!CITIES.includes(city.toLowerCase())) notFound()
 
   const cityLabel = titleCase(city)
   const isRemote = city === 'remote'
   const { year, monthYear } = currentPeriod()
-  const [internships, roleCombos] = await Promise.all([
-    fetchInternshipsByCity(city),
+  const [{ internships, totalPages, total }, roleCombos] = await Promise.all([
+    fetchInternshipsByCity(city, page),
     isRemote ? Promise.resolve([] as Combo[]) : fetchRoleCombosForCity(city),
   ])
-  const canonicalUrl = `${WEBSITE_BASE_URL}/internships-in/${city}`
+  const basePath = `/internships-in/${city}`
+  const canonicalUrl = page > 1 ? `${WEBSITE_BASE_URL}${basePath}?page=${page}` : `${WEBSITE_BASE_URL}${basePath}`
   const now = new Date().toISOString()
 
   const breadcrumbSchema = {
@@ -153,7 +168,7 @@ export default async function InternshipsInCityPage(
     isPartOf: { '@type': 'WebSite', name: 'Riseflake', url: WEBSITE_BASE_URL },
     mainEntity: {
       '@type': 'ItemList',
-      numberOfItems: internships.length,
+      numberOfItems: total,
       itemListElement: internships.slice(0, 25).map((it, i) => ({
         '@type': 'ListItem',
         position: i + 1,
@@ -281,6 +296,8 @@ export default async function InternshipsInCityPage(
               ))}
             </div>
           )}
+
+          <CrawlablePagination basePath={basePath} currentPage={page} totalPages={totalPages} />
 
           {/* Role-in-city landing pages */}
           {roleCombos.length > 0 && (

@@ -18,6 +18,7 @@ export async function GET() {
     'https://riseflake.com/sitemap-hackathons.xml',
     'https://riseflake.com/sitemap-colleges.xml',
     'https://riseflake.com/sitemap-colleges-facets.xml',
+    'https://riseflake.com/sitemap-skills.xml',
     'https://riseflake.com/sitemap-users.xml',
     'https://riseflake.com/sitemap-people.xml',
     'https://riseflake.com/sitemap-people-directory.xml',
