@@ -192,6 +192,19 @@ export default async function SitemapHtmlPage() {
                 <TreeInfo label={`${fmt(peopleCount)} public candidate profiles · role & city landing pages auto-generated`} />
               </TreeBranch>
 
+              {/* Discover — India Company Registry */}
+              <TreeBranch
+                icon={<Building2 className="h-4 w-4" />}
+                label="Discover · India Company Registry"
+                href="/discover/companies/india"
+                badge="3.6M+ companies"
+                badgeColor="blue"
+              >
+                <TreeLeaf href="/discover/companies/india" label="Browse the India Company Registry" icon={<ExternalLink className="h-3 w-3" />} />
+                <TreeLeaf href="/sitemap-india-companies.xml" label="India Company Registry sitemap index (auto-updated)" icon={<FileText className="h-3 w-3" />} muted />
+                <TreeInfo label="MCA/ROC public-record companies · batched in XML sitemaps of 45,000" />
+              </TreeBranch>
+
               {/* Hackathons */}
               <TreeBranch
                 icon={<Trophy className="h-4 w-4" />}
@@ -281,6 +294,7 @@ export default async function SitemapHtmlPage() {
               <XmlCard href="/sitemap-blogs.xml" title="Blog Sitemap" desc="Every published article · refreshes hourly" />
               <XmlCard href="/sitemap-hackathons.xml" title="Hackathons Sitemap" desc="Every hackathon detail page · refreshes hourly" />
               <XmlCard href="/sitemap-static.xml" title="Static Pages Sitemap" desc="Core pages, discovery hubs & city landing pages · refreshes daily" />
+              <XmlCard href="/sitemap-india-companies.xml" title="India Company Registry Sitemap Index" desc="3.6M+ MCA/ROC companies · batches of 45,000" />
             </div>
 
             <div className="mt-6 flex items-start gap-2 rounded-xl bg-slate-800 px-4 py-3">

@@ -23,7 +23,9 @@ export default function Navbar({ bgTransparent = false }: { bgTransparent?: bool
           ? '/colleges'
           : pathname === '/in/people' || pathname.startsWith('/in/')
             ? '/in/people'
-            : null
+            : pathname.startsWith('/discover')
+              ? '/discover'
+              : null
 
   const isActive = (href: string) =>
     href.startsWith('/') && (pathname === href || (href !== '/' && pathname.startsWith(href)))
@@ -154,6 +156,23 @@ export default function Navbar({ bgTransparent = false }: { bgTransparent?: bool
               >
                 People
               </Link>
+              <div className="relative group shrink-0">
+                <a
+                  href="/discover/companies/india"
+                  className={`inline-block rounded-lg px-2 xl:px-3 py-2 text-sm font-medium transition-all duration-500 whitespace-nowrap ${activeTab === '/discover'
+                    ? 'bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 text-white scale-105 shadow-md shadow-indigo-500/20'
+                    : 'bg-transparent text-slate-700 hover:bg-white/60 hover:text-slate-900'
+                    }`}
+                >
+                  Discover
+                </a>
+                <div className="absolute left-1/2 -translate-x-1/2 top-full pt-3 w-64 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                  <div className="rounded-2xl bg-white p-3 shadow-2xl border border-slate-200 flex flex-col gap-1">
+                    <div className="px-3 pt-1 pb-1.5 text-[11px] font-semibold uppercase tracking-wide text-slate-400">Companies</div>
+                    <Link href="/discover/companies/india" className="rounded-xl px-3 py-2 text-sm text-slate-600 hover:bg-slate-50 hover:text-indigo-600">India Company Registry</Link>
+                  </div>
+                </div>
+              </div>
               <a
                 href="https://app.riseflake.com/chat"
                 className={`flex items-center rounded-lg px-2 xl:px-3 py-2 text-sm font-medium transition-all duration-500 whitespace-nowrap bg-transparent text-slate-700 hover:bg-white/60 hover:text-slate-900`}
@@ -468,6 +487,17 @@ export default function Navbar({ bgTransparent = false }: { bgTransparent?: bool
                 onClick={() => setOpen(false)}
               >
                 <span>People</span>
+                <ChevronRight className="h-5 w-5 opacity-70" />
+              </Link>
+              <Link
+                href="/discover/companies/india"
+                className={`flex items-center justify-between rounded-xl px-4 py-3 text-base font-medium transition ${isActive('/discover')
+                  ? 'bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 text-white shadow'
+                  : 'text-slate-700 hover:bg-slate-100'
+                  }`}
+                onClick={() => setOpen(false)}
+              >
+                <span>Discover · India Company Registry</span>
                 <ChevronRight className="h-5 w-5 opacity-70" />
               </Link>
 

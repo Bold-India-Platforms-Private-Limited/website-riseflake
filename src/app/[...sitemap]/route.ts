@@ -44,6 +44,10 @@ const SITEMAP_TYPES: Record<string, SitemapType> = {
     backendPath: (batch) => `${API_BASE_URL}/people-sitemap-${batch}.xml`,
     cacheSeconds: 3600,   // 1 h — curated public profile index
   },
+  'india-companies': {
+    backendPath: (batch) => `${API_BASE_URL}/discover/companies-india-sitemap-${batch}.xml`,
+    cacheSeconds: 21600,  // 6 h — MCA/ROC registry data changes slowly
+  },
 }
 
 export async function GET(_req: Request, context: RouteContext): Promise<Response> {
@@ -56,7 +60,7 @@ export async function GET(_req: Request, context: RouteContext): Promise<Respons
   const filename = sitemapArr[0]
 
   // Match: sitemap-{type}-{batchNumber}.xml
-  const match = filename.match(/^sitemap-(jobs|internships|companies|users|people)-(\d+)\.xml$/)
+  const match = filename.match(/^sitemap-(jobs|internships|companies|users|people|india-companies)-(\d+)\.xml$/)
   if (!match) {
     return new NextResponse(null, { status: 404 })
   }

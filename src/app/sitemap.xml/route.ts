@@ -22,6 +22,7 @@ export async function GET() {
     'https://riseflake.com/sitemap-users.xml',
     'https://riseflake.com/sitemap-people.xml',
     'https://riseflake.com/sitemap-people-directory.xml',
+    'https://riseflake.com/sitemap-india-companies.xml',
   ]
 
   const entries = sitemaps

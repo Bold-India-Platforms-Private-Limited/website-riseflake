@@ -9,14 +9,27 @@ export default function CrawlablePagination({
   basePath,
   currentPage,
   totalPages,
+  extraParams,
 }: {
   basePath: string
   currentPage: number
   totalPages: number
+  /** Extra query params (filters, search terms) to preserve across page links. */
+  extraParams?: Record<string, string | undefined>
 }) {
   if (totalPages <= 1) return null
   const maxPage = Math.min(totalPages, 100)
-  const href = (p: number) => (p <= 1 ? basePath : `${basePath}?page=${p}`)
+  const href = (p: number) => {
+    const qs = new URLSearchParams()
+    if (extraParams) {
+      for (const [k, v] of Object.entries(extraParams)) {
+        if (v) qs.set(k, v)
+      }
+    }
+    if (p > 1) qs.set('page', String(p))
+    const s = qs.toString()
+    return s ? `${basePath}?${s}` : basePath
+  }
 
   // window of page numbers around the current page
   const nums: number[] = []

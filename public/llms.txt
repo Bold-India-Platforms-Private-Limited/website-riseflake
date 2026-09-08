@@ -14,6 +14,7 @@ Riseflake (riseflake.com) is the public, search-indexable marketing and discover
 - [Professional profiles](https://riseflake.com/in/): Public profile pages for Riseflake members (name, headline, current role, and location; full details require signing in).
 - [Colleges](https://riseflake.com/colleges): College and campus-placement related pages.
 - [Skills directory](https://riseflake.com/skills): Jobs and internships in India organized by skill (Python, React, Java, AWS, Figma, data analysis, etc.), with companies hiring for each skill and related skills.
+- [Discover: India Company Registry](https://riseflake.com/discover/companies/india): Directory of 3.6M+ officially registered Indian companies sourced from public MCA/ROC records — CIN/LLPIN, incorporation date, status, category, state, and registered address. Distinct from the job-board Companies section above.
 - [Hackathons](https://riseflake.com/hackathons): Hackathon listings and details.
 - [Blog](https://riseflake.com/blog): Career advice, hiring trends, and platform updates.
 - [About](https://riseflake.com/about): What Riseflake is and who it's for.
