@@ -2,7 +2,7 @@
  * facets.ts — shared config + helpers for the programmatic-SEO faceted listing
  * pages (/internships/browse/* and /jobs/browse/*).
  *
- * The backend (/api/v1/website/{vertical}/directory/:filter) owns slug
+ * The backend (/api/v2/website/{vertical}/directory/:filter) owns slug
  * resolution, counting and inventory. This module owns the *presentation*:
  * dynamic titles / descriptions / H1 / FAQ, the curated link lists that seed
  * internal linking (Navbar, Footer, hubs), and the slugify contract that must

@@ -29,7 +29,7 @@ const DELAY_MAX_MS = 30_000     // 30 seconds
 
 const AUTH_CHECK_URL = (() => {
   const base = process.env.NEXT_PUBLIC_API_BASE_URL ?? ''
-  // Convert /api/v1/website → /api/v1/auth/me
+  // Convert /api/v2/website → /api/v2/auth/me
   return base.replace(/\/website$/, '') + '/auth/me'
 })()
 

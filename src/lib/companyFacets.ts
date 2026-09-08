@@ -1,6 +1,6 @@
 /**
  * companyFacets.ts — presentation config for the SEO company directory pages
- * (/companies/browse/*). The backend (/api/v1/website/companies/directory/…)
+ * (/companies/browse/*). The backend (/api/v2/website/companies/directory/…)
  * owns slug resolution, counting and inventory.
  */
 

@@ -23,7 +23,7 @@ export async function register() {
   if (!secret) return
 
   const apiBaseUrl =
-    process.env.NEXT_PUBLIC_API_BASE_URL ?? 'https://backend.riseflake.com/api/v1/website'
+    process.env.NEXT_PUBLIC_API_BASE_URL ?? 'https://backend.riseflake.com/api/v2/website'
 
   const originalFetch = globalThis.fetch
 

@@ -5,15 +5,15 @@
  */
 export const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL ??
-  'https://backend.riseflake.com/api/v1/website'
+  'https://backend.riseflake.com/api/v2/website'
 
 /**
  * Blog-specific API base (no /website suffix).
- * Blog routes are mounted at /api/v1/blogs, NOT /api/v1/website/blogs.
+ * Blog routes are mounted at /api/v2/blogs, NOT /api/v2/website/blogs.
  */
 export const BLOG_API_URL =
   process.env.NEXT_PUBLIC_BLOG_API_URL ??
-  'https://backend.riseflake.com/api/v1'
+  'https://backend.riseflake.com/api/v2'
 
 export const WEBSITE_BASE_URL = 'https://riseflake.com'
 export const BASE_ASSETS_URL = 'https://assets.riseflake.com/images'
