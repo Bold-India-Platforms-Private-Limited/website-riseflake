@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { API_BASE_URL } from '../../lib/config'
 
-export const revalidate = 3600
+export const dynamic = 'force-dynamic'
 
 // This endpoint returns a <sitemapindex> (→ sitemap-jobs-1.xml, -2.xml, …).
 // On backend failure serve a valid-but-empty index, never an error string.

@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import { API_BASE_URL } from '../../lib/config'
 
 // India Company Registry — batches change slowly (MCA/ROC data), long TTL.
-export const revalidate = 21600
+export const dynamic = 'force-dynamic'
 
 const EMPTY_INDEX = `<?xml version="1.0" encoding="UTF-8"?><sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"></sitemapindex>`
 

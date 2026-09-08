@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { API_BASE_URL } from '../../lib/config'
 
-export const revalidate = 3600
+export const dynamic = 'force-dynamic'
 
 // Empty sitemapindex — returned on error so Google gets valid XML, not an error string
 const EMPTY_SITEMAPINDEX = `<?xml version="1.0" encoding="UTF-8"?><sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"></sitemapindex>`

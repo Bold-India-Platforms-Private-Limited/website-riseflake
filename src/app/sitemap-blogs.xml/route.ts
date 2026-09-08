@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import { BLOG_API_URL, WEBSITE_BASE_URL } from '../../lib/config'
 import { STATIC_BLOG_SITEMAP_ENTRIES } from '../../lib/staticBlogPosts'
 
-export const revalidate = 3600 // rebuild hourly
+export const dynamic = 'force-dynamic'
 
 export async function GET() {
   let slugs: { slug: string; updated_at: string }[] = []
