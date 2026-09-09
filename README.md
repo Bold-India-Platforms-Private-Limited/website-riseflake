@@ -3,6 +3,7 @@
 A production-ready, SEO-optimized landing page for riseflake.com built with Next.js Static Site Generation (SSG) and deployed on Cloudflare Pages.
 
 ## 🚀 Features
+ok
 
 - ✅ **Static Site Generation (SSG)** - Fast, secure, and SEO-friendly
 - ✅ **Mobile Responsive** - Perfect on all devices
