@@ -16,6 +16,16 @@ export const BLOG_API_URL =
   'https://backend.riseflake.com/api/v2'
 
 export const WEBSITE_BASE_URL = 'https://riseflake.com'
+
+/**
+ * 404-tracking beacon — a top-level /api/v1 route (NOT under /website), so it
+ * sits outside the read-only public-website API hardening group entirely.
+ * Fired client-side from not-found.tsx so the admin panel's API Monitoring >
+ * 404 Pages tab can see which URLs are actually broken.
+ */
+export const TRACK_404_URL =
+  process.env.NEXT_PUBLIC_TRACK_404_URL ??
+  'https://backend.riseflake.com/api/v1/track-404'
 export const BASE_ASSETS_URL = 'https://assets.riseflake.com/images'
 
 /**

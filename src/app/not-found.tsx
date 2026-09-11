@@ -4,10 +4,12 @@ import { FiHome, FiSearch, FiArrowLeft, FiRefreshCw } from "react-icons/fi";
 import { Search } from "lucide-react";
 import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
+import Track404Beacon from "./components/Track404Beacon";
 
 export default function NotFound() {
     return (
         <div className="flex flex-col min-h-screen bg-slate-50">
+            <Track404Beacon />
             <Navbar />
 
             <div className="w-full bg-white border-b border-slate-200">

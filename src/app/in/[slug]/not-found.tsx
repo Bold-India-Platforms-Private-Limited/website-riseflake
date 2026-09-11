@@ -1,9 +1,11 @@
 import Link from 'next/link'
 import Navbar from '../../components/Navbar'
+import Track404Beacon from '../../components/Track404Beacon'
 
 export default function ProfileNotFound() {
   return (
     <>
+      <Track404Beacon />
       <Navbar bgTransparent />
       <main className="min-h-screen bg-slate-50 pt-20 flex items-center justify-center px-4">
         <div className="max-w-md w-full text-center">
