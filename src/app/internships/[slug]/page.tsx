@@ -217,7 +217,14 @@ type InternshipResponse = {
   result: JobDetail
 }
 
-const fetchInternship = async (slug: string) => {
+// `expired` is layered ON TOP of a successful fetch — the deadline has passed,
+// but the listing itself still exists and should render normally with an
+// expired status, not 404. A bare `{ expired: true }` (no `result`) means the
+// backend returned 410 Gone (recruiter/admin explicitly took the post down —
+// see the takedown flow) and IS a hard not-found, handled separately below.
+type InternshipFetchResult = (InternshipResponse & { expired: boolean }) | { expired: true } | null
+
+const fetchInternship = async (slug: string): Promise<InternshipFetchResult> => {
   try {
     const response = await fetch(`${API_BASE_URL}/internships/${slug}`, {
       next: { revalidate: 900 },
@@ -229,13 +236,15 @@ const fetchInternship = async (slug: string) => {
       return null
     }
     const data = (await response.json()) as InternshipResponse
-    // Treat deadline-expired internships as expired on the frontend too
+    // Deadline passed → still a real listing, just flagged expired. The page
+    // renders it with an "Expired" status and disables Apply, instead of 404ing.
+    let expired = false
     if (data.result?.job_deadline) {
       const deadline = new Date(data.result.job_deadline)
       deadline.setHours(23, 59, 59, 999)
-      if (deadline < new Date()) return { expired: true }
+      if (deadline < new Date()) expired = true
     }
-    return data
+    return { ...data, expired }
   } catch (err) {
     console.error(`[internships] fetch error for "${slug}":`, err)
     return null
@@ -545,28 +554,32 @@ export default async function InternshipDetailsPage(
 
   const data = await fetchInternship(slug)
 
-  if (data && 'expired' in data && data.expired) {
-    // SEO: return 404 so Google deindexes expired internship URLs.
-    // Never return 200 for expired content — it wastes crawl budget and hurts ranking.
-    notFound()
-  }
-
+  // A bare `{ expired: true }` with no `result` is a 410 Gone (post explicitly
+  // taken down) — that stays a hard not-found. A deadline-passed listing still
+  // carries its `result` and renders normally below, just flagged expired.
   if (!data || !('status' in data) || !('result' in data) || !data.status || !data.result) {
     notFound()
   }
 
   const internship = (data as InternshipResponse).result
+  const isExpired = (data as { expired?: boolean }).expired === true
   const canonicalUrl = `${WEBSITE_BASE_URL}/internships/${internship.slug}`
-  const jobPostingSchema = buildJobPostingSchema(internship, canonicalUrl)
   const breadcrumbSchema = buildBreadcrumbSchema(internship, canonicalUrl)
+  // Google's JobPosting guidelines: remove the rich-result markup once a
+  // listing expires rather than leaving stale "still hiring" data indexed.
+  // The page itself stays up (with the Expired status below) — only the
+  // structured data is dropped.
+  const jobPostingSchema = isExpired ? null : buildJobPostingSchema(internship, canonicalUrl)
 
   return (
     <>
       {/* Structured data */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jobPostingSchema) }}
-      />
+      {jobPostingSchema && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jobPostingSchema) }}
+        />
+      )}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
@@ -636,7 +649,7 @@ export default async function InternshipDetailsPage(
 
             {/* Sidebar */}
             <div className="lg:col-span-1 space-y-6">
-              <ApplyCard job={internship} />
+              <ApplyCard job={internship} isExpired={isExpired} />
               <DownloadAppCard />
               <SimilarListings slug={internship.slug} categories={internship.categories} isInternship />
             </div>

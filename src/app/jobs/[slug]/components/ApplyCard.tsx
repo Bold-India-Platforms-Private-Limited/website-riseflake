@@ -117,7 +117,7 @@ function ShareRow({ title, url }: { title: string; url: string }) {
 }
 
 // ─── Main ──────────────────────────────────────────────────────────────────────
-export default function ApplyCard({ job }: { job: JobDetail }) {
+export default function ApplyCard({ job, isExpired = false }: { job: JobDetail; isExpired?: boolean }) {
   const pathname = usePathname()
   const [incentivesOpen, setIncentivesOpen] = useState(false)
 
@@ -197,18 +197,28 @@ export default function ApplyCard({ job }: { job: JobDetail }) {
           <div className="p-5 space-y-3">
 
             {/* Apply CTA */}
-            <a
-              href={applyHref}
-              className="group flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 py-3.5 text-sm font-semibold text-white shadow-md shadow-indigo-200/60 hover:bg-indigo-700 hover:shadow-indigo-300/60 active:scale-[0.98] transition-all"
-            >
-              Apply Now
-              <svg className="h-4 w-4 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 7l5 5m0 0l-5 5m5-5H6"/>
-              </svg>
-            </a>
+            {isExpired ? (
+              <div
+                aria-disabled="true"
+                className="flex w-full flex-col items-center justify-center gap-0.5 rounded-xl bg-slate-100 py-3.5 text-center"
+              >
+                <span className="text-sm font-semibold text-slate-500">Applications Closed</span>
+                <span className="text-xs text-slate-400">This listing has expired</span>
+              </div>
+            ) : (
+              <a
+                href={applyHref}
+                className="group flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 py-3.5 text-sm font-semibold text-white shadow-md shadow-indigo-200/60 hover:bg-indigo-700 hover:shadow-indigo-300/60 active:scale-[0.98] transition-all"
+              >
+                Apply Now
+                <svg className="h-4 w-4 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                </svg>
+              </a>
+            )}
 
             {/* Deadline */}
-            {job.job_deadline && <DeadlineBadge deadline={job.job_deadline} />}
+            {!isExpired && job.job_deadline && <DeadlineBadge deadline={job.job_deadline} />}
 
             {/* Compact meta row */}
             {openings !== null && (
@@ -244,7 +254,7 @@ export default function ApplyCard({ job }: { job: JobDetail }) {
         <div className="flex items-center gap-3 max-w-lg mx-auto">
 
           {/* Deadline pill — small screens */}
-          {job.job_deadline && (() => {
+          {!isExpired && job.job_deadline && (() => {
             const diff = Math.ceil((new Date(job.job_deadline).getTime() - Date.now()) / 86_400_000)
             if (diff < 0 || Number.isNaN(diff)) return null
             const urgent = diff <= 7
@@ -267,15 +277,21 @@ export default function ApplyCard({ job }: { job: JobDetail }) {
           )}
 
           {/* Apply button */}
-          <a
-            href={applyHref}
-            className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-indigo-600 py-3.5 text-sm font-bold text-white hover:bg-indigo-700 active:scale-[0.97] transition-all"
-          >
-            Apply Now
-            <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 7l5 5m0 0l-5 5m5-5H6"/>
-            </svg>
-          </a>
+          {isExpired ? (
+            <div aria-disabled="true" className="flex flex-1 items-center justify-center rounded-xl bg-slate-100 py-3.5 text-sm font-bold text-slate-500">
+              Applications Closed
+            </div>
+          ) : (
+            <a
+              href={applyHref}
+              className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-indigo-600 py-3.5 text-sm font-bold text-white hover:bg-indigo-700 active:scale-[0.97] transition-all"
+            >
+              Apply Now
+              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+              </svg>
+            </a>
+          )}
         </div>
 
         <p className="flex items-center justify-center gap-1 text-[10px] text-slate-400 mt-1.5">
