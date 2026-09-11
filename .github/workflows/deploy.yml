@@ -95,3 +95,14 @@ jobs:
             fi
             pm2 save
             echo "✅ Website deploy complete at $(date)"
+
+      # The Cloudflare cache rule stores / and /jobs with the same s-maxage
+      # (up to 1yr) the app sends, so without a purge every deploy is
+      # invisible to visitors until Cloudflare's edge TTL happens to expire.
+      - name: Purge Cloudflare cache
+        run: |
+          curl -sS --fail -X POST \
+            "https://api.cloudflare.com/client/v4/zones/${{ secrets.CLOUDFLARE_ZONE_ID }}/purge_cache" \
+            -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            --data '{"purge_everything":true}'
