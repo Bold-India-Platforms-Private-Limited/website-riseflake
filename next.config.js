@@ -5,6 +5,11 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Standalone server output — deploy target is a self-hosted EC2 box, not
+  // Vercel. `next build` traces only the files server.js actually needs into
+  // .next/standalone, so the deploy bundle doesn't need `npm install` on the
+  // (memory- and disk-constrained) target host.
+  output: 'standalone',
   // The repo sits in a monorepo with a nested resume/ lockfile — pin tracing to
   // this app so `next build` doesn't scan the whole tree during "Collecting
   // build traces".

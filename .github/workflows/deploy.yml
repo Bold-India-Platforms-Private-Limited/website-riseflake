@@ -1,0 +1,97 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Build and Deploy to Production
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Build runs here, not on the EC2 box — that host has ~100MB of spare
+      # RAM and hosts other unrelated production apps, so `next build` (which
+      # can spike well past that) has no business running there.
+      - name: Build
+        run: npm run build
+        env:
+          NEXT_PUBLIC_API_BASE_URL: https://backend.riseflake.com/api/v2/website
+          NEXT_PUBLIC_BLOG_API_URL: https://backend.riseflake.com/api/v2
+          NEXT_PUBLIC_APP_BASE_URL: https://app.riseflake.com
+
+      # `output: standalone` traces only the files server.js needs into
+      # .next/standalone — but it does NOT copy public/ or .next/static
+      # (Next.js deploy docs call this out explicitly). Bundle both in by
+      # hand, plus the pm2 process file, then ship one tarball.
+      - name: Assemble standalone bundle
+        run: |
+          cp -r public .next/standalone/public
+          mkdir -p .next/standalone/.next
+          cp -r .next/static .next/standalone/.next/static
+          cp ecosystem.config.js .next/standalone/ecosystem.config.js
+          tar -czf release.tar.gz -C .next/standalone .
+
+      - name: Upload release archive
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ec2-user
+          key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+          source: "release.tar.gz"
+          target: "/home/ec2-user"
+          overwrite: true
+
+      - name: Release and reload
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ec2-user
+          key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+          port: 22
+          script_stop: true
+          script: |
+            set -e
+            APP_DIR=/home/ec2-user/website-riseflake
+            ARCHIVE=/home/ec2-user/release.tar.gz
+            ENV_BACKUP=/home/ec2-user/website-riseflake.env.bak
+
+            mkdir -p "$APP_DIR"
+
+            if [ -f "$APP_DIR/.env" ]; then
+              cp "$APP_DIR/.env" "$ENV_BACKUP"
+            elif [ ! -f "$ENV_BACKUP" ]; then
+              echo "❌ Missing $APP_DIR/.env — create it once manually before the first deploy."
+              exit 1
+            fi
+
+            # Full swap-in rather than untarring over the old tree — avoids
+            # accumulating stale hashed _next/static chunks from old builds
+            # forever on a box with ~2GB free disk.
+            rm -rf "$APP_DIR"
+            mkdir -p "$APP_DIR"
+            tar -xzf "$ARCHIVE" -C "$APP_DIR"
+            rm -f "$ARCHIVE"
+            mv "$ENV_BACKUP" "$APP_DIR/.env"
+
+            cd "$APP_DIR"
+            if pm2 describe riseflake-website > /dev/null 2>&1; then
+              pm2 restart riseflake-website --update-env
+            else
+              pm2 start ecosystem.config.js
+            fi
+            pm2 save
+            echo "✅ Website deploy complete at $(date)"
