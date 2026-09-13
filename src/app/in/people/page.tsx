@@ -104,7 +104,13 @@ async function getInitialData(): Promise<{
     items = json.result ?? []
     cursor = json.next_cursor ?? null
   } else {
-    console.error('[people] list fetch failed:', listRes.status === 'rejected' ? listRes.reason : listRes.value.status)
+    const reason = listRes.status === 'rejected' ? listRes.reason : listRes.value.status
+    console.error('[people] list fetch failed:', reason)
+    // Throw instead of degrading to an empty list: a transient backend blip
+    // (e.g. mid-restart) must not get baked into the hour-long ISR cache as
+    // "0 profiles". Throwing makes Next.js keep serving the last good cached
+    // page and retry on the next request instead of caching this failure.
+    throw new Error(`[people] list fetch failed: ${reason}`)
   }
   if (facetRes.status === 'fulfilled' && facetRes.value.ok) {
     const json = await facetRes.value.json()
