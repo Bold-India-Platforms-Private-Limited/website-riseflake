@@ -7,15 +7,25 @@ import LoginPromptModal from '../components/LoginPromptModalLoader'
 import { hreflangAlternates } from '../../lib/config'
 import { currentPeriod } from '../../lib/period'
 
-export function generateMetadata(): Metadata {
+type SearchParams = { [k: string]: string | string[] | undefined }
+
+function parsePage(sp: SearchParams): number {
+  const raw = Array.isArray(sp.page) ? sp.page[0] : sp.page
+  const n = parseInt(raw ?? '1', 10)
+  return Number.isFinite(n) && n > 0 ? n : 1
+}
+
+export async function generateMetadata({ searchParams }: { searchParams: Promise<SearchParams> }): Promise<Metadata> {
   const { monthYear } = currentPeriod()
+  const page = parsePage(await searchParams)
+  const canonical = page > 1 ? `https://riseflake.com/internships?page=${page}` : 'https://riseflake.com/internships'
   return {
     title: `Internships in India ${monthYear} — Find Verified Internships`,
     description: `Browse 1000s of internship opportunities across India (updated ${monthYear}). Filter by location, domain, and stipend. Apply directly on Riseflake.`,
     keywords: 'internships, internship search, internship in India, paid internships, work from home internship, summer internship, IT internship, MBA internship, engineering internship, riseflake',
     alternates: {
-      canonical: 'https://riseflake.com/internships',
-      ...hreflangAlternates('https://riseflake.com/internships'),
+      canonical,
+      ...hreflangAlternates(canonical),
     },
     openGraph: {
       type: 'website',

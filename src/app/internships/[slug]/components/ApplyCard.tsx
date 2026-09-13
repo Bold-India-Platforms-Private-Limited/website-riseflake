@@ -205,7 +205,7 @@ export default function ApplyCard({ job, isExpired = false }: { job: JobDetail; 
                 className="flex w-full flex-col items-center justify-center gap-0.5 rounded-xl bg-slate-100 py-3.5 text-center"
               >
                 <span className="text-sm font-semibold text-slate-500">Applications Closed</span>
-                <span className="text-xs text-slate-400">This listing has expired</span>
+                <span className="text-xs text-slate-400">This listing is no longer accepting applications</span>
               </div>
             ) : (
               <a

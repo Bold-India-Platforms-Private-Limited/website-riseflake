@@ -6,11 +6,22 @@ import MobileFilters from './components/MobileFilters'
 import LoginPromptModal from '../components/LoginPromptModalLoader'
 import { WEBSITE_BASE_URL, hreflangAlternates } from '../../lib/config'
 
-export const metadata: Metadata = {
+type SearchParams = { [k: string]: string | string[] | undefined }
+
+function parsePage(sp: SearchParams): number {
+  const raw = Array.isArray(sp.page) ? sp.page[0] : sp.page
+  const n = parseInt(raw ?? '1', 10)
+  return Number.isFinite(n) && n > 0 ? n : 1
+}
+
+export async function generateMetadata({ searchParams }: { searchParams: Promise<SearchParams> }): Promise<Metadata> {
+  const page = parsePage(await searchParams)
+  const canonical = page > 1 ? `${WEBSITE_BASE_URL}/jobs?page=${page}` : `${WEBSITE_BASE_URL}/jobs`
+  return {
   title: 'Jobs in India — Full-time, Part-time & Contract',
   description:
     'Browse thousands of full-time, part-time and contract jobs across India. Filter by role, location, salary and skills. Apply free on Riseflake — India\'s job portal for students, freshers & professionals.',
-  alternates: { canonical: `${WEBSITE_BASE_URL}/jobs`, ...hreflangAlternates(`${WEBSITE_BASE_URL}/jobs`) },
+  alternates: { canonical, ...hreflangAlternates(canonical) },
   openGraph: {
     title: 'Jobs in India | Riseflake',
     description: 'Find verified job openings across India. Filter by location, salary, experience and skills. Apply on Riseflake.',
@@ -25,6 +36,7 @@ export const metadata: Metadata = {
   },
   keywords: 'jobs in india, job search, hiring, freshers jobs, full time jobs, part time jobs, contract jobs, riseflake, job portal india',
   robots: { index: true, follow: true },
+  }
 }
 
 const breadcrumbSchema = {

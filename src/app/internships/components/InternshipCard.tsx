@@ -33,6 +33,19 @@ export type JobListItem = {
 
 const ACTIVE_STATUSES = new Set(['live', 'screening', 'interview', 'assessment'])
 
+const CLOSED_STATUS_STYLES: Record<string, string> = {
+  pending:    'bg-amber-50 text-amber-700 border-amber-100',
+  closed:     'bg-slate-100 text-slate-600 border-slate-200',
+  expired:    'bg-rose-50 text-rose-700 border-rose-100',
+  on_hold:    'bg-orange-50 text-orange-700 border-orange-100',
+  cancelled:  'bg-red-50 text-red-700 border-red-100',
+  offer_made: 'bg-blue-50 text-blue-700 border-blue-100',
+  hired:      'bg-green-50 text-green-700 border-green-100',
+}
+
+const formatStatus = (s: string) =>
+  s.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
+
 
 const formatExperience = (min?: number | null, max?: number | null): string | null => {
   if (min == null && max == null) return null
@@ -78,6 +91,10 @@ export default function InternshipCard({ job }: { job: JobListItem }) {
   const postedDisplay = formatPostedDate(job.created_at)
   const workplace = workplaceLabel(job.workplace_type)
   const isActive = ACTIVE_STATUSES.has(job.job_status)
+  const deadlinePassed = job.job_deadline ? new Date(job.job_deadline).getTime() < Date.now() : false
+  const isHiring = isActive && !deadlinePassed
+  const closedStatusKey = isActive && deadlinePassed ? 'expired' : job.job_status
+  const closedLabel = isActive && deadlinePassed ? 'Expired' : formatStatus(job.job_status)
   const skillNames = (job.job_skills ?? []).filter((s): s is string => typeof s === 'string')
 
   return (
@@ -110,13 +127,17 @@ export default function InternshipCard({ job }: { job: JobListItem }) {
               <h2 className="text-base font-semibold text-slate-900 group-hover:text-indigo-700 transition-colors leading-tight">
                 {job.position}
               </h2>
-              {isActive && (
+              {isHiring ? (
                 <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-emerald-700 border border-emerald-100">
                   <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
                   Hiring
                 </span>
+              ) : (
+                <span className={`inline-flex items-center rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${CLOSED_STATUS_STYLES[closedStatusKey] ?? 'bg-slate-100 text-slate-600 border-slate-200'}`}>
+                  {closedLabel}
+                </span>
               )}
-              {deadlineDisplay && (
+              {isHiring && deadlineDisplay && (
                 <span className="rounded-full bg-rose-50 border border-rose-100 px-2 py-0.5 text-[10px] font-semibold text-rose-600">
                   {deadlineDisplay}
                 </span>

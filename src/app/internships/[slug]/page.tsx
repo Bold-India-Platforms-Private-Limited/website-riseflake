@@ -236,9 +236,10 @@ const fetchInternship = async (slug: string): Promise<InternshipFetchResult> => 
       return null
     }
     const data = (await response.json()) as InternshipResponse
-    // Deadline passed → still a real listing, just flagged expired. The page
-    // renders it with an "Expired" status and disables Apply, instead of 404ing.
-    let expired = false
+    // Deadline passed, or the recruiter closed it early (job_status === 'closed')
+    // → still a real listing, just flagged expired. The page renders it with an
+    // "Expired"/"Closed" status and disables Apply, instead of 404ing.
+    let expired = data.result?.job_status === 'closed'
     if (data.result?.job_deadline) {
       const deadline = new Date(data.result.job_deadline)
       deadline.setHours(23, 59, 59, 999)
