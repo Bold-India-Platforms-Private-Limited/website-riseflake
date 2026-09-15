@@ -66,10 +66,13 @@ jobs:
           script: |
             set -e
             APP_DIR=/home/ec2-user/website-riseflake
+            OLD_DIR=/home/ec2-user/website-riseflake.old
+            NEW_DIR=/home/ec2-user/website-riseflake.new
             ARCHIVE=/home/ec2-user/release.tar.gz
             ENV_BACKUP=/home/ec2-user/website-riseflake.env.bak
 
-            mkdir -p "$APP_DIR"
+            # Leftovers from a previous run that died mid-swap
+            rm -rf "$NEW_DIR" "$OLD_DIR"
 
             if [ -f "$APP_DIR/.env" ]; then
               cp "$APP_DIR/.env" "$ENV_BACKUP"
@@ -78,14 +81,22 @@ jobs:
               exit 1
             fi
 
-            # Full swap-in rather than untarring over the old tree — avoids
-            # accumulating stale hashed _next/static chunks from old builds
-            # forever on a box with ~2GB free disk.
-            rm -rf "$APP_DIR"
-            mkdir -p "$APP_DIR"
-            tar -xzf "$ARCHIVE" -C "$APP_DIR"
+            # Extract into a fresh directory rather than wiping the live one
+            # in place: riseflake-website keeps serving traffic (and writing
+            # ISR/fetch-cache files) while this runs, so `rm -rf` on the live
+            # directory can race with those writes and abort with "Directory
+            # not empty" — which happened in production. `mv` is atomic and
+            # never conflicts with the old process's open file descriptors,
+            # so build the new tree beside the old one and rename into place.
+            mkdir -p "$NEW_DIR"
+            tar -xzf "$ARCHIVE" -C "$NEW_DIR"
             rm -f "$ARCHIVE"
-            mv "$ENV_BACKUP" "$APP_DIR/.env"
+            cp "$ENV_BACKUP" "$NEW_DIR/.env"
+
+            if [ -d "$APP_DIR" ]; then
+              mv "$APP_DIR" "$OLD_DIR"
+            fi
+            mv "$NEW_DIR" "$APP_DIR"
 
             cd "$APP_DIR"
             if pm2 describe riseflake-website > /dev/null 2>&1; then
@@ -94,6 +105,11 @@ jobs:
               pm2 start ecosystem.config.js
             fi
             pm2 save
+
+            # Safe now — the restart above has already moved the process off
+            # of $OLD_DIR, so nothing is writing into it anymore.
+            rm -rf "$OLD_DIR"
+
             echo "✅ Website deploy complete at $(date)"
 
       # The Cloudflare cache rule stores / and /jobs with the same s-maxage
