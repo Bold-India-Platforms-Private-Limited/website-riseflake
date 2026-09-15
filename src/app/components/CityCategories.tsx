@@ -116,9 +116,9 @@ export default function CityCategories() {
 
           <div
             ref={scrollRef}
-            className="[-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            className="overflow-x-auto scroll-smooth [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           >
-            <div className="flex min-w-max items-center justify-center gap-6 px-[60px] py-4">
+            <div className="flex min-w-max items-center justify-center gap-6 px-4 md:px-[60px] py-4">
               {cities.map((city, index) => (
                 <div
                   key={city.name}

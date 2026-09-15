@@ -88,7 +88,7 @@ export default function Home() {
             </p>
           </div>
 
-          <h1 className="text-6xl sm:text-7xl lg:text-8xl font-bold mb-6 leading-tight">
+          <h1 className="text-4xl sm:text-7xl lg:text-8xl font-bold mb-6 leading-tight">
             <span className="text-gradient">Rise Above</span>{' '}
             <br />
             <span className="text-slate-900">Your Career Limits</span>
@@ -108,14 +108,14 @@ export default function Home() {
               href="https://play.google.com/store/apps/details?id=com.riseflake.app"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-modern text-white hover:shadow-2xl hover:shadow-indigo-400/50 rounded-full font-bold text-lg transition-all"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-modern text-white hover:shadow-2xl hover:shadow-indigo-400/50 rounded-full font-bold text-lg transition-all active:scale-95"
             >
               <Rocket className="h-5 w-5" />
               Start Your Journey
             </a>
             <button
               onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}
-              className="px-8 py-4 border-2 border-indigo-300 text-indigo-600 hover:bg-indigo-50 rounded-full font-bold text-lg transition-all"
+              className="px-8 py-4 border-2 border-indigo-300 text-indigo-600 hover:bg-indigo-50 rounded-full font-bold text-lg transition-all active:scale-95"
             >
               Learn More
             </button>
@@ -142,7 +142,7 @@ export default function Home() {
           <div ref={searchWrapperRef} className="relative max-w-3xl mx-auto mb-12">
             <form onSubmit={handleSearchSubmit}>
               <div className="relative flex items-center gap-3 rounded-full border-2 border-slate-200 bg-white shadow-lg hover:border-indigo-300 transition-colors">
-                <FiSearch className="absolute left-6 h-5 w-5 text-slate-400" />
+                <FiSearch className="absolute left-4 sm:left-6 h-5 w-5 text-slate-400" />
                 <input
                   type="text"
                   value={searchQuery}
@@ -150,11 +150,11 @@ export default function Home() {
                   onFocus={() => setShowSuggestions(true)}
                   placeholder="Search jobs, internships, roles…"
                   autoComplete="off"
-                  className="flex-1 pl-14 pr-2 py-4 text-base text-slate-700 bg-transparent focus:outline-none placeholder:text-slate-400"
+                  className="flex-1 pl-11 sm:pl-14 pr-2 py-3 sm:py-4 text-sm sm:text-base text-slate-700 bg-transparent focus:outline-none placeholder:text-slate-400 min-w-0"
                 />
                 <button
                   type="submit"
-                  className="px-4 py-2 mr-2 bg-gradient-modern text-white rounded-full font-semibold text-base whitespace-nowrap"
+                  className="px-3 sm:px-4 py-2 mr-1 sm:mr-2 bg-gradient-modern text-white rounded-full font-semibold text-sm sm:text-base whitespace-nowrap shrink-0"
                 >
                   Search
                 </button>

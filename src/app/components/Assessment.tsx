@@ -231,7 +231,7 @@ export default function Assessment() {
   }> = ({ className, titleText, titleColor, bulletColor, featureKey, large }) => (
     <div className={className}>
       {/* image area placeholder — flex-1 so content is pushed to bottom */}
-      <div className="flex-1 flex items-center justify-center p-4" />
+      <div className="flex-1 flex items-center justify-center p-4 max-md:hidden" />
       <div className="px-5 pb-5 pt-4 max-md:p-5">
         <h2
           className={`${large ? 'text-[18px]' : 'text-[16px]'} font-semibold m-0 mb-3 leading-[1.3] max-md:text-[18px] max-md:mb-4`}
@@ -255,8 +255,8 @@ export default function Assessment() {
   `;
 
   // Grid card dimensions (desktop) vs full-width on mobile
-  const large = 'w-[296px] h-[270px] max-md:w-full max-md:h-[200px]';
-  const medium = 'w-[296px] h-[130px] max-md:w-full max-md:h-[200px]';
+  const large = 'w-[296px] h-[270px] max-md:w-full max-md:h-auto';
+  const medium = 'w-[296px] h-[130px] max-md:w-full max-md:h-auto';
 
   return (
     <>

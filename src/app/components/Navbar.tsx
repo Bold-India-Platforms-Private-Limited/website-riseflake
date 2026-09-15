@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { Menu, X, ChevronRight, ChevronDown, Building2, GraduationCap, Briefcase, Cloud, FileText, FileCheck, Star, BookOpen } from 'lucide-react'
 import BrowseMegaMenu from './BrowseMegaMenu'
+import MobileBottomNav from './MobileBottomNav'
 
 export default function Navbar({ bgTransparent = false }: { bgTransparent?: boolean }) {
   const pathname = usePathname()
@@ -93,7 +94,7 @@ export default function Navbar({ bgTransparent = false }: { bgTransparent?: bool
             </a>
 
             {/* Main Center Menu */}
-            <nav className="hidden lg:flex items-center gap-1 xl:gap-2 rounded-lg p-1 bg-transparent shrink">
+            <nav className="hidden xl:flex items-center gap-1 xl:gap-2 rounded-lg p-1 bg-transparent shrink">
               <div className="relative group shrink-0">
                 <a
                   href="/jobs"
@@ -222,7 +223,7 @@ export default function Navbar({ bgTransparent = false }: { bgTransparent?: bool
             <div className="flex items-center gap-2 md:gap-3 shrink-0 ml-auto lg:ml-0">
 
               {/* Business Dropdown */}
-              <div className="relative group shrink-0 hidden lg:block">
+              <div className="relative group shrink-0 hidden xl:block">
                 <button className="flex items-center gap-1 md:gap-1.5 rounded-full px-3 md:px-4 lg:px-5 py-2 md:py-2.5 text-xs lg:text-sm font-semibold transition-all duration-500 whitespace-nowrap bg-indigo-50/80 text-indigo-700 hover:bg-indigo-100 hover:text-indigo-800 border-[1.5px] border-indigo-200/60 hover:border-indigo-300/60 hover:-translate-y-0.5 shadow-sm">
                   <span className="hidden sm:inline">For </span>Business <ChevronDown className="h-3.5 w-3.5 md:h-4 md:w-4 text-indigo-500 group-hover:text-indigo-600 transition-colors" />
                 </button>
@@ -274,7 +275,7 @@ export default function Navbar({ bgTransparent = false }: { bgTransparent?: bool
               {/* Main Call to Action */}
               <a
                 href="https://app.riseflake.com/home"
-                className="hidden md:inline-flex rounded-full bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 px-4 lg:px-5 py-2.5 font-semibold text-white shadow-lg shadow-indigo-500/30 transition-all duration-300 hover:shadow-xl hover:shadow-indigo-500/40 hover:-translate-y-0.5 text-xs lg:text-sm whitespace-nowrap"
+                className="hidden md:inline-flex rounded-full bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 px-4 lg:px-5 py-2.5 font-semibold text-white shadow-lg shadow-indigo-500/30 transition-all duration-300 hover:shadow-xl hover:shadow-indigo-500/40 hover:-translate-y-0.5 active:scale-95 text-xs lg:text-sm whitespace-nowrap"
               >
                 Find Jobs
               </a>
@@ -297,7 +298,7 @@ export default function Navbar({ bgTransparent = false }: { bgTransparent?: bool
               {/* Mobile Call to Action */}
               <a
                 href="https://app.riseflake.com/home"
-                className="md:hidden inline-flex rounded-full bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 px-4 py-1.5 font-semibold text-white shadow-md transition-all hover:shadow-lg text-xs mr-1"
+                className="md:hidden inline-flex rounded-full bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 px-4 py-1.5 font-semibold text-white shadow-md transition-all hover:shadow-lg active:scale-95 text-xs mr-1"
                 style={{ minWidth: '80px', justifyContent: 'center' }}
               >
                 Find Jobs
@@ -305,7 +306,7 @@ export default function Navbar({ bgTransparent = false }: { bgTransparent?: bool
 
               <button
                 type="button"
-                className="lg:hidden inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 bg-white/80 backdrop-blur text-slate-700 hover:bg-white shrink-0"
+                className="xl:hidden inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 bg-white/80 backdrop-blur text-slate-700 hover:bg-white shrink-0"
                 onClick={() => {
                   setBusinessModalOpen(false)
                   setOpen((value) => !value)
@@ -403,23 +404,42 @@ export default function Navbar({ bgTransparent = false }: { bgTransparent?: bool
         </div>
       )}
 
-      {/* Mobile Drawer Overlay and Drawer (unmount after fade-out) */}
+      {/* Mobile Sidebar Drawer (unmount after fade-out) */}
       {showDrawer && (
         <div
-          className={`lg:hidden fixed inset-0 z-40 transition-all duration-300 ${open ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
-          style={{ background: open ? 'rgba(0,0,0,0.12)' : 'rgba(0,0,0,0)' }}
+          className={`xl:hidden fixed inset-0 z-[60] transition-opacity duration-300 ${open ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
+          style={{ background: 'rgba(15, 23, 42, 0.45)' }}
           aria-hidden={!open}
           onClick={() => open && setOpen(false)}
         >
           <div
-            className={`absolute top-0 left-0 w-full h-screen overflow-y-auto border-t border-slate-200/70 bg-white/95 backdrop-blur-xl transition-transform duration-300 ${open ? 'translate-y-0' : '-translate-y-8'}`}
+            className={`absolute inset-y-0 left-0 flex h-full w-[84%] max-w-[360px] flex-col bg-white shadow-2xl transition-transform duration-300 ease-out ${open ? 'translate-x-0' : '-translate-x-full'}`}
             style={{ pointerEvents: 'auto' }}
             onClick={e => e.stopPropagation()}
           >
-            <div className="mx-3 mt-4 mb-20 rounded-3xl bg-white/90 p-4 shadow-xl flex flex-col gap-2">
-              <div className="px-4 py-2 text-xs font-bold uppercase tracking-wider text-slate-400">
-                Menu
-              </div>
+            {/* Drawer header */}
+            <div
+              className="flex items-center justify-between border-b border-slate-100 px-4 pb-4"
+              style={{ paddingTop: 'calc(1rem + env(safe-area-inset-top))' }}
+            >
+              <a href="/" className="flex items-center gap-2.5" onClick={() => setOpen(false)}>
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-white">
+                  <img src="/logo.webp" alt="Riseflake logo" className="h-5 w-5 object-contain" />
+                </div>
+                <span className="text-lg font-semibold text-slate-900">Riseflake</span>
+              </a>
+              <button
+                type="button"
+                onClick={() => setOpen(false)}
+                className="inline-flex h-9 w-9 items-center justify-center rounded-full text-slate-500 transition-transform hover:bg-slate-100 active:scale-95"
+                aria-label="Close menu"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            {/* Scrollable nav links */}
+            <div className="flex flex-1 flex-col gap-1.5 overflow-y-auto px-3 py-4">
               <Link
                 href="/jobs"
                 className={`flex items-center justify-between rounded-xl px-4 py-3 text-base font-medium transition ${isActive('/jobs')
@@ -631,20 +651,26 @@ export default function Navbar({ bgTransparent = false }: { bgTransparent?: bool
                 </div>
                 <ChevronRight className="h-5 w-5 opacity-70" />
               </Link>
+            </div>
 
-              <div className="mt-4 pt-4 pb-12 border-t border-slate-100 md:hidden">
-                <a
-                  href="https://app.riseflake.com/home"
-                  className="flex w-full justify-center rounded-xl bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 px-4 py-3 font-semibold text-white shadow-lg transition-all"
-                  onClick={() => setOpen(false)}
-                >
-                  Find Jobs
-                </a>
-              </div>
+            {/* Pinned footer CTA */}
+            <div
+              className="border-t border-slate-100 p-4"
+              style={{ paddingBottom: 'calc(1rem + env(safe-area-inset-bottom))' }}
+            >
+              <a
+                href="https://app.riseflake.com/home"
+                className="flex w-full justify-center rounded-xl bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 px-4 py-3 font-semibold text-white shadow-lg transition-all active:scale-95"
+                onClick={() => setOpen(false)}
+              >
+                Find Jobs
+              </a>
             </div>
           </div>
         </div>
       )}
+
+      <MobileBottomNav />
     </>
   )
 }

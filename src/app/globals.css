@@ -9,8 +9,10 @@
 }
 
 html {
+  font-size: 18px;
   scroll-behavior: smooth;
   overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
 }
 
 @font-face {
@@ -41,6 +43,13 @@ body {
 
 .body-scroll-lock {
   overflow: hidden;
+}
+
+/* Space for the floating mobile bottom tab bar (mirrors the xl breakpoint where it shows) */
+@media (max-width: 1279px) {
+  body {
+    padding-bottom: calc(5rem + env(safe-area-inset-bottom));
+  }
 }
 
 /* Modern gradient text */
