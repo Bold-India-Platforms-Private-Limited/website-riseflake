@@ -329,11 +329,7 @@ export default function Footer() {
               <div className="space-y-1 text-xs text-gray-500">
                 <p>All logos are trademarks of their respective owners. Used for identification purposes only.</p>
                 <p>
-                  © {currentYear} {BRAND_NAME}.{' '}
-                  <FooterLink href="https://boldindia.in" target="_blank" rel="noopener noreferrer">
-                    Bold India Platforms Pvt. Ltd.
-                  </FooterLink>{' '}
-                  All rights reserved.
+                  © {currentYear} {BRAND_NAME}. All rights reserved.
                 </p>
               </div>
             </div>
