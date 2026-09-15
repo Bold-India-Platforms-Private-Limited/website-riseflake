@@ -99,8 +99,16 @@ jobs:
             mv "$NEW_DIR" "$APP_DIR"
 
             cd "$APP_DIR"
+            # Restart by config FILE, not by process name: `pm2 restart <name>
+            # --update-env` merges in whatever env the invoking (non-interactive
+            # CI) shell happens to have, which does NOT include ecosystem.config.js's
+            # HOSTNAME: "127.0.0.1" — that only applies on the original `pm2 start`.
+            # A name-only restart silently let the box's ambient EC2 hostname leak
+            # into HOSTNAME instead, so the app bound off-localhost and nginx (which
+            # proxies to 127.0.0.1:3300) 502'd on every request. Passing the config
+            # file makes PM2 re-read its env block every time.
             if pm2 describe riseflake-website > /dev/null 2>&1; then
-              pm2 restart riseflake-website --update-env
+              pm2 restart ecosystem.config.js --update-env
             else
               pm2 start ecosystem.config.js
             fi
