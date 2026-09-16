@@ -70,6 +70,7 @@ jobs:
             NEW_DIR=/home/ec2-user/website-riseflake.new
             ARCHIVE=/home/ec2-user/release.tar.gz
             ENV_BACKUP=/home/ec2-user/website-riseflake.env.bak
+            APP_PORT=3300   # must match ecosystem.config.js's PORT (nginx proxies here)
 
             # Leftovers from a previous run that died mid-swap
             rm -rf "$NEW_DIR" "$OLD_DIR"
@@ -114,8 +115,42 @@ jobs:
             fi
             pm2 save
 
-            # Safe now — the restart above has already moved the process off
-            # of $OLD_DIR, so nothing is writing into it anymore.
+            # pm2 restart/start returns success the instant it hands off to the
+            # new process — it does not wait to see whether that process
+            # actually stays up. A build that compiles fine but crashes on
+            # boot (bad env var, failed DB connection, etc.) would otherwise
+            # sail through as "deployed". Probe the app directly before
+            # committing to this release, and roll back if it never answers.
+            echo "Health-checking new release on port $APP_PORT..."
+            HEALTHY=0
+            for i in $(seq 1 10); do
+              sleep 2
+              if curl -sf -o /dev/null "http://127.0.0.1:$APP_PORT/"; then
+                HEALTHY=1
+                break
+              fi
+            done
+
+            if [ "$HEALTHY" -ne 1 ]; then
+              echo "❌ New release failed health check on port $APP_PORT."
+              if [ -d "$OLD_DIR" ]; then
+                echo "Rolling back to previous release."
+                rm -rf "$APP_DIR"
+                mv "$OLD_DIR" "$APP_DIR"
+                cd "$APP_DIR"
+                # Same config-file restart as above — a name-only restart here
+                # would reintroduce the off-localhost HOSTNAME bug too.
+                pm2 restart ecosystem.config.js --update-env
+                pm2 save
+                echo "Rolled back to previous working release."
+              else
+                echo "No previous release to roll back to (first deploy) — leaving as-is."
+              fi
+              exit 1
+            fi
+
+            # Safe now — the new release is confirmed healthy, and pm2 has
+            # already moved the process off of $OLD_DIR.
             rm -rf "$OLD_DIR"
 
             echo "✅ Website deploy complete at $(date)"
