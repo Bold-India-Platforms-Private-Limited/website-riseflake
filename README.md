@@ -1,4 +1,4 @@
-# Riseflake Landing Page
+# Riseflake Website Page
 
 A production-ready, SEO-optimized landing page for riseflake.com built with Next.js Static Site Generation (SSG) and deployed on Cloudflare Pages.
 
