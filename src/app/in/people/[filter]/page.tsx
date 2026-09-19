@@ -5,9 +5,10 @@ import Navbar from '../../../components/Navbar'
 import { API_BASE_URL, WEBSITE_BASE_URL, hreflangAlternates } from '../../../../lib/config'
 import PeopleClient, { type Facets, type LockedFilter } from '../PeopleClient'
 import type { PersonCardData } from '../components/PersonCard'
+import { facetSlugs } from '../../../../lib/manifest'
 
-export const revalidate = 3600
-export const dynamicParams = true
+// Static export: only the manifest's role / city / skill landings exist.
+export const dynamicParams = false
 
 type ComboTarget = { slug: string; role_slug: string; city_slug: string; label: string; count: number }
 type Target = { slug: string; label: string; count: number }
@@ -85,23 +86,8 @@ async function getFacets(): Promise<Facets> {
   }
 }
 
-export async function generateStaticParams() {
-  // Pre-render only the highest-value landing pages — the rest render on demand
-  // (dynamicParams=true) and get picked up by ISR. Kept well under the backend's
-  // per-IP rate limit so a build burst doesn't 429 itself.
-  try {
-    const res = await fetch(`${API_BASE_URL}/people-directory-sitemap.xml`, {
-      signal: AbortSignal.timeout(8000),
-    })
-    if (!res.ok) return []
-    const xml = await res.text()
-    const slugs = Array.from(xml.matchAll(/\/in\/people\/([^<]+)</g))
-      .map((m) => m[1])
-      .filter((s) => s && s !== 'people')
-    return slugs.slice(0, 36).map((filter) => ({ filter }))
-  } catch {
-    return []
-  }
+export function generateStaticParams() {
+  return facetSlugs('people').map((filter) => ({ filter }))
 }
 
 function headline(l: Pick<Landing, 'kind' | 'role_label' | 'city_label' | 'skill_label'>) {
@@ -189,7 +175,9 @@ export default async function PeopleLandingPage(
     return (
       <>
         <Navbar bgTransparent />
-        <main className="flex min-h-screen items-center justify-center bg-slate-100 px-4">
+        {/* data-rf-degraded: the post-build audit drops any page carrying this marker, so a
+            backend blip during the build can never be published as a real page. */}
+        <main data-rf-degraded="1" className="flex min-h-screen items-center justify-center bg-slate-100 px-4">
           <div className="rounded-2xl border border-slate-200 bg-white p-8 text-center shadow-sm">
             <p className="text-sm text-slate-600">This page is loading. Please refresh in a moment.</p>
             <a href="/in/people" className="mt-3 inline-block text-sm font-medium text-indigo-600 hover:underline">

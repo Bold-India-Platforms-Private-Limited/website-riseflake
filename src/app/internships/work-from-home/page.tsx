@@ -7,8 +7,6 @@ import { API_BASE_URL, WEBSITE_BASE_URL, hreflangAlternates } from '../../../lib
 import { formatSalaryChip } from '../../../lib/salary'
 import { currentPeriod } from '../../../lib/period'
 
-export const revalidate = 1800
-
 export function generateMetadata(): Metadata {
   const { monthYear } = currentPeriod()
   return {

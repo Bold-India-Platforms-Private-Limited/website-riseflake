@@ -18,6 +18,14 @@ export const BLOG_API_URL =
 export const WEBSITE_BASE_URL = 'https://riseflake.com'
 
 /**
+ * Social-share image for pages that used to get a per-page card from the
+ * /api/og edge route. A static export has no server to render those on demand
+ * (and pre-rendering one image per page would blow the 20,000-file deploy limit),
+ * so every page shares the branded 1200x630 image in /public.
+ */
+export const OG_FALLBACK_IMAGE = `${WEBSITE_BASE_URL}/og-image.webp`
+
+/**
  * 404-tracking beacon — a top-level /api/v1 route (NOT under /website), so it
  * sits outside the read-only public-website API hardening group entirely.
  * Fired client-side from not-found.tsx so the admin panel's API Monitoring >

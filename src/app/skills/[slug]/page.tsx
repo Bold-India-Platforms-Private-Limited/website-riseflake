@@ -5,26 +5,25 @@ import { Sparkles, Briefcase, Building2, ArrowRight } from 'lucide-react'
 import Navbar from '../../components/Navbar'
 import Footer from '../../components/Footer'
 import { WEBSITE_BASE_URL, hreflangAlternates } from '../../../lib/config'
-import { fetchSkillsDirectory, fetchSkillDetail } from '../../../lib/skillsData'
+import { fetchSkillDetail } from '../../../lib/skillsData'
+import { skillSlugs } from '../../../lib/manifest'
 import { currentPeriod } from '../../../lib/period'
 import SeoListingCard from '../../components/seo/SeoListingCard'
-import CrawlablePagination from '../../components/seo/CrawlablePagination'
+import BrowseAllCta from '../../components/seo/BrowseAllCta'
 import FaqBlock from '../../components/seo/FaqJsonLd'
 
-export const dynamicParams = true
-export const revalidate = 1800
+// Static export: only the slugs in the build manifest exist (see src/lib/manifest.ts).
+export const dynamicParams = false
 
 export async function generateStaticParams() {
-  const skills = await fetchSkillsDirectory()
-  return skills.slice(0, 200).map((s) => ({ slug: s.slug }))
+  return skillSlugs().map((slug) => ({ slug }))
 }
 
 export async function generateMetadata(
-  { params, searchParams }: { params: Promise<{ slug: string }>; searchParams: Promise<{ page?: string }> }
+  { params }: { params: Promise<{ slug: string }> }
 ): Promise<Metadata> {
   const { slug } = await params
-  const { page: pageParam } = await searchParams
-  const page = Math.max(parseInt(pageParam || '1', 10) || 1, 1)
+  const page = 1 // static export: only page 1 is pre-rendered (see BrowseAllCta)
   const { year } = currentPeriod()
 
   const data = await fetchSkillDetail(slug, page)
@@ -53,17 +52,16 @@ export async function generateMetadata(
 }
 
 export default async function SkillDetailPage(
-  { params, searchParams }: { params: Promise<{ slug: string }>; searchParams: Promise<{ page?: string }> }
+  { params }: { params: Promise<{ slug: string }> }
 ) {
   const { slug } = await params
-  const { page: pageParam } = await searchParams
-  const page = Math.max(parseInt(pageParam || '1', 10) || 1, 1)
+  const page = 1 // static export: only page 1 is pre-rendered (see BrowseAllCta)
   const { year, monthYear } = currentPeriod()
 
   const data = await fetchSkillDetail(slug, page)
   if (!data) notFound()
 
-  const { skill, result: listings, totalPages, total, jobCount, internshipCount, totalCount, companies, relatedSkills } = data
+  const { skill, result: listings, total, jobCount, internshipCount, totalCount, companies, relatedSkills } = data
   const name = skill.name
   const basePath = `/skills/${slug}`
   const canonicalUrl = page > 1 ? `${WEBSITE_BASE_URL}${basePath}?page=${page}` : `${WEBSITE_BASE_URL}${basePath}`
@@ -172,7 +170,13 @@ export default async function SkillDetailPage(
             </div>
           )}
 
-          <CrawlablePagination basePath={basePath} currentPage={page} totalPages={totalPages} />
+          <BrowseAllCta
+            href={`/jobs?position=${encodeURIComponent(skill.name)}`}
+            label={`Browse all ${skill.name} jobs`}
+            total={totalCount}
+            shown={listings.length}
+            noun="jobs & internships"
+          />
 
           {/* Companies hiring for this skill */}
           {companies.length > 0 && (

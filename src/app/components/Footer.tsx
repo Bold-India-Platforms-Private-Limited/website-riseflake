@@ -12,7 +12,7 @@ const links = {
   resources: [
     { label: 'Support', href: '/support' },
     { label: 'Login & Register', href: '/' },
-    { label: 'HTML Sitemap', href: '/sitemap.html' },
+    { label: 'HTML Sitemap', href: '/sitemap' },
     { label: 'XML Sitemap', href: '/sitemap.xml' },
   ],
   explore: [

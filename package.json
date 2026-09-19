@@ -1,16 +1,19 @@
 {
   "name": "riseflake-landing",
   "version": "1.0.0",
-  "description": "SEO-friendly job portal and professional networking landing page",
+  "description": "riseflake.com \u2014 SEO-first job portal & professional network website (Next.js static export on Cloudflare Pages)",
   "private": true,
   "scripts": {
+    "predev": "test -f .build/manifest.json || CF_LIMIT_PER_ROUTE=25 node scripts/cf/build-manifest.mjs",
     "dev": "next dev",
+    "build": "node scripts/cf/build.mjs",
+    "build:manifest": "node scripts/cf/build-manifest.mjs",
     "build:resume": "bash scripts/build-resume.sh",
-    "prebuild": "bash scripts/build-resume.sh",
-    "build": "next build",
-    "start": "next start",
+    "build:next": "next build",
+    "preview": "npx --yes wrangler@4 pages dev out",
+    "smoke": "node scripts/cf/smoke.mjs",
     "lint": "next lint",
-    "export": "next build"
+    "seo-diff": "node scripts/cf/seo-diff.mjs"
   },
   "dependencies": {
     "dompurify": "^3.3.1",
@@ -32,5 +35,8 @@
     "eslint-config-next": "^15.0.0",
     "postcss": "^8.5.6",
     "tailwindcss": "^3.4.19"
+  },
+  "engines": {
+    "node": ">=22.18"
   }
 }

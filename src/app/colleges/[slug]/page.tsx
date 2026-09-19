@@ -1,10 +1,11 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import CollegeDetailClient from './CollegeDetailClient'
-import { API_BASE_URL, WEBSITE_BASE_URL, hreflangAlternates } from '../../../lib/config'
+import { API_BASE_URL, WEBSITE_BASE_URL, hreflangAlternates, OG_FALLBACK_IMAGE } from '../../../lib/config'
+import { collegeSlugs } from '../../../lib/manifest'
 
-export const revalidate = 3600
-export const dynamicParams = true
+// Static export: only the slugs in the build manifest exist (see src/lib/manifest.ts).
+export const dynamicParams = false
 
 type PageProps = {
   params: Promise<{ slug: string }>
@@ -45,7 +46,7 @@ async function fetchCollege(slug: string): Promise<CollegeDetail | null> {
 }
 
 export async function generateStaticParams() {
-  return []
+  return collegeSlugs().map((slug) => ({ slug }))
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -73,11 +74,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     'View job openings, internships, alumni network and placement opportunities.',
   ].filter(Boolean).join(' ').slice(0, 160)
 
-  const ogImageUrl =
-    `${WEBSITE_BASE_URL}/api/og?type=college` +
-    `&company=${encodeURIComponent(college_name)}` +
-    `&logo=${encodeURIComponent(college.college_logo ?? '')}` +
-    (locationStr ? `&subtitle=${encodeURIComponent(locationStr)}` : '')
+  const ogImageUrl = OG_FALLBACK_IMAGE
 
   const canonicalUrl = `${WEBSITE_BASE_URL}/colleges/${slug}`
 

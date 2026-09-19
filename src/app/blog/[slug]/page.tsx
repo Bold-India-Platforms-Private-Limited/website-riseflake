@@ -9,11 +9,11 @@ import {
   getStaticBlogPost,
   getStaticBlogRelated,
   isStaticBlogSlug,
-  STATIC_BLOG_POSTS,
 } from '../../../lib/staticBlogPosts'
+import { blogSlugs } from '../../../lib/manifest'
 
-export const dynamicParams = true
-export const revalidate = 600 // ISR: rebuild every 10 min
+// Static export: only the slugs in the build manifest exist (see src/lib/manifest.ts).
+export const dynamicParams = false
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -87,16 +87,8 @@ async function fetchRelated(categorySlug: string | null, excludeSlug: string): P
 // ─── Static params ────────────────────────────────────────────────────────────
 
 export async function generateStaticParams() {
-  const staticParams = STATIC_BLOG_POSTS.map((p) => ({ slug: p.slug }))
-  try {
-    const res = await fetch(`${BLOG_API_URL}/blogs/public/slugs`, { next: { revalidate: 600 } })
-    if (!res.ok) return staticParams
-    const data = await res.json()
-    const apiParams = (data.slugs ?? []).map((s: { slug: string }) => ({ slug: s.slug }))
-    return [...staticParams, ...apiParams]
-  } catch {
-    return staticParams
-  }
+  // The manifest already merges CMS posts with the hand-written static ones.
+  return blogSlugs().map((slug) => ({ slug }))
 }
 
 // ─── Metadata ─────────────────────────────────────────────────────────────────

@@ -7,18 +7,12 @@ import LoginPromptModal from '../components/LoginPromptModalLoader'
 import { hreflangAlternates } from '../../lib/config'
 import { currentPeriod } from '../../lib/period'
 
-type SearchParams = { [k: string]: string | string[] | undefined }
-
-function parsePage(sp: SearchParams): number {
-  const raw = Array.isArray(sp.page) ? sp.page[0] : sp.page
-  const n = parseInt(raw ?? '1', 10)
-  return Number.isFinite(n) && n > 0 ? n : 1
-}
-
-export async function generateMetadata({ searchParams }: { searchParams: Promise<SearchParams> }): Promise<Metadata> {
+// Static export: the server never sees the query string, so every `/internships?…`
+// variant (filters, search, ?page=N) is the same HTML whose canonical is the clean
+// /internships URL. The list itself is fetched in the browser by <InternshipsClient />.
+export function generateMetadata(): Metadata {
   const { monthYear } = currentPeriod()
-  const page = parsePage(await searchParams)
-  const canonical = page > 1 ? `https://riseflake.com/internships?page=${page}` : 'https://riseflake.com/internships'
+  const canonical = 'https://riseflake.com/internships'
   return {
     title: `Internships in India ${monthYear} — Find Verified Internships`,
     description: `Browse 1000s of internship opportunities across India (updated ${monthYear}). Filter by location, domain, and stipend. Apply directly on Riseflake.`,
@@ -71,7 +65,12 @@ export default function InternshipsPage() {
             <span className="text-slate-700 font-medium">Internships</span>
           </nav>
 
-          <MobileFilters />
+          {/* Suspense: MobileFilters reads the query string (useSearchParams). Unsuspended, it forces the
+              whole page into client-side rendering during the static prerender, and the h1 and copy below
+              would be missing from the HTML crawlers receive. */}
+          <Suspense fallback={null}>
+            <MobileFilters />
+          </Suspense>
 
           <div className="mb-6 rounded-3xl border border-slate-200 bg-white px-6 py-5 shadow-sm">
             <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Riseflake Internships</p>

@@ -5,10 +5,11 @@ import { GraduationCap, MapPin, Building2 } from 'lucide-react'
 import Navbar from '../../../components/Navbar'
 import Footer from '../../../components/Footer'
 import FacetChips from '../../../components/seo/FacetChips'
-import CrawlablePagination from '../../../components/seo/CrawlablePagination'
+import BrowseAllCta from '../../../components/seo/BrowseAllCta'
 import FaqBlock from '../../../components/seo/FaqJsonLd'
 import { WEBSITE_BASE_URL, hreflangAlternates } from '../../../../lib/config'
 import { currentPeriod } from '../../../../lib/period'
+import { facetSlugs } from '../../../../lib/manifest'
 import {
   fetchCollegeDirectory,
   fetchCollegeLanding,
@@ -20,34 +21,24 @@ import {
   type CollegeLanding,
 } from '../../../../lib/collegeBrowse'
 
-export const dynamicParams = true
-export const revalidate = 21600
+// Static export: only the manifest's facet landings (and the hub) exist.
+export const dynamicParams = false
 
 type Props = {
   params: Promise<{ slug?: string[] }>
-  searchParams: Promise<{ [k: string]: string | string[] | undefined }>
 }
 
 const HUB = `${WEBSITE_BASE_URL}/colleges/browse`
-const MAX_INDEXED_PAGE = 20
 
-function parsePage(sp: Record<string, string | string[] | undefined>): number {
-  const raw = Array.isArray(sp.page) ? sp.page[0] : sp.page
-  const n = parseInt(raw ?? '1', 10)
-  return Number.isFinite(n) && n > 0 ? Math.min(n, 100) : 1
+// Only page 1 of each landing is pre-rendered (the server never sees `?page=N`);
+// deeper results are reached through the interactive /colleges list — see BrowseAllCta.
+const PAGE = 1
+
+export function generateStaticParams() {
+  return [{ slug: [] }, ...facetSlugs('colleges').map((s) => ({ slug: [s] }))]
 }
 
-export async function generateStaticParams() {
-  const dir = await fetchCollegeDirectory()
-  if (!dir) return []
-  const slugs = [...dir.types, ...dir.states, ...dir.cities.slice(0, 60), ...dir.combos.slice(0, 40)]
-    .map((t) => t.slug)
-    .filter(Boolean)
-    .slice(0, 120)
-  return slugs.map((s) => ({ slug: [s] }))
-}
-
-export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug: slugArr = [] } = await params
   if (slugArr.length === 0) {
     const { year } = currentPeriod()
@@ -65,17 +56,17 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   if (slugArr.length > 1) return { title: 'Colleges | Riseflake', robots: { index: false, follow: false } }
 
   const slug = slugArr[0]
-  const page = parsePage(await searchParams)
+  const page = PAGE
   const landing = await fetchCollegeLanding(slug, page)
   if (!landing || landing === 'retry') {
     return { title: 'Colleges | Riseflake', robots: { index: false, follow: false } }
   }
 
   const cleanUrl = `${HUB}/${slug}`
-  const canonical = page > 1 ? `${cleanUrl}?page=${page}` : cleanUrl
+  const canonical = cleanUrl
   const title = collegeTitle(landing, page)
   const description = collegeDescription(landing)
-  const indexable = landing.count >= 5 && page <= MAX_INDEXED_PAGE
+  const indexable = landing.count >= 5
 
   return {
     title,
@@ -174,14 +165,17 @@ async function Hub() {
 }
 
 // ── facet landing ─────────────────────────────────────────────────────────
-async function Facet({ slug, page }: { slug: string; page: number }) {
+async function Facet({ slug }: { slug: string }) {
+  const page = PAGE
   const landing = await fetchCollegeLanding(slug, page)
   if (landing === null) notFound()
   if (landing === 'retry') {
     return (
       <>
         <Navbar bgTransparent />
-        <main className="flex min-h-screen items-center justify-center bg-slate-100 px-4">
+        {/* data-rf-degraded: the post-build audit drops any page carrying this marker, so a
+            backend blip during the build can never be published as a real page. */}
+        <main data-rf-degraded="1" className="flex min-h-screen items-center justify-center bg-slate-100 px-4">
           <div className="rounded-2xl border border-slate-200 bg-white p-8 text-center shadow-sm">
             <p className="text-sm text-slate-600">This page is loading. Please refresh in a moment.</p>
             <a href="/colleges/browse" className="mt-3 inline-block text-sm font-medium text-indigo-600 hover:underline">
@@ -194,11 +188,11 @@ async function Facet({ slug, page }: { slug: string; page: number }) {
   }
 
   const l: CollegeLanding = landing
-  if (!l.result || (l.result.length === 0 && page > 1)) notFound()
+  if (!l.result) notFound()
 
   const h1 = collegeHeadline(l)
   const cleanUrl = `${HUB}/${slug}`
-  const canonical = page > 1 ? `${cleanUrl}?page=${page}` : cleanUrl
+  const canonical = cleanUrl
   const faqs = collegeFaqs(l)
 
   const breadcrumb = {
@@ -268,7 +262,7 @@ async function Facet({ slug, page }: { slug: string; page: number }) {
             </div>
           )}
 
-          <CrawlablePagination basePath={cleanUrl} currentPage={page} totalPages={l.totalPages} />
+          <BrowseAllCta href="/colleges" label="Browse all colleges" total={l.total} shown={l.result.length} noun="colleges" />
 
           {l.related.in_state.length > 0 && (
             <FacetChips title={`More in ${l.labels.place ?? 'this area'}`} chips={l.related.in_state} hrefBase="/colleges/browse" />
@@ -289,9 +283,9 @@ async function Facet({ slug, page }: { slug: string; page: number }) {
   )
 }
 
-export default async function CollegesBrowsePage({ params, searchParams }: Props) {
+export default async function CollegesBrowsePage({ params }: Props) {
   const { slug: slugArr = [] } = await params
   if (slugArr.length === 0) return <Hub />
   if (slugArr.length > 1) notFound()
-  return <Facet slug={slugArr[0]} page={parsePage(await searchParams)} />
+  return <Facet slug={slugArr[0]} />
 }

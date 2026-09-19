@@ -6,17 +6,11 @@ import MobileFilters from './components/MobileFilters'
 import LoginPromptModal from '../components/LoginPromptModalLoader'
 import { WEBSITE_BASE_URL, hreflangAlternates } from '../../lib/config'
 
-type SearchParams = { [k: string]: string | string[] | undefined }
-
-function parsePage(sp: SearchParams): number {
-  const raw = Array.isArray(sp.page) ? sp.page[0] : sp.page
-  const n = parseInt(raw ?? '1', 10)
-  return Number.isFinite(n) && n > 0 ? n : 1
-}
-
-export async function generateMetadata({ searchParams }: { searchParams: Promise<SearchParams> }): Promise<Metadata> {
-  const page = parsePage(await searchParams)
-  const canonical = page > 1 ? `${WEBSITE_BASE_URL}/jobs?page=${page}` : `${WEBSITE_BASE_URL}/jobs`
+// Static export: the server never sees the query string, so every `/jobs?…` variant
+// (filters, search, ?page=N) is the same HTML whose canonical is the clean /jobs URL.
+// The list itself is fetched in the browser by <JobsClient />.
+export function generateMetadata(): Metadata {
+  const canonical = `${WEBSITE_BASE_URL}/jobs`
   return {
   title: 'Jobs in India — Full-time, Part-time & Contract',
   description:
@@ -60,7 +54,12 @@ export default function JobsPage() {
 
       <main className="px-4 sm:px-6 lg:px-8 pt-20 pb-12 bg-slate-100 min-h-screen">
         <div className="max-w-[1200px] mx-auto">
-          <MobileFilters />
+          {/* Suspense: MobileFilters reads the query string (useSearchParams). Unsuspended, it forces the
+              whole page into client-side rendering during the static prerender, and the h1 and copy below
+              would be missing from the HTML crawlers receive. */}
+          <Suspense fallback={null}>
+            <MobileFilters />
+          </Suspense>
 
           {/* Page header */}
           <div className="mb-6 rounded-3xl border border-slate-200 bg-white px-6 py-6 shadow-sm">

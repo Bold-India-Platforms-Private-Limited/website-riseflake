@@ -3,7 +3,7 @@ import { ArrowRight, Building2 } from 'lucide-react'
 import Navbar from '../Navbar'
 import Footer from '../Footer'
 import CompanyCard from './CompanyCard'
-import CrawlablePagination from './CrawlablePagination'
+import BrowseAllCta from './BrowseAllCta'
 import FacetChips from './FacetChips'
 import FaqBlock from './FaqJsonLd'
 import { WEBSITE_BASE_URL } from '../../../lib/config'
@@ -92,7 +92,6 @@ export function CompanyBrowseFacet({ slug, page, landing }: { slug: string; page
   const labels = (landing.labels ?? {}) as CompanyFacetLabels
   const companies = landing.result ?? []
   const total = landing.total ?? landing.count ?? companies.length
-  const totalPages = landing.totalPages ?? 1
   const related = landing.related
   const cleanPath = `${HUB}/${slug}`
   const canonicalUrl = `${WEBSITE_BASE_URL}${cleanPath}${page > 1 ? `?page=${page}` : ''}`
@@ -176,7 +175,7 @@ export function CompanyBrowseFacet({ slug, page, landing }: { slug: string; page
         </div>
       )}
 
-      <CrawlablePagination basePath={cleanPath} currentPage={page} totalPages={totalPages} />
+      <BrowseAllCta href="/companies" label="Browse all companies" total={total} shown={companies.length} noun="companies" />
 
       {related && (
         <>

@@ -7,8 +7,6 @@ import { WEBSITE_BASE_URL, hreflangAlternates } from '../../lib/config'
 import { fetchSkillsDirectory } from '../../lib/skillsData'
 import { currentPeriod } from '../../lib/period'
 
-export const revalidate = 1800
-
 export async function generateMetadata(): Promise<Metadata> {
   const { year } = currentPeriod()
   const canonicalUrl = `${WEBSITE_BASE_URL}/skills`

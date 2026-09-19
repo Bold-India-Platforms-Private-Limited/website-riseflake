@@ -1,9 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import Navbar from '../components/Navbar'
-import { WEBSITE_BASE_URL, hreflangAlternates } from '../../lib/config'
-
-export const revalidate = 3600
+import { WEBSITE_BASE_URL, hreflangAlternates, OG_FALLBACK_IMAGE } from '../../lib/config'
 
 // ─── Metadata ─────────────────────────────────────────────────────────────────
 
@@ -26,14 +24,14 @@ export const metadata: Metadata = {
       'Discover students, freshers, and early-career professionals on Riseflake — India\'s professional network.',
     url: `${WEBSITE_BASE_URL}/network`,
     siteName: 'Riseflake',
-    images: [{ url: `${WEBSITE_BASE_URL}/api/og`, width: 1200, height: 630 }],
+    images: [{ url: OG_FALLBACK_IMAGE, width: 1200, height: 630 }],
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Professional Network | Riseflake',
     description: 'Discover professionals on Riseflake — India\'s student & early-career network.',
-    images: [`${WEBSITE_BASE_URL}/api/og`],
+    images: [OG_FALLBACK_IMAGE],
   },
   alternates: { canonical: `${WEBSITE_BASE_URL}/network`, ...hreflangAlternates(`${WEBSITE_BASE_URL}/network`) },
   robots: { index: true, follow: true },

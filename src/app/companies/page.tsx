@@ -3,7 +3,7 @@ import { Suspense } from 'react'
 import Navbar from '../components/Navbar'
 import CompaniesClient from './CompaniesClient'
 import LoginPromptModal from '../components/LoginPromptModalLoader'
-import { hreflangAlternates } from '../../lib/config'
+import { hreflangAlternates, OG_FALLBACK_IMAGE } from '../../lib/config'
 
 export const metadata: Metadata = {
   title: 'Top Companies Hiring',
@@ -23,14 +23,14 @@ export const metadata: Metadata = {
       'Discover top employers on Riseflake. Browse verified company profiles and explore open positions across India.',
     url: 'https://riseflake.com/companies',
     siteName: 'Riseflake',
-    images: [{ url: 'https://riseflake.com/api/og', width: 1200, height: 630 }],
+    images: [{ url: OG_FALLBACK_IMAGE, width: 1200, height: 630 }],
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Top Companies Hiring | Riseflake',
     description: 'Browse verified company profiles and explore open positions across India.',
-    images: ['https://riseflake.com/api/og'],
+    images: [OG_FALLBACK_IMAGE],
   },
   alternates: { canonical: 'https://riseflake.com/companies', ...hreflangAlternates('https://riseflake.com/companies') },
   robots: { index: true, follow: true },

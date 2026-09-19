@@ -9,9 +9,10 @@ import {
 import Navbar from '../../components/Navbar'
 import Footer from '../../components/Footer'
 import { BLOG_API_URL, WEBSITE_BASE_URL, hreflangAlternates } from '../../../lib/config'
+import { hackathonSlugs } from '../../../lib/manifest'
 
-export const dynamicParams = true
-export const revalidate = 1800
+// Static export: only the slugs in the build manifest exist (see src/lib/manifest.ts).
+export const dynamicParams = false
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -75,7 +76,7 @@ async function fetchHackathon(slug: string): Promise<HackathonDetail | null> {
 }
 
 export async function generateStaticParams() {
-  return []
+  return hackathonSlugs().map((slug) => ({ slug }))
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────

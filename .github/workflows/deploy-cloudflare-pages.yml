@@ -1,0 +1,84 @@
+name: Deploy to Cloudflare Pages
+
+# The site is a static export, so "content changes" (new jobs, companies, blog posts…) reach visitors by
+# rebuilding and redeploying. That happens on every push to main, on a schedule, and on demand
+# (Actions tab → "Deploy to Cloudflare Pages" → Run workflow — use this after publishing something urgent).
+on:
+  push:
+    branches: [main]
+  schedule:
+    # Every 3 hours (UTC). Odd minute on purpose: top-of-the-hour cron slots are the most congested.
+    - cron: "17 */3 * * *"
+  workflow_dispatch:
+
+# A newer run supersedes an older one — never let two deploys race each other.
+concurrency:
+  group: cloudflare-pages
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  # Cloudflare Pages project name (create it once: Workers & Pages → Create → Pages → Direct Upload).
+  # Override with a repository variable of the same name if the project is called something else.
+  CF_PAGES_PROJECT: ${{ vars.CF_PAGES_PROJECT || 'riseflake-website' }}
+
+jobs:
+  build-and-deploy:
+    name: Build, verify, deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          # >= 22.18 — the build scripts import TypeScript data files directly (native type stripping).
+          node-version: "24"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      # `npm run build` = resume sub-app → build manifest → next build → post-build audit.
+      # The post-build step FAILS the run (nothing is deployed) if the export is over the file budget,
+      # contains soft-404 pages, lost its server-rendered headings, or the backend was unhealthy.
+      # NEXT_PUBLIC_* are inlined into the client bundles, so they must be the production values.
+      - name: Build static site
+        run: npm run build
+        env:
+          NEXT_PUBLIC_API_BASE_URL: https://backend.riseflake.com/api/v2/website
+          NEXT_PUBLIC_BLOG_API_URL: https://backend.riseflake.com/api/v2
+          NEXT_PUBLIC_APP_BASE_URL: https://app.riseflake.com
+          NEXT_PUBLIC_TRACK_404_URL: https://backend.riseflake.com/api/v1/track-404
+          # Lets the backend tell "our own site build" apart from a scraper (same secret the
+          # backend's websiteApiHardening middleware already expects). Optional but strongly advised:
+          # without it a full build can trip the rate limiter and fail the fetch-failure gate.
+          WEBSITE_ISR_SECRET: ${{ secrets.WEBSITE_ISR_SECRET }}
+
+      # 1) Upload to a non-production alias first…
+      - name: Deploy to staging alias
+        id: staging
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy out --project-name=${{ env.CF_PAGES_PROJECT }} --branch=staging --commit-dirty=true
+
+      # 2) …and prove that Cloudflare actually serves what we built (special-character URLs, redirects,
+      #    real 404s, canonical tags) BEFORE it goes anywhere near production.
+      - name: Smoke test staging deployment
+        run: node scripts/cf/smoke.mjs "${{ steps.staging.outputs.deployment-url }}" --sample=300
+
+      # 3) Promote: the same files, uploaded to the production branch. Assets are content-addressed, so
+      #    this second upload is fast.
+      - name: Deploy to production
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy out --project-name=${{ env.CF_PAGES_PROJECT }} --branch=main --commit-dirty=true

@@ -1,24 +1,21 @@
 import type { Metadata } from 'next'
-import {
-  buildBrowseMetadata, renderBrowsePage, browseStaticParams,
-} from '../../../components/seo/browsePageHelpers'
+import { browseStaticParams, buildBrowseMetadata, renderBrowsePage } from '../../../components/seo/browsePageHelpers'
 
-export const dynamicParams = true
-export const revalidate = 1800
+// Static export: only the manifest's facet landings (and the hub) exist.
+export const dynamicParams = false
 
 type Props = {
   params: Promise<{ slug?: string[] }>
-  searchParams: Promise<{ [k: string]: string | string[] | undefined }>
 }
 
 export function generateStaticParams() {
   return browseStaticParams('internships')
 }
 
-export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
-  return buildBrowseMetadata('internships', await params, await searchParams)
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  return buildBrowseMetadata('internships', await params)
 }
 
-export default async function InternshipsBrowsePage({ params, searchParams }: Props) {
-  return renderBrowsePage('internships', await params, await searchParams)
+export default async function InternshipsBrowsePage({ params }: Props) {
+  return renderBrowsePage('internships', await params)
 }

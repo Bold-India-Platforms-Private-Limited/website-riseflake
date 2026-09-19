@@ -116,8 +116,7 @@ export default function DeleteAccount() {
                         <h1 className="text-2xl font-bold text-slate-900">Request Submitted</h1>
                         <p className="text-slate-600">
                             Your account deletion request has been successfully received.
-                            As per our policy, your account and all associated data will be permanently removed from our servers
-                            and database within <strong>90 days</strong>.
+                            We may contact you at the email address or mobile number you gave to verify your identity. Once verified, your account is locked and your personal data is erased or irreversibly anonymised within <strong>90 days</strong>, except records we must keep by law (see our Privacy Policy, Section 10).
                         </p>
                         <button
                             onClick={() => router.push("/")}
@@ -175,9 +174,7 @@ export default function DeleteAccount() {
                                 <div className="space-y-2">
                                     <h2 className="font-bold text-red-900">Important Instruction</h2>
                                     <p className="text-red-800 text-sm leading-relaxed">
-                                        Once you submit this request, your access to the RiseFlake platform will be disabled.
-                                        Your profile, resumes, applications, and networking history will be queued for permanent deletion.
-                                        This process is irreversible after the 90-day grace period.
+                                        After we verify your identity, your account is locked and your profile, resumes, applications and networking history are erased or anonymised within 90 days. Deletion cannot be undone once erasure has run.
                                     </p>
                                 </div>
                             </div>
@@ -288,7 +285,7 @@ export default function DeleteAccount() {
                                             )}
                                         </button>
                                         <p className="mt-4 text-xs text-slate-500 text-center sm:text-left">
-                                            By clicking the button above, you acknowledge that your account data will be permanently removed within 90 days.
+                                            By clicking the button above, you ask us to erase your account data within 90 days after verification. We use the email and mobile number you enter only to verify and process this request.
                                         </p>
                                     </div>
                                 </form>
@@ -298,16 +295,14 @@ export default function DeleteAccount() {
                                 <h2 className="text-xl font-bold text-slate-800 font-semibold">Data Policy & Removal Process</h2>
                                 <div className="space-y-4 text-sm leading-relaxed">
                                     <p>
-                                        <strong>Timeline:</strong> Once the deletion request is submitted, your account enters a 90-day &quot;grace period&quot;. During the first 7 days, your account will be deactivated and hidden from other users.
+                                        <strong>Timeline:</strong> We verify your identity, lock the account, and erase or irreversibly anonymise your personal data within 90 days. Encrypted backups roll off within a further 30 days.
                                     </p>
                                     <p>
-                                        <strong>Data Removal:</strong> All your personal identification information, including name, email, phone number, resumes, and saved jobs, will be purged from our active databases and backup servers within 90 days.
-                                    </p>
+                                        <strong>Data Removal:</strong> Your name, email, phone number, resumes, saved jobs and other profile data are removed from our systems. Chat messages are deleted automatically after 30 days in any case.</p>
                                     <p>
-                                        <strong>Residual Data:</strong> Some non-identifiable data (like aggregated hiring trends) may be retained for analytical purposes, but it will no longer be linked to you.
-                                    </p>
+                                        <strong>Residual Data:</strong> We keep only what the law or security requires — payment and tax records, security logs for at least one year, and an opt-out record so we honour your unsubscribe — plus anonymised statistics that no longer identify you. Recruiters or companies you already applied to hold their own copies; contact them directly to delete those.</p>
                                     <p>
-                                        <strong>Support:</strong> If you change your mind within the first 48 hours, you can reach out to <a href="mailto:support@riseflake.com" className="text-indigo-600 hover:underline font-medium">support@riseflake.com</a> to request a cancellation of the deletion process.
+                                        <strong>Support:</strong> If you change your mind before erasure has run, reach out to <a href="mailto:support@riseflake.com" className="text-indigo-600 hover:underline font-medium">support@riseflake.com</a> to request a cancellation of the deletion process.
                                     </p>
                                 </div>
                             </section>

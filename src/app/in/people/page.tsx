@@ -6,8 +6,6 @@ import PeopleClient, { type Facets } from './PeopleClient'
 import type { PersonCardData } from './components/PersonCard'
 
 // Rebuild hourly — the backend read model refreshes on the same cadence.
-export const revalidate = 3600
-
 const CANONICAL = `${WEBSITE_BASE_URL}/in/people`
 
 const EMPTY_FACETS: Facets = {

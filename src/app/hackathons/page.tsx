@@ -6,8 +6,6 @@ import Footer from '../components/Footer'
 import { BLOG_API_URL, WEBSITE_BASE_URL, hreflangAlternates } from '../../lib/config'
 import { currentPeriod } from '../../lib/period'
 
-export const revalidate = 1800
-
 export function generateMetadata(): Metadata {
   const { year } = currentPeriod()
   return {

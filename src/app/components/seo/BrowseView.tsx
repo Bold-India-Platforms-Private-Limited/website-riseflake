@@ -3,7 +3,7 @@ import { ArrowRight, Briefcase } from 'lucide-react'
 import Navbar from '../Navbar'
 import Footer from '../Footer'
 import SeoListingCard from './SeoListingCard'
-import CrawlablePagination from './CrawlablePagination'
+import BrowseAllCta from './BrowseAllCta'
 import FacetChips from './FacetChips'
 import FacetJsonLd from './FacetJsonLd'
 import FaqBlock from './FaqJsonLd'
@@ -160,7 +160,6 @@ export function BrowseFacet({
   const labels = (landing.labels ?? {}) as FacetLabels
   const items = landing.result ?? []
   const total = landing.total ?? landing.count ?? items.length
-  const totalPages = landing.totalPages ?? 1
   const related = landing.related
   const hubBase = `/${vertical}/browse`
   const cleanPath = `${hubBase}/${slug}`
@@ -235,7 +234,13 @@ export function BrowseFacet({
         </div>
       )}
 
-      <CrawlablePagination basePath={cleanPath} currentPage={page} totalPages={totalPages} />
+      <BrowseAllCta
+        href={vertical === 'internships' ? '/internships' : '/jobs'}
+        label={vertical === 'internships' ? 'Browse all internships' : 'Browse all jobs'}
+        total={total}
+        shown={items.length}
+        noun={vertical === 'internships' ? 'internships' : 'jobs'}
+      />
 
       {related && (
         <>

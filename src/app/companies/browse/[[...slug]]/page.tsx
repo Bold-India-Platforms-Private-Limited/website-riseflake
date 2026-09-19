@@ -1,24 +1,21 @@
 import type { Metadata } from 'next'
-import {
-  buildCompanyBrowseMetadata, renderCompanyBrowsePage, companyBrowseStaticParams,
-} from '../../../components/seo/companyBrowseHelpers'
+import { buildCompanyBrowseMetadata, companyBrowseStaticParams, renderCompanyBrowsePage } from '../../../components/seo/companyBrowseHelpers'
 
-export const dynamicParams = true
-export const revalidate = 3600
+// Static export: only the manifest's facet landings (and the hub) exist.
+export const dynamicParams = false
 
 type Props = {
   params: Promise<{ slug?: string[] }>
-  searchParams: Promise<{ [k: string]: string | string[] | undefined }>
 }
 
 export function generateStaticParams() {
   return companyBrowseStaticParams()
 }
 
-export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
-  return buildCompanyBrowseMetadata(await params, await searchParams)
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  return buildCompanyBrowseMetadata(await params)
 }
 
-export default async function CompaniesBrowsePage({ params, searchParams }: Props) {
-  return renderCompanyBrowsePage(await params, await searchParams)
+export default async function CompaniesBrowsePage({ params }: Props) {
+  return renderCompanyBrowsePage(await params)
 }

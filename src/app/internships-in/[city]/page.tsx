@@ -9,10 +9,11 @@ import { formatSalaryChip } from '../../../lib/salary'
 import { currentPeriod } from '../../../lib/period'
 import FacetChips from '../../components/seo/FacetChips'
 import FaqBlock from '../../components/seo/FaqJsonLd'
-import CrawlablePagination from '../../components/seo/CrawlablePagination'
+import BrowseAllCta from '../../components/seo/BrowseAllCta'
 
-export const dynamicParams = true
-export const revalidate = 3600
+// Static export: only the cities listed below exist. Only page 1 is pre-rendered; deeper
+// results live in the interactive /internships list (see BrowseAllCta).
+export const dynamicParams = false
 
 const CITIES = [
   'bangalore', 'mumbai', 'delhi', 'hyderabad', 'pune', 'chennai',
@@ -89,11 +90,10 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata(
-  { params, searchParams }: { params: Promise<{ city: string }>; searchParams: Promise<{ page?: string }> }
+  { params }: { params: Promise<{ city: string }> }
 ): Promise<Metadata> {
   const { city } = await params
-  const { page: pageParam } = await searchParams
-  const page = Math.max(parseInt(pageParam || '1', 10) || 1, 1)
+  const page = 1
   if (!CITIES.includes(city.toLowerCase())) {
     return { title: 'Internships | Riseflake', robots: { index: false, follow: false } }
   }
@@ -129,17 +129,16 @@ export async function generateMetadata(
 }
 
 export default async function InternshipsInCityPage(
-  { params, searchParams }: { params: Promise<{ city: string }>; searchParams: Promise<{ page?: string }> }
+  { params }: { params: Promise<{ city: string }> }
 ) {
   const { city } = await params
-  const { page: pageParam } = await searchParams
-  const page = Math.max(parseInt(pageParam || '1', 10) || 1, 1)
+  const page = 1
   if (!CITIES.includes(city.toLowerCase())) notFound()
 
   const cityLabel = titleCase(city)
   const isRemote = city === 'remote'
   const { year, monthYear } = currentPeriod()
-  const [{ internships, totalPages, total }, roleCombos] = await Promise.all([
+  const [{ internships, total }, roleCombos] = await Promise.all([
     fetchInternshipsByCity(city, page),
     isRemote ? Promise.resolve([] as Combo[]) : fetchRoleCombosForCity(city),
   ])
@@ -297,7 +296,13 @@ export default async function InternshipsInCityPage(
             </div>
           )}
 
-          <CrawlablePagination basePath={basePath} currentPage={page} totalPages={totalPages} />
+          <BrowseAllCta
+            href={isRemote ? '/internships?workplace_type=1' : `/internships?location=${city}`}
+            label={isRemote ? 'Browse all remote internships' : `Browse all internships in ${cityLabel}`}
+            total={total}
+            shown={internships.length}
+            noun="internships"
+          />
 
           {/* Role-in-city landing pages */}
           {roleCombos.length > 0 && (

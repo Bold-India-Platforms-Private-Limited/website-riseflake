@@ -9,10 +9,11 @@ import { formatSalaryChip } from '../../../lib/salary'
 import { currentPeriod } from '../../../lib/period'
 import FacetChips from '../../components/seo/FacetChips'
 import FaqBlock from '../../components/seo/FaqJsonLd'
-import CrawlablePagination from '../../components/seo/CrawlablePagination'
+import BrowseAllCta from '../../components/seo/BrowseAllCta'
 
-export const dynamicParams = true
-export const revalidate = 3600
+// Static export: only the cities listed below exist. Only page 1 is pre-rendered; deeper
+// results live in the interactive /jobs list (see BrowseAllCta).
+export const dynamicParams = false
 
 // Supported cities — drives generateStaticParams so Google gets them pre-rendered
 const CITIES = [
@@ -91,11 +92,10 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata(
-  { params, searchParams }: { params: Promise<{ city: string }>; searchParams: Promise<{ page?: string }> }
+  { params }: { params: Promise<{ city: string }> }
 ): Promise<Metadata> {
   const { city } = await params
-  const { page: pageParam } = await searchParams
-  const page = Math.max(parseInt(pageParam || '1', 10) || 1, 1)
+  const page = 1
   if (!CITIES.includes(city.toLowerCase())) {
     return { title: 'Jobs | Riseflake', robots: { index: false, follow: false } }
   }
@@ -131,17 +131,16 @@ export async function generateMetadata(
 }
 
 export default async function JobsInCityPage(
-  { params, searchParams }: { params: Promise<{ city: string }>; searchParams: Promise<{ page?: string }> }
+  { params }: { params: Promise<{ city: string }> }
 ) {
   const { city } = await params
-  const { page: pageParam } = await searchParams
-  const page = Math.max(parseInt(pageParam || '1', 10) || 1, 1)
+  const page = 1
   if (!CITIES.includes(city.toLowerCase())) notFound()
 
   const cityLabel = titleCase(city)
   const isRemote = city === 'remote'
   const { year, monthYear } = currentPeriod()
-  const [{ jobs, totalPages, total }, roleCombos] = await Promise.all([
+  const [{ jobs, total }, roleCombos] = await Promise.all([
     fetchJobsByCity(city, page),
     isRemote ? Promise.resolve([] as Combo[]) : fetchRoleCombosForCity(city),
   ])
@@ -299,7 +298,13 @@ export default async function JobsInCityPage(
             </div>
           )}
 
-          <CrawlablePagination basePath={basePath} currentPage={page} totalPages={totalPages} />
+          <BrowseAllCta
+            href={isRemote ? '/jobs?workplace_type=1' : `/jobs?location=${city}`}
+            label={isRemote ? 'Browse all remote jobs' : `Browse all jobs in ${cityLabel}`}
+            total={total}
+            shown={jobs.length}
+            noun="jobs"
+          />
 
           {/* Role-in-city landing pages */}
           {roleCombos.length > 0 && (

@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import { CompanyBrowseHub, CompanyBrowseFacet } from './CompanyBrowseView'
 import { fetchCompanyDirectory, fetchCompanyLanding } from '../../../lib/companyBrowseData'
 import { WEBSITE_BASE_URL, hreflangAlternates } from '../../../lib/config'
+import { facetSlugs } from '../../../lib/manifest'
 import {
   buildCompanyTitle, buildCompanyDescription, buildCompanyKeywords,
   currentMonthYear, currentYear,
@@ -10,17 +11,11 @@ import {
 } from '../../../lib/companyFacets'
 
 type Params = { slug?: string[] }
-type SearchParams = { [k: string]: string | string[] | undefined }
 
-const MAX_INDEXED_PAGE = 20
+// Static export: only page 1 of each landing is pre-rendered (see BrowseAllCta).
+const PAGE = 1
 
-function parsePage(sp: SearchParams): number {
-  const raw = Array.isArray(sp.page) ? sp.page[0] : sp.page
-  const n = parseInt(raw ?? '1', 10)
-  return Number.isFinite(n) && n > 0 ? Math.min(n, 100) : 1
-}
-
-export async function buildCompanyBrowseMetadata(params: Params, searchParams: SearchParams): Promise<Metadata> {
+export async function buildCompanyBrowseMetadata(params: Params): Promise<Metadata> {
   const slugArr = params.slug ?? []
 
   if (slugArr.length === 0) {
@@ -38,8 +33,7 @@ export async function buildCompanyBrowseMetadata(params: Params, searchParams: S
   if (slugArr.length > 1) return { title: 'Companies', robots: { index: false, follow: false } }
 
   const slug = slugArr[0]
-  const page = parsePage(searchParams)
-  const landing = await fetchCompanyLanding(slug, page)
+  const landing = await fetchCompanyLanding(slug, PAGE)
   if (!landing || landing.status === false) {
     return { title: 'Companies', robots: { index: false, follow: false } }
   }
@@ -48,10 +42,10 @@ export async function buildCompanyBrowseMetadata(params: Params, searchParams: S
   const labels = (landing.labels ?? {}) as CompanyFacetLabels
   const count = landing.count ?? landing.total
   const cleanUrl = `${WEBSITE_BASE_URL}/companies/browse/${slug}`
-  const canonical = page > 1 ? `${cleanUrl}?page=${page}` : cleanUrl
-  const title = buildCompanyTitle(kind, labels, page, count)
+  const canonical = cleanUrl
+  const title = buildCompanyTitle(kind, labels, PAGE, count)
   const description = buildCompanyDescription(kind, labels, count)
-  const indexable = (count ?? 0) >= 3 && page <= MAX_INDEXED_PAGE
+  const indexable = (count ?? 0) >= 3
 
   return {
     title, description,
@@ -63,7 +57,7 @@ export async function buildCompanyBrowseMetadata(params: Params, searchParams: S
   }
 }
 
-export async function renderCompanyBrowsePage(params: Params, searchParams: SearchParams) {
+export async function renderCompanyBrowsePage(params: Params) {
   const slugArr = params.slug ?? []
 
   if (slugArr.length === 0) {
@@ -74,20 +68,13 @@ export async function renderCompanyBrowsePage(params: Params, searchParams: Sear
   if (slugArr.length > 1) notFound()
 
   const slug = slugArr[0]
-  const page = parsePage(searchParams)
-  const landing = await fetchCompanyLanding(slug, page)
+  const landing = await fetchCompanyLanding(slug, PAGE)
   if (!landing || landing.status === false) notFound()
-  if (!landing.result || (landing.result.length === 0 && page > 1)) notFound()
+  if (!landing.result) notFound()
 
-  return <CompanyBrowseFacet slug={slug} page={page} landing={landing} />
+  return <CompanyBrowseFacet slug={slug} page={PAGE} landing={landing} />
 }
 
-export async function companyBrowseStaticParams(): Promise<{ slug: string[] }[]> {
-  const dir = await fetchCompanyDirectory()
-  if (!dir) return []
-  const slugs = [
-    ...dir.hiring, ...dir.industries, ...dir.org_types, ...dir.sizes,
-    ...dir.hiring_roles, ...dir.hiring_cities, ...dir.combos.slice(0, 30),
-  ].map((t) => t.slug).filter(Boolean).slice(0, 120)
-  return slugs.map((s) => ({ slug: [s] }))
+export function companyBrowseStaticParams(): { slug: string[] }[] {
+  return [{ slug: [] }, ...facetSlugs('companies').map((s) => ({ slug: [s] }))]
 }

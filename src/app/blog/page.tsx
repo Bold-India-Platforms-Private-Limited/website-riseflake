@@ -1,53 +1,26 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
-import Image from 'next/image'
+import { Suspense } from 'react'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import { BLOG_API_URL, WEBSITE_BASE_URL, hreflangAlternates } from '../../lib/config'
 import { getStaticBlogSummaries } from '../../lib/staticBlogPosts'
+import { BlogListingView, type BlogCategory, type BlogPost } from './BlogListing'
+import BlogListingClient from './BlogListingClient'
 
-export const revalidate = 300 // ISR: 5 min
+// ─── Metadata ─────────────────────────────────────────────────────────────────
+// Static export: one page for /blog. `?category=` / `?tag=` / `?search=` / `?page=`
+// variants were already canonicalised to /blog (and tag/search noindexed), so nothing
+// SEO-relevant is lost by serving the same HTML for all of them.
 
-// ─── Metadata (dynamic — varies by searchParams) ───────────────────────────────
-
-type SearchParams = { category?: string; tag?: string; search?: string; page?: string }
-
-export async function generateMetadata({ searchParams }: { searchParams: Promise<SearchParams> }): Promise<Metadata> {
-  const { category, tag, search, page } = await searchParams
-  const pageNum = parseInt(page || '1')
-
-  // Base canonical always points to /blog (page 1, no filters) — avoids duplicate indexing
+export function generateMetadata(): Metadata {
+  const title = 'Blog — Career Advice, Tech Insights & Campus Life'
+  const description =
+    'Expert articles on career tips, internships, tech engineering, campus life and company spotlights from the Riseflake team.'
   const canonicalUrl = `${WEBSITE_BASE_URL}/blog`
-
-  // ?search= and ?tag= are thin/query pages → noindex, follow
-  // ?category= and ?page= are indexable content
-  const isThinPage  = !!search || !!tag
-  const isPaginated = pageNum > 1
-
-  // Build contextual title / description
-  let title       = 'Blog — Career Advice, Tech Insights & Campus Life'
-  let description = 'Expert articles on career tips, internships, tech engineering, campus life and company spotlights from the Riseflake team.'
-
-  if (category) {
-    // Fetch category name for a proper title (categories are cached 1h so no perf hit)
-    try {
-      const res  = await fetch(`${BLOG_API_URL}/blogs/public/categories`, { next: { revalidate: 3600 } })
-      const data = res.ok ? await res.json() : { categories: [] }
-      const cat  = (data.categories ?? []).find((c: { slug: string; name: string }) => c.slug === category)
-      if (cat) {
-        title       = `${cat.name} — Blog`
-        description = `Browse all ${cat.name} articles on Riseflake Blog. Career advice, guides and insights for students and professionals.`
-      }
-    } catch { /* use default */ }
-  }
-
-  if (isPaginated) title = `${title} — Page ${pageNum}`
-
   return {
     title,
     description,
     keywords: 'riseflake blog, career tips india, internship advice, tech articles, campus life, job search tips, freshers guide',
-    // Canonical always points to base /blog — paginated & filtered pages consolidate link equity here
     alternates: { canonical: canonicalUrl, ...hreflangAlternates(canonicalUrl) },
     openGraph: {
       title,
@@ -65,34 +38,8 @@ export async function generateMetadata({ searchParams }: { searchParams: Promise
       description,
       images: [`${WEBSITE_BASE_URL}/og-blog-default.png`],
     },
-    // Noindex thin pages (search queries, tag archives) — follow to pass link equity
-    robots: isThinPage
-      ? { index: false, follow: true }
-      : { index: true, follow: true, googleBot: { index: true, follow: true, 'max-image-preview': 'large', 'max-snippet': -1 } },
+    robots: { index: true, follow: true, googleBot: { index: true, follow: true, 'max-image-preview': 'large', 'max-snippet': -1 } },
   }
-}
-
-// ─── Types ────────────────────────────────────────────────────────────────────
-
-type BlogPost = {
-  id: number
-  title: string
-  slug: string
-  excerpt: string | null
-  cover_image_url: string | null
-  published_at: string | null
-  view_count: number
-  read_time_minutes: number | null
-  category_name: string | null
-  category_slug: string | null
-  author_name: string
-  tags: { name: string; slug: string }[]
-}
-
-type BlogCategory = {
-  id: number
-  name: string
-  slug: string
 }
 
 // ─── Data fetching ────────────────────────────────────────────────────────────
@@ -160,147 +107,18 @@ const websiteSchema = {
   },
 }
 
-// ─── Blog card ────────────────────────────────────────────────────────────────
-
-function BlogCard({ post, featured = false }: { post: BlogPost; featured?: boolean }) {
-  const date = post.published_at
-    ? new Date(post.published_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })
-    : null
-
-  if (featured) {
-    return (
-      <Link
-        href={`/blog/${post.slug}`}
-        className="group col-span-1 sm:col-span-2 lg:col-span-3 block bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow overflow-hidden"
-      >
-        <div className="sm:flex">
-          <div className="relative sm:w-[45%] h-52 sm:h-auto flex-shrink-0">
-            {post.cover_image_url ? (
-              <Image
-                src={post.cover_image_url}
-                alt={post.title}
-                fill
-                className="object-cover group-hover:scale-105 transition-transform duration-500"
-                sizes="(max-width: 640px) 100vw, 45vw"
-                priority
-              />
-            ) : (
-              <div className="w-full h-full bg-gradient-to-br from-blue-600 to-violet-600 flex items-center justify-center">
-                <span className="text-white text-5xl opacity-40">✍️</span>
-              </div>
-            )}
-          </div>
-          <div className="p-6 sm:p-8 flex flex-col justify-center">
-            <div className="flex items-center gap-2 mb-3">
-              <span className="text-xs font-bold text-blue-600 bg-blue-50 px-3 py-1 rounded-full uppercase tracking-wide">
-                {post.category_name ?? 'Featured'}
-              </span>
-              {post.read_time_minutes && (
-                <span className="text-xs text-gray-400">{post.read_time_minutes} min read</span>
-              )}
-            </div>
-            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 leading-tight group-hover:text-blue-600 transition-colors">
-              {post.title}
-            </h2>
-            {post.excerpt && (
-              <p className="mt-3 text-sm text-gray-500 line-clamp-3">{post.excerpt}</p>
-            )}
-            <div className="mt-4 flex items-center gap-3 text-xs text-gray-400">
-              <span>{post.author_name}</span>
-              {date && <><span>·</span><time dateTime={post.published_at ?? ''}>{date}</time></>}
-            </div>
-          </div>
-        </div>
-      </Link>
-    )
-  }
-
-  return (
-    <Link
-      href={`/blog/${post.slug}`}
-      className="group block bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow overflow-hidden"
-      itemScope
-      itemType="https://schema.org/BlogPosting"
-    >
-      <meta itemProp="url" content={`${WEBSITE_BASE_URL}/blog/${post.slug}`} />
-      {post.cover_image_url ? (
-        <div className="relative w-full h-44">
-          <Image
-            src={post.cover_image_url}
-            alt={post.title}
-            fill
-            className="object-cover group-hover:scale-105 transition-transform duration-300"
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-            itemProp="image"
-          />
-        </div>
-      ) : (
-        <div className="w-full h-44 bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center">
-          <span className="text-3xl opacity-40">✍️</span>
-        </div>
-      )}
-      <div className="p-5">
-        {post.category_name && (
-          <span className="text-xs font-bold text-blue-600 uppercase tracking-wide" itemProp="articleSection">
-            {post.category_name}
-          </span>
-        )}
-        <h2
-          className="mt-1 text-sm font-bold text-gray-900 line-clamp-2 group-hover:text-blue-600 transition-colors leading-snug"
-          itemProp="headline"
-        >
-          {post.title}
-        </h2>
-        {post.excerpt && (
-          <p className="mt-1.5 text-xs text-gray-500 line-clamp-2" itemProp="description">{post.excerpt}</p>
-        )}
-        <div className="mt-4 flex items-center justify-between text-xs text-gray-400">
-          <span itemProp="author">{post.author_name}</span>
-          <div className="flex items-center gap-1.5">
-            {date && <time dateTime={post.published_at ?? ''} itemProp="datePublished">{date}</time>}
-            {post.read_time_minutes && <><span>·</span><span>{post.read_time_minutes} min</span></>}
-          </div>
-        </div>
-      </div>
-    </Link>
-  )
-}
-
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
-export default async function BlogPage({ searchParams }: { searchParams: Promise<SearchParams> }) {
-  const resolvedParams = await searchParams
-  const params: Record<string, string> = {}
-  if (resolvedParams.category) params.category = resolvedParams.category
-  if (resolvedParams.tag)      params.tag      = resolvedParams.tag
-  if (resolvedParams.search)   params.search   = resolvedParams.search
-  if (resolvedParams.page)     params.page     = resolvedParams.page
-
-  const [{ blogs, total }, categories] = await Promise.all([
-    fetchBlogs(params),
+export default async function BlogPage() {
+  const [{ blogs }, categories] = await Promise.all([
+    // Every post goes into the static HTML; the blog is small (well under this cap).
+    fetchBlogs({ limit: '100' }),
     fetchCategories(),
   ])
 
-  const currentPage    = Math.max(1, parseInt(resolvedParams.page || '1'))
-  const activeCategory = resolvedParams.category || ''
-  const isFiltered     = !!(resolvedParams.category || resolvedParams.tag || resolvedParams.search)
-
-  // Merge in the hand-written static posts. They only appear on page 1 and are
-  // hidden on tag / search views (which are thin, noindex pages anyway).
-  const staticSummaries =
-    !resolvedParams.tag && !resolvedParams.search && currentPage === 1
-      ? getStaticBlogSummaries(resolvedParams.category)
-      : []
-  const mergedBlogs = [
-    ...staticSummaries,
-    ...blogs.filter((b) => !staticSummaries.some((s) => s.slug === b.slug)),
-  ]
-  const mergedTotal = total + staticSummaries.length
-  const totalPages  = Math.ceil(mergedTotal / 12)
-
-  // Feature the first post on unfiltered page 1
-  const featuredPost = (!isFiltered && currentPage === 1 && mergedBlogs.length > 0) ? mergedBlogs[0] : null
-  const gridPosts    = featuredPost ? mergedBlogs.slice(1) : mergedBlogs
+  // Merge in the hand-written static posts (they win over a CMS post with the same slug).
+  const staticSummaries = getStaticBlogSummaries()
+  const posts = [...staticSummaries, ...blogs.filter((b) => !staticSummaries.some((s) => s.slug === b.slug))]
 
   return (
     <>
@@ -321,87 +139,11 @@ export default async function BlogPage({ searchParams }: { searchParams: Promise
             </p>
           </header>
 
-          {/* Category filter tabs */}
-          {categories.length > 0 && (
-            <nav aria-label="Blog categories" className="flex flex-wrap gap-2 mb-8 justify-center">
-              <Link
-                href="/blog"
-                className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
-                  !activeCategory ? 'bg-blue-600 text-white shadow-sm' : 'bg-white text-gray-600 border border-gray-200 hover:border-blue-300 hover:text-blue-600'
-                }`}
-              >
-                All
-              </Link>
-              {categories.map((c) => (
-                <Link
-                  key={c.slug}
-                  href={`/blog?category=${c.slug}`}
-                  className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
-                    activeCategory === c.slug
-                      ? 'bg-blue-600 text-white shadow-sm'
-                      : 'bg-white text-gray-600 border border-gray-200 hover:border-blue-300 hover:text-blue-600'
-                  }`}
-                >
-                  {c.name}
-                </Link>
-              ))}
-            </nav>
-          )}
-
-          {/* Active filter indicator */}
-          {resolvedParams.tag && (
-            <div className="flex items-center gap-2 mb-6">
-              <span className="text-sm text-gray-500">Filtering by tag:</span>
-              <span className="text-sm font-semibold text-blue-700 bg-blue-50 px-3 py-0.5 rounded-full">#{resolvedParams.tag}</span>
-              <Link href="/blog" className="text-xs text-gray-400 hover:text-red-500 transition-colors">✕ Clear</Link>
-            </div>
-          )}
-
-          {/* Blog grid */}
-          {mergedBlogs.length === 0 ? (
-            <div className="text-center py-20 text-gray-400">
-              <p className="text-4xl mb-3">📭</p>
-              <p className="text-lg font-semibold text-gray-600">No posts found</p>
-              <p className="text-sm mt-1">Try a different category or check back soon!</p>
-              <Link href="/blog" className="inline-block mt-5 text-sm text-blue-600 font-medium hover:underline">
-                View all posts →
-              </Link>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-              {featuredPost && <BlogCard post={featuredPost} featured />}
-              {gridPosts.map((post) => (
-                <BlogCard key={post.id} post={post} />
-              ))}
-            </div>
-          )}
-
-          {/* Pagination with rel=prev/next for Googlebot */}
-          {totalPages > 1 && (
-            <nav aria-label="Pagination" className="flex justify-center items-center gap-2 mt-10">
-              {currentPage > 1 && (
-                <Link
-                  href={`/blog?${new URLSearchParams({ ...params, page: String(currentPage - 1) })}`}
-                  rel="prev"
-                  className="px-4 py-2 border border-gray-200 rounded-xl bg-white text-sm hover:bg-gray-50 transition-colors"
-                >
-                  ← Previous
-                </Link>
-              )}
-              <span className="px-4 py-2 text-sm text-gray-500">
-                Page {currentPage} of {totalPages}
-              </span>
-              {currentPage < totalPages && (
-                <Link
-                  href={`/blog?${new URLSearchParams({ ...params, page: String(currentPage + 1) })}`}
-                  rel="next"
-                  className="px-4 py-2 border border-gray-200 rounded-xl bg-white text-sm hover:bg-gray-50 transition-colors"
-                >
-                  Next →
-                </Link>
-              )}
-            </nav>
-          )}
+          {/* The fallback IS the full unfiltered list, so the static HTML contains every post;
+              the client component then applies ?category= / ?tag= / ?search= in the browser. */}
+          <Suspense fallback={<BlogListingView posts={posts} categories={categories} />}>
+            <BlogListingClient posts={posts} categories={categories} />
+          </Suspense>
         </div>
       </main>
 
