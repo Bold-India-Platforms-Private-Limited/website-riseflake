@@ -16,6 +16,7 @@ import Testimonials from './components/Testimonials'
 import Assessment from './components/Assessment'
 import DownloadTheApp from './components/DownloadTheApp'
 import ContactSection from './components/ContactSection'
+import DropCvSection from './components/DropCvSection'
 
 const JOB_SUGGESTIONS = [
   'Data Analyst', 'Software Engineer', 'Product Manager', 'UI/UX Designer',
@@ -488,6 +489,7 @@ export default function Home() {
       </section>
 
       {/* Footer - SEO Optimized */}
+      <DropCvSection />
       <ContactSection />
       <DownloadTheApp />
       <Footer />

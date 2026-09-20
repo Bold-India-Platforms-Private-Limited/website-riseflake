@@ -65,7 +65,7 @@ export default function RegulatoryBody() {
 
 <section>
 <h2>6. Your Data-Protection Rights in Brief</h2>
-<p>You can access, correct, erase, withdraw consent, nominate another person to act for you, and complain. Use <em>Settings</em> in your account, the <a href="/delete-account">delete-account request form</a>, or email <a href="mailto:privacy@riseflake.com">privacy@riseflake.com</a>. Full details, retention periods and the list of service providers are in the <a href="/privacy-policy">Privacy Policy</a> (Sections 8, 10 and 14). We provide notices in Hindi or another Eighth-Schedule language on request.</p>
+<p>You can access, correct, erase, withdraw consent, nominate another person to act for you, and complain. Use <em>Settings</em> in your account, the <a href="/delete-account">delete-account request form</a>, or email <a href="mailto:privacy@riseflake.com">privacy@riseflake.com</a>. Full details, retention periods and the list of service providers are in the <a href="/privacy-policy">Privacy Policy</a> (Sections 8, 10 and 14). We provide notices in Hindi or another Eighth-Schedule language on request. Our application servers, databases and backups are hosted on Amazon Web Services in Mumbai, India (see Section 9 of the Privacy Policy).</p>
 </section>
 
 <section>

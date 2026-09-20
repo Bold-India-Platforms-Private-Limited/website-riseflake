@@ -295,12 +295,12 @@ export default function DeleteAccount() {
                                 <h2 className="text-xl font-bold text-slate-800 font-semibold">Data Policy & Removal Process</h2>
                                 <div className="space-y-4 text-sm leading-relaxed">
                                     <p>
-                                        <strong>Timeline:</strong> We verify your identity, lock the account, and erase or irreversibly anonymise your personal data within 90 days. Encrypted backups roll off within a further 30 days.
+                                        <strong>Timeline:</strong> We verify your identity, then immediately disable sign-in and stop all emails and notifications to you. Your personal data is erased or irreversibly anonymised within 90 days. Encrypted backups roll off within a further 30 days.
                                     </p>
                                     <p>
                                         <strong>Data Removal:</strong> Your name, email, phone number, resumes, saved jobs and other profile data are removed from our systems. Chat messages are deleted automatically after 30 days in any case.</p>
                                     <p>
-                                        <strong>Residual Data:</strong> We keep only what the law or security requires — payment and tax records, security logs for at least one year, and an opt-out record so we honour your unsubscribe — plus anonymised statistics that no longer identify you. Recruiters or companies you already applied to hold their own copies; contact them directly to delete those.</p>
+                                        <strong>Records we keep:</strong> Only a small set, each for a limited time listed in Section 10.2 of our Privacy Policy — a record that you asked for deletion, security logs, payment and tax records, a fraud-prevention record if your account was removed for abuse, and a scrambled (hashed) form of your email so we honour your unsubscribe. Your profile, resume, messages, contacts and location are not kept. Recruiters or companies you already applied to hold their own copies; contact them directly to delete those.</p>
                                     <p>
                                         <strong>Support:</strong> If you change your mind before erasure has run, reach out to <a href="mailto:support@riseflake.com" className="text-indigo-600 hover:underline font-medium">support@riseflake.com</a> to request a cancellation of the deletion process.
                                     </p>
