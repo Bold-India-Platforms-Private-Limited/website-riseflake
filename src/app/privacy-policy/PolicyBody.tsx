@@ -200,7 +200,7 @@ export default function PolicyBody() {
 <table>
 <thead><tr><th>Provider</th><th>What it does for us</th><th>Data involved</th></tr></thead>
 <tbody>
-<tr><td>Amazon Web Services</td><td>Cloud hosting and storage</td><td>Platform data, backups</td></tr>
+<tr><td>Amazon Web Services (Mumbai, India — ap-south-1)</td><td>Hosts our application servers and databases and stores files and backups, in India</td><td>All Platform data, backups</td></tr>
 <tr><td>Cloudflare</td><td>Content delivery, DDoS protection, R2 file storage (resumes, photos, documents), Turnstile bot check on sign-up</td><td>IP address, request headers, uploaded files, Turnstile challenge signals</td></tr>
 <tr><td>Cloudinary</td><td>Storage and delivery of chat images</td><td>Images you send in chat</td></tr>
 <tr><td>MongoDB (managed database)</td><td>Stores chat messages</td><td>Chat text, sender/receiver IDs, timestamps</td></tr>
@@ -219,30 +219,52 @@ export default function PolicyBody() {
 
 <section>
 <h2>9. Transfers Outside India</h2>
-<p>Some providers above store or process data on servers outside India. The DPDP Act allows such transfers except to countries the Government restricts by notification; we will comply with any restriction or condition it imposes and will not transfer to a restricted country. We use contractual safeguards with processors and share only what the service needs.</p>
+<p>Our application servers, databases and backups run on Amazon Web Services in <strong>Mumbai, India</strong>, so your account data is stored and mainly processed in India. Some other providers in Section 8 — for example Cloudflare’s global network, Cloudinary, Google (notifications, analytics, sign-in, Gemini, fonts and advertising), Microsoft and LinkedIn sign-in, ip-api.com, OpenStreetMap and Better Stack — may process limited data (such as IP addresses, tokens, or the images or text you send through that feature) on servers outside India. The DPDP Act allows such transfers except to countries the Government restricts by notification; we will comply with any restriction or condition it imposes and will not transfer to a restricted country. We use contractual safeguards with processors and share only what the service needs.</p>
 </section>
 
 <section>
-<h2>10. How Long We Keep Data, and Deletion</h2>
+<h2>10. How Long We Keep Data, and Deleting Your Account</h2>
+
+<h3>10.1 How long we keep data</h3>
 <table>
 <thead><tr><th>Data</th><th>Retention</th></tr></thead>
 <tbody>
 <tr><td>Account and profile data</td><td>While your account is active.</td></tr>
-<tr><td>If you delete your account</td><td>Your account is locked immediately. We erase or irreversibly anonymise your personal data within <strong>90 days</strong>, except the records listed below. Backups roll off within a further 30 days.</td></tr>
-<tr><td>Hibernated account</td><td>Kept, hidden from other users and recruiters, until you reactivate or delete it.</td></tr>
+<tr><td>Hibernated account</td><td>Kept, hidden from other users and recruiters, and we send you no communications, until you reactivate or delete it.</td></tr>
 <tr><td>Inactive accounts</td><td>If there is no sign-in or activity for <strong>36 months</strong> we will email you at least 48 hours before erasing the account, and erase or anonymise it unless you sign in.</td></tr>
 <tr><td>Chat messages and images</td><td>Deleted automatically after 30 days.</td></tr>
 <tr><td>Phone contacts (Android)</td><td>Until you withdraw consent, ask us to delete them, or your account is erased.</td></tr>
 <tr><td>Location (Find Nearby)</td><td>Latest position only, while the feature is enabled; deleted with your account, or earlier on request.</td></tr>
 <tr><td>One-time passwords</td><td>Minutes.</td></tr>
-<tr><td>Security, session and access logs (IP, device, timestamps)</td><td>At least one year, as required by the DPDP Rules, then deleted or anonymised.</td></tr>
-<tr><td>Payment, invoice and tax records</td><td>As required by tax and company law (up to 8 years).</td></tr>
+<tr><td>Security, session and access logs (IP, device, timestamps)</td><td>At least one year, as the DPDP Rules require, then deleted or anonymised (see 10.2 for logs that outlive an account).</td></tr>
 <tr><td>Support and grievance records</td><td>As long as needed to resolve the matter and evidence compliance, up to 3 years after closure unless a dispute is pending.</td></tr>
-<tr><td>Marketing opt-out list</td><td>Kept so we keep honouring your opt-out.</td></tr>
+<tr><td>Payment, invoice and tax records</td><td>As required by tax and company law (up to 8 years).</td></tr>
 <tr><td>Anonymised or aggregated statistics</td><td>No limit; they no longer identify you.</td></tr>
 </tbody>
 </table>
-<p>We may keep data longer where the law requires or where needed for a legal claim, and will then limit it to that purpose. To delete your account use <em>Settings → Delete Account</em>, the <a href="/delete-account">delete-account request form</a> on our website, or email <a href="mailto:privacy@riseflake.com">privacy@riseflake.com</a>. We may verify your identity first. To take a break without losing data, use <em>Hibernate</em>.</p>
+
+<h3>10.2 Deleting your account</h3>
+<p>You can delete your account from <em>Settings → Delete Account</em>, through the <a href="/delete-account">delete-account request form</a> on our website, or by emailing <a href="mailto:privacy@riseflake.com">privacy@riseflake.com</a>. We may verify your identity first. Deletion cannot be undone once erasure has run. If you only want a break, use <em>Hibernate</em> instead.</p>
+<p><strong>What happens when you delete:</strong></p>
+<ul>
+<li><strong>Right away (once we have verified it is you):</strong> sign-in is disabled and all your sessions end; your profile disappears from other users, recruiters and our public directory (search engines may take longer to refresh their copies); all emails, push notifications and messages to you stop, and your address is added to our do-not-contact list.</li>
+<li><strong>Within 90 days:</strong> we erase or irreversibly anonymise your personal data from our live systems — profile, resume, applications, messages, phone contacts, location, saved items, devices and notification tokens. Encrypted backups roll off within a further 30 days.</li>
+<li><strong>After that</strong> only the limited records listed below remain.</li>
+</ul>
+<p><strong>Records we keep after deletion.</strong> We do not keep your profile, resume, messages, contacts, location or applications. We keep only the following, each for a stated purpose and a stated time:</p>
+<table>
+<thead><tr><th>Record</th><th>What it contains</th><th>Why</th><th>How long</th></tr></thead>
+<tbody>
+<tr><td>Deletion and consent record</td><td>An internal reference number (not your profile), the date and channel of your request, the date we erased your data, and the versions of our policies you accepted</td><td>To prove we honoured your request and your consent history if you or a regulator ask</td><td>3 years after deletion</td></tr>
+<tr><td>Security and access logs</td><td>IP address, device details, sign-in events, staff-access events and timestamps</td><td>Security, investigating incidents, and legal duties (DPDP Rules, CERT-In)</td><td>1 year from the log date; longer only while a security incident, fraud investigation or legal proceeding involving them is open</td></tr>
+<tr><td>Fraud and abuse record — only if your account was suspended or removed for fraud, fake postings, harassment or another serious breach of the Terms</td><td>Scrambled (hashed) email and mobile number, a reason category and the date</td><td>To stop the same person re-registering to repeat the abuse, and to defend legal claims</td><td>3 years after removal; longer only while a claim or investigation is open</td></tr>
+<tr><td>Payment, invoice and tax records</td><td>Order and invoice details, amounts, GST details</td><td>Tax, accounting and company law</td><td>As the law requires (up to 8 years)</td></tr>
+<tr><td>Do-not-contact record</td><td>A scrambled (hashed) form of your email address</td><td>So we do not email you again after you unsubscribed or deleted your account</td><td>For as long as we run the service, because it exists only to honour your request. Ask us to remove it if you prefer; you may then be contactable again if someone else adds your address.</td></tr>
+<tr><td>Legal hold</td><td>Whatever a court, regulator or a pending dispute requires</td><td>Legal obligation or defence of a legal claim</td><td>Until the matter closes, then deleted</td></tr>
+<tr><td>Anonymised statistics</td><td>Data that no longer identifies you</td><td>Analytics</td><td>No limit</td></tr>
+</tbody>
+</table>
+<p><strong>Limits on these records:</strong> they are kept apart from live accounts; only a few named roles can access them; they are never used for marketing, matching, profiling or advertising; they are never shown to other users or recruiters; they are shared only where the law requires; and each is deleted when its period ends. Recruiters, companies, colleges and organisers you already shared data with hold their own copies (Section 7.1) — contact them directly to delete those.</p>
 </section>
 
 <section>
