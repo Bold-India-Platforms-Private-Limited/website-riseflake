@@ -27,6 +27,8 @@ import {
 } from './lib.mjs'
 import { FACET_REDIRECTS } from './redirects.mjs'
 import { STATIC_PAGE_PATHS, generateSitemaps } from './sitemaps.mjs'
+import { copyForwardReusedPages, finalizeIncrementalState } from './incremental.mjs'
+import { computeCodeState } from './routes.mjs'
 
 const MAX_FILES = Math.min(envInt('CF_MAX_FILES', 19_000), PLATFORM_FILE_LIMIT)
 const MAX_BROKEN_RATIO = Number(process.env.CF_MAX_BROKEN_RATIO ?? 0.02)
@@ -44,6 +46,11 @@ if (!fs.existsSync(OUT_DIR)) {
 const manifest = readManifest()
 const rel = (f) => path.relative(OUT_DIR, f).split(path.sep).join('/')
 const has = (p) => fs.existsSync(path.join(OUT_DIR, p))
+
+// `next build` only rendered the pages manifest.*.r flagged (see scripts/cf/incremental.mjs).
+// Put the rest of the site back before auditing/sitemapping/budgeting the export as a whole —
+// everything below this line already treats "every manifest page has a file" as the baseline.
+copyForwardReusedPages(manifest)
 
 // ── 1. AUDIT ────────────────────────────────────────────────────────────────
 const LEAVES = [
@@ -246,9 +253,14 @@ if (failures.length) {
   for (const f of failures) console.error(`  ✗ ${f}`)
   if (ALLOW_DEGRADED) {
     warn('CF_ALLOW_DEGRADED=1 — continuing despite failures (do NOT deploy this output).')
+    finalizeIncrementalState(final, computeCodeState())
   } else {
     process.exit(1)
   }
 } else {
   log('post-build checks passed ✓')
+  // Record what's actually in ./out (post-audit) as "last known good" — the deploy workflow
+  // only persists .cache/ (via actions/cache) after this build has ALSO been deployed and
+  // smoke-tested, so a bad build or a failed deploy never poisons the next run's cache.
+  finalizeIncrementalState(final, computeCodeState())
 }

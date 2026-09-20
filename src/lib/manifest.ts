@@ -11,10 +11,16 @@ import path from 'node:path'
  * and feeds the sitemaps — so a URL is either a real file AND in the sitemap, or neither.
  */
 
-type Entry = { s: string; m?: string }
+type Entry = { s: string; m?: string; /** render this page in THIS build (incremental builds only) */ r?: 1 }
 
 export type Manifest = {
   generatedAt: string
+  /**
+   * Incremental build: `generateStaticParams()` returns only entries flagged `r` (new / changed / due for a
+   * refresh / affected by a code change). Every other page is reused as-is from the previous deployment —
+   * see scripts/cf/build-manifest.mjs for the rules.
+   */
+  incremental: boolean
   jobs: Entry[]
   internships: Entry[]
   companies: Entry[]
@@ -35,6 +41,7 @@ export type Manifest = {
 
 const EMPTY: Manifest = {
   generatedAt: '',
+  incremental: false,
   jobs: [], internships: [], companies: [], colleges: [], people: [], extraProfiles: [],
   skills: [], blogs: [], hackathons: [],
   facets: { jobs: [], internships: [], companies: [], colleges: [], people: [] },
@@ -66,7 +73,8 @@ export function getManifest(): Manifest {
  */
 const PLACEHOLDER = '__no-pages__'
 const slugs = (...lists: Entry[][]): string[] => {
-  const all = [...new Set(lists.flatMap((l) => l.map((e) => e.s)))]
+  const incremental = getManifest().incremental
+  const all = [...new Set(lists.flatMap((l) => l.filter((e) => !incremental || e.r).map((e) => e.s)))]
   return all.length ? all : [PLACEHOLDER]
 }
 

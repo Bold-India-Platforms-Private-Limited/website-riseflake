@@ -26,6 +26,11 @@ const nextConfig = {
   // Canonical URLs have no trailing slash (`/jobs/foo`); Cloudflare Pages serves
   // `out/jobs/foo.html` at exactly that path.
   trailingSlash: false,
+  // Incremental builds re-render only some pages and reuse the rest from the previous deployment, so the
+  // client assets (chunks, CSS) must have the SAME names whenever the code is the same. scripts/cf/build.mjs
+  // passes a hash of the code as CF_BUILD_ID: identical for data-only builds, new whenever a route's code
+  // changes. (null → Next's default random id, e.g. for a bare `next build`.)
+  generateBuildId: async () => process.env.CF_BUILD_ID || null,
   // Pin tracing to this app — the repo has a nested resume/ project with its own lockfile.
   outputFileTracingRoot: __dirname,
   images: {

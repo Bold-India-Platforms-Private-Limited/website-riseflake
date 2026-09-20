@@ -24,6 +24,8 @@ import {
   envInt, getJson, getText, installBuildFetch, locsOf, log, safeSlug, slugAfter, warn, xmlUnescape,
 } from './lib.mjs'
 import { REDIRECTED_SOURCES } from './redirects.mjs'
+import { decideIncrementalBuild } from './incremental.mjs'
+import { computeCodeState } from './routes.mjs'
 
 installBuildFetch()
 
@@ -134,6 +136,21 @@ async function main() {
       `NEXT_PUBLIC_API_BASE_URL points at a local backend (${API_BASE_URL}). Refusing to build a deployable static ` +
         `site against it. Set the production URLs (see .github/workflows/deploy-cloudflare-pages.yml), ` +
         `or CF_ALLOW_LOCAL_API=1 for a throwaway local build.`,
+    )
+  }
+  // WEBSITE_ISR_SECRET (sent as the x-riseflake-internal-key header by scripts/cf/preload.cjs) is
+  // what tells the backend's websiteApiHardening middleware "this is our own build, not a scraper"
+  // — without it, a full manifest crawl (thousands of distinct job/company/college/profile URLs in
+  // minutes) looks EXACTLY like the bulk-scraping pattern that middleware exists to block, and every
+  // request gets 429'd into retry storms instead of a clean 404/500. That doesn't fail the build
+  // loudly — it just makes it dramatically, silently slower until it eventually times out. If a
+  // build ever takes far longer than usual or hits the job's time limit, check this first.
+  if (!process.env.WEBSITE_ISR_SECRET && !/\/\/(localhost|127\.0\.0\.1)/.test(API_BASE_URL)) {
+    warn(
+      'WEBSITE_ISR_SECRET is not set. This build has no bypass for the backend\'s rate limiter / ' +
+        'anti-scrape guard and WILL be throttled fetching thousands of pages — expect the build to be ' +
+        'extremely slow or to time out. Set the GitHub Actions secret to the same value the backend\'s ' +
+        'own WEBSITE_ISR_SECRET env var uses (see DEPLOYMENT_GUIDE.md § One-time setup).',
     )
   }
   fs.mkdirSync(BUILD_DIR, { recursive: true })
@@ -260,6 +277,10 @@ async function main() {
     candidates: { colleges: collegeCandidates.length, extraProfiles: users.length },
   }
 
+  // ── incremental decision: which of these pages actually need to be (re)rendered ──────────
+  const codeState = computeCodeState()
+  const incStats = decideIncrementalBuild(manifest, codeState)
+
   fs.writeFileSync(MANIFEST_PATH, JSON.stringify(manifest))
   log(
     `manifest written (${(fs.statSync(MANIFEST_PATH).size / 1024).toFixed(0)} KB) — ` +
@@ -268,6 +289,13 @@ async function main() {
       `estimated files ≈ ${estimate} of ${MAX_FILES}`,
   )
   if (dropped.length) warn(`${dropped.length} slug(s) dropped as unsafe for static paths (see manifest.dropped)`)
+  log(
+    incStats.canReuse
+      ? `incremental build (buildId ${codeState.buildId} unchanged): rendering ${incStats.rendered} page(s) ` +
+        `(new ${incStats.new}, changed ${incStats.changed}, stale ${incStats.stale}), reusing ${incStats.reused}`
+      : `full build (buildId ${codeState.buildId}${codeState.unsafe ? ', unresolvable dynamic import — hashed whole tree' : ''}): ` +
+        `no matching previous deployment to reuse, rendering all ${incStats.rendered} page(s)`,
+  )
 }
 
 main().catch((err) => {

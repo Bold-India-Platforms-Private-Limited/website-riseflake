@@ -37,6 +37,35 @@ and renders the normal page **in the browser** — so a job posted after the las
 colleges, still opens for real visitors. It only shows the 404 page (and reports it to the 404 tracker) when
 the API confirms the record doesn't exist.
 
+## Incremental builds
+
+With thousands of pages, re-rendering every one of them on every 3-hourly schedule would make each build slow
+and hammer the backend for no reason — almost nothing changes between two runs 3 hours apart. So a build only
+renders pages that actually need it, and reuses every other page byte-for-byte from the previous deployment:
+
+```
+scripts/cf/routes.mjs        hashes the CODE (every route's import graph + shared config/env) → `buildId`
+scripts/cf/build-manifest.mjs   asks the backend what pages exist NOW (fresh, every build) and decides,
+                                per page, render vs reuse (scripts/cf/incremental.mjs):
+                                  • buildId changed since the last deploy → render EVERYTHING (safe full
+                                    rebuild; code changes are rare next to data changes, so this trade
+                                    favors simplicity over reusing two different asset trees)
+                                  • otherwise: new page, or an `entity` page whose data `lastmod` changed,
+                                    or a page older than its kind's max-age → render; everything else reused
+next build                     renders only the flagged pages (dynamicParams=false + src/lib/manifest.ts)
+scripts/cf/postbuild.mjs       copies every reused page's file(s) back in from .cache/site, THEN runs the
+                                same audit/sitemap/budget checks as always, THEN — only if they pass —
+                                saves the new .cache/ (state.json + the full ./out) as "last known good"
+.github/workflows/…yml         restores .cache/ before the build and saves it again ONLY after the build
+                                AND the smoke test AND the production deploy all succeeded, via
+                                actions/cache (free, no self-hosted storage, no Worker)
+```
+
+A cold cache (first deploy after this shipped, or a GitHub Actions cache eviction) just means that one build
+renders everything, same as before this existed — nothing breaks, it's only slower that one time. Nothing about
+this changes *what* gets published, only how much work a given build has to redo to get there; `npm run smoke`
+and `npm run seo-diff` verify the output either way. See `scripts/cf/incremental.mjs` for the exact rules.
+
 ## One-time setup
 
 1. **Create the Pages project** (Direct Upload — GitHub Actions does the build, not Cloudflare):
@@ -87,6 +116,9 @@ the API confirms the record doesn't exist.
 - **Content freshness**: a new job / company / blog post appears in the static site at the next build (every
   3 h, on every push to `main`, or immediately via *Run workflow*). Until then a new job **URL still works**
   for visitors through the browser fallback; it just isn't in the sitemap yet.
+- **Build time**: a scheduled run (no code changes) only re-renders new/changed/stale-by-age pages — see
+  *Incremental builds* above — so it stays fast regardless of how large the site grows. A build after a code
+  push re-renders everything, same as any static-export deploy.
 - **Cost**: Cloudflare Pages $0. GitHub Actions: private repos get 2,000 free minutes/month; see the
   *build time* note in the workflow before tightening the schedule.
 - **Tuning the page budget** (environment variables, all optional; defaults in `scripts/cf/build-manifest.mjs`):
@@ -100,6 +132,7 @@ the API confirms the record doesn't exist.
   | `CF_MAX_FETCH_FAILURES` | 25 | backend requests allowed to fail after all retries |
   | `CF_FETCH_CONCURRENCY` / `CF_BUILD_CPUS` | 4 / 4 | how hard the build hits the backend |
   | `CF_LIMIT_PER_ROUTE` | – | **local only**: truncate every list to N for a fast test build |
+  | `CF_FORCE_FULL_BUILD` | – | ignore the incremental cache and re-render every page (also a checkbox on *Run workflow*) |
 
 - **If the site outgrows 20,000 files** the build fails with a clear message rather than deploying a partial
   site. Options: lower `CF_COLLEGES_MAX` / `CF_EXTRA_PROFILES_MAX`, or move the Pages project to a paid plan
@@ -158,3 +191,4 @@ The post-build step prints every failed gate. Common ones:
 | `N page(s) have no server-rendered <h1>` | something pushed a page into client-side rendering (usually `useSearchParams()` outside `<Suspense>`) |
 | `… files exceeds the budget` | see *If the site outgrows 20,000 files* |
 | `Refusing to build … against a local backend` | `NEXT_PUBLIC_API_BASE_URL` points at localhost |
+| A page looks stale and its data clearly changed | its `lastmod` didn't move and it's within its kind's max-age window (`scripts/cf/lib.mjs` `PAGE_KINDS`) — re-run with the *Run workflow* "force full build" checkbox, or wait for the max-age refresh |

@@ -13,6 +13,12 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { spawnSync } from 'node:child_process'
 import { BUILD_DIR, FAILURE_LOG, OUT_DIR, ROOT, log } from './lib.mjs'
+import { computeCodeState } from './routes.mjs'
+
+// Computed once and reused everywhere it's needed (next.config.js's generateBuildId, and
+// build-manifest.mjs / postbuild.mjs independently recompute the same deterministic value from
+// the same source tree rather than threading it through env vars — see scripts/cf/incremental.mjs).
+const codeState = computeCodeState()
 
 const run = (label, cmd, args, env = {}) => {
   log(`── ${label}`)
@@ -38,6 +44,7 @@ const preload = path.join(ROOT, 'scripts', 'cf', 'preload.cjs')
 run('next build', path.join(ROOT, 'node_modules', '.bin', 'next'), ['build'], {
   NEXT_TELEMETRY_DISABLED: '1',
   NODE_OPTIONS: `${process.env.NODE_OPTIONS ?? ''} --require ${preload}`.trim(),
+  CF_BUILD_ID: codeState.buildId,
 })
 
 run('post-build', process.execPath, ['scripts/cf/postbuild.mjs'])

@@ -10,6 +10,11 @@ on:
     # Every 3 hours (UTC). Odd minute on purpose: top-of-the-hour cron slots are the most congested.
     - cron: "17 */3 * * *"
   workflow_dispatch:
+    inputs:
+      force_full_build:
+        description: "Re-render every page instead of reusing the cache (see DEPLOYMENT_GUIDE.md § Incremental builds)"
+        type: boolean
+        default: false
 
 # A newer run supersedes an older one — never let two deploys race each other.
 concurrency:
@@ -28,7 +33,13 @@ jobs:
   build-and-deploy:
     name: Build, verify, deploy
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    # A COLD build (no matching incremental cache — the very first deploy, or after a code
+    # change/cache eviction) renders every page in the file budget via live backend calls and can
+    # genuinely take well over 45 minutes at full scale; every build AFTER that is incremental and
+    # should finish in a few minutes (see DEPLOYMENT_GUIDE.md § Incremental builds). This ceiling is
+    # a safety net against a truly stuck run, not a target — `concurrency.cancel-in-progress` above
+    # already prevents runs from piling up.
+    timeout-minutes: 180
 
     steps:
       - name: Checkout
@@ -44,6 +55,24 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # Restore the previous successful deployment's output + per-page state (see
+      # scripts/cf/incremental.mjs). Without this, EVERY run is a cold, full rebuild of every
+      # page — restoring it is what actually makes "only render what changed" possible in CI,
+      # since Actions runners start from a blank disk every time otherwise.
+      #
+      # restore-keys falls back to the most recent cache under this prefix (exact hit or not) —
+      # a stale-but-present cache is still useful (some pages just look older than they are,
+      # which the maxAgeH ceiling in scripts/cf/lib.mjs bounds); a cache miss just means this
+      # run falls back to a full build, same as before this existed. No cache is ever "wrong",
+      # only more or less helpful — see scripts/cf/incremental.mjs's own file-existence checks.
+      - name: Restore incremental build cache
+        uses: actions/cache/restore@v4
+        with:
+          path: .cache
+          key: cf-site-cache-${{ github.run_id }}
+          restore-keys: |
+            cf-site-cache-
+
       # `npm run build` = resume sub-app → build manifest → next build → post-build audit.
       # The post-build step FAILS the run (nothing is deployed) if the export is over the file budget,
       # contains soft-404 pages, lost its server-rendered headings, or the backend was unhealthy.
@@ -55,10 +84,16 @@ jobs:
           NEXT_PUBLIC_BLOG_API_URL: https://backend.riseflake.com/api/v2
           NEXT_PUBLIC_APP_BASE_URL: https://app.riseflake.com
           NEXT_PUBLIC_TRACK_404_URL: https://backend.riseflake.com/api/v1/track-404
+          # Cloudflare Turnstile SITE key for the contact form — public by design (it's meant to
+          # ship in client HTML), so it's inlined here like the other NEXT_PUBLIC_* values rather
+          # than kept as a secret. Same key frontend-riseflake uses (VITE_TURNSTILE_SITE_KEY);
+          # its allowed hostnames in the Cloudflare dashboard must include riseflake.com.
+          NEXT_PUBLIC_TURNSTILE_SITE_KEY: 0x4AAAAAADR3vt6rRrmI-T-k
           # Lets the backend tell "our own site build" apart from a scraper (same secret the
           # backend's websiteApiHardening middleware already expects). Optional but strongly advised:
           # without it a full build can trip the rate limiter and fail the fetch-failure gate.
           WEBSITE_ISR_SECRET: ${{ secrets.WEBSITE_ISR_SECRET }}
+          CF_FORCE_FULL_BUILD: ${{ github.event.inputs.force_full_build == 'true' && '1' || '' }}
 
       # 1) Upload to a non-production alias first…
       - name: Deploy to staging alias
@@ -82,3 +117,14 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: pages deploy out --project-name=${{ env.CF_PAGES_PROJECT }} --branch=main --commit-dirty=true
+
+      # Only reached if build + staging smoke test + production deploy all succeeded — so the
+      # cache always reflects what's ACTUALLY live, never a build that merely passed locally.
+      # Saved under a fresh key every run; old ones age out on their own (unused >7 days, or
+      # LRU once the repo's 10 GB cache cap is hit) — never something this workflow has to manage.
+      - name: Save incremental build cache
+        if: success()
+        uses: actions/cache/save@v4
+        with:
+          path: .cache
+          key: cf-site-cache-${{ github.run_id }}
