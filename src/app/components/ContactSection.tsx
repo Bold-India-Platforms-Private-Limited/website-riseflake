@@ -1,4 +1,106 @@
+'use client'
+
+import { useRef, useState } from 'react'
+import { CheckCircle2, Loader2, X } from 'lucide-react'
+import CountryCodeSelect from './CountryCodeSelect'
+import TurnstileWidget, { type TurnstileWidgetHandle } from './TurnstileWidget'
+import { API_BASE_URL } from '@/lib/config'
+import { checkContactFormLimit, incrementContactFormCount } from '@/utils/contactFormLimit'
+
+type Status = 'idle' | 'loading' | 'success' | 'error'
+
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
 export default function ContactSection() {
+  const [fullName, setFullName] = useState('')
+  const [email, setEmail] = useState('')
+  const [phone, setPhone] = useState('')
+  const [countryDial, setCountryDial] = useState('+91')
+  const [message, setMessage] = useState('')
+  const [turnstileToken, setTurnstileToken] = useState('')
+  const [status, setStatus] = useState<Status>('idle')
+  const [errorMessage, setErrorMessage] = useState('')
+  const turnstileRef = useRef<TurnstileWidgetHandle>(null)
+
+  const resetTurnstile = () => {
+    turnstileRef.current?.reset()
+    setTurnstileToken('')
+  }
+
+  const onSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setErrorMessage('')
+
+    const trimmedName = fullName.trim()
+    const trimmedEmail = email.trim()
+    const trimmedPhone = phone.trim()
+    const trimmedMessage = message.trim()
+
+    if (trimmedName.length < 2) {
+      setErrorMessage('Please enter your full name.')
+      return
+    }
+    if (!EMAIL_REGEX.test(trimmedEmail)) {
+      setErrorMessage('Please enter a valid email.')
+      return
+    }
+    if (trimmedPhone.length < 6) {
+      setErrorMessage('Please enter a valid mobile number.')
+      return
+    }
+    if (trimmedMessage.length < 10) {
+      setErrorMessage('Please write a message of at least 10 characters.')
+      return
+    }
+    if (!turnstileToken) {
+      setErrorMessage('Please complete the verification challenge.')
+      return
+    }
+
+    const limitCheck = checkContactFormLimit()
+    if (!limitCheck.allowed) {
+      setErrorMessage(limitCheck.message ?? 'Too many messages sent. Please try again later.')
+      return
+    }
+
+    setStatus('loading')
+    incrementContactFormCount()
+
+    try {
+      const res = await fetch(`${API_BASE_URL}/contact-inquiries`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          full_name: trimmedName,
+          email: trimmedEmail,
+          mobile_no: `${countryDial} ${trimmedPhone}`,
+          message: trimmedMessage,
+          cf_turnstile_token: turnstileToken,
+        }),
+      })
+
+      const data = await res.json().catch(() => ({}))
+
+      if (!res.ok) {
+        setStatus('error')
+        setErrorMessage(data?.message || 'Something went wrong. Please try again.')
+        resetTurnstile()
+        return
+      }
+
+      setStatus('success')
+      setFullName('')
+      setEmail('')
+      setPhone('')
+      setMessage('')
+      resetTurnstile()
+    } catch {
+      setStatus('error')
+      setErrorMessage('Network error. Please check your connection and try again.')
+      resetTurnstile()
+    }
+  }
+
   return (
     <section id="contact" className="mx-auto max-w-[1400px] bg-white px-[5%] py-20 md:py-16">
       <div className="mb-16 text-center">
@@ -62,41 +164,84 @@ export default function ContactSection() {
               or have pre-sales questions, you're at the right place.
             </p>
 
-            <form className="mt-8 flex flex-col gap-6">
-              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-                <div className="flex flex-col gap-2">
-                  <label className="text-sm font-medium text-slate-700">Full Name</label>
-                  <input
-                    type="text"
-                    placeholder="Samay Raina"
-                    className="rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 transition focus:border-slate-300 focus:outline-none"
-                  />
-                </div>
-                <div className="flex flex-col gap-2">
-                  <label className="text-sm font-medium text-slate-700">Email</label>
-                  <input
-                    type="email"
-                    placeholder="samayraina@icloud.com"
-                    className="rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 transition focus:border-slate-300 focus:outline-none"
-                  />
-                </div>
+            {status === 'success' ? (
+              <div className="mt-8 flex items-start gap-2 rounded-xl bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
+                <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0" />
+                <span>Thanks for reaching out! We&apos;ll get back to you shortly.</span>
               </div>
+            ) : (
+              <form className="mt-8 flex flex-col gap-6" onSubmit={onSubmit}>
+                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                  <div className="flex flex-col gap-2">
+                    <label className="text-sm font-medium text-slate-700">Full Name</label>
+                    <input
+                      type="text"
+                      value={fullName}
+                      onChange={(e) => setFullName(e.target.value)}
+                      placeholder="Samay Raina"
+                      className="rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 transition focus:border-slate-300 focus:outline-none"
+                    />
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <label className="text-sm font-medium text-slate-700">Email</label>
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="samayraina@icloud.com"
+                      className="rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 transition focus:border-slate-300 focus:outline-none"
+                    />
+                  </div>
+                </div>
 
-              <div className="flex flex-col gap-2">
-                <label className="text-sm font-medium text-slate-700">Message</label>
-                <textarea
-                  placeholder="Write a message..."
-                  className="min-h-[115px] resize-y rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 transition focus:border-slate-300 focus:outline-none"
+                <div className="flex flex-col gap-2">
+                  <label className="text-sm font-medium text-slate-700">Mobile Number</label>
+                  <div className="flex gap-2">
+                    <CountryCodeSelect onChange={(c) => setCountryDial(c.dial)} />
+                    <input
+                      type="tel"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value.replace(/[^\d\s-]/g, ''))}
+                      placeholder="9225220170"
+                      className="flex-1 rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 transition focus:border-slate-300 focus:outline-none"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex flex-col gap-2">
+                  <label className="text-sm font-medium text-slate-700">Message</label>
+                  <textarea
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                    placeholder="Write a message..."
+                    className="min-h-[115px] resize-y rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 transition focus:border-slate-300 focus:outline-none"
+                  />
+                </div>
+
+                <TurnstileWidget
+                  ref={turnstileRef}
+                  onVerify={setTurnstileToken}
+                  onExpire={() => setTurnstileToken('')}
+                  onError={() => setTurnstileToken('')}
                 />
-              </div>
 
-              <button
-                type="submit"
-                className="w-fit rounded-lg bg-[#6b7ff5] px-8 py-3 text-sm font-semibold text-white transition hover:bg-[#5a6ee5]"
-              >
-                Send inquiry
-              </button>
-            </form>
+                {status === 'error' && errorMessage && (
+                  <div className="flex items-start gap-2 rounded-xl bg-rose-50 px-4 py-3 text-sm text-rose-700">
+                    <X className="mt-0.5 h-4 w-4 shrink-0" />
+                    <span>{errorMessage}</span>
+                  </div>
+                )}
+
+                <button
+                  type="submit"
+                  disabled={status === 'loading' || !turnstileToken}
+                  className="flex w-fit items-center gap-2 rounded-lg bg-[#6b7ff5] px-8 py-3 text-sm font-semibold text-white transition hover:bg-[#5a6ee5] disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  {status === 'loading' && <Loader2 className="h-4 w-4 animate-spin" />}
+                  {status === 'loading' ? 'Sending…' : 'Send inquiry'}
+                </button>
+              </form>
+            )}
           </div>
         </div>
       </div>
