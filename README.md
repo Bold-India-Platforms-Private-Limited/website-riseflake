@@ -41,7 +41,7 @@ A deployable build talks to the production API and must not use a local backend:
 export NEXT_PUBLIC_API_BASE_URL=https://backend.riseflake.com/api/v2/website \
        NEXT_PUBLIC_BLOG_API_URL=https://backend.riseflake.com/api/v2 \
        NEXT_PUBLIC_APP_BASE_URL=https://app.riseflake.com \
-       NEXT_PUBLIC_TRACK_404_URL=https://backend.riseflake.com/api/v1/track-404
+       NEXT_PUBLIC_TRACK_404_URL=https://backend.riseflake.com/api/v2/track-404
 
 SKIP_RESUME_BUILD=1 CF_LIMIT_PER_ROUTE=25 npm run build   # small, fast, gentle on the API
 npm run preview                                           # serves ./out with Cloudflare's runtime

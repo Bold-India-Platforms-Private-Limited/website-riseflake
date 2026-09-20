@@ -26,14 +26,14 @@ export const WEBSITE_BASE_URL = 'https://riseflake.com'
 export const OG_FALLBACK_IMAGE = `${WEBSITE_BASE_URL}/og-image.webp`
 
 /**
- * 404-tracking beacon — a top-level /api/v1 route (NOT under /website), so it
+ * 404-tracking beacon — a top-level /api/v2 route (NOT under /website), so it
  * sits outside the read-only public-website API hardening group entirely.
  * Fired client-side from not-found.tsx so the admin panel's API Monitoring >
  * 404 Pages tab can see which URLs are actually broken.
  */
 export const TRACK_404_URL =
   process.env.NEXT_PUBLIC_TRACK_404_URL ??
-  'https://backend.riseflake.com/api/v1/track-404'
+  'https://backend.riseflake.com/api/v2/track-404'
 export const BASE_ASSETS_URL = 'https://assets.riseflake.com/images'
 
 /**
