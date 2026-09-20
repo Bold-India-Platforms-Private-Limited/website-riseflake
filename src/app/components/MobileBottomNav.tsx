@@ -19,6 +19,7 @@ import {
   Star,
   BookOpen,
 } from 'lucide-react'
+import { PARKED_VERTICALS } from '../../lib/parkedVerticals'
 
 const TABS = [
   { href: '/', label: 'Home', icon: Home, match: (p: string) => p === '/' },
@@ -123,7 +124,11 @@ export default function MobileBottomNav() {
             </div>
 
             <div className="grid grid-cols-4 gap-2.5 px-4 pb-2">
-              {MORE_LINKS.map((item) => {
+              {MORE_LINKS.filter(
+                (item) =>
+                  (item.href !== '/colleges' || !PARKED_VERTICALS.colleges) &&
+                  (item.href !== '/in/people' || !PARKED_VERTICALS.people),
+              ).map((item) => {
                 const Icon = item.icon
                 const inner = (
                   <>

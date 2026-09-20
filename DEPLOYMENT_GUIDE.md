@@ -137,6 +137,12 @@ and `npm run seo-diff` verify the output either way. See `scripts/cf/incremental
 - **If the site outgrows 20,000 files** the build fails with a clear message rather than deploying a partial
   site. Options: lower `CF_COLLEGES_MAX` / `CF_EXTRA_PROFILES_MAX`, or move the Pages project to a paid plan
   (100,000 files; raise `CF_MAX_FILES`).
+- **Parked verticals**: `src/lib/parkedVerticals.ts` currently has `colleges` and `people` (the `/in/*` public
+  profile directory) both set to `true`. While parked, neither is fetched during the build, pre-rendered, or
+  present in any sitemap; their nav links are hidden; and `/colleges`, `/colleges/browse`, `/in/people` redirect
+  to `/` (a direct hit on a detail/facet URL like `/colleges/some-college` or `/in/someone` is a plain 404 —
+  the browser-side fallback for those two kinds is also disabled while parked). Nothing was deleted — flip
+  either flag back to `false` and redeploy to bring it back exactly as it was.
 
 ## Local development
 
@@ -151,7 +157,7 @@ npm run dev                # next dev (creates a tiny .build/manifest.json on fi
 export NEXT_PUBLIC_API_BASE_URL=https://backend.riseflake.com/api/v2/website \
        NEXT_PUBLIC_BLOG_API_URL=https://backend.riseflake.com/api/v2 \
        NEXT_PUBLIC_APP_BASE_URL=https://app.riseflake.com \
-       NEXT_PUBLIC_TRACK_404_URL=https://backend.riseflake.com/api/v1/track-404
+       NEXT_PUBLIC_TRACK_404_URL=https://backend.riseflake.com/api/v2/track-404
 SKIP_RESUME_BUILD=1 CF_LIMIT_PER_ROUTE=25 npm run build   # small + fast
 npm run preview                                           # wrangler pages dev ./out on :8788
 ```

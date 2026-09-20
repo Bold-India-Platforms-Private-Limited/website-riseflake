@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import type { AnchorHTMLAttributes, ReactNode } from 'react'
 import { BASE_ASSETS_URL } from '../../lib/config'
+import { PARKED_VERTICALS } from '../../lib/parkedVerticals'
 
 type SectionKey = 'resources' | 'company' | 'quickLinks' | 'explore'
 
@@ -282,7 +283,9 @@ export default function Footer() {
               </div>
               <div className={isMobile && !expandedSections.explore ? 'hidden sm:block' : ''}>
                 <ul className="space-y-3">
-                  {links.explore.map((link) => (
+                  {links.explore
+                    .filter((link) => !PARKED_VERTICALS.colleges || !link.href.startsWith('/colleges'))
+                    .map((link) => (
                     <li key={link.href}>
                       <FooterLink href={link.href}>{link.label}</FooterLink>
                     </li>

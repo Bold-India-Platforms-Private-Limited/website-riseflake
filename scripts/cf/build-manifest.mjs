@@ -26,6 +26,7 @@ import {
 import { REDIRECTED_SOURCES } from './redirects.mjs'
 import { decideIncrementalBuild } from './incremental.mjs'
 import { computeCodeState } from './routes.mjs'
+const { PARKED_VERTICALS } = await import(new URL('../../src/lib/parkedVerticals.ts', import.meta.url).href)
 
 installBuildFetch()
 
@@ -157,11 +158,15 @@ async function main() {
   fs.rmSync(`${BUILD_DIR}/fetch-failures.log`, { force: true })
 
   // ── content that must exist ─────────────────────────────────────────────
+  // Parked verticals (see src/lib/parkedVerticals.ts) are fetched as empty rather than
+  // skipped outright, so every downstream calculation (budget math, manifest shape,
+  // sitemap generation) sees the same "zero entries" shape it already handles for a
+  // vertical with no data — no separate code path needed anywhere else in this file.
   const [jobs, internships, companies, people] = await Promise.all([
     fromBatchedSitemap('jobs', '/jobs/'),
     fromBatchedSitemap('internships', '/internships/'),
     fromBatchedSitemap('companies', '/companies/'),
-    fromBatchedSitemap('people', '/in/'),
+    PARKED_VERTICALS.people ? Promise.resolve([]) : fromBatchedSitemap('people', '/in/'),
   ])
   log(`jobs=${jobs.length} internships=${internships.length} companies=${companies.length} people=${people.length}`)
 
@@ -171,8 +176,12 @@ async function main() {
     fromFlatSitemap('jobs-directory-sitemap.xml', '/jobs/browse/', 'jobs-facets', { skip: facetOf('jobs') }),
     fromFlatSitemap('internships-directory-sitemap.xml', '/internships/browse/', 'internships-facets', { skip: facetOf('internships') }),
     fromFlatSitemap('companies-directory-sitemap.xml', '/companies/browse/', 'companies-facets', { skip: facetOf('companies') }),
-    fromFlatSitemap('colleges-directory-sitemap.xml', '/colleges/browse/', 'colleges-facets', { skip: facetOf('colleges') }),
-    fromFlatSitemap('people-directory-sitemap.xml', '/in/people/', 'people-facets', { skip: (s) => s === '' || s === 'people' }),
+    PARKED_VERTICALS.colleges
+      ? Promise.resolve([])
+      : fromFlatSitemap('colleges-directory-sitemap.xml', '/colleges/browse/', 'colleges-facets', { skip: facetOf('colleges') }),
+    PARKED_VERTICALS.people
+      ? Promise.resolve([])
+      : fromFlatSitemap('people-directory-sitemap.xml', '/in/people/', 'people-facets', { skip: (s) => s === '' || s === 'people' }),
     fromFlatSitemap('skills-directory-sitemap.xml', '/skills/', 'skills'),
   ])
   log(
@@ -206,12 +215,14 @@ async function main() {
   }
 
   // ── sanity floors: never publish a site built from a broken backend answer ──
+  // (skipped for a parked vertical — an empty list there is the intended state, not a
+  // sign the backend answered badly)
   requireAtLeast('jobs', jobs, envInt('CF_MIN_JOBS', 1))
   requireAtLeast('companies', companies, envInt('CF_MIN_COMPANIES', 100))
-  requireAtLeast('people', people, envInt('CF_MIN_PEOPLE', 10))
+  if (!PARKED_VERTICALS.people) requireAtLeast('people', people, envInt('CF_MIN_PEOPLE', 10))
   requireAtLeast('skills', skills, envInt('CF_MIN_SKILLS', 10))
   requireAtLeast('jobs facets', jobFacets, envInt('CF_MIN_FACETS', 5))
-  requireAtLeast('people directory', peopleFacets, envInt('CF_MIN_FACETS', 5))
+  if (!PARKED_VERTICALS.people) requireAtLeast('people directory', peopleFacets, envInt('CF_MIN_FACETS', 5))
 
   // ── budget ──────────────────────────────────────────────────────────────
   // Every page costs 2 files (.html + the .txt RSC payload) except "leaf" pages
@@ -233,14 +244,16 @@ async function main() {
     )
   }
 
-  // Optional tiers, in priority order, fill whatever room is left.
-  const collegesWanted = Math.max(0, Math.min(COLLEGES_MAX, Math.floor(room * 0.6)))
+  // Optional tiers, in priority order, fill whatever room is left. Forced to 0 for a
+  // parked vertical so the (otherwise expensive — one request per facet, or a full
+  // batched sitemap fetch) crawl never runs at all rather than running and being discarded.
+  const collegesWanted = PARKED_VERTICALS.colleges ? 0 : Math.max(0, Math.min(COLLEGES_MAX, Math.floor(room * 0.6)))
   const collegeCandidates =
     collegesWanted > 0 ? await collegesFromFacets(slugs(collegeFacets).slice(0, DEV_LIMIT || undefined)) : []
   const colleges = collegeCandidates.slice(0, collegesWanted)
 
   const peopleSet = new Set(slugs(people))
-  const extraWanted = Math.max(0, Math.min(EXTRA_PROFILES_MAX, room - colleges.length))
+  const extraWanted = PARKED_VERTICALS.people ? 0 : Math.max(0, Math.min(EXTRA_PROFILES_MAX, room - colleges.length))
   const users =
     extraWanted > 0 ? (await fromBatchedSitemap('users', '/in/')).filter((e) => !peopleSet.has(e.s)) : []
   const extraProfiles = users.slice(0, extraWanted)

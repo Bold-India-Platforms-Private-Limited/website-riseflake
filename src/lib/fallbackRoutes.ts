@@ -10,7 +10,13 @@
  *
  * Pure and dependency-free: it is also stringified into an inline script that runs before first
  * paint, so the 404 UI never flashes for a URL the fallback is about to render.
+ *
+ * A parked vertical (src/lib/parkedVerticals.ts) is excluded from ROUTES below, so a stale link
+ * to /colleges/* or /in/* gets a plain, honest 404 instead of a live-fetched page — the 'college'
+ * and 'profile' handling in NotFoundFallback.tsx itself is untouched and starts working again the
+ * moment the flag flips back.
  */
+import { PARKED_VERTICALS } from './parkedVerticals'
 
 export type FallbackRoute =
   | { kind: 'job'; slug: string }
@@ -27,9 +33,9 @@ const ROUTES: { kind: FallbackRoute['kind']; re: RegExp }[] = [
   { kind: 'job', re: new RegExp(`^/jobs/${SEG}/?$`) },
   { kind: 'internship', re: new RegExp(`^/internships/${SEG}/?$`) },
   { kind: 'company', re: new RegExp(`^/companies/${SEG}/?$`) },
-  { kind: 'college', re: new RegExp(`^/colleges/${SEG}/?$`) },
+  ...(PARKED_VERTICALS.colleges ? [] : [{ kind: 'college' as const, re: new RegExp(`^/colleges/${SEG}/?$`) }]),
   // /in/people is a real page; /in/people/<x> has two segments and never matches this.
-  { kind: 'profile', re: new RegExp(`^/in/${SEG}/?$`) },
+  ...(PARKED_VERTICALS.people ? [] : [{ kind: 'profile' as const, re: new RegExp(`^/in/${SEG}/?$`) }]),
   // /discover/companies/india/<cin>/<name> — the CIN (first segment) identifies the company.
   { kind: 'india-company', re: new RegExp(`^/discover/companies/india/${SEG}/[^/]+/?$`) },
 ]

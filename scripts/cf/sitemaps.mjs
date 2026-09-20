@@ -14,6 +14,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { SITE_ORIGIN, xmlEscape } from './lib.mjs'
+const { PARKED_VERTICALS } = await import(new URL('../../src/lib/parkedVerticals.ts', import.meta.url).href)
 
 const BATCH = 10_000 // URLs per child sitemap (protocol max is 50,000)
 const XML_HEAD = '<?xml version="1.0" encoding="UTF-8"?>\n'
@@ -65,7 +66,7 @@ const STATIC_PAGES = [
   P('/jobs', 'hourly', '0.9'),
   P('/internships', 'hourly', '0.9'),
   P('/companies', 'daily', '0.7'),
-  P('/colleges', 'weekly', '0.6'),
+  ...(PARKED_VERTICALS.colleges ? [] : [P('/colleges', 'weekly', '0.6')]),
   P('/about', 'monthly', '0.5'),
   P('/contact', 'monthly', '0.5'),
   P('/careers', 'monthly', '0.4'),
@@ -81,14 +82,14 @@ const STATIC_PAGES = [
   P('/delete-account', 'monthly', '0.3'),
   P('/campus-ambassador', 'monthly', '0.5'),
   P('/network', 'daily', '0.7'),
-  P('/in/people', 'daily', '0.7'),
+  ...(PARKED_VERTICALS.people ? [] : [P('/in/people', 'daily', '0.7')]),
   P('/hackathons', 'daily', '0.8'),
   P('/internships/work-from-home', 'daily', '0.9'),
   // Faceted discovery hubs — individual facet URLs live in the sitemap-*-facets.xml files
   P('/internships/browse', 'daily', '0.8'),
   P('/jobs/browse', 'daily', '0.8'),
   P('/companies/browse', 'daily', '0.7'),
-  P('/colleges/browse', 'weekly', '0.7'),
+  ...(PARKED_VERTICALS.colleges ? [] : [P('/colleges/browse', 'weekly', '0.7')]),
   P('/skills', 'daily', '0.7'),
   P('/internships/software-development', 'daily', '0.8'),
   P('/internships/web-development', 'daily', '0.8'),

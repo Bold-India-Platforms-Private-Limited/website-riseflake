@@ -3,6 +3,7 @@ import type { ReactNode } from 'react'
 import { Briefcase, GraduationCap, Building2, School, Globe, Home, FileText, ClipboardList, Info, Users, Mail, Rocket, HelpCircle, ScrollText, Lock, CreditCard, Shield, AlertTriangle, Cookie, Trash2, ExternalLink, Newspaper, Trophy, Network } from 'lucide-react'
 import Navbar from '../components/Navbar'
 import { API_BASE_URL, hreflangAlternates } from '../../lib/config'
+import { PARKED_VERTICALS } from '../../lib/parkedVerticals'
 
 export const metadata: Metadata = {
   title: 'Sitemap — All Pages & Sections',
@@ -44,8 +45,8 @@ export default async function SitemapHtmlPage() {
     fetchCount(`${API_BASE_URL}/jobs`),
     fetchCount(`${API_BASE_URL}/internships`),
     fetchCount(`${API_BASE_URL}/companies`),
-    fetchCount(`${API_BASE_URL}/colleges`),
-    fetchPeopleCount(),
+    PARKED_VERTICALS.colleges ? Promise.resolve(0) : fetchCount(`${API_BASE_URL}/colleges`),
+    PARKED_VERTICALS.people ? Promise.resolve(0) : fetchPeopleCount(),
   ])
 
   return (
@@ -79,7 +80,9 @@ export default async function SitemapHtmlPage() {
             <StatCard icon={<Briefcase className="h-5 w-5" />} label="Live Jobs" value={fmt(jobCount)} color="emerald" />
             <StatCard icon={<GraduationCap className="h-5 w-5" />} label="Internships" value={fmt(internshipCount)} color="violet" />
             <StatCard icon={<Building2 className="h-5 w-5" />} label="Companies" value={fmt(companyCount)} color="blue" />
-            <StatCard icon={<School className="h-5 w-5" />} label="Colleges" value={fmt(collegeCount)} color="amber" />
+            {!PARKED_VERTICALS.colleges && (
+              <StatCard icon={<School className="h-5 w-5" />} label="Colleges" value={fmt(collegeCount)} color="amber" />
+            )}
           </div>
 
           {/* Tree */}
@@ -155,40 +158,44 @@ export default async function SitemapHtmlPage() {
                 <TreeInfo label={`${fmt(companyCount)} company profile pages · batched in XML sitemaps of 1,000`} />
               </TreeBranch>
 
-              {/* Colleges */}
-              <TreeBranch
-                icon={<School className="h-4 w-4" />}
-                label="Colleges"
-                href="/colleges"
-                badge={`${fmt(collegeCount)} listed`}
-                badgeColor="amber"
-              >
-                <TreeLeaf href="/colleges" label="Browse all colleges" icon={<ExternalLink className="h-3 w-3" />} />
-                <TreeLeaf href="/colleges/browse" label="Browse colleges by discipline, state & city" icon={<ExternalLink className="h-3 w-3" />} />
-                <TreeLeaf href="/colleges/browse/engineering-colleges-in-india" label="Engineering colleges" icon={<School className="h-3 w-3" />} />
-                <TreeLeaf href="/colleges/browse/medical-colleges-in-india" label="Medical colleges" icon={<School className="h-3 w-3" />} />
-                <TreeLeaf href="/colleges/browse/management-colleges-in-india" label="Management colleges" icon={<School className="h-3 w-3" />} />
-                <TreeLeaf href="/sitemap-colleges.xml" label="Colleges sitemap index (auto-updated)" icon={<FileText className="h-3 w-3" />} muted />
-                <TreeLeaf href="/sitemap-colleges-facets.xml" label="College faceted-page sitemap" icon={<FileText className="h-3 w-3" />} muted />
-                <TreeInfo label={`${fmt(collegeCount)} college pages · batched in XML sitemaps`} />
-              </TreeBranch>
+              {/* Colleges — parked, see src/lib/parkedVerticals.ts */}
+              {!PARKED_VERTICALS.colleges && (
+                <TreeBranch
+                  icon={<School className="h-4 w-4" />}
+                  label="Colleges"
+                  href="/colleges"
+                  badge={`${fmt(collegeCount)} listed`}
+                  badgeColor="amber"
+                >
+                  <TreeLeaf href="/colleges" label="Browse all colleges" icon={<ExternalLink className="h-3 w-3" />} />
+                  <TreeLeaf href="/colleges/browse" label="Browse colleges by discipline, state & city" icon={<ExternalLink className="h-3 w-3" />} />
+                  <TreeLeaf href="/colleges/browse/engineering-colleges-in-india" label="Engineering colleges" icon={<School className="h-3 w-3" />} />
+                  <TreeLeaf href="/colleges/browse/medical-colleges-in-india" label="Medical colleges" icon={<School className="h-3 w-3" />} />
+                  <TreeLeaf href="/colleges/browse/management-colleges-in-india" label="Management colleges" icon={<School className="h-3 w-3" />} />
+                  <TreeLeaf href="/sitemap-colleges.xml" label="Colleges sitemap index (auto-updated)" icon={<FileText className="h-3 w-3" />} muted />
+                  <TreeLeaf href="/sitemap-colleges-facets.xml" label="College faceted-page sitemap" icon={<FileText className="h-3 w-3" />} muted />
+                  <TreeInfo label={`${fmt(collegeCount)} college pages · batched in XML sitemaps`} />
+                </TreeBranch>
+              )}
 
-              {/* People directory */}
-              <TreeBranch
-                icon={<Users className="h-4 w-4" />}
-                label="People"
-                href="/in/people"
-                badge={`${fmt(peopleCount)} profiles`}
-                badgeColor="blue"
-              >
-                <TreeLeaf href="/in/people" label="Browse the people directory" icon={<ExternalLink className="h-3 w-3" />} />
-                <TreeLeaf href="/in/people/software-developer" label="Candidates by role — e.g. Software Developer" icon={<Briefcase className="h-3 w-3" />} />
-                <TreeLeaf href="/in/people/pune" label="Candidates by city — e.g. Pune" icon={<Building2 className="h-3 w-3" />} />
-                <TreeLeaf href="/in/people/data-analyst-in-pune" label="Role in city — e.g. Data Analyst in Pune" icon={<Globe className="h-3 w-3" />} />
-                <TreeLeaf href="/sitemap-people.xml" label="Profiles XML sitemap (auto-updated)" icon={<FileText className="h-3 w-3" />} muted />
-                <TreeLeaf href="/sitemap-people-directory.xml" label="Directory landing-pages XML sitemap" icon={<FileText className="h-3 w-3" />} muted />
-                <TreeInfo label={`${fmt(peopleCount)} public candidate profiles · role & city landing pages auto-generated`} />
-              </TreeBranch>
+              {/* People directory — parked, see src/lib/parkedVerticals.ts */}
+              {!PARKED_VERTICALS.people && (
+                <TreeBranch
+                  icon={<Users className="h-4 w-4" />}
+                  label="People"
+                  href="/in/people"
+                  badge={`${fmt(peopleCount)} profiles`}
+                  badgeColor="blue"
+                >
+                  <TreeLeaf href="/in/people" label="Browse the people directory" icon={<ExternalLink className="h-3 w-3" />} />
+                  <TreeLeaf href="/in/people/software-developer" label="Candidates by role — e.g. Software Developer" icon={<Briefcase className="h-3 w-3" />} />
+                  <TreeLeaf href="/in/people/pune" label="Candidates by city — e.g. Pune" icon={<Building2 className="h-3 w-3" />} />
+                  <TreeLeaf href="/in/people/data-analyst-in-pune" label="Role in city — e.g. Data Analyst in Pune" icon={<Globe className="h-3 w-3" />} />
+                  <TreeLeaf href="/sitemap-people.xml" label="Profiles XML sitemap (auto-updated)" icon={<FileText className="h-3 w-3" />} muted />
+                  <TreeLeaf href="/sitemap-people-directory.xml" label="Directory landing-pages XML sitemap" icon={<FileText className="h-3 w-3" />} muted />
+                  <TreeInfo label={`${fmt(peopleCount)} public candidate profiles · role & city landing pages auto-generated`} />
+                </TreeBranch>
+              )}
 
               {/* Discover — India Company Registry */}
               <TreeBranch
@@ -237,8 +244,12 @@ export default async function SitemapHtmlPage() {
               >
                 <TreeLeaf href="/network" label="Profile network — crawlable hub for /in/* pages" icon={<ExternalLink className="h-3 w-3" />} />
                 <TreeLeaf href="/campus-ambassador" label="Campus Ambassador programme" icon={<Rocket className="h-3 w-3" />} />
-                <TreeLeaf href="/sitemap-users.xml" label="Member profiles XML sitemap index" icon={<FileText className="h-3 w-3" />} muted />
-                <TreeInfo label="Individual /in/{username} profile pages · batched XML sitemaps" />
+                {!PARKED_VERTICALS.people && (
+                  <>
+                    <TreeLeaf href="/sitemap-users.xml" label="Member profiles XML sitemap index" icon={<FileText className="h-3 w-3" />} muted />
+                    <TreeInfo label="Individual /in/{username} profile pages · batched XML sitemaps" />
+                  </>
+                )}
               </TreeBranch>
 
               {/* Company section */}
@@ -282,12 +293,20 @@ export default async function SitemapHtmlPage() {
               <XmlCard href="/sitemap-internships-facets.xml" title="Internships Faceted Sitemap" desc="Role, city, company, stipend, month & workplace landing pages" />
               <XmlCard href="/sitemap-companies.xml" title="Companies Sitemap Index" desc={`${fmt(companyCount)} companies across batches of 1,000`} />
               <XmlCard href="/sitemap-companies-facets.xml" title="Companies Faceted Sitemap" desc="Industry, size, type & hiring landing pages" />
-              <XmlCard href="/sitemap-colleges.xml" title="Colleges Sitemap Index" desc={`${fmt(collegeCount)} college profile pages · refreshes daily`} />
-              <XmlCard href="/sitemap-colleges-facets.xml" title="Colleges Faceted Sitemap" desc="Discipline, state & city landing pages" />
+              {!PARKED_VERTICALS.colleges && (
+                <>
+                  <XmlCard href="/sitemap-colleges.xml" title="Colleges Sitemap Index" desc={`${fmt(collegeCount)} college profile pages · refreshes daily`} />
+                  <XmlCard href="/sitemap-colleges-facets.xml" title="Colleges Faceted Sitemap" desc="Discipline, state & city landing pages" />
+                </>
+              )}
               <XmlCard href="/sitemap-skills.xml" title="Skills Directory Sitemap" desc="Skill landing pages · jobs, internships & companies hiring" />
-              <XmlCard href="/sitemap-people.xml" title="People Sitemap Index" desc={`${fmt(peopleCount)} public candidate profiles · refreshes hourly`} />
-              <XmlCard href="/sitemap-people-directory.xml" title="People Directory Sitemap" desc="Role, city & skill landing pages · auto-generated" />
-              <XmlCard href="/sitemap-users.xml" title="Members Sitemap Index" desc="Public member profiles · batched XML sitemaps" />
+              {!PARKED_VERTICALS.people && (
+                <>
+                  <XmlCard href="/sitemap-people.xml" title="People Sitemap Index" desc={`${fmt(peopleCount)} public candidate profiles · refreshes hourly`} />
+                  <XmlCard href="/sitemap-people-directory.xml" title="People Directory Sitemap" desc="Role, city & skill landing pages · auto-generated" />
+                  <XmlCard href="/sitemap-users.xml" title="Members Sitemap Index" desc="Public member profiles · batched XML sitemaps" />
+                </>
+              )}
               <XmlCard href="/sitemap-blogs.xml" title="Blog Sitemap" desc="Every published article · refreshes hourly" />
               <XmlCard href="/sitemap-hackathons.xml" title="Hackathons Sitemap" desc="Every hackathon detail page · refreshes hourly" />
               <XmlCard href="/sitemap-static.xml" title="Static Pages Sitemap" desc="Core pages, discovery hubs & city landing pages · refreshes daily" />

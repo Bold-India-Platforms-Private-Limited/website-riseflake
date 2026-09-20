@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { Menu, X, ChevronRight, ChevronDown, Building2, GraduationCap, Briefcase, Cloud, FileText, FileCheck, Star, BookOpen } from 'lucide-react'
 import BrowseMegaMenu from './BrowseMegaMenu'
 import MobileBottomNav from './MobileBottomNav'
+import { PARKED_VERTICALS } from '../../lib/parkedVerticals'
 
 export default function Navbar({ bgTransparent = false }: { bgTransparent?: boolean }) {
   const pathname = usePathname()
@@ -139,24 +140,28 @@ export default function Navbar({ bgTransparent = false }: { bgTransparent?: bool
                   </div>
                 </div>
               </div>
-              <a
-                href="/colleges"
-                className={`rounded-lg px-2 xl:px-3 py-2 text-sm font-medium transition-all duration-500 whitespace-nowrap ${activeTab === '/colleges'
-                  ? 'bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 text-white scale-105 shadow-md shadow-indigo-500/20'
-                  : 'bg-transparent text-slate-700 hover:bg-white/60 hover:text-slate-900'
-                  }`}
-              >
-                Colleges
-              </a>
-              <Link
-                href="/in/people"
-                className={`rounded-lg px-2 xl:px-3 py-2 text-sm font-medium transition-all duration-500 whitespace-nowrap ${activeTab === '/in/people'
-                  ? 'bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 text-white scale-105 shadow-md shadow-indigo-500/20'
-                  : 'bg-transparent text-slate-700 hover:bg-white/60 hover:text-slate-900'
-                  }`}
-              >
-                People
-              </Link>
+              {!PARKED_VERTICALS.colleges && (
+                <a
+                  href="/colleges"
+                  className={`rounded-lg px-2 xl:px-3 py-2 text-sm font-medium transition-all duration-500 whitespace-nowrap ${activeTab === '/colleges'
+                    ? 'bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 text-white scale-105 shadow-md shadow-indigo-500/20'
+                    : 'bg-transparent text-slate-700 hover:bg-white/60 hover:text-slate-900'
+                    }`}
+                >
+                  Colleges
+                </a>
+              )}
+              {!PARKED_VERTICALS.people && (
+                <Link
+                  href="/in/people"
+                  className={`rounded-lg px-2 xl:px-3 py-2 text-sm font-medium transition-all duration-500 whitespace-nowrap ${activeTab === '/in/people'
+                    ? 'bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 text-white scale-105 shadow-md shadow-indigo-500/20'
+                    : 'bg-transparent text-slate-700 hover:bg-white/60 hover:text-slate-900'
+                    }`}
+                >
+                  People
+                </Link>
+              )}
               <div className="relative group shrink-0">
                 <a
                   href="/discover/companies/india"
@@ -487,28 +492,32 @@ export default function Navbar({ bgTransparent = false }: { bgTransparent?: bool
                 <span>Companies</span>
                 <ChevronRight className="h-5 w-5 opacity-70" />
               </Link>
-              <Link
-                href="/colleges"
-                className={`flex items-center justify-between rounded-xl px-4 py-3 text-base font-medium transition ${isActive('/colleges')
-                  ? 'bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 text-white shadow'
-                  : 'text-slate-700 hover:bg-slate-100'
-                  }`}
-                onClick={() => setOpen(false)}
-              >
-                <span>Colleges</span>
-                <ChevronRight className="h-5 w-5 opacity-70" />
-              </Link>
-              <Link
-                href="/in/people"
-                className={`flex items-center justify-between rounded-xl px-4 py-3 text-base font-medium transition ${isActive('/in/people')
-                  ? 'bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 text-white shadow'
-                  : 'text-slate-700 hover:bg-slate-100'
-                  }`}
-                onClick={() => setOpen(false)}
-              >
-                <span>People</span>
-                <ChevronRight className="h-5 w-5 opacity-70" />
-              </Link>
+              {!PARKED_VERTICALS.colleges && (
+                <Link
+                  href="/colleges"
+                  className={`flex items-center justify-between rounded-xl px-4 py-3 text-base font-medium transition ${isActive('/colleges')
+                    ? 'bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 text-white shadow'
+                    : 'text-slate-700 hover:bg-slate-100'
+                    }`}
+                  onClick={() => setOpen(false)}
+                >
+                  <span>Colleges</span>
+                  <ChevronRight className="h-5 w-5 opacity-70" />
+                </Link>
+              )}
+              {!PARKED_VERTICALS.people && (
+                <Link
+                  href="/in/people"
+                  className={`flex items-center justify-between rounded-xl px-4 py-3 text-base font-medium transition ${isActive('/in/people')
+                    ? 'bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 text-white shadow'
+                    : 'text-slate-700 hover:bg-slate-100'
+                    }`}
+                  onClick={() => setOpen(false)}
+                >
+                  <span>People</span>
+                  <ChevronRight className="h-5 w-5 opacity-70" />
+                </Link>
+              )}
               <Link
                 href="/discover/companies/india"
                 className={`flex items-center justify-between rounded-xl px-4 py-3 text-base font-medium transition ${isActive('/discover')
