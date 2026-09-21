@@ -203,7 +203,7 @@ hook** (Settings → Builds) and put its URL in the GitHub secret `CF_PAGES_DEPL
   | `CF_BASELINE_URL` / `CF_BASELINE` | riseflake.com | where to fetch the previous deployment from / `off` = never reuse |
   | `CF_MAX_BROKEN_RATIO` / `CF_MAX_BROKEN_MIN` | 0.02 / 30 | how many soft-404 pages the audit tolerates |
   | `CF_MAX_FETCH_FAILURES` | 25 | backend requests allowed to fail after all retries |
-  | `CF_FETCH_CONCURRENCY` / `CF_BUILD_CPUS` | 4 / 4 with `WEBSITE_ISR_SECRET`, 1 / 2 without | how hard the build hits the backend (gentler when the backend will throttle it) |
+  | `CF_FETCH_CONCURRENCY` / `CF_BUILD_CPUS` | 4 / 4 with `WEBSITE_ISR_SECRET`; 1 / 2 without, for page rendering only (the manifest step always uses 4) | how hard the build hits the backend |
   | `CF_LIMIT_PER_ROUTE` | – | **local only**: truncate every list to N for a fast test build |
   | `CF_FORCE_FULL_BUILD` | – | ignore the incremental cache and re-render every page (also a checkbox on *Run workflow*) |
 
@@ -270,6 +270,7 @@ The post-build step prints every failed gate. Common ones:
 | `WEBSITE_ISR_SECRET is not set: the backend will throttle this build` | add it as a build variable (see *Building on Cloudflare Pages itself*). Until then each build renders only `CF_RENDER_BUDGET` pages |
 | `This build could only afford N of the M pages the live site has` | the shrink guard: code changed, so every page must be re-rendered, and the render budget can't cover it. Set `WEBSITE_ISR_SECRET`, or raise `CF_RENDER_BUDGET` |
 | `baseline: … no build state` / `full build … no matching previous deployment` | first deployment, or the code changed since the last one — a full render is expected. If it repeats on every build, the live site isn't serving `/_rf/state.json` (check `CF_BASELINE_URL`) |
+| `[cf-fetch] attempt N/M failed … GET <url>` / `manifest build FAILED: GET <url> failed after 5 attempts` | that backend endpoint is slow or unreachable from the build machine (the URL is named). Re-run; if it repeats, check the backend/EC2 health |
 | `hiring-companies-sitemap.xml returned 404` | the backend hasn't been deployed with that endpoint yet — the build falls back to the newest 1,500 companies |
 | Build hits the platform's build-time limit | check the log's `plan:` line — a cold build with `WEBSITE_ISR_SECRET` should be minutes; without it, budget-limited by design |
 | `N page(s) have no server-rendered <h1>` | something pushed a page into client-side rendering (usually `useSearchParams()` outside `<Suspense>`) |

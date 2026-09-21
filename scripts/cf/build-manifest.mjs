@@ -34,7 +34,7 @@
 import fs from 'node:fs'
 import {
   API_BASE_URL, BLOG_API_URL, BUILD_DIR, HAS_INTERNAL_KEY, MANIFEST_PATH, PAGE_KINDS, PLATFORM_FILE_LIMIT,
-  envInt, getJson, getText, installBuildFetch, listOf, locsOf, log, safeSlug, slugAfter, warn, xmlUnescape,
+  envInt, getJson, getText, installBuildFetch, listOf, loadState, locsOf, log, safeSlug, slugAfter, warn, xmlUnescape,
 } from './lib.mjs'
 import { REDIRECTED_SOURCES } from './redirects.mjs'
 import { decideIncrementalBuild, describePlan } from './incremental.mjs'
@@ -107,8 +107,9 @@ async function fromFlatSitemap(path, prefix, label, { skip = () => false } = {})
 /**
  * Companies worth a static page = the ones hiring right now. The backend lists them in
  * hiring-companies-sitemap.xml; if it predates that endpoint (404), fall back to the most recently updated
- * companies from the full registry, capped — a build must not stop working because the backend and the
- * website deploy in a different order.
+ * companies from the full registry — a build must not stop working because the backend and the website deploy
+ * in a different order. The fallback is deliberately cheap (the registry sitemap is newest-first, so 2 batches
+ * cover the default 1,500) and fail-soft: it is an optional tier, so a slow backend must not fail the build.
  */
 async function hiringCompanies() {
   const xml = await getText(`${API_BASE_URL}/hiring-companies-sitemap.xml`, { allow404: true })
@@ -117,8 +118,23 @@ async function hiringCompanies() {
     `${API_BASE_URL}/hiring-companies-sitemap.xml returned 404 — the backend has not been deployed with it yet. ` +
       `Falling back to the ${COMPANIES_FALLBACK_MAX} most recently updated companies (instead of only those hiring).`,
   )
-  const all = await fromBatchedSitemap('companies', '/companies/')
-  return { entries: all.slice(0, COMPANIES_FALLBACK_MAX), fallback: true }
+  try {
+    const indexXml = await getText(`${API_BASE_URL}/companies-sitemap.xml`)
+    const batches = locsOf(indexXml).map((l) => /-(\d+)\.xml$/.exec(l)?.[1]).filter(Boolean)
+    const all = []
+    for (const n of batches) {
+      all.push(...entriesFromUrlset(await getText(`${API_BASE_URL}/companies-sitemap-${n}.xml`), '/companies/', 'companies'))
+      if (all.length >= COMPANIES_FALLBACK_MAX) break
+    }
+    return { entries: uniqueBy(all).slice(0, COMPANIES_FALLBACK_MAX), fallback: true }
+  } catch (err) {
+    // Keep whatever the live site already has rather than silently dropping every company page.
+    const kept = Object.entries(loadState()?.pages ?? {})
+      .filter(([k]) => k.startsWith('companies/'))
+      .map(([k, v]) => ({ s: k.slice('companies/'.length), ...(v.m ? { m: v.m } : {}) }))
+    warn(`company fallback failed (${err.message}) — keeping the ${kept.length} company page(s) of the previous deployment`)
+    return { entries: kept, fallback: true }
+  }
 }
 
 function uniqueBy(entries) {
@@ -265,7 +281,8 @@ async function main() {
   // (skipped for a parked vertical — an empty list there is the intended state, not a
   // sign the backend answered badly)
   requireAtLeast('jobs', jobs, envInt('CF_MIN_JOBS', 1))
-  requireAtLeast('companies', companies, envInt('CF_MIN_COMPANIES', 10))
+  // (not enforced for the fallback: there "few companies" means the backend is slow/behind, not that the answer is broken)
+  if (!hiring.fallback) requireAtLeast('companies', companies, envInt('CF_MIN_COMPANIES', 10))
   if (!PARKED_VERTICALS.people) requireAtLeast('people', people, envInt('CF_MIN_PEOPLE', 10))
   requireAtLeast('skills', skills, envInt('CF_MIN_SKILLS', 10))
   requireAtLeast('jobs facets', jobFacets, envInt('CF_MIN_FACETS', 5))

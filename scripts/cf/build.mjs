@@ -17,7 +17,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { spawnSync } from 'node:child_process'
-import { BUILD_DIR, FAILURE_LOG, OUT_DIR, ROOT, log } from './lib.mjs'
+import { BUILD_DIR, FAILURE_LOG, HAS_INTERNAL_KEY, OUT_DIR, ROOT, log } from './lib.mjs'
 import { computeCodeState } from './routes.mjs'
 import { restoreBaseline } from './baseline.mjs'
 
@@ -52,6 +52,9 @@ run('build manifest', process.execPath, ['scripts/cf/build-manifest.mjs'])
 const preload = path.join(ROOT, 'scripts', 'cf', 'preload.cjs')
 run('next build', path.join(ROOT, 'node_modules', '.bin', 'next'), ['build'], {
   NEXT_TELEMETRY_DISABLED: '1',
+  // Without WEBSITE_ISR_SECRET the backend allows 600 requests/min per IP: render gently (see next.config.js
+  // for the matching worker count) rather than provoke a 429 retry storm. The manifest step is unaffected.
+  ...(HAS_INTERNAL_KEY || process.env.CF_FETCH_CONCURRENCY ? {} : { CF_FETCH_CONCURRENCY: '1' }),
   NODE_OPTIONS: `${process.env.NODE_OPTIONS ?? ''} --require ${preload}`.trim(),
   CF_BUILD_ID: codeState.buildId,
 })

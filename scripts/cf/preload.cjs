@@ -31,9 +31,10 @@ const ROOT = path.resolve(__dirname, '..', '..')
 const FAILURE_LOG = path.join(ROOT, '.build', 'fetch-failures.log')
 
 const secret = process.env.WEBSITE_ISR_SECRET || ''
-// With the internal key the backend doesn't throttle us; without it the backend allows 600 requests/min per IP,
-// so go gently (2 render workers × 1 request each) instead of provoking a 429 retry storm.
-const MAX_CONCURRENT = Math.max(1, Number(process.env.CF_FETCH_CONCURRENCY) || (secret ? 4 : 1))
+// scripts/cf/build.mjs lowers this for the page-rendering step of a build WITHOUT the internal key (the backend
+// then allows only 600 requests/min per IP). The manifest step keeps the default: it makes ~30 slow sitemap
+// requests, and running those one at a time lets a single hung request stall all of them.
+const MAX_CONCURRENT = Math.max(1, Number(process.env.CF_FETCH_CONCURRENCY) || 4)
 const RETRIES = Math.max(0, Number(process.env.CF_FETCH_RETRIES ?? 4))
 const ATTEMPT_TIMEOUT_MS = Math.max(1000, Number(process.env.CF_FETCH_TIMEOUT_MS) || 30_000)
 const RETRY_STATUS = new Set([408, 425, 429, 500, 502, 503, 504, 520, 521, 522, 523, 524])
@@ -85,6 +86,14 @@ function recordFailure(method, url, reason) {
 }
 
 const stats = { requests: 0, retries: 0, failed: 0 }
+let retryLogBudget = 40 // per process: enough to name a misbehaving endpoint, never enough to flood a log
+function noteRetry(method, url, attempt, reason, startedAt) {
+  if (retryLogBudget-- <= 0) return
+  const shown = url.length > 120 ? url.slice(0, 117) + '…' : url
+  console.warn(
+    `[cf-fetch] attempt ${attempt + 1}/${RETRIES + 1} failed after ${((Date.now() - startedAt) / 1000).toFixed(1)}s: ${method} ${shown} — ${reason}`,
+  )
+}
 process.on('exit', () => {
   if (stats.requests > 0 && process.env.CF_FETCH_VERBOSE === '1') {
     console.error(
@@ -125,6 +134,7 @@ async function backendFetch(url, input, init) {
   for (let attempt = 0; attempt <= RETRIES; attempt++) {
     let retryAfter
     await acquire()
+    const startedAt = Date.now()
     try {
       const res = await origFetch(url, {
         ...rest,
@@ -134,6 +144,7 @@ async function backendFetch(url, input, init) {
       })
       if (!RETRY_STATUS.has(res.status)) return res
       lastReason = `HTTP ${res.status}`
+      noteRetry(method, url, attempt, lastReason, startedAt)
       retryAfter = res.headers.get('retry-after')
       if (attempt === RETRIES) {
         // Out of retries: hand the (bad) response back so page code keeps its
@@ -149,10 +160,12 @@ async function backendFetch(url, input, init) {
       }
     } catch (err) {
       lastReason = (err && (err.cause?.code || err.name || err.message)) || 'network error'
+      noteRetry(method, url, attempt, String(lastReason), startedAt)
       if (attempt === RETRIES) {
         stats.failed++
         recordFailure(method, url, String(lastReason))
-        throw err
+        // Say WHICH request gave up ("The operation was aborted due to timeout" alone names nothing).
+        throw new Error(`${method} ${url} failed after ${RETRIES + 1} attempts: ${lastReason}`, { cause: err })
       }
     } finally {
       release()
