@@ -83,7 +83,7 @@ jobs:
           NEXT_PUBLIC_API_BASE_URL: https://backend.riseflake.com/api/v2/website
           NEXT_PUBLIC_BLOG_API_URL: https://backend.riseflake.com/api/v2
           NEXT_PUBLIC_APP_BASE_URL: https://app.riseflake.com
-          NEXT_PUBLIC_TRACK_404_URL: https://backend.riseflake.com/api/v1/track-404
+          NEXT_PUBLIC_TRACK_404_URL: https://backend.riseflake.com/api/v2/track-404
           # Cloudflare Turnstile SITE key for the contact form — public by design (it's meant to
           # ship in client HTML), so it's inlined here like the other NEXT_PUBLIC_* values rather
           # than kept as a secret. Same key frontend-riseflake uses (VITE_TURNSTILE_SITE_KEY);
