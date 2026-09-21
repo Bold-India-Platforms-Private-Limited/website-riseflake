@@ -31,7 +31,9 @@ const ROOT = path.resolve(__dirname, '..', '..')
 const FAILURE_LOG = path.join(ROOT, '.build', 'fetch-failures.log')
 
 const secret = process.env.WEBSITE_ISR_SECRET || ''
-const MAX_CONCURRENT = Math.max(1, Number(process.env.CF_FETCH_CONCURRENCY) || 4)
+// With the internal key the backend doesn't throttle us; without it the backend allows 600 requests/min per IP,
+// so go gently (2 render workers × 1 request each) instead of provoking a 429 retry storm.
+const MAX_CONCURRENT = Math.max(1, Number(process.env.CF_FETCH_CONCURRENCY) || (secret ? 4 : 1))
 const RETRIES = Math.max(0, Number(process.env.CF_FETCH_RETRIES ?? 4))
 const ATTEMPT_TIMEOUT_MS = Math.max(1000, Number(process.env.CF_FETCH_TIMEOUT_MS) || 30_000)
 const RETRY_STATUS = new Set([408, 425, 429, 500, 502, 503, 504, 520, 521, 522, 523, 524])

@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import CollegeDetailClient from './CollegeDetailClient'
 import { API_BASE_URL, WEBSITE_BASE_URL, hreflangAlternates, OG_FALLBACK_IMAGE } from '../../../lib/config'
-import { collegeSlugs } from '../../../lib/manifest'
+import { collegeSlugs, isPlaceholderSlug } from '../../../lib/manifest'
 
 // Static export: only the slugs in the build manifest exist (see src/lib/manifest.ts).
 export const dynamicParams = false
@@ -28,6 +28,7 @@ interface CollegeDetail {
 }
 
 async function fetchCollege(slug: string): Promise<CollegeDetail | null> {
+  if (isPlaceholderSlug(slug)) return null // colleges are parked → the only "page" is the empty-list placeholder; no backend call
   try {
     const res = await fetch(`${API_BASE_URL}/colleges/${slug}`, {
       next: { revalidate: 3600 },

@@ -68,10 +68,13 @@ export function getManifest(): Manifest {
  * Next refuses `output: 'export'` for a dynamic route whose generateStaticParams() is empty
  * ("is missing generateStaticParams()"). A perfectly normal build can have an empty list
  * (e.g. no hackathons right now), so an empty list yields ONE placeholder param instead.
- * That page renders as a not-found shell, which scripts/cf/postbuild.mjs then deletes — so
- * it never ships, and the route simply has no pages.
+ * That page renders as a not-found shell (or, under a loading.tsx, a skeleton), which
+ * scripts/cf/postbuild.mjs deletes on sight — so it never ships, and the route simply has no pages.
+ * (An INCREMENTAL build hits this constantly: when every page of a kind is reused there is nothing to render.)
  */
-const PLACEHOLDER = '__no-pages__'
+const PLACEHOLDER = '__no-pages__' // keep identical to PLACEHOLDER_SLUG in scripts/cf/lib.mjs
+/** True for the stand-in param above — a route's data fetch should skip the backend call for it. */
+export const isPlaceholderSlug = (slug: string): boolean => slug === PLACEHOLDER
 const slugs = (...lists: Entry[][]): string[] => {
   const incremental = getManifest().incremental
   const all = [...new Set(lists.flatMap((l) => l.filter((e) => !incremental || e.r).map((e) => e.s)))]

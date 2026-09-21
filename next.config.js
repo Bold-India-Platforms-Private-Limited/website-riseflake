@@ -50,8 +50,9 @@ const nextConfig = {
   // Thousands of pages are rendered against the backend API; bound the number of
   // parallel render workers so a build doesn't hammer it (each worker also caps its
   // own concurrent requests — see scripts/cf/preload.cjs).
+  // Without WEBSITE_ISR_SECRET the backend throttles the build (600 requests/min per IP), so use fewer workers.
   experimental: {
-    cpus: Math.max(1, Number(process.env.CF_BUILD_CPUS) || 4),
+    cpus: Math.max(1, Number(process.env.CF_BUILD_CPUS) || (process.env.WEBSITE_ISR_SECRET ? 4 : 2)),
   },
   // A page whose backend calls are being retried can legitimately take a while.
   staticPageGenerationTimeout: 180,

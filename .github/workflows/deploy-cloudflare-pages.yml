@@ -33,12 +33,12 @@ jobs:
   build-and-deploy:
     name: Build, verify, deploy
     runs-on: ubuntu-latest
-    # A COLD build (no matching incremental cache — the very first deploy, or after a code
-    # change/cache eviction) renders every page in the file budget via live backend calls and can
-    # genuinely take well over 45 minutes at full scale; every build AFTER that is incremental and
-    # should finish in a few minutes (see DEPLOYMENT_GUIDE.md § Incremental builds). This ceiling is
-    # a safety net against a truly stuck run, not a target — `concurrency.cancel-in-progress` above
-    # already prevents runs from piling up.
+    # A COLD build (no matching incremental cache — the first deploy, or after a code change) renders every
+    # page in the manifest (~2,400: active jobs/internships, hiring companies, landing pages) via live backend
+    # calls: minutes with WEBSITE_ISR_SECRET set, far longer if the backend throttles it. Every build AFTER
+    # that is incremental and should finish in a few minutes (see DEPLOYMENT_GUIDE.md § Incremental builds).
+    # This ceiling is a safety net against a truly stuck run, not a target — `concurrency.cancel-in-progress`
+    # above already prevents runs from piling up.
     timeout-minutes: 180
 
     steps:

@@ -14,17 +14,30 @@
  *
  * so the sitemaps can never advertise a URL that does not exist as a file.
  *
+ * WHAT IS PRE-RENDERED (everything else is rendered on demand in the browser by the 404 fallback,
+ * see src/lib/fallbackRoutes.ts — and is simply not a file):
+ *
+ *   jobs, internships   only ACTIVE ones (the backend's jobs/internships sitemaps already filter to those)
+ *   companies           only companies that currently have an active job or internship
+ *                       (backend: hiring-companies-sitemap.xml) — not the whole ~6k company registry
+ *   hubs                facet landing pages, skills, blog, hackathons, static pages
+ *   colleges, profiles  not pre-rendered (opt in with CF_COLLEGES_MAX / CF_EXTRA_PROFILES_MAX)
+ *
+ * Then the incremental planner (scripts/cf/incremental.mjs) decides which of those actually get RENDERED
+ * this build — new / changed / stale — and which are reused untouched from the previous deployment.
+ *
  * Tunables (all optional): CF_MAX_FILES, CF_OVERHEAD_FILES, CF_SAFETY_FILES,
- * CF_COLLEGES_MAX, CF_EXTRA_PROFILES_MAX, CF_LIMIT_PER_ROUTE (dev shortcut: truncate
- * every list to N entries for a fast local build).
+ * CF_COLLEGES_MAX, CF_EXTRA_PROFILES_MAX, CF_RENDER_BUDGET, CF_MIN_COVERAGE, CF_ALLOW_SHRINK,
+ * CF_COMPANIES_FALLBACK_MAX, CF_LIMIT_PER_ROUTE (dev shortcut: truncate every list to N entries for a
+ * fast local build).
  */
 import fs from 'node:fs'
 import {
-  API_BASE_URL, BLOG_API_URL, BUILD_DIR, MANIFEST_PATH, PLATFORM_FILE_LIMIT,
-  envInt, getJson, getText, installBuildFetch, locsOf, log, safeSlug, slugAfter, warn, xmlUnescape,
+  API_BASE_URL, BLOG_API_URL, BUILD_DIR, HAS_INTERNAL_KEY, MANIFEST_PATH, PAGE_KINDS, PLATFORM_FILE_LIMIT,
+  envInt, getJson, getText, installBuildFetch, listOf, locsOf, log, safeSlug, slugAfter, warn, xmlUnescape,
 } from './lib.mjs'
 import { REDIRECTED_SOURCES } from './redirects.mjs'
-import { decideIncrementalBuild } from './incremental.mjs'
+import { decideIncrementalBuild, describePlan } from './incremental.mjs'
 import { computeCodeState } from './routes.mjs'
 const { PARKED_VERTICALS } = await import(new URL('../../src/lib/parkedVerticals.ts', import.meta.url).href)
 
@@ -33,9 +46,23 @@ installBuildFetch()
 const MAX_FILES = Math.min(envInt('CF_MAX_FILES', 19_000), PLATFORM_FILE_LIMIT)
 const OVERHEAD = envInt('CF_OVERHEAD_FILES', 600)        // public/ + _next/static + 404 + misc (~350 measured)
 const SAFETY = envInt('CF_SAFETY_FILES', 1_000)          // headroom for growth between builds
-const COLLEGES_MAX = envInt('CF_COLLEGES_MAX', 3_000)
-const EXTRA_PROFILES_MAX = envInt('CF_EXTRA_PROFILES_MAX', 2_000)
+// Opt-in tiers: colleges and non-curated profiles are NOT worth a static file each (they are rendered on
+// demand in the browser); raise these only for an experiment.
+const COLLEGES_MAX = envInt('CF_COLLEGES_MAX', 0)
+const EXTRA_PROFILES_MAX = envInt('CF_EXTRA_PROFILES_MAX', 0)
 const DEV_LIMIT = envInt('CF_LIMIT_PER_ROUTE', 0)
+// Companies to pre-render if the backend predates hiring-companies-sitemap.xml (newest-updated first).
+const COMPANIES_FALLBACK_MAX = envInt('CF_COMPANIES_FALLBACK_MAX', 1_500)
+
+// The backend's anti-scrape guard lets one IP open 600 DISTINCT detail URLs (job / company / skill page…)
+// per rolling 5 minutes. A build that can't identify itself (no WEBSITE_ISR_SECRET) therefore can only
+// render ~500 such pages before it is throttled into retry storms and a timeout. Rather than try and fail,
+// such a build renders that many per run and the rest converge over the following builds (0 = unlimited).
+const UNAUTHENTICATED_RENDER_BUDGET = 450
+const RENDER_BUDGET = envInt('CF_RENDER_BUDGET', HAS_INTERNAL_KEY ? 0 : UNAUTHENTICATED_RENDER_BUDGET)
+// Refuse to publish a site that lost more than this share of the previous deployment's pages because of the
+// render budget (a code change forces a full re-render; a budget too small for it would silently shrink the site).
+const MIN_COVERAGE = Number(process.env.CF_MIN_COVERAGE ?? 0.7)
 const STATIC_ROUTE_ESTIMATE = 60                          // non-dynamic pages (about, legal, hubs, …)
 
 const dropped = []
@@ -75,6 +102,23 @@ async function fromBatchedSitemap(kind, prefix) {
 async function fromFlatSitemap(path, prefix, label, { skip = () => false } = {}) {
   const xml = await getText(`${API_BASE_URL}/${path}`)
   return uniqueBy(entriesFromUrlset(xml, prefix, label)).filter((e) => !skip(e.s))
+}
+
+/**
+ * Companies worth a static page = the ones hiring right now. The backend lists them in
+ * hiring-companies-sitemap.xml; if it predates that endpoint (404), fall back to the most recently updated
+ * companies from the full registry, capped — a build must not stop working because the backend and the
+ * website deploy in a different order.
+ */
+async function hiringCompanies() {
+  const xml = await getText(`${API_BASE_URL}/hiring-companies-sitemap.xml`, { allow404: true })
+  if (xml != null) return { entries: uniqueBy(entriesFromUrlset(xml, '/companies/', 'companies')), fallback: false }
+  warn(
+    `${API_BASE_URL}/hiring-companies-sitemap.xml returned 404 — the backend has not been deployed with it yet. ` +
+      `Falling back to the ${COMPANIES_FALLBACK_MAX} most recently updated companies (instead of only those hiring).`,
+  )
+  const all = await fromBatchedSitemap('companies', '/companies/')
+  return { entries: all.slice(0, COMPANIES_FALLBACK_MAX), fallback: true }
 }
 
 function uniqueBy(entries) {
@@ -139,19 +183,18 @@ async function main() {
         `or CF_ALLOW_LOCAL_API=1 for a throwaway local build.`,
     )
   }
-  // WEBSITE_ISR_SECRET (sent as the x-riseflake-internal-key header by scripts/cf/preload.cjs) is
-  // what tells the backend's websiteApiHardening middleware "this is our own build, not a scraper"
-  // — without it, a full manifest crawl (thousands of distinct job/company/college/profile URLs in
-  // minutes) looks EXACTLY like the bulk-scraping pattern that middleware exists to block, and every
-  // request gets 429'd into retry storms instead of a clean 404/500. That doesn't fail the build
-  // loudly — it just makes it dramatically, silently slower until it eventually times out. If a
-  // build ever takes far longer than usual or hits the job's time limit, check this first.
-  if (!process.env.WEBSITE_ISR_SECRET && !/\/\/(localhost|127\.0\.0\.1)/.test(API_BASE_URL)) {
+  // WEBSITE_ISR_SECRET (sent as the x-riseflake-internal-key header by scripts/cf/preload.cjs) is what tells
+  // the backend's websiteApiHardening middleware "this is our own build, not a scraper". Without it the
+  // backend's anti-scrape guard allows only 600 distinct detail URLs per 5 minutes per IP (about 100 pages a
+  // minute), so a full build is throttled into retry storms and times out. This was the cause of the
+  // Cloudflare Pages build timeouts. Without the secret we cap how many pages a build renders (RENDER_BUDGET
+  // below) instead of pretending it will work.
+  if (!HAS_INTERNAL_KEY) {
     warn(
-      'WEBSITE_ISR_SECRET is not set. This build has no bypass for the backend\'s rate limiter / ' +
-        'anti-scrape guard and WILL be throttled fetching thousands of pages — expect the build to be ' +
-        'extremely slow or to time out. Set the GitHub Actions secret to the same value the backend\'s ' +
-        'own WEBSITE_ISR_SECRET env var uses (see DEPLOYMENT_GUIDE.md § One-time setup).',
+      'WEBSITE_ISR_SECRET is not set: the backend will throttle this build (600 detail URLs per 5 min per IP). ' +
+        `Rendering at most ${RENDER_BUDGET || 'unlimited'} new/changed page(s) this run; the rest are picked up by the next builds. ` +
+        'Set WEBSITE_ISR_SECRET (same value as the backend\'s own env var) as a Cloudflare Pages build variable ' +
+        '(or GitHub Actions secret) to lift the limit — see DEPLOYMENT_GUIDE.md § One-time setup.',
     )
   }
   fs.mkdirSync(BUILD_DIR, { recursive: true })
@@ -162,13 +205,17 @@ async function main() {
   // skipped outright, so every downstream calculation (budget math, manifest shape,
   // sitemap generation) sees the same "zero entries" shape it already handles for a
   // vertical with no data — no separate code path needed anywhere else in this file.
-  const [jobs, internships, companies, people] = await Promise.all([
+  const [jobs, internships, hiring, people] = await Promise.all([
     fromBatchedSitemap('jobs', '/jobs/'),
     fromBatchedSitemap('internships', '/internships/'),
-    fromBatchedSitemap('companies', '/companies/'),
+    hiringCompanies(),
     PARKED_VERTICALS.people ? Promise.resolve([]) : fromBatchedSitemap('people', '/in/'),
   ])
-  log(`jobs=${jobs.length} internships=${internships.length} companies=${companies.length} people=${people.length}`)
+  const companies = hiring.entries
+  log(
+    `active jobs=${jobs.length} internships=${internships.length} · companies with an active listing=${companies.length}` +
+      `${hiring.fallback ? ' (FALLBACK: capped recent companies)' : ''} · people=${people.length}`,
+  )
 
   // ── hubs & facet landings ───────────────────────────────────────────────
   const facetOf = (vertical) => (s) => REDIRECTED_SOURCES.has(`/${vertical}/browse/${s}`) || s === ''
@@ -218,7 +265,7 @@ async function main() {
   // (skipped for a parked vertical — an empty list there is the intended state, not a
   // sign the backend answered badly)
   requireAtLeast('jobs', jobs, envInt('CF_MIN_JOBS', 1))
-  requireAtLeast('companies', companies, envInt('CF_MIN_COMPANIES', 100))
+  requireAtLeast('companies', companies, envInt('CF_MIN_COMPANIES', 10))
   if (!PARKED_VERTICALS.people) requireAtLeast('people', people, envInt('CF_MIN_PEOPLE', 10))
   requireAtLeast('skills', skills, envInt('CF_MIN_SKILLS', 10))
   requireAtLeast('jobs facets', jobFacets, envInt('CF_MIN_FACETS', 5))
@@ -291,8 +338,26 @@ async function main() {
   }
 
   // ── incremental decision: which of these pages actually need to be (re)rendered ──────────
+  // (new / changed / stale → render; unchanged → reuse from the previous deployment; over budget → deferred)
   const codeState = computeCodeState()
-  const incStats = decideIncrementalBuild(manifest, codeState)
+  const incStats = decideIncrementalBuild(manifest, codeState, { budget: RENDER_BUDGET })
+  manifest.plan = incStats
+
+  // Shrink guard. A code change (or a monthly title rollover) invalidates every previous page, and a render
+  // budget smaller than the site can't rebuild all of it — publishing that would replace a full site with a
+  // partial one. Better to fail the build and keep the last good deployment live.
+  const kept = PAGE_KINDS.reduce((n, k) => n + listOf(manifest, k).length, 0)
+  if (incStats.dropped > 0 && incStats.prevPages > 0 && process.env.CF_ALLOW_SHRINK !== '1') {
+    const coverage = kept / incStats.prevPages
+    if (coverage < MIN_COVERAGE) {
+      throw new Error(
+        `This build could only afford ${kept} of the ${incStats.prevPages} pages the live site has (${(coverage * 100).toFixed(0)}%, ` +
+          `minimum ${(MIN_COVERAGE * 100).toFixed(0)}%) — the render budget is ${RENDER_BUDGET} and the code changed since the last ` +
+          `deployment, so every page must be re-rendered. Not deploying a smaller site. Set WEBSITE_ISR_SECRET so the backend doesn't ` +
+          `throttle the build (then there is no budget), or raise CF_RENDER_BUDGET, or set CF_ALLOW_SHRINK=1 to accept the smaller site.`,
+      )
+    }
+  }
 
   fs.writeFileSync(MANIFEST_PATH, JSON.stringify(manifest))
   log(
@@ -304,11 +369,17 @@ async function main() {
   if (dropped.length) warn(`${dropped.length} slug(s) dropped as unsafe for static paths (see manifest.dropped)`)
   log(
     incStats.canReuse
-      ? `incremental build (buildId ${codeState.buildId} unchanged): rendering ${incStats.rendered} page(s) ` +
-        `(new ${incStats.new}, changed ${incStats.changed}, stale ${incStats.stale}), reusing ${incStats.reused}`
+      ? `incremental build (buildId ${codeState.buildId} unchanged since the last deployment)`
       : `full build (buildId ${codeState.buildId}${codeState.unsafe ? ', unresolvable dynamic import — hashed whole tree' : ''}): ` +
-        `no matching previous deployment to reuse, rendering all ${incStats.rendered} page(s)`,
+        `no matching previous deployment to reuse`,
   )
+  log(
+    `plan: render ${incStats.rendered} (new ${incStats.new}, changed ${incStats.changed}, stale ${incStats.stale}), ` +
+      `reuse ${incStats.reused - incStats.deferred}` +
+      (incStats.deferred ? `, keep old copy of ${incStats.deferred} (over budget)` : '') +
+      (incStats.dropped ? `, ${incStats.dropped} not built yet (over budget of ${RENDER_BUDGET} — next build)` : ''),
+  )
+  console.log(describePlan(incStats))
 }
 
 main().catch((err) => {

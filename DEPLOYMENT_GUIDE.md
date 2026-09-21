@@ -22,13 +22,20 @@ GitHub Actions (every push to main · every 3 h · on demand)
 ```
 
 **Why a manifest?** Cloudflare Pages (free) accepts at most **20,000 files per deployment**, and a static
-export writes two files per page (`.html` + a `.txt` RSC payload). The backend has ~1,000 jobs, ~6,200
-companies, 68,000 colleges, 27,000 profiles … so not everything can be a file. `build-manifest.mjs` asks the
-backend what exists, applies a budget (priority order: SEO landing pages → jobs & internships → curated
-profiles → companies → colleges linked from pre-rendered pages → extra profiles) and writes the list. **Every
-dynamic route's `generateStaticParams()` and every sitemap read that one list**, so a URL is either a real
-file *and* in the sitemap, or neither. Leaf pages (job / internship / company / college / profile) drop their
-`.txt` payload after the build (links to them are plain navigations), so each costs one file.
+export writes two files per page (`.html` + a `.txt` RSC payload). More importantly, every pre-rendered page is
+a backend call at build time, so *what* gets pre-rendered decides how long a build takes. `build-manifest.mjs`
+asks the backend what exists and writes the list:
+
+| Pre-rendered (a static file) | Not pre-rendered (rendered on demand in the browser) |
+|---|---|
+| **active** jobs and internships (~1,000 + ~55) | expired / closed jobs |
+| companies that have **an active job or internship** (~750) — backend `hiring-companies-sitemap.xml` | the other ~5,500 companies of the registry |
+| SEO landing pages: job / internship / company facets, skills, blog, hackathons, static pages (~700) | colleges (68,000), profile pages (`CF_COLLEGES_MAX` / `CF_EXTRA_PROFILES_MAX` opt in) |
+
+**Every dynamic route's `generateStaticParams()` and every sitemap read that one list**, so a URL is either a
+real file *and* in the sitemap, or neither. Leaf pages (job / internship / company) drop their `.txt` payload
+after the build (links to them are plain navigations), so each costs one file. The whole site is ~2,400 pages
+≈ 4,000 files — a fifth of the limit.
 
 **What about pages that are not pre-rendered?** Cloudflare answers with the real HTTP `404` (correct for
 search engines). The 404 page (`src/app/components/NotFoundFallback.tsx`) then looks at the URL and, if it is a
@@ -39,32 +46,91 @@ the API confirms the record doesn't exist.
 
 ## Incremental builds
 
-With thousands of pages, re-rendering every one of them on every 3-hourly schedule would make each build slow
-and hammer the backend for no reason — almost nothing changes between two runs 3 hours apart. So a build only
-renders pages that actually need it, and reuses every other page byte-for-byte from the previous deployment:
+Re-rendering every page on every build would be slow and would hammer the backend for no reason — almost
+nothing changes between two builds a few hours apart. So each build sorts every page in the manifest into one
+of these, and **only renders `new`, `changed` and `stale` ones**:
+
+| State | Meaning | What the build does |
+|---|---|---|
+| **reuse** | same record `lastmod`, younger than its kind's max age | copies last deployment's file byte-for-byte — zero backend calls |
+| **new** | no previous copy | renders it |
+| **changed** | the record's `lastmod` moved (job edited; a company's listings changed) | renders it |
+| **stale** | unchanged, but older than its kind's max age (`scripts/cf/lib.mjs` `PAGE_KINDS`: 12–72 h) — keeps "26 days left" style text and related lists honest | renders it (spread out per page so a kind doesn't expire all at once) |
+| **deferred** | wants rendering but the build's render budget is spent (see *Render budget*) | keeps its old copy, or — if it has none — is left for the next build |
+| *(gone)* | no longer in the manifest (job expired, company stopped hiring) | not copied → removed from the site and the sitemaps |
 
 ```
-scripts/cf/routes.mjs        hashes the CODE (every route's import graph + shared config/env) → `buildId`
-scripts/cf/build-manifest.mjs   asks the backend what pages exist NOW (fresh, every build) and decides,
-                                per page, render vs reuse (scripts/cf/incremental.mjs):
-                                  • buildId changed since the last deploy → render EVERYTHING (safe full
-                                    rebuild; code changes are rare next to data changes, so this trade
-                                    favors simplicity over reusing two different asset trees)
-                                  • otherwise: new page, or an `entity` page whose data `lastmod` changed,
-                                    or a page older than its kind's max-age → render; everything else reused
-next build                     renders only the flagged pages (dynamicParams=false + src/lib/manifest.ts)
-scripts/cf/postbuild.mjs       copies every reused page's file(s) back in from .cache/site, THEN runs the
-                                same audit/sitemap/budget checks as always, THEN — only if they pass —
-                                saves the new .cache/ (state.json + the full ./out) as "last known good"
-.github/workflows/…yml         restores .cache/ before the build and saves it again ONLY after the build
-                                AND the smoke test AND the production deploy all succeeded, via
-                                actions/cache (free, no self-hosted storage, no Worker)
+scripts/cf/routes.mjs          hashes the CODE (every route's import graph + shared config/env) → `buildId`
+scripts/cf/baseline.mjs        restores the previous deployment (state + pages) into .cache/ — see below
+scripts/cf/build-manifest.mjs  asks the backend what pages exist NOW, then (incremental.mjs) plans each page as above
+                                • buildId changed since the last deploy → every page is `new` (pages from two
+                                  code versions can't be mixed: their JS/CSS asset names differ)
+next build                     renders only the pages flagged in the manifest (dynamicParams=false + src/lib/manifest.ts)
+scripts/cf/postbuild.mjs       copies the reused pages back in, THEN audits/sitemaps/budget-checks the WHOLE site,
+                                THEN — only if every gate passes — publishes the new baseline
 ```
 
-A cold cache (first deploy after this shipped, or a GitHub Actions cache eviction) just means that one build
-renders everything, same as before this existed — nothing breaks, it's only slower that one time. Nothing about
-this changes *what* gets published, only how much work a given build has to redo to get there; `npm run smoke`
-and `npm run seo-diff` verify the output either way. See `scripts/cf/incremental.mjs` for the exact rules.
+**Where "the previous deployment" comes from.** A Cloudflare Pages build starts on a blank disk, so nothing can
+be cached between builds. Instead **every deployment publishes its own build state inside itself**:
+
+```
+/_rf/state.json               per-page {lastmod, rendered-at} + the code fingerprint + checksums of the bundles
+/_rf/pages-<kind>-<n>.tgz     the site's page files, packed (≈ 10 files — so they barely touch the file limit)
+```
+
+The next build downloads those from the live site (`https://riseflake.com`, or `CF_BASELINE_URL`; on Cloudflare
+Pages it also tries the project's `*.pages.dev` address automatically), verifies the checksums and unpacks them
+into `.cache/site`. Bundles rather than per-page downloads because a static host may rewrite the HTML it serves;
+a `.tgz` comes back byte-for-byte. `/_rf/*` is `noindex` and not in any sitemap. A GitHub Actions runner that
+already restores `.cache/` (the workflow does) skips the download.
+
+Everything fails safe: no baseline (first deploy), different code, unreachable site, bad checksum → that build
+is simply a full one. It never makes a build *fail*, and it never changes *what* is published, only how much
+work it takes. `npm run smoke` and `npm run seo-diff` verify the output either way.
+
+### Render budget (why a build can't time out any more)
+
+The backend's anti-scrape guard lets one IP open only **600 distinct detail URLs per 5 minutes** — about 100
+pages a minute — unless the request carries the `WEBSITE_ISR_SECRET` header. A Cloudflare Pages build without
+that variable hit exactly this wall: thousands of `429`s, retry storms, and the build timing out mid-way. Now:
+
+- **`WEBSITE_ISR_SECRET` set** (the fix): no throttling, no budget — every new/changed/stale page renders in one build.
+- **not set**: the build renders at most `CF_RENDER_BUDGET` (default 450) job / internship / company / skill pages
+  per run — new pages first (internships → jobs → hiring companies), then changed, then stale. The remainder
+  simply wait for the next build (each keeps its old copy if it has one; a page that has never been built is
+  not in the sitemap yet, but its URL still opens via the browser fallback). The site converges over a few builds.
+- **Shrink guard**: a code change forces a full re-render. If the budget can't cover at least 70 % of the
+  pages the live site has (`CF_MIN_COVERAGE`), the build **fails instead of replacing a full site with a partial
+  one** — the previous deployment stays live. Set the secret (or raise the budget) and re-run.
+
+## Building on Cloudflare Pages itself (Git integration)
+
+If the Pages project is connected to the GitHub repo (Workers & Pages → Create → Connect to Git), Cloudflare runs
+the build. Settings:
+
+| Setting | Value |
+|---|---|
+| Build command | `npm run build` |
+| Build output directory | `out` |
+| Production branch | `main` |
+
+**Environment variables → Production** (Settings → Variables and Secrets; encrypt the secret one):
+
+| Variable | Value |
+|---|---|
+| `NODE_VERSION` | `24` (the build scripts need ≥ 22.18) |
+| `NEXT_PUBLIC_API_BASE_URL` | `https://backend.riseflake.com/api/v2/website` |
+| `NEXT_PUBLIC_BLOG_API_URL` | `https://backend.riseflake.com/api/v2` |
+| `NEXT_PUBLIC_APP_BASE_URL` | `https://app.riseflake.com` |
+| `NEXT_PUBLIC_TRACK_404_URL` | `https://backend.riseflake.com/api/v2/track-404` |
+| `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | `0x4AAAAAADR3vt6rRrmI-T-k` (public key) |
+| **`WEBSITE_ISR_SECRET`** | the backend's own `WEBSITE_ISR_SECRET` value — **this is what makes builds fast and reliable** |
+| `SKIP_RESUME_BUILD` | `1` — reuses the committed `public/resume` instead of rebuilding that sub-app (saves ~2 min) |
+
+A Git-connected project rebuilds on `git push` only. To also pick up new jobs on a schedule, add a **Deploy
+hook** (Settings → Builds) and put its URL in the GitHub secret `CF_PAGES_DEPLOY_HOOK` —
+`.github/workflows/trigger-cloudflare-build.yml` then triggers a build every 3 hours. If you build this way, disable
+`deploy-cloudflare-pages.yml` (it deploys to a *Direct Upload* project and can't target a Git-connected one).
 
 ## One-time setup
 
@@ -118,7 +184,10 @@ and `npm run seo-diff` verify the output either way. See `scripts/cf/incremental
   for visitors through the browser fallback; it just isn't in the sitemap yet.
 - **Build time**: a scheduled run (no code changes) only re-renders new/changed/stale-by-age pages — see
   *Incremental builds* above — so it stays fast regardless of how large the site grows. A build after a code
-  push re-renders everything, same as any static-export deploy.
+  push re-renders everything (~2,400 pages; minutes with `WEBSITE_ISR_SECRET`, see *Render budget* without).
+- **Deploying the backend before the website**: the website build uses the backend's
+  `GET /api/v2/website/hiring-companies-sitemap.xml`. Until that is deployed the build falls back to the 1,500
+  most recently updated companies (with a warning in the log) — nothing breaks, it just isn't as precise.
 - **Cost**: Cloudflare Pages $0. GitHub Actions: private repos get 2,000 free minutes/month; see the
   *build time* note in the workflow before tightening the schedule.
 - **Tuning the page budget** (environment variables, all optional; defaults in `scripts/cf/build-manifest.mjs`):
@@ -126,17 +195,21 @@ and `npm run seo-diff` verify the output either way. See `scripts/cf/incremental
   | Variable | Default | Meaning |
   |---|---|---|
   | `CF_MAX_FILES` | 19000 | hard budget for the deployment (platform limit 20,000) |
-  | `CF_COLLEGES_MAX` | 3000 | most college pages to pre-render (only colleges linked from pre-rendered pages) |
-  | `CF_EXTRA_PROFILES_MAX` | 2000 | most non-curated profiles to pre-render |
+  | `CF_COLLEGES_MAX` | 0 | most college pages to pre-render (opt-in; colleges are parked anyway) |
+  | `CF_EXTRA_PROFILES_MAX` | 0 | most non-curated profiles to pre-render (opt-in) |
+  | `CF_RENDER_BUDGET` | 450 without `WEBSITE_ISR_SECRET`, unlimited with it | most job/internship/company/skill pages rendered per build (see *Render budget*) |
+  | `CF_MIN_COVERAGE` / `CF_ALLOW_SHRINK` | 0.7 / – | shrink guard: fail if a budget-limited build would keep < 70 % of the live site's pages (`CF_ALLOW_SHRINK=1` accepts it) |
+  | `CF_COMPANIES_FALLBACK_MAX` | 1500 | companies to pre-render if the backend has no `hiring-companies-sitemap.xml` yet (newest first) |
+  | `CF_BASELINE_URL` / `CF_BASELINE` | riseflake.com | where to fetch the previous deployment from / `off` = never reuse |
   | `CF_MAX_BROKEN_RATIO` / `CF_MAX_BROKEN_MIN` | 0.02 / 30 | how many soft-404 pages the audit tolerates |
   | `CF_MAX_FETCH_FAILURES` | 25 | backend requests allowed to fail after all retries |
-  | `CF_FETCH_CONCURRENCY` / `CF_BUILD_CPUS` | 4 / 4 | how hard the build hits the backend |
+  | `CF_FETCH_CONCURRENCY` / `CF_BUILD_CPUS` | 4 / 4 with `WEBSITE_ISR_SECRET`, 1 / 2 without | how hard the build hits the backend (gentler when the backend will throttle it) |
   | `CF_LIMIT_PER_ROUTE` | – | **local only**: truncate every list to N for a fast test build |
   | `CF_FORCE_FULL_BUILD` | – | ignore the incremental cache and re-render every page (also a checkbox on *Run workflow*) |
 
 - **If the site outgrows 20,000 files** the build fails with a clear message rather than deploying a partial
-  site. Options: lower `CF_COLLEGES_MAX` / `CF_EXTRA_PROFILES_MAX`, or move the Pages project to a paid plan
-  (100,000 files; raise `CF_MAX_FILES`).
+  site. At ~4,000 files today that is far away; the levers are the facet lists in the backend, or a paid Pages
+  plan (100,000 files; raise `CF_MAX_FILES`).
 - **Parked verticals**: `src/lib/parkedVerticals.ts` currently has `colleges` and `people` (the `/in/*` public
   profile directory) both set to `true`. While parked, neither is fetched during the build, pre-rendered, or
   present in any sitemap; their nav links are hidden; and `/colleges`, `/colleges/browse`, `/in/people` redirect
@@ -193,7 +266,12 @@ The post-build step prints every failed gate. Common ones:
 | Message | Meaning / fix |
 |---|---|
 | `N pages rendered as not-found/degraded` | the backend was unhealthy during the build — re-run; nothing was deployed |
-| `N backend requests failed after retries` | same, or the rate limiter blocked the build — check `WEBSITE_ISR_SECRET` is set |
+| `N backend requests failed after retries` | same, or the rate limiter blocked the build — check `WEBSITE_ISR_SECRET` is set (and equals the backend's) |
+| `WEBSITE_ISR_SECRET is not set: the backend will throttle this build` | add it as a build variable (see *Building on Cloudflare Pages itself*). Until then each build renders only `CF_RENDER_BUDGET` pages |
+| `This build could only afford N of the M pages the live site has` | the shrink guard: code changed, so every page must be re-rendered, and the render budget can't cover it. Set `WEBSITE_ISR_SECRET`, or raise `CF_RENDER_BUDGET` |
+| `baseline: … no build state` / `full build … no matching previous deployment` | first deployment, or the code changed since the last one — a full render is expected. If it repeats on every build, the live site isn't serving `/_rf/state.json` (check `CF_BASELINE_URL`) |
+| `hiring-companies-sitemap.xml returned 404` | the backend hasn't been deployed with that endpoint yet — the build falls back to the newest 1,500 companies |
+| Build hits the platform's build-time limit | check the log's `plan:` line — a cold build with `WEBSITE_ISR_SECRET` should be minutes; without it, budget-limited by design |
 | `N page(s) have no server-rendered <h1>` | something pushed a page into client-side rendering (usually `useSearchParams()` outside `<Suspense>`) |
 | `… files exceeds the budget` | see *If the site outgrows 20,000 files* |
 | `Refusing to build … against a local backend` | `NEXT_PUBLIC_API_BASE_URL` points at localhost |

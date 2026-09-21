@@ -3,9 +3,14 @@
  * `npm run build` — the full static-site build for Cloudflare Pages.
  *
  *   1. resume sub-app  → public/resume        (scripts/build-resume.sh, fault tolerant)
- *   2. build manifest  → .build/manifest.json (which pages exist — scripts/cf/build-manifest.mjs)
- *   3. next build      → ./out                (with the hardened build-time fetch preloaded)
- *   4. post-build      → audit, trim, sitemaps, _redirects, _headers, file budget
+ *   2. baseline        → .cache/              (the previous deployment's pages, so unchanged ones are skipped —
+ *                                              scripts/cf/baseline.mjs; a no-op when there is none)
+ *   3. build manifest  → .build/manifest.json (which pages exist, and which of them to render this build —
+ *                                              scripts/cf/build-manifest.mjs)
+ *   4. next build      → ./out                (renders ONLY the pages flagged in the manifest, with the
+ *                                              hardened build-time fetch preloaded)
+ *   5. post-build      → reuse carried-forward pages, audit, trim, sitemaps, _redirects, _headers, file budget,
+ *                        publish the baseline for the next build
  *
  * Set SKIP_RESUME_BUILD=1 to reuse the committed public/resume instead of rebuilding it.
  */
@@ -14,6 +19,7 @@ import path from 'node:path'
 import { spawnSync } from 'node:child_process'
 import { BUILD_DIR, FAILURE_LOG, OUT_DIR, ROOT, log } from './lib.mjs'
 import { computeCodeState } from './routes.mjs'
+import { restoreBaseline } from './baseline.mjs'
 
 // Computed once and reused everywhere it's needed (next.config.js's generateBuildId, and
 // build-manifest.mjs / postbuild.mjs independently recompute the same deterministic value from
@@ -37,6 +43,9 @@ fs.rmSync(FAILURE_LOG, { force: true })
 
 if (process.env.SKIP_RESUME_BUILD === '1') log('── resume sub-app: skipped (SKIP_RESUME_BUILD=1, using committed public/resume)')
 else run('resume sub-app', 'bash', ['scripts/build-resume.sh'])
+
+log('── baseline (previous deployment)')
+await restoreBaseline(codeState)
 
 run('build manifest', process.execPath, ['scripts/cf/build-manifest.mjs'])
 

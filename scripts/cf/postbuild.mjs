@@ -14,7 +14,9 @@
  *                  cost against the 20,000-file limit.
  *   3. SITEMAPS  — written from the manifest, filtered to pages that actually survived (1–2).
  *   4. EDGE FILES— `_redirects` (canonical facet redirects) and `_headers` (asset caching).
- *   5. BUDGET    — fails if the deployment exceeds the file budget; verifies every sitemap URL
+ *   5. BASELINE  — packs the finished pages + build state into /_rf so the NEXT build (even on a blank
+ *                  disk, as on Cloudflare Pages) can skip every page that hasn't changed (baseline.mjs).
+ *   6. BUDGET    — fails if the deployment exceeds the file budget; verifies every sitemap URL
  *                  resolves to a real file.
  *
  * Tunables: CF_MAX_FILES, CF_MAX_BROKEN_RATIO, CF_MAX_BROKEN_MIN, CF_MAX_FETCH_FAILURES,
@@ -23,11 +25,12 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import {
-  FAILURE_LOG, OUT_DIR, PLATFORM_FILE_LIMIT, ROOT, envInt, log, readManifest, walkFiles, warn,
+  BASELINE_PUBLIC_DIR, FAILURE_LOG, OUT_DIR, PLACEHOLDER_SLUG, PLATFORM_FILE_LIMIT, ROOT, envInt, log, readManifest, walkFiles, warn,
 } from './lib.mjs'
 import { FACET_REDIRECTS } from './redirects.mjs'
 import { STATIC_PAGE_PATHS, generateSitemaps } from './sitemaps.mjs'
-import { copyForwardReusedPages, finalizeIncrementalState } from './incremental.mjs'
+import { buildState, copyForwardReusedPages, saveState } from './incremental.mjs'
+import { publishBaseline } from './baseline.mjs'
 import { computeCodeState } from './routes.mjs'
 
 const MAX_FILES = Math.min(envInt('CF_MAX_FILES', 19_000), PLATFORM_FILE_LIMIT)
@@ -51,6 +54,19 @@ const has = (p) => fs.existsSync(path.join(OUT_DIR, p))
 // Put the rest of the site back before auditing/sitemapping/budgeting the export as a whole —
 // everything below this line already treats "every manifest page has a file" as the baseline.
 copyForwardReusedPages(manifest)
+
+// ── 0. PLACEHOLDERS ─────────────────────────────────────────────────────────
+// A route whose list of pages-to-render is empty this build (all reused, or none exist) still gets ONE stand-in
+// page from src/lib/manifest.ts — Next won't export a dynamic route without params. It is never a real page:
+// remove it before the audit, so it is neither mistaken for a broken page nor for a code regression (under a
+// loading.tsx it is a heading-less skeleton, which the h1 gate below would otherwise reject).
+let placeholders = 0
+for (const f of walkFiles(OUT_DIR)) {
+  if (!f.includes(`${path.sep}${PLACEHOLDER_SLUG}.`) || rel(f).startsWith('_next/') || rel(f).startsWith('resume/')) continue
+  fs.rmSync(f, { force: true })
+  placeholders++
+}
+log(`placeholders: removed ${placeholders} empty-route stand-in file(s)`)
 
 // ── 1. AUDIT ────────────────────────────────────────────────────────────────
 const LEAVES = [
@@ -222,6 +238,11 @@ fs.writeFileSync(
 /_next/static/*
   Cache-Control: public, max-age=31536000, immutable
 
+# Build state + page bundles for the next build (scripts/cf/baseline.mjs) — never for search engines or caches.
+/${BASELINE_PUBLIC_DIR}/*
+  X-Robots-Tag: noindex
+  Cache-Control: public, max-age=0, must-revalidate
+
 /*
   X-Content-Type-Options: nosniff
   X-Frame-Options: SAMEORIGIN
@@ -229,7 +250,14 @@ fs.writeFileSync(
 `,
 )
 
-// ── 5. BUDGET + report ──────────────────────────────────────────────────────
+// ── 5. BASELINE for the next build ──────────────────────────────────────────
+// Built from `final` (what actually survived the audit) and written into ./out BEFORE the file count below,
+// so the bundles are counted against the budget like everything else.
+const codeState = computeCodeState()
+const state = buildState(final, codeState)
+publishBaseline(final, state)
+
+// ── 6. BUDGET + report ──────────────────────────────────────────────────────
 fs.writeFileSync(
   path.join(OUT_DIR, 'build-info.json'),
   JSON.stringify({ builtAt: new Date().toISOString(), manifestAt: manifest.generatedAt, pages: htmlFiles.length - removed.length }) + '\n',
@@ -243,7 +271,7 @@ log(`FILES: ${all.length} / budget ${MAX_FILES} / platform limit ${PLATFORM_FILE
 if (all.length > MAX_FILES) {
   fail(
     `${all.length} files exceeds the budget of ${MAX_FILES} (Cloudflare Pages free plan hard limit: ${PLATFORM_FILE_LIMIT}). ` +
-      `Lower CF_COLLEGES_MAX / CF_EXTRA_PROFILES_MAX in scripts/cf/build-manifest.mjs, or upgrade the Pages plan.`,
+      `Trim the manifest (see scripts/cf/build-manifest.mjs — colleges / extra profiles are opt-in, so check CF_COLLEGES_MAX / CF_EXTRA_PROFILES_MAX), or upgrade the Pages plan.`,
   )
 }
 if (big.length) fail(`files over Cloudflare's 25 MiB limit: ${big.map(rel).join(', ')}`)
@@ -253,7 +281,7 @@ if (failures.length) {
   for (const f of failures) console.error(`  ✗ ${f}`)
   if (ALLOW_DEGRADED) {
     warn('CF_ALLOW_DEGRADED=1 — continuing despite failures (do NOT deploy this output).')
-    finalizeIncrementalState(final, computeCodeState())
+    saveState(state)
   } else {
     process.exit(1)
   }
@@ -262,5 +290,5 @@ if (failures.length) {
   // Record what's actually in ./out (post-audit) as "last known good" — the deploy workflow
   // only persists .cache/ (via actions/cache) after this build has ALSO been deployed and
   // smoke-tested, so a bad build or a failed deploy never poisons the next run's cache.
-  finalizeIncrementalState(final, computeCodeState())
+  saveState(state)
 }
