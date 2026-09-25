@@ -2,13 +2,15 @@
 
 import { useEffect, useState } from 'react';
 import { API_BASE_URL } from '../../lib/config';
-import ReportButton from './ReportButton';
+import ReportButton, { extractId } from './ReportButton';
 
 export default function JobReportWrapper({ jobSlug, isInternship = false }: { jobSlug: string; isInternship?: boolean }) {
   const [alreadyReported, setAlreadyReported] = useState(false);
 
   useEffect(() => {
     const checkReport = async () => {
+      const id = extractId(jobSlug);
+      if (id === null) return;
       const endpoint = isInternship ? `${API_BASE_URL}/report-internship` : `${API_BASE_URL}/report-job`;
       const idKey = isInternship ? 'internship_id' : 'job_id';
       try {
@@ -16,7 +18,7 @@ export default function JobReportWrapper({ jobSlug, isInternship = false }: { jo
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            [idKey]: Number(jobSlug.split('-').pop() ?? 0) - 1,
+            [idKey]: id,
             reason: '__check__'
           }),
         });

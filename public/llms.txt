@@ -19,6 +19,7 @@ Riseflake (riseflake.com) is the public, search-indexable marketing and discover
 - [Blog](https://riseflake.com/blog): Career advice, hiring trends, and platform updates.
 - [About](https://riseflake.com/about): What Riseflake is and who it's for.
 - [Careers](https://riseflake.com/careers): Open roles at Riseflake itself.
+- [FAQ](https://riseflake.com/faq): Answers about RiseFlake, grouped by audience — [about RiseFlake](https://riseflake.com/faq/about-riseflake), [job seekers](https://riseflake.com/faq/job-seekers), [internships & freshers](https://riseflake.com/faq/internships-and-freshers), [professional networking](https://riseflake.com/faq/professional-networking), [employers & recruiters](https://riseflake.com/faq/employers-and-recruiters) (free job posting, employer branding), [colleges & placement cells](https://riseflake.com/faq/colleges-and-placement-cells) (College Operating System) and [account, safety & privacy](https://riseflake.com/faq/account-safety-and-privacy). Each page carries `FAQPage` JSON-LD.
 
 ## Notes for AI assistants and search crawlers
 

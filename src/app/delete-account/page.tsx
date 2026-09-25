@@ -116,7 +116,7 @@ export default function DeleteAccount() {
                         <h1 className="text-2xl font-bold text-slate-900">Request Submitted</h1>
                         <p className="text-slate-600">
                             Your account deletion request has been successfully received.
-                            We may contact you at the email address or mobile number you gave to verify your identity. Once verified, your account is locked and your personal data is erased or irreversibly anonymised within <strong>90 days</strong>, except records we must keep by law (see our Privacy Policy, Section 10).
+                            We may contact you at the email address or mobile number you gave to verify your identity. Once verified, your account is locked and your personal data is erased or irreversibly anonymised within <strong>30 days</strong>, except records we must keep by law (see our Privacy Policy, Section 10).
                         </p>
                         <button
                             onClick={() => router.push("/")}
@@ -174,7 +174,7 @@ export default function DeleteAccount() {
                                 <div className="space-y-2">
                                     <h2 className="font-bold text-red-900">Important Instruction</h2>
                                     <p className="text-red-800 text-sm leading-relaxed">
-                                        After we verify your identity, your account is locked and your profile, resumes, applications and networking history are erased or anonymised within 90 days. Deletion cannot be undone once erasure has run.
+                                        After we verify your identity, your account is locked and your profile, resumes, applications and networking history are erased or anonymised within 30 days. Deletion cannot be undone once erasure has run.
                                     </p>
                                 </div>
                             </div>
@@ -285,7 +285,7 @@ export default function DeleteAccount() {
                                             )}
                                         </button>
                                         <p className="mt-4 text-xs text-slate-500 text-center sm:text-left">
-                                            By clicking the button above, you ask us to erase your account data within 90 days after verification. We use the email and mobile number you enter only to verify and process this request.
+                                            By clicking the button above, you ask us to erase your account data within 30 days after verification. We use the email and mobile number you enter only to verify and process this request.
                                         </p>
                                     </div>
                                 </form>
@@ -295,7 +295,7 @@ export default function DeleteAccount() {
                                 <h2 className="text-xl font-bold text-slate-800 font-semibold">Data Policy & Removal Process</h2>
                                 <div className="space-y-4 text-sm leading-relaxed">
                                     <p>
-                                        <strong>Timeline:</strong> We verify your identity, then immediately disable sign-in and stop all emails and notifications to you. Your personal data is erased or irreversibly anonymised within 90 days. Encrypted backups roll off within a further 30 days.
+                                        <strong>Timeline:</strong> We verify your identity, then immediately disable sign-in and stop all emails and notifications to you. Your personal data is erased or irreversibly anonymised within 30 days. Encrypted backups roll off within a further 30 days.
                                     </p>
                                     <p>
                                         <strong>Data Removal:</strong> Your name, email, phone number, resumes, saved jobs and other profile data are removed from our systems. Chat messages are deleted automatically after 30 days in any case.</p>

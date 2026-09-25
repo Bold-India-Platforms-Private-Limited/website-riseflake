@@ -22,10 +22,10 @@ const PRESETS = [
 const TAKEDOWN = 'Remove / delete this listing (official recruiter or company)';
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-const extractId = (slug: string) => {
-  const parts = slug.split('-');
-  const last = parts[parts.length - 1];
-  return !isNaN(Number(last)) ? Number(last) - 1 : null;
+// Job / internship slugs end in the listing's database id (e.g. "...-latentview-analytics-2619" → 2619).
+export const extractId = (slug: string) => {
+  const last = Number(slug.split('-').pop());
+  return Number.isInteger(last) && last > 0 ? last : null;
 };
 
 const ReportButton: React.FC<ReportButtonProps> = ({ jobSlug, isInternship, alreadyReported, onReported }) => {

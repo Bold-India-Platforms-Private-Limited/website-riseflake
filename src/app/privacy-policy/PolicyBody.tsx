@@ -4,7 +4,7 @@ export default function PolicyBody() {
     <>
 <section>
 <p><strong>Version 2.0</strong></p>
-<p><strong>Last Updated:</strong> September 19, 2026 &nbsp;|&nbsp; <strong>Effective Date:</strong> September 19, 2026</p>
+<p><strong>Last Updated:</strong> September 25, 2026 &nbsp;|&nbsp; <strong>Effective Date:</strong> September 19, 2026</p>
 </section>
 <div className="callout">
 <p><strong>The short version</strong></p>
@@ -248,7 +248,7 @@ export default function PolicyBody() {
 <p><strong>What happens when you delete:</strong></p>
 <ul>
 <li><strong>Right away (once we have verified it is you):</strong> sign-in is disabled and all your sessions end; your profile disappears from other users, recruiters and our public directory (search engines may take longer to refresh their copies); all emails, push notifications and messages to you stop, and your address is added to our do-not-contact list.</li>
-<li><strong>Within 90 days:</strong> we erase or irreversibly anonymise your personal data from our live systems — profile, resume, applications, messages, phone contacts, location, saved items, devices and notification tokens. Encrypted backups roll off within a further 30 days.</li>
+<li><strong>Within 30 days:</strong> we erase or irreversibly anonymise your personal data from our live systems — profile, resume, applications, messages, phone contacts, location, saved items, devices and notification tokens. Encrypted backups roll off within a further 30 days.</li>
 <li><strong>After that</strong> only the limited records listed below remain.</li>
 </ul>
 <p><strong>Records we keep after deletion.</strong> We do not keep your profile, resume, messages, contacts, location or applications. We keep only the following, each for a stated purpose and a stated time:</p>

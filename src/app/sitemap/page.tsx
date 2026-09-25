@@ -4,6 +4,7 @@ import { Briefcase, GraduationCap, Building2, School, Globe, Home, FileText, Cli
 import Navbar from '../components/Navbar'
 import { API_BASE_URL, hreflangAlternates } from '../../lib/config'
 import { PARKED_VERTICALS } from '../../lib/parkedVerticals'
+import { FAQ_TOPICS } from '../../lib/faqs'
 
 export const metadata: Metadata = {
   title: 'Sitemap — All Pages & Sections',
@@ -258,6 +259,14 @@ export default async function SitemapHtmlPage() {
                 <TreeLeaf href="/contact" label="Contact" icon={<Mail className="h-3 w-3" />} />
                 <TreeLeaf href="/careers" label="Careers at Riseflake" icon={<Rocket className="h-3 w-3" />} />
                 <TreeLeaf href="/support" label="Support & Help" icon={<HelpCircle className="h-3 w-3" />} />
+              </TreeBranch>
+
+              {/* FAQ */}
+              <TreeBranch icon={<HelpCircle className="h-4 w-4" />} label="FAQ" href="/faq" defaultOpen={false}>
+                <TreeLeaf href="/faq" label="All FAQs" icon={<HelpCircle className="h-3 w-3" />} />
+                {FAQ_TOPICS.map((t) => (
+                  <TreeLeaf key={t.slug} href={`/faq/${t.slug}`} label={`${t.label} FAQs`} icon={<HelpCircle className="h-3 w-3" />} />
+                ))}
               </TreeBranch>
 
               {/* Legal */}
