@@ -16,10 +16,10 @@ export const metadata: Metadata = {
     'campus ambassador ID card',
   ],
   openGraph: {
-    title: 'Campus Ambassador Program – Riseflake',
+    title: 'Campus Ambassador Program – Riseflake Jobportal',
     description: 'Represent Riseflake at your college & earn real rewards.',
     url: 'https://jobportal.riseflake.com/campus-ambassador',
-    siteName: 'Riseflake',
+    siteName: 'Riseflake Jobportal',
     type: 'website',
   },
   alternates: { canonical: 'https://jobportal.riseflake.com/campus-ambassador', ...hreflangAlternates('https://jobportal.riseflake.com/campus-ambassador') },

@@ -16,10 +16,10 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_IN',
     url: 'https://jobportal.riseflake.com/internships',
-    siteName: 'Riseflake',
+    siteName: 'Riseflake Jobportal',
     title: 'Internships in India - Browse & Apply on Riseflake',
     description: 'Find internships across India for students and freshers. Filter by domain, city and stipend. Apply directly on Riseflake.',
-    images: [{ url: '/og-image.webp', width: 1200, height: 630, alt: 'Internships in India - Riseflake' }],
+    images: [{ url: '/og-image.webp', width: 1200, height: 630, alt: 'Internships in India - Riseflake Jobportal' }],
   },
   twitter: {
     card: 'summary_large_image',

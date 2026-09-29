@@ -108,7 +108,7 @@ export async function generateMetadata(
   const landing = await getLanding(filter).catch(() => null)
   // 404 or transient failure → safe noindex metadata; never crash metadata gen.
   if (!landing || landing === 'retry') {
-    return { title: 'People | Riseflake', robots: { index: false, follow: false } }
+    return { title: 'People | Riseflake Jobportal', robots: { index: false, follow: false } }
   }
 
   const h1 = headline(landing)
@@ -129,7 +129,7 @@ export async function generateMetadata(
   const shouldIndex = landing.count >= 5
 
   return {
-    // Root layout applies the `%s | Riseflake` template to this string.
+    // Root layout applies the `%s | Riseflake Jobportal` template to this string.
     title: h1,
     description,
     keywords: [
@@ -141,15 +141,15 @@ export async function generateMetadata(
     ].filter(Boolean),
     alternates: { canonical, ...hreflangAlternates(canonical) },
     openGraph: {
-      title: `${h1} | Riseflake`,
+      title: `${h1} | Riseflake Jobportal`,
       description,
       url: canonical,
-      siteName: 'Riseflake',
+      siteName: 'Riseflake Jobportal',
       type: 'website',
       locale: 'en_IN',
       images: [{ url: '/og-image.webp', width: 1200, height: 630 }],
     },
-    twitter: { card: 'summary_large_image', title: `${h1} | Riseflake`, description },
+    twitter: { card: 'summary_large_image', title: `${h1} | Riseflake Jobportal`, description },
     robots: { index: shouldIndex, follow: true },
   }
 }

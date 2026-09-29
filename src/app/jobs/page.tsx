@@ -17,15 +17,15 @@ export function generateMetadata(): Metadata {
     'Browse thousands of full-time, part-time and contract jobs across India. Filter by role, location, salary and skills. Apply free on Riseflake — India\'s job portal for students, freshers & professionals.',
   alternates: { canonical, ...hreflangAlternates(canonical) },
   openGraph: {
-    title: 'Jobs in India | Riseflake',
+    title: 'Jobs in India | Riseflake Jobportal',
     description: 'Find verified job openings across India. Filter by location, salary, experience and skills. Apply on Riseflake.',
     url: `${WEBSITE_BASE_URL}/jobs`,
-    siteName: 'Riseflake',
+    siteName: 'Riseflake Jobportal',
     type: 'website',
   },
   twitter: {
     card: 'summary',
-    title: 'Jobs in India | Riseflake',
+    title: 'Jobs in India | Riseflake Jobportal',
     description: 'Find verified job openings across India. Filter by location, salary and skills. Apply free on Riseflake.',
   },
   keywords: 'jobs in india, job search, hiring, freshers jobs, full time jobs, part time jobs, contract jobs, riseflake, job portal india',

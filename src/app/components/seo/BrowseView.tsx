@@ -192,7 +192,7 @@ export function BrowseFacet({
     >
       <FacetJsonLd
         canonicalUrl={canonicalUrl}
-        name={`${h1} — Riseflake`}
+        name={`${h1} — Riseflake Jobportal`}
         description={`${total.toLocaleString('en-IN')} ${phrase} on Riseflake, updated ${currentMonthYear()}.`}
         crumbs={crumbs}
         items={items.map((it) => ({ position: it.position, slug: it.slug, company: it.company_name }))}

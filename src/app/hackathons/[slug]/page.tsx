@@ -203,7 +203,7 @@ export async function generateMetadata(
       title,
       description,
       url: canonicalUrl,
-      siteName: 'Riseflake',
+      siteName: 'Riseflake Jobportal',
       type: 'website',
       ...(h.banner_image_url ? { images: [{ url: h.banner_image_url, width: 1200, height: 630, alt: h.title }] } : {}),
     },

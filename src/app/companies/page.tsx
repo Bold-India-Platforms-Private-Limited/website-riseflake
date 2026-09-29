@@ -18,17 +18,17 @@ export const metadata: Metadata = {
     'riseflake companies',
   ],
   openGraph: {
-    title: 'Top Companies Hiring | Riseflake',
+    title: 'Top Companies Hiring | Riseflake Jobportal',
     description:
       'Discover top employers on Riseflake. Browse verified company profiles and explore open positions across India.',
     url: 'https://jobportal.riseflake.com/companies',
-    siteName: 'Riseflake',
+    siteName: 'Riseflake Jobportal',
     images: [{ url: OG_FALLBACK_IMAGE, width: 1200, height: 630 }],
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Top Companies Hiring | Riseflake',
+    title: 'Top Companies Hiring | Riseflake Jobportal',
     description: 'Browse verified company profiles and explore open positions across India.',
     images: [OG_FALLBACK_IMAGE],
   },

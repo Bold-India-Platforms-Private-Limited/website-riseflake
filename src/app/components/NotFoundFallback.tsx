@@ -154,7 +154,7 @@ export default function NotFoundFallback({ children }: { children: ReactNode }) 
     load(route)
       .then((res) => {
         if (!live || res === 'redirected') return
-        if (res.title) document.title = `${res.title} | Riseflake`
+        if (res.title) document.title = `${res.title} | Riseflake Jobportal`
         document.documentElement.classList.remove('rf-fallback')
         setPhase({ kind: 'view', node: res.node })
       })

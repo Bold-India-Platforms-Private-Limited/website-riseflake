@@ -296,7 +296,7 @@ export async function generateMetadata(
       title,
       description,
       url: canonicalUrl,
-      siteName: 'Riseflake',
+      siteName: 'Riseflake Jobportal',
       type: 'website',
       images: [{ url: ogImageUrl, width: 1200, height: 630, alt: `${job.position} at ${job.company_name}` }],
     },

@@ -95,7 +95,7 @@ export async function generateMetadata(
   const { city } = await params
   const page = 1
   if (!CITIES.includes(city.toLowerCase())) {
-    return { title: 'Internships | Riseflake', robots: { index: false, follow: false } }
+    return { title: 'Internships | Riseflake Jobportal', robots: { index: false, follow: false } }
   }
 
   const cityLabel = titleCase(city)
@@ -119,7 +119,7 @@ export async function generateMetadata(
     title,
     description,
     alternates: { canonical: canonicalUrl, ...hreflangAlternates(canonicalUrl) },
-    openGraph: { title, description, url: canonicalUrl, siteName: 'Riseflake', type: 'website' },
+    openGraph: { title, description, url: canonicalUrl, siteName: 'Riseflake Jobportal', type: 'website' },
     twitter: { card: 'summary', title, description },
     keywords: isRemote
       ? 'remote internships india, online internships, work from home internships, virtual internships india, riseflake internships'

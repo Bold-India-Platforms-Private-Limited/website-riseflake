@@ -115,7 +115,7 @@ export function CompanyBrowseFacet({ slug, page, landing }: { slug: string; page
   const collection = companies.length > 0 ? {
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
-    name: `${h1} — Riseflake`,
+    name: `${h1} — Riseflake Jobportal`,
     description: `${total.toLocaleString('en-IN')} ${phrase} on Riseflake, updated ${currentMonthYear()}.`,
     url: canonicalUrl,
     datePublished: now,

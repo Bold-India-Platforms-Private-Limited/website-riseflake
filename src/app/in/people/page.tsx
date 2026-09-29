@@ -46,15 +46,15 @@ export const metadata: Metadata = {
     locale: 'en_IN',
     type: 'website',
     url: CANONICAL,
-    siteName: 'Riseflake',
-    title: 'Professionals & Candidates in India | Riseflake',
+    siteName: 'Riseflake Jobportal',
+    title: 'Professionals & Candidates in India | Riseflake Jobportal',
     description:
       'Explore public professional and candidate profiles across India — by location, role, skills, education and experience.',
     images: [{ url: '/og-image.webp', width: 1200, height: 630 }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Professionals & Candidates in India | Riseflake',
+    title: 'Professionals & Candidates in India | Riseflake Jobportal',
     description:
       'Explore public professional and candidate profiles across India on Riseflake.',
   },

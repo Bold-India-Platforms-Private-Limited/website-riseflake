@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   openGraph: {
     locale: 'en_IN',
     url: 'https://jobportal.riseflake.com/colleges',
-    title: 'Top Colleges & Universities in India | Riseflake',
+    title: 'Top Colleges & Universities in India | Riseflake Jobportal',
     description: 'Explore top colleges and universities across India with placement records and hiring partners.',
     images: [{ url: '/og-image.webp', width: 1200, height: 630 }],
   },

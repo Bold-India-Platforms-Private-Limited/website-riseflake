@@ -26,7 +26,7 @@ export function generateMetadata(): Metadata {
       title,
       description,
       url: canonicalUrl,
-      siteName: 'Riseflake',
+      siteName: 'Riseflake Jobportal',
       type: 'website',
       locale: 'en_IN',
       images: [{ url: `${WEBSITE_BASE_URL}/og-blog-default.png`, width: 1200, height: 630, alt: 'Riseflake Blog' }],

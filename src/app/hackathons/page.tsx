@@ -14,16 +14,16 @@ export function generateMetadata(): Metadata {
       'Find upcoming hackathons, coding competitions, and innovation challenges in India. Register free, win prizes, and build real projects. Discover the best hackathons for students and developers on Riseflake.',
     alternates: { canonical: `${WEBSITE_BASE_URL}/hackathons`, ...hreflangAlternates(`${WEBSITE_BASE_URL}/hackathons`) },
     openGraph: {
-      title: `Hackathons & Coding Competitions in India ${year} | Riseflake`,
+      title: `Hackathons & Coding Competitions in India ${year} | Riseflake Jobportal`,
       description:
         'Discover upcoming hackathons, coding contests, and innovation challenges. Win prizes and build your portfolio.',
       url: `${WEBSITE_BASE_URL}/hackathons`,
-      siteName: 'Riseflake',
+      siteName: 'Riseflake Jobportal',
       type: 'website',
     },
     twitter: {
       card: 'summary',
-      title: 'Hackathons & Competitions in India | Riseflake',
+      title: 'Hackathons & Competitions in India | Riseflake Jobportal',
       description: 'Find and register for the best hackathons in India — free, open to students and developers.',
     },
     keywords:

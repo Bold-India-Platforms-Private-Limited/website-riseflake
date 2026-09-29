@@ -24,14 +24,14 @@ export function generateMetadata(): Metadata {
     openGraph: {
       type: 'website',
       url: 'https://jobportal.riseflake.com/internships',
-      siteName: 'Riseflake',
-      title: `Internships in India ${monthYear} | Riseflake`,
+      siteName: 'Riseflake Jobportal',
+      title: `Internships in India ${monthYear} | Riseflake Jobportal`,
       description: 'Browse verified internship opportunities across India. Filter by location, domain, and stipend on Riseflake.',
       images: [{ url: 'https://jobportal.riseflake.com/og-image.webp', width: 1200, height: 630, alt: 'Riseflake Internships' }],
     },
     twitter: {
       card: 'summary_large_image',
-      title: `Internships in India ${monthYear} | Riseflake`,
+      title: `Internships in India ${monthYear} | Riseflake Jobportal`,
       description: 'Browse verified internship opportunities across India on Riseflake.',
       site: '@riseflake',
       creator: '@riseflake',

@@ -42,24 +42,24 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug: slugArr = [] } = await params
   if (slugArr.length === 0) {
     const { year } = currentPeriod()
-    // root layout applies the `%s | Riseflake` template — no explicit suffix
+    // root layout applies the `%s | Riseflake Jobportal` template — no explicit suffix
     const title = `Browse Colleges in India ${year} — By State, City & Type`
     const description = `Explore India's colleges by state, city and institution type — engineering, medical, management, law, arts & science. Verified from the AISHE directory on Riseflake.`
     return {
       title,
       description,
       alternates: { canonical: HUB, ...hreflangAlternates(HUB) },
-      openGraph: { title: `${title} | Riseflake`, description, url: HUB, siteName: 'Riseflake', type: 'website' },
+      openGraph: { title: `${title} | Riseflake Jobportal`, description, url: HUB, siteName: 'Riseflake Jobportal', type: 'website' },
       robots: { index: true, follow: true },
     }
   }
-  if (slugArr.length > 1) return { title: 'Colleges | Riseflake', robots: { index: false, follow: false } }
+  if (slugArr.length > 1) return { title: 'Colleges | Riseflake Jobportal', robots: { index: false, follow: false } }
 
   const slug = slugArr[0]
   const page = PAGE
   const landing = await fetchCollegeLanding(slug, page)
   if (!landing || landing === 'retry') {
-    return { title: 'Colleges | Riseflake', robots: { index: false, follow: false } }
+    return { title: 'Colleges | Riseflake Jobportal', robots: { index: false, follow: false } }
   }
 
   const cleanUrl = `${HUB}/${slug}`
@@ -72,8 +72,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title,
     description,
     alternates: { canonical, ...hreflangAlternates(canonical) },
-    openGraph: { title: `${title} | Riseflake`, description, url: canonical, siteName: 'Riseflake', type: 'website' },
-    twitter: { card: 'summary', title: `${title} | Riseflake`, description },
+    openGraph: { title: `${title} | Riseflake Jobportal`, description, url: canonical, siteName: 'Riseflake Jobportal', type: 'website' },
+    twitter: { card: 'summary', title: `${title} | Riseflake Jobportal`, description },
     robots: { index: indexable, follow: true },
   }
 }

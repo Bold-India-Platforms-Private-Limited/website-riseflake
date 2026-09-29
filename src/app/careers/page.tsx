@@ -133,7 +133,7 @@ function ApplyModal({ open, onClose, subject }: { open: boolean; onClose: () => 
 
 export default function Careers() {
   const [modalOpen, setModalOpen] = useState(false)
-  const [subject, setSubject] = useState('Job Application — Riseflake')
+  const [subject, setSubject] = useState('Job Application — Riseflake Jobportal')
 
   useEffect(() => { window.scrollTo(0, 0) }, [])
 
@@ -170,7 +170,7 @@ export default function Careers() {
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <button
-                onClick={() => openApply('Job Application — Riseflake')}
+                onClick={() => openApply('Job Application — Riseflake Jobportal')}
                 className="flex items-center justify-center gap-2 rounded-xl bg-indigo-600 px-7 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 active:scale-95"
               >
                 <Briefcase size={16} />
@@ -214,7 +214,7 @@ export default function Careers() {
               resume and tell us how you&apos;d like to contribute — we review every application.
             </p>
             <button
-              onClick={() => openApply('Job Application — Riseflake')}
+              onClick={() => openApply('Job Application — Riseflake Jobportal')}
               className="mt-6 flex items-center gap-2 rounded-xl bg-indigo-600 px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 active:scale-95"
             >
               <Briefcase size={16} />
@@ -233,7 +233,7 @@ export default function Careers() {
                 </p>
               </div>
               <button
-                onClick={() => openApply('Internship Application — Riseflake')}
+                onClick={() => openApply('Internship Application — Riseflake Jobportal')}
                 className="flex shrink-0 items-center gap-2 rounded-xl border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-700 transition hover:border-indigo-200 hover:text-indigo-600"
               >
                 <GraduationCap size={16} />
@@ -249,7 +249,7 @@ export default function Careers() {
               We&apos;d still love to hear from you. Share your resume with us — great people always find a place at Riseflake.
             </p>
             <button
-              onClick={() => openApply('Job Application — Riseflake')}
+              onClick={() => openApply('Job Application — Riseflake Jobportal')}
               className="mx-auto mt-7 flex items-center gap-2 rounded-xl bg-white px-7 py-3.5 text-sm font-semibold text-indigo-700 shadow-sm transition hover:bg-indigo-50 active:scale-95"
             >
               <Send size={16} />

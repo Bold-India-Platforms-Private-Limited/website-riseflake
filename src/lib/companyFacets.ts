@@ -87,7 +87,7 @@ export function buildCompanyTitle(kind: CompanyFacetKind, l: CompanyFacetLabels,
       : ` — ${count.toLocaleString('en-IN')} Verified`
   }
   const suffix = page > 1 ? ` — Page ${page}` : ''
-  // /companies has no layout title override → the root `%s | Riseflake` template applies.
+  // /companies has no layout title override → the root `%s | Riseflake Jobportal` template applies.
   return `${phrase} ${yr}${clause}${suffix}`
 }
 

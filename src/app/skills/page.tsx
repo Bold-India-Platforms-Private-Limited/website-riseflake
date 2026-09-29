@@ -10,13 +10,13 @@ import { currentPeriod } from '../../lib/period'
 export async function generateMetadata(): Promise<Metadata> {
   const { year } = currentPeriod()
   const canonicalUrl = `${WEBSITE_BASE_URL}/skills`
-  const title = `Skills Directory ${year} — Jobs & Internships by Skill | Riseflake`
+  const title = `Skills Directory ${year} — Jobs & Internships by Skill | Riseflake Jobportal`
   const description = `Browse verified jobs and internships in India by skill — Python, React, Java, AWS, Figma, data analysis and more. See who is hiring, salary info and related skills.`
   return {
     title,
     description,
     alternates: { canonical: canonicalUrl, ...hreflangAlternates(canonicalUrl) },
-    openGraph: { title, description, url: canonicalUrl, siteName: 'Riseflake', type: 'website' },
+    openGraph: { title, description, url: canonicalUrl, siteName: 'Riseflake Jobportal', type: 'website' },
     twitter: { card: 'summary', title, description },
     robots: { index: true, follow: true },
   }

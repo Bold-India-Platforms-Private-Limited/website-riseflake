@@ -27,24 +27,24 @@ export async function buildBrowseMetadata(
 
   if (slugArr.length === 0) {
     const url = `${WEBSITE_BASE_URL}/${vertical}/browse`
-    const title = `Browse ${label} in India ${currentYear()} — By Role, City, Company & Salary | Riseflake`
+    const title = `Browse ${label} in India ${currentYear()} — By Role, City, Company & Salary | Riseflake Jobportal`
     const description = `Explore verified ${label.toLowerCase()} on Riseflake by role, city, company, ${vertical === 'internships' ? 'stipend' : 'salary'}, month and workplace type. Updated ${currentMonthYear()}. Free to apply.`
     return {
       title, description,
       alternates: { canonical: url, ...hreflangAlternates(url) },
-      openGraph: { title, description, url, siteName: 'Riseflake', type: 'website' },
+      openGraph: { title, description, url, siteName: 'Riseflake Jobportal', type: 'website' },
       twitter: { card: 'summary', title, description },
       robots: { index: true, follow: true },
     }
   }
 
-  if (slugArr.length > 1) return { title: `${label} | Riseflake`, robots: { index: false, follow: false } }
+  if (slugArr.length > 1) return { title: `${label} | Riseflake Jobportal`, robots: { index: false, follow: false } }
 
   const slug = slugArr[0]
   const landing = await fetchLanding(vertical, slug, PAGE)
 
   if (!landing || landing.status === false) {
-    return { title: `${label} | Riseflake`, robots: { index: false, follow: false } }
+    return { title: `${label} | Riseflake Jobportal`, robots: { index: false, follow: false } }
   }
   // Redirect here (in generateMetadata, before the page body streams behind the
   // /internships loading.tsx boundary) so crawlers get a real HTTP 308.
@@ -66,7 +66,7 @@ export async function buildBrowseMetadata(
     description,
     keywords: buildFacetKeywords(v, kind, labels),
     alternates: { canonical, ...hreflangAlternates(canonical) },
-    openGraph: { title, description, url: canonical, siteName: 'Riseflake', type: 'website' },
+    openGraph: { title, description, url: canonical, siteName: 'Riseflake Jobportal', type: 'website' },
     twitter: { card: 'summary', title, description },
     robots: { index: indexable, follow: true },
   }

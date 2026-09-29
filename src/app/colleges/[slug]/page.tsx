@@ -96,7 +96,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       title,
       description,
       url: canonicalUrl,
-      siteName: 'Riseflake',
+      siteName: 'Riseflake Jobportal',
       type: 'website',
       images: [{ url: ogImageUrl, width: 1200, height: 630, alt: `${college_name} on Riseflake` }],
     },

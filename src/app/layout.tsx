@@ -3,6 +3,12 @@ import type { Metadata, Viewport } from 'next'
 import Script from 'next/script'
 import ClientOnly from './components/ClientOnly'
 import { hreflangAlternates } from '../lib/config'
+import { currentYear } from '../lib/facets'
+
+// Rendered at build time; the site rebuilds every few hours, so it rolls over to the new year on its own.
+const YEAR = currentYear()
+const SITE_TITLE = `Riseflake Jobportal – Internships & Jobs in India ${YEAR}`
+const SITE_DESCRIPTION = `Find internships and fresher jobs in India for ${YEAR}: paid, work-from-home and summer internships for students across Bangalore, Mumbai, Delhi, Hyderabad, Pune and Chennai. Apply free on Riseflake Jobportal.`
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -13,12 +19,14 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL('https://jobportal.riseflake.com'),
   title: {
-    default: 'Riseflake - Job Portal & Professional Networking Platform in India',
-    template: '%s | Riseflake',
+    default: SITE_TITLE,
+    template: '%s | Riseflake Jobportal',
   },
-  description: 'Riseflake is India\'s job portal and professional networking platform. Find jobs, internships, and career opportunities in Bangalore, Mumbai, Delhi, Hyderabad, Pune, Chennai. Connect with top companies and grow your career.',
+  description: SITE_DESCRIPTION,
   keywords: [
-    'riseflake', 'rise flake', 'riseflake jobs', 'riseflake job portal',
+    'riseflake jobportal', 'riseflake', 'internships in india', `internships ${YEAR}`,
+    'paid internships india', 'work from home internships', 'summer internships india',
+    'riseflake jobs', 'riseflake job portal',
     'job portal india', 'jobs in india', 'find jobs', 'professional networking india',
     'jobs in bangalore', 'jobs in mumbai', 'jobs in delhi', 'jobs in hyderabad', 'jobs in pune',
     'fresher jobs india', 'software engineer jobs india', 'internships india',
@@ -38,22 +46,22 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_IN',
     url: 'https://jobportal.riseflake.com',
-    siteName: 'Riseflake',
-    title: 'Riseflake - Job Portal & Professional Networking in India',
-    description: 'Discover your next opportunity in India. Find jobs and internships across Bangalore, Mumbai, Delhi, Hyderabad and more. Connect with top Indian companies on Riseflake.',
+    siteName: 'Riseflake Jobportal',
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
     images: [
       {
         url: '/og-image.webp',
         width: 1200,
         height: 630,
-        alt: 'Riseflake - Job Portal & Professional Networking Platform in India',
+        alt: SITE_TITLE,
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Riseflake - India\'s Job Portal & Professional Networking',
-    description: 'Find jobs, internships and network with professionals across India',
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
     site: '@riseflake',
     creator: '@riseflake',
     images: ['/og-image.webp'],
@@ -151,7 +159,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             __html: JSON.stringify({
               '@context': 'https://schema.org',
               '@type': 'WebSite',
-              name: 'Riseflake',
+              name: 'Riseflake Jobportal',
               url: 'https://jobportal.riseflake.com',
               description: 'India\'s job portal and professional networking platform',
               potentialAction: [

@@ -25,7 +25,7 @@ export async function buildCompanyBrowseMetadata(params: Params): Promise<Metada
     return {
       title, description,
       alternates: { canonical: url, ...hreflangAlternates(url) },
-      openGraph: { title, description, url, siteName: 'Riseflake', type: 'website' },
+      openGraph: { title, description, url, siteName: 'Riseflake Jobportal', type: 'website' },
       twitter: { card: 'summary', title, description },
       robots: { index: true, follow: true },
     }
@@ -51,7 +51,7 @@ export async function buildCompanyBrowseMetadata(params: Params): Promise<Metada
     title, description,
     keywords: buildCompanyKeywords(kind, labels),
     alternates: { canonical, ...hreflangAlternates(canonical) },
-    openGraph: { title, description, url: canonical, siteName: 'Riseflake', type: 'website' },
+    openGraph: { title, description, url: canonical, siteName: 'Riseflake Jobportal', type: 'website' },
     twitter: { card: 'summary', title, description },
     robots: { index: indexable, follow: true },
   }

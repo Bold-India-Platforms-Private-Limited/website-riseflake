@@ -190,9 +190,9 @@ export function buildFacetTitle(
       : `${phrase} ${yr} — ${count ? count.toLocaleString('en-IN') + ' Openings' : 'Latest Openings'}`
   const suffix = page > 1 ? ` — Page ${page}` : ''
   // The /jobs and /internships layouts set a plain-string `title`, which stops
-  // the root `%s | Riseflake` template from reaching /{vertical}/browse/* — so
+  // the root `%s | Riseflake Jobportal` template from reaching /{vertical}/browse/* — so
   // append the brand here. (City pages under /{vertical}-in DO get the template.)
-  return `${base}${suffix} | Riseflake`
+  return `${base}${suffix} | Riseflake Jobportal`
 }
 
 export function buildFacetDescription(

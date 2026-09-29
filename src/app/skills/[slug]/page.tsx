@@ -28,14 +28,14 @@ export async function generateMetadata(
 
   const data = await fetchSkillDetail(slug, page)
   if (!data) {
-    return { title: 'Skills | Riseflake', robots: { index: false, follow: false } }
+    return { title: 'Skills | Riseflake Jobportal', robots: { index: false, follow: false } }
   }
 
   const name = data.skill.name
   const baseUrl = `${WEBSITE_BASE_URL}/skills/${slug}`
   const canonicalUrl = page > 1 ? `${baseUrl}?page=${page}` : baseUrl
   const pageSuffix = page > 1 ? ` — Page ${page}` : ''
-  const title = `${name} Jobs & Internships in India ${year} — ${data.totalCount} Openings${pageSuffix} | Riseflake`
+  const title = `${name} Jobs & Internships in India ${year} — ${data.totalCount} Openings${pageSuffix} | Riseflake Jobportal`
   const description = `Find ${name} jobs and internships in India. ${data.jobCount} jobs and ${data.internshipCount} internships from verified companies hiring ${name} skills right now. Apply free on Riseflake.`
 
   const shouldIndex = data.result.length > 0 && page <= data.totalPages
@@ -44,7 +44,7 @@ export async function generateMetadata(
     title,
     description,
     alternates: { canonical: canonicalUrl, ...hreflangAlternates(canonicalUrl) },
-    openGraph: { title, description, url: canonicalUrl, siteName: 'Riseflake', type: 'website' },
+    openGraph: { title, description, url: canonicalUrl, siteName: 'Riseflake Jobportal', type: 'website' },
     twitter: { card: 'summary', title, description },
     keywords: `${name.toLowerCase()} jobs, ${name.toLowerCase()} jobs in india, ${name.toLowerCase()} internships, ${name.toLowerCase()} developer jobs, companies hiring ${name.toLowerCase()}, riseflake ${name.toLowerCase()}`,
     robots: { index: shouldIndex, follow: true },

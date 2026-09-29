@@ -112,7 +112,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       title,
       description,
       url:           canonicalUrl,
-      siteName:      'Riseflake',
+      siteName: 'Riseflake Jobportal',
       type:          'article',
       publishedTime: blog.published_at ?? blog.updated_at,
       modifiedTime:  blog.updated_at,

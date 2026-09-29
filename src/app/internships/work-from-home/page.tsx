@@ -15,15 +15,15 @@ export function generateMetadata(): Metadata {
       `Find verified work from home and remote internships in India for students and freshers (updated ${monthYear}). Browse paid online internships in software, marketing, design, data science and more. Apply free on Riseflake.`,
     alternates: { canonical: `${WEBSITE_BASE_URL}/internships/work-from-home`, ...hreflangAlternates(`${WEBSITE_BASE_URL}/internships/work-from-home`) },
     openGraph: {
-      title: `Work from Home Internships ${monthYear} | Riseflake`,
+      title: `Work from Home Internships ${monthYear} | Riseflake Jobportal`,
       description: 'Browse verified remote internship opportunities for students across India. Paid work from home internships in all domains.',
       url: `${WEBSITE_BASE_URL}/internships/work-from-home`,
-      siteName: 'Riseflake',
+      siteName: 'Riseflake Jobportal',
       type: 'website',
     },
     twitter: {
       card: 'summary',
-      title: `Work from Home Internships ${monthYear} | Riseflake`,
+      title: `Work from Home Internships ${monthYear} | Riseflake Jobportal`,
       description: 'Browse paid remote internships for Indian students on Riseflake.',
     },
     keywords:

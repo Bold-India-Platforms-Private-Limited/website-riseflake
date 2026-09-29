@@ -91,8 +91,8 @@ export function collegeHeadline(l: Pick<CollegeLanding, 'kind' | 'labels'>): str
 
 const nf = (n: number) => n.toLocaleString('en-IN')
 
-// NOTE: `/colleges` has no own layout.tsx, so the root `%s | Riseflake` title
-// template applies — do NOT append "| Riseflake" here (would double it).
+// NOTE: `/colleges` has no own layout.tsx, so the root `%s | Riseflake Jobportal` title
+// template applies — do NOT append "| Riseflake Jobportal" here (would double it).
 // Kept < ~60 chars before the template so it doesn't get truncated in SERPs.
 export function collegeTitle(l: Pick<CollegeLanding, 'kind' | 'labels' | 'count'>, page: number): string {
   const { year } = currentPeriod()

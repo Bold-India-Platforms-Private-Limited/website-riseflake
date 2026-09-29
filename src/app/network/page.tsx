@@ -19,17 +19,17 @@ export const metadata: Metadata = {
     'college student network',
   ],
   openGraph: {
-    title: 'Professional Network | Riseflake',
+    title: 'Professional Network | Riseflake Jobportal',
     description:
       'Discover students, freshers, and early-career professionals on Riseflake — India\'s professional network.',
     url: `${WEBSITE_BASE_URL}/network`,
-    siteName: 'Riseflake',
+    siteName: 'Riseflake Jobportal',
     images: [{ url: OG_FALLBACK_IMAGE, width: 1200, height: 630 }],
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Professional Network | Riseflake',
+    title: 'Professional Network | Riseflake Jobportal',
     description: 'Discover professionals on Riseflake — India\'s student & early-career network.',
     images: [OG_FALLBACK_IMAGE],
   },
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'WebPage',
-  name: 'Professional Network | Riseflake',
+  name: 'Professional Network | Riseflake Jobportal',
   description:
     'Discover students, freshers, and early-career professionals on Riseflake — India\'s professional network.',
   url: `${WEBSITE_BASE_URL}/network`,

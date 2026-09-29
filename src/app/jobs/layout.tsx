@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_IN',
     url: 'https://jobportal.riseflake.com/jobs',
-    siteName: 'Riseflake',
+    siteName: 'Riseflake Jobportal',
     title: 'Jobs in India - Browse & Apply on Riseflake',
     description: 'Discover thousands of job openings across India. Filter by city, role, salary and experience. Apply directly on Riseflake.',
     images: [{ url: '/og-image.webp', width: 1200, height: 630, alt: 'Jobs in India - Riseflake Job Portal' }],
