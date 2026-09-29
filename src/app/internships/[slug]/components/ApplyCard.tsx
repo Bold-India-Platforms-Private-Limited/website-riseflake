@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import { Gift, ChevronDown, ChevronUp } from 'lucide-react'
 import type { JobDetail } from './types'
+import { attributionHandoffQuery, jobParams, track } from '@/lib/analytics'
 import { WEBSITE_BASE_URL, APP_BASE_URL, resolveAppBaseUrl } from '../../../../lib/config'
 import { formatSalaryInfo } from '../../../../lib/salary'
 
@@ -130,20 +131,14 @@ export default function ApplyCard({ job, isExpired = false }: { job: JobDetail; 
     setAppBase(resolveAppBaseUrl())
     // Carry SEO attribution (captured by UTMCapture from faceted-listing links)
     // through to the web app so the apply funnel is credited to organic search.
-    try {
-      const raw = localStorage.getItem('rf_attribution')
-      if (raw) {
-        const a = JSON.parse(raw) as Record<string, string>
-        const p = new URLSearchParams()
-        for (const k of ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'ref']) {
-          if (a[k]) p.set(k, a[k])
-        }
-        const s = p.toString()
-        if (s) setUtmQs(`&${s}`)
-      }
-    } catch { /* localStorage unavailable */ }
+    const qs = attributionHandoffQuery()
+    if (qs) setUtmQs(`&${qs}`)
   }, [])
+  useEffect(() => {
+    track('view_job', jobParams(job, 'internship'))
+  }, [job])
   const applyHref = useMemo(() => `${appBase}${pathname}?apply=1${utmQs}`, [appBase, pathname, utmQs])
+  const trackApplyClick = () => track('apply_click', { ...jobParams(job, 'internship'), link_url: applyHref })
 
   const shareUrl   = `${WEBSITE_BASE_URL}${pathname}`
   const salaryInfo = formatSalaryInfo(job)
@@ -210,6 +205,7 @@ export default function ApplyCard({ job, isExpired = false }: { job: JobDetail; 
             ) : (
               <a
                 href={applyHref}
+              onClick={trackApplyClick}
                 className="group flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 py-3.5 text-sm font-semibold text-white shadow-md shadow-indigo-200/60 hover:bg-indigo-700 hover:shadow-indigo-300/60 active:scale-[0.98] transition-all"
               >
                 Apply Now
@@ -286,6 +282,7 @@ export default function ApplyCard({ job, isExpired = false }: { job: JobDetail; 
           ) : (
             <a
               href={applyHref}
+              onClick={trackApplyClick}
               className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-indigo-600 py-3.5 text-sm font-bold text-white hover:bg-indigo-700 active:scale-[0.97] transition-all"
             >
               Apply Now

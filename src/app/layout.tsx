@@ -94,7 +94,7 @@ export default function RootLayout({
       <head>
         <Script id="gtm-platform-tag" strategy="beforeInteractive">
           {`window.dataLayer = window.dataLayer || [];
-window.dataLayer.push({ event: 'platform_source_ready', platform_source: 'website' });`}
+window.dataLayer.push({ platform_source: 'jobportal' });`}
         </Script>
         <Script id="gtm-script" strategy="afterInteractive">
           {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
