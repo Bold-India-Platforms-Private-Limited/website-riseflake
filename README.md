@@ -1,8 +1,11 @@
-# Riseflake website
+# Riseflake Jobportal
 
-The public site at **riseflake.com** — jobs, internships, companies, colleges, people directory, skills,
-hackathons and blog. Built for search: every indexable page is pre-rendered HTML with its own metadata and
-structured data.
+The public internships & jobs portal at **[jobportal.riseflake.com](https://jobportal.riseflake.com)** — internships,
+jobs, companies, skills, hackathons and blog, focused on India. Built for search: every indexable page is
+pre-rendered HTML with its own metadata and structured data, and every page title ends in
+"| Riseflake Jobportal" so its traffic is easy to separate in Google Analytics.
+
+This is a separate site from riseflake.com (the main Riseflake site) and app.riseflake.com (the web app).
 
 It is a **static Next.js export hosted on Vercel** — no server, no Functions. The data
 comes from the RiseflakeBackend public API **at build time**; the site rebuilds every few hours.

@@ -1,9 +1,9 @@
 # Deployment guide — Vercel (static export)
 
-riseflake.com is a **fully static Next.js export served by Vercel**. There is no Node server, no Vercel
+Riseflake Jobportal (**jobportal.riseflake.com**) is a **fully static Next.js export served by Vercel**. There is no Node server, no Vercel
 Function and no ISR — every request is a static file from Vercel's CDN.
 
-> Scope: this covers `website-riseflake` only. The backend API, the web app and the admin panel are unchanged.
+> Scope: this covers the Riseflake Jobportal (`website-riseflake` repo) only. The backend API, the web app and the admin panel are unchanged.
 
 ## How it works
 
@@ -121,7 +121,9 @@ that variable hit exactly this wall: thousands of `429`s, retry storms, and the 
 4. **Scheduled refresh**: Vercel rebuilds on every push to `main`. For new jobs to appear between pushes,
    create a Deploy Hook (Settings → Git → Deploy Hooks, branch `main`) and store its URL as the GitHub secret
    `VERCEL_DEPLOY_HOOK`; `.github/workflows/refresh-vercel.yml` then triggers a build every 3 hours.
-5. **Domain**: Settings → Domains → add `riseflake.com` and follow the DNS instructions.
+5. **Domain**: Settings → Domains → `jobportal.riseflake.com` (Cloudflare DNS CNAME to Vercel, proxied, with a
+   Configuration Rule setting SSL to Full (strict) for that hostname only — the zone default stays Flexible).
+   The site origin comes from `NEXT_PUBLIC_SITE_URL` (default `https://jobportal.riseflake.com`).
 
 Vercel caps a build at 45 minutes. A cold build (first deploy, or after a code change) renders every page, so
 keep `WEBSITE_ISR_SECRET` set; later builds reuse unchanged pages from the live site (`/_rf`, see

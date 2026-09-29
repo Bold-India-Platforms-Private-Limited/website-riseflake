@@ -1,7 +1,7 @@
 {
-  "name": "riseflake-landing",
+  "name": "riseflake-jobportal",
   "version": "1.0.0",
-  "description": "riseflake.com \u2014 SEO-first job portal & professional network website (Next.js static export on Vercel)",
+  "description": "Riseflake Jobportal (jobportal.riseflake.com) \u2014 SEO-first internships & jobs portal for India (Next.js static export on Vercel)",
   "private": true,
   "scripts": {
     "predev": "test -f .build/manifest.json || CF_LIMIT_PER_ROUTE=25 node scripts/cf/build-manifest.mjs",
