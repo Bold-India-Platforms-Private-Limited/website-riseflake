@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * `npm run build` — the full static-site build for Cloudflare Pages.
+ * `npm run build` — the full static-site build for Vercel.
  *
  *   1. resume sub-app  → public/resume        (scripts/build-resume.sh, fault tolerant)
  *   2. baseline        → .cache/              (the previous deployment's pages, so unchanged ones are skipped —
@@ -9,8 +9,8 @@
  *                                              scripts/cf/build-manifest.mjs)
  *   4. next build      → ./out                (renders ONLY the pages flagged in the manifest, with the
  *                                              hardened build-time fetch preloaded)
- *   5. post-build      → reuse carried-forward pages, audit, trim, sitemaps, _redirects, _headers, file budget,
- *                        publish the baseline for the next build
+ *   5. post-build      → reuse carried-forward pages, audit, trim, sitemaps, file budget, publish the baseline for
+ *                        the next build, package .vercel/output (redirects, headers, clean URLs)
  *
  * Set SKIP_RESUME_BUILD=1 to reuse the committed public/resume instead of rebuilding it.
  */
@@ -60,4 +60,4 @@ run('next build', path.join(ROOT, 'node_modules', '.bin', 'next'), ['build'], {
 })
 
 run('post-build', process.execPath, ['scripts/cf/postbuild.mjs'])
-log('Static site ready in ./out — deploy with: npx wrangler pages deploy out --project-name <project>')
+log('Static site ready in .vercel/output — deploy with: vercel deploy --prebuilt')

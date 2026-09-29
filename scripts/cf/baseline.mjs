@@ -1,6 +1,6 @@
 /**
  * The "previous deployment" that incremental builds (scripts/cf/incremental.mjs) reuse pages from — for
- * builders that start every run on a blank disk, which is exactly what a Cloudflare Pages git build is.
+ * builders that start every run on a blank disk, which is exactly what a Vercel build is.
  *
  * A build that finishes and passes the post-build gates PUBLISHES its own state inside the deployment:
  *
@@ -24,8 +24,8 @@
  * different code) just means "no baseline" and the build renders what it has to — it never breaks a build.
  * A runner that already persists .cache/ (GitHub Actions cache) skips the download entirely.
  *
- * Tunables: CF_BASELINE_URL (where to look; default: the project's *.pages.dev URL when building on
- * Cloudflare Pages, then https://riseflake.com), CF_BASELINE=off (never use a baseline).
+ * Tunables: CF_BASELINE_URL (where to look; default: the Vercel project's production URL, then
+ * https://riseflake.com), CF_BASELINE=off (never use a baseline).
  */
 import fs from 'node:fs'
 import path from 'node:path'
@@ -37,7 +37,7 @@ import {
 
 const BUNDLE_MAX_RAW_BYTES = envInt('CF_BUNDLE_MAX_MB', 40) * 1024 * 1024 // raw bytes per bundle before gzip
 const BUNDLE_MAX_FILES = 1500
-const BUNDLE_MAX_GZ_BYTES = 24 * 1024 * 1024 // Cloudflare Pages: 25 MiB per file
+const BUNDLE_MAX_GZ_BYTES = 24 * 1024 * 1024 // keep bundles well under 25 MiB per file
 const BUNDLE_NAME_RE = /^[A-Za-z0-9._-]+\.tgz$/
 
 // ── publish ──────────────────────────────────────────────────────────────────────────────────
@@ -71,7 +71,7 @@ export function publishBaseline(finalManifest, state) {
       if (r.status !== 0) throw new Error(`tar failed while bundling ${file}: ${r.stderr || r.error?.message}`)
       const buf = fs.readFileSync(dest)
       if (buf.length > BUNDLE_MAX_GZ_BYTES) {
-        throw new Error(`${file} is ${(buf.length / 1048576).toFixed(1)} MiB — over Cloudflare's 25 MiB file limit. Lower CF_BUNDLE_MAX_MB.`)
+        throw new Error(`${file} is ${(buf.length / 1048576).toFixed(1)} MiB — over the 25 MiB file limit. Lower CF_BUNDLE_MAX_MB.`)
       }
       bundles.push({ file, kind: kind.id, count: chunk.length, bytes: buf.length, sha1: sha1(buf) })
       chunk = []
@@ -111,15 +111,8 @@ function candidateBases() {
     if (base && !out.includes(base)) out.push(base)
   }
   add(process.env.CF_BASELINE_URL)
-  // Cloudflare Pages exposes this deployment's URL as CF_PAGES_URL (https://<hash>.<project>.pages.dev);
-  // dropping the hash label gives https://<project>.pages.dev, which always serves the latest production deploy.
-  try {
-    const u = new URL(process.env.CF_PAGES_URL ?? '')
-    const labels = u.hostname.split('.')
-    if (u.hostname.endsWith('.pages.dev') && labels.length >= 4) add(`https://${labels.slice(1).join('.')}`)
-  } catch {
-    /* not on Cloudflare Pages */
-  }
+  // Vercel exposes the project's production domain (without scheme) at build time.
+  if (process.env.VERCEL_PROJECT_PRODUCTION_URL) add(`https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`)
   add(SITE_ORIGIN)
   return out
 }

@@ -4,7 +4,7 @@ import path from 'node:path'
 /**
  * Build manifest reader — server/build-time only (never import from a client component).
  *
- * The site is a static export on Cloudflare Pages, so every dynamic route must list
+ * The site is a static export on Vercel, so every dynamic route must list
  * the exact params it wants pre-rendered (`dynamicParams = false`). Those lists come
  * from `.build/manifest.json`, written by `npm run build:manifest`
  * (scripts/cf/build-manifest.mjs), which also applies the 20,000-file deployment budget

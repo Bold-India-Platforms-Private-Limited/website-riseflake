@@ -111,7 +111,7 @@ function NotFoundPage() {
 }
 
 /**
- * Rendered as 404.html, which Cloudflare Pages serves with a real HTTP 404 for every URL that has no
+ * Rendered as 404.html, which Vercel serves with a real HTTP 404 for every URL that has no
  * file. <NotFoundFallback> first checks whether the URL is a valid record that just was not
  * pre-rendered (a new job, one of 68k colleges, …) and renders it in the browser; otherwise it shows
  * this page and reports the broken URL to the 404 tracker.

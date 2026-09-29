@@ -3,14 +3,14 @@
  * Post-deploy smoke test for the static site.
  *
  *   node scripts/cf/smoke.mjs <base-url> [--all] [--sample=300]
- *   npm run smoke -- https://riseflake.pages.dev
+ *   npm run smoke -- https://<deployment>.vercel.app
  *
  * Reads the deployed /sitemap.xml tree, requests the pages it lists (a random sample by
  * default, every URL with --all) and checks each one is a real, indexable page:
  * HTTP 200, no Next error shell, and a canonical link pointing at riseflake.com + the same
  * path. Also checks the hand-written edge behaviour: redirects, real 404s, robots.txt.
  *
- * Only reads static files, so it costs nothing on Cloudflare Pages. Exit code 1 on any failure.
+ * Only reads static files, so it costs nothing to run. Exit code 1 on any failure.
  */
 import { SITE_ORIGIN, locsOf } from './lib.mjs'
 

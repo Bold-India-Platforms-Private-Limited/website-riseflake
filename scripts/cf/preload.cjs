@@ -1,6 +1,6 @@
 'use strict'
 /**
- * Build-time fetch hardening for the static (Cloudflare Pages) build.
+ * Build-time fetch hardening for the static (Vercel) build.
  *
  * Loaded into every Node process of the build with `--require` (see
  * scripts/cf/build.mjs) — the Next.js static-generation workers as well as our

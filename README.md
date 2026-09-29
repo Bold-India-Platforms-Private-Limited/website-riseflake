@@ -4,7 +4,7 @@ The public site at **riseflake.com** — jobs, internships, companies, colleges,
 hackathons and blog. Built for search: every indexable page is pre-rendered HTML with its own metadata and
 structured data.
 
-It is a **static Next.js export hosted on Cloudflare Pages** — no server, no Workers, $0 hosting. The data
+It is a **static Next.js export hosted on Vercel** — no server, no Functions. The data
 comes from the RiseflakeBackend public API **at build time**; the site rebuilds every few hours.
 
 ➡️ **How it works, setup, cutover and operations: [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md)**
@@ -12,7 +12,7 @@ comes from the RiseflakeBackend public API **at build time**; the site rebuilds 
 ## Stack
 
 - Next.js 15 (App Router) with `output: 'export'`, React 19, TypeScript, Tailwind CSS
-- Cloudflare Pages (Direct Upload via GitHub Actions) — static assets only
+- Vercel (Git integration, Build Output API) — static files only
 - `resume/` — the separate resume-builder app, built into `public/resume`
 
 ## Project layout
@@ -23,7 +23,7 @@ src/lib/                 API config, facets, manifest reader, fallback route mat
 scripts/cf/              static-build tooling (manifest, post-build audit, sitemaps, smoke + SEO checks)
 public/                  static assets, robots.txt, _redirects (hand-written rules)
 resume/                  resume-builder sub-app
-.github/workflows/       deploy-cloudflare-pages.yml
+.github/workflows/       refresh-vercel.yml (scheduled deploy hook)
 ```
 
 ## Local development
@@ -44,7 +44,7 @@ export NEXT_PUBLIC_API_BASE_URL=https://backend.riseflake.com/api/v2/website \
        NEXT_PUBLIC_TRACK_404_URL=https://backend.riseflake.com/api/v2/track-404
 
 SKIP_RESUME_BUILD=1 CF_LIMIT_PER_ROUTE=25 npm run build   # small, fast, gentle on the API
-npm run preview                                           # serves ./out with Cloudflare's runtime
+npm run preview                                           # serves ./out locally
 npm run smoke -- http://localhost:8788 --all              # every sitemap URL is a real page
 npm run seo-diff -- http://localhost:8788                 # <head> + JSON-LD vs the live site
 ```
@@ -58,7 +58,7 @@ Drop `CF_LIMIT_PER_ROUTE` for the real thing (`npm run build` — about 17k file
 | `npm run dev` | Next dev server |
 | `npm run build` | resume app → manifest → `next build` → post-build audit → `./out` |
 | `npm run build:manifest` | just refresh `.build/manifest.json` |
-| `npm run preview` | `wrangler pages dev ./out` |
+| `npm run preview` | `npx serve out` |
 | `npm run smoke -- <url> [--all]` | post-deploy check of a deployment |
 | `npm run seo-diff -- <url>` | compare SEO tags with the live site |
 

@@ -1,6 +1,0 @@
-# Cloudflare Pages (Direct Upload) — static export only, no Functions / Workers.
-# Deployed by .github/workflows/deploy-cloudflare-pages.yml with `wrangler pages deploy out`.
-# See DEPLOYMENT_GUIDE.md.
-name = "riseflake-website"
-pages_build_output_dir = "out"
-compatibility_date = "2026-09-01"

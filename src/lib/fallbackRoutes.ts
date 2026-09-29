@@ -2,7 +2,7 @@
  * Which URLs the browser-side 404 fallback can render.
  *
  * The site is a static export: only the pages in the build manifest exist as files, and
- * Cloudflare Pages answers every other URL with the real HTTP 404 page (404.html) — which is
+ * Vercel answers every other URL with the real HTTP 404 page (404.html) — which is
  * what search engines should see. But people also follow links to pages that simply were not
  * pre-rendered: a job posted an hour ago (the site rebuilds on a schedule), one of 68,000 colleges,
  * a profile outside the SEO budget, a registry company. For those the 404 page fetches the record

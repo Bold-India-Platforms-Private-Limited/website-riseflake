@@ -8,7 +8,7 @@ import { FALLBACK_PATTERN_SOURCE, matchFallbackRoute, type FallbackRoute } from 
 /**
  * Browser-side fallback for URLs that were not pre-rendered.
  *
- * On Cloudflare Pages every URL without a file gets the real HTTP 404 page — correct for search
+ * On Vercel every URL without a file gets the real HTTP 404 page — correct for search
  * engines, and exactly what we want for typos. But some of those URLs are perfectly valid records
  * that just are not part of the static build: a job posted after the last (scheduled) build, one of
  * the ~68,000 colleges, a registry company, a profile outside the SEO budget. For those, this

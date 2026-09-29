@@ -32,7 +32,7 @@
  *   .cache/state.json  what the LAST successful build rendered (per page: record version, render time)
  *                      + the code fingerprint it was built from.
  *   .cache/site        the last deployed tree while a build is running.
- * A CI runner that persists .cache (GitHub Actions cache) has both already; a Cloudflare Pages build has
+ * A CI runner that persists .cache (GitHub Actions cache) has both already; a Vercel build has
  * a blank disk, so baseline.mjs downloads them from the live site, where every deployment publishes them
  * under /_rf/.
  */

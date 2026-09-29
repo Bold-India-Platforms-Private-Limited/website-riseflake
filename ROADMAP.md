@@ -8,7 +8,7 @@
 - [x] Responsive design
 - [x] CTA redirect to app
 - [x] Newsletter subscription form
-- [x] Cloudflare Pages deployment
+- [x] Vercel deployment
 
 ### Phase 2: Quick Wins (1-2 weeks)
 - [ ] Google Analytics 4 integration

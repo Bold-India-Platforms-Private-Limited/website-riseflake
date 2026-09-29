@@ -3,7 +3,7 @@
  * Build manifest — the single source of truth for WHICH pages the static site contains.
  *
  * A static host can only serve pages that were generated at build time, and the
- * Cloudflare Pages free plan caps a deployment at 20,000 files. So instead of every
+ * The build keeps a deployment under a file budget (CF_MAX_FILES). So instead of every
  * route independently guessing what to pre-render, this script asks the backend once,
  * applies an explicit file budget, and writes .build/manifest.json. Everything else
  * reads that file:
@@ -195,7 +195,7 @@ async function main() {
   if (/\/\/(localhost|127\.0\.0\.1)/.test(API_BASE_URL) && process.env.CF_ALLOW_LOCAL_API !== '1') {
     throw new Error(
       `NEXT_PUBLIC_API_BASE_URL points at a local backend (${API_BASE_URL}). Refusing to build a deployable static ` +
-        `site against it. Set the production URLs (see .github/workflows/deploy-cloudflare-pages.yml), ` +
+        `site against it. Set the production URLs (Vercel → Settings → Environment Variables), ` +
         `or CF_ALLOW_LOCAL_API=1 for a throwaway local build.`,
     )
   }
@@ -203,13 +203,13 @@ async function main() {
   // the backend's websiteApiHardening middleware "this is our own build, not a scraper". Without it the
   // backend's anti-scrape guard allows only 600 distinct detail URLs per 5 minutes per IP (about 100 pages a
   // minute), so a full build is throttled into retry storms and times out. This was the cause of the
-  // Cloudflare Pages build timeouts. Without the secret we cap how many pages a build renders (RENDER_BUDGET
+  // Vercel build timeouts. Without the secret we cap how many pages a build renders (RENDER_BUDGET
   // below) instead of pretending it will work.
   if (!HAS_INTERNAL_KEY) {
     warn(
       'WEBSITE_ISR_SECRET is not set: the backend will throttle this build (600 detail URLs per 5 min per IP). ' +
         `Rendering at most ${RENDER_BUDGET || 'unlimited'} new/changed page(s) this run; the rest are picked up by the next builds. ` +
-        'Set WEBSITE_ISR_SECRET (same value as the backend\'s own env var) as a Cloudflare Pages build variable ' +
+        'Set WEBSITE_ISR_SECRET (same value as the backend\'s own env var) as a Vercel environment variable ' +
         '(or GitHub Actions secret) to lift the limit — see DEPLOYMENT_GUIDE.md § One-time setup.',
     )
   }
@@ -302,7 +302,7 @@ async function main() {
 
   if (DEV_LIMIT === 0 && fixed > MAX_FILES) {
     throw new Error(
-      `Over the Cloudflare Pages file budget before optional pages: needs ~${fixed} files, budget is ${MAX_FILES} ` +
+      `Over the file budget before optional pages: needs ~${fixed} files, budget is ${MAX_FILES} ` +
         `(platform limit ${PLATFORM_FILE_LIMIT}). Mandatory leaves: jobs=${jobs.length} internships=${internships.length} ` +
         `companies=${companies.length} people=${people.length}. Options: raise the plan's file limit, or trim a tier.`,
     )

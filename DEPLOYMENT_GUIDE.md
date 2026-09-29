@@ -1,27 +1,25 @@
-# Deployment guide — Cloudflare Pages (static export)
+# Deployment guide — Vercel (static export)
 
-riseflake.com is a **fully static Next.js export served from Cloudflare Pages**. There is no Node server, no
-Cloudflare Worker / Pages Function, and no per-request compute anywhere. Static requests on Pages are free
-and unlimited, so hosting costs **$0** and pages are served from Cloudflare's edge in every region.
+riseflake.com is a **fully static Next.js export served by Vercel**. There is no Node server, no Vercel
+Function and no ISR — every request is a static file from Vercel's CDN.
 
 > Scope: this covers `website-riseflake` only. The backend API, the web app and the admin panel are unchanged.
 
 ## How it works
 
 ```
-GitHub Actions (every push to main · every 3 h · on demand)
+Vercel build (every push to main · every 3 h via deploy hook · on demand)
   │
-  ├─ npm run build
-  │    1. resume sub-app      → public/resume                     (scripts/build-resume.sh)
-  │    2. build manifest      → .build/manifest.json              (scripts/cf/build-manifest.mjs)
-  │    3. next build          → ./out   (output: 'export')        (next.config.js)
-  │    4. post-build audit    → sitemaps, _redirects, _headers,   (scripts/cf/postbuild.mjs)
-  │                              file-budget + quality gates
-  ├─ deploy ./out → Pages "staging" alias  ──▶ smoke test (scripts/cf/smoke.mjs)
-  └─ deploy ./out → Pages production
+  └─ npm run build
+       1. resume sub-app      → public/resume                     (scripts/build-resume.sh)
+       2. build manifest      → .build/manifest.json              (scripts/cf/build-manifest.mjs)
+       3. next build          → ./out   (output: 'export')        (next.config.js)
+       4. post-build audit    → sitemaps, file-budget + quality   (scripts/cf/postbuild.mjs)
+                                 gates, then .vercel/output with   (scripts/cf/vercel.mjs)
+                                 redirects, headers, clean URLs
 ```
 
-**Why a manifest?** Cloudflare Pages (free) accepts at most **20,000 files per deployment**, and a static
+**Why a manifest?** The build keeps the deployment under a file budget (`CF_MAX_FILES`), and a static
 export writes two files per page (`.html` + a `.txt` RSC payload). More importantly, every pre-rendered page is
 a backend call at build time, so *what* gets pre-rendered decides how long a build takes. `build-manifest.mjs`
 asks the backend what exists and writes the list:
@@ -37,7 +35,7 @@ real file *and* in the sitemap, or neither. Leaf pages (job / internship / compa
 after the build (links to them are plain navigations), so each costs one file. The whole site is ~2,400 pages
 ≈ 4,000 files — a fifth of the limit.
 
-**What about pages that are not pre-rendered?** Cloudflare answers with the real HTTP `404` (correct for
+**What about pages that are not pre-rendered?** Vercel answers with the real HTTP `404` (correct for
 search engines). The 404 page (`src/app/components/NotFoundFallback.tsx`) then looks at the URL and, if it is a
 job / internship / company / college / profile / registry-company URL, fetches the record from the public API
 and renders the normal page **in the browser** — so a job posted after the last build, or one of the 68,000
@@ -70,7 +68,7 @@ scripts/cf/postbuild.mjs       copies the reused pages back in, THEN audits/site
                                 THEN — only if every gate passes — publishes the new baseline
 ```
 
-**Where "the previous deployment" comes from.** A Cloudflare Pages build starts on a blank disk, so nothing can
+**Where "the previous deployment" comes from.** A Vercel build starts on a blank disk, so nothing can
 be cached between builds. Instead **every deployment publishes its own build state inside itself**:
 
 ```
@@ -78,8 +76,8 @@ be cached between builds. Instead **every deployment publishes its own build sta
 /_rf/pages-<kind>-<n>.tgz     the site's page files, packed (≈ 10 files — so they barely touch the file limit)
 ```
 
-The next build downloads those from the live site (`https://riseflake.com`, or `CF_BASELINE_URL`; on Cloudflare
-Pages it also tries the project's `*.pages.dev` address automatically), verifies the checksums and unpacks them
+The next build downloads those from the live site (`https://riseflake.com`, or `CF_BASELINE_URL`; on Vercel
+it also tries the project's production domain), verifies the checksums and unpacks them
 into `.cache/site`. Bundles rather than per-page downloads because a static host may rewrite the HTML it serves;
 a `.tgz` comes back byte-for-byte. `/_rf/*` is `noindex` and not in any sitemap. A GitHub Actions runner that
 already restores `.cache/` (the workflow does) skips the download.
@@ -91,7 +89,7 @@ work it takes. `npm run smoke` and `npm run seo-diff` verify the output either w
 ### Render budget (why a build can't time out any more)
 
 The backend's anti-scrape guard lets one IP open only **600 distinct detail URLs per 5 minutes** — about 100
-pages a minute — unless the request carries the `WEBSITE_ISR_SECRET` header. A Cloudflare Pages build without
+pages a minute — unless the request carries the `WEBSITE_ISR_SECRET` header. A build without
 that variable hit exactly this wall: thousands of `429`s, retry storms, and the build timing out mid-way. Now:
 
 - **`WEBSITE_ISR_SECRET` set** (the fix): no throttling, no budget — every new/changed/stale page renders in one build.
@@ -103,22 +101,15 @@ that variable hit exactly this wall: thousands of `429`s, retry storms, and the 
   pages the live site has (`CF_MIN_COVERAGE`), the build **fails instead of replacing a full site with a partial
   one** — the previous deployment stays live. Set the secret (or raise the budget) and re-run.
 
-## Building on Cloudflare Pages itself (Git integration)
+## Vercel setup (one time)
 
-If the Pages project is connected to the GitHub repo (Workers & Pages → Create → Connect to Git), Cloudflare runs
-the build. Settings:
-
-| Setting | Value |
-|---|---|
-| Build command | `npm run build` |
-| Build output directory | `out` |
-| Production branch | `main` |
-
-**Environment variables → Production** (Settings → Variables and Secrets; encrypt the secret one):
+1. Vercel → **Add New → Project** → import this GitHub repo. `vercel.json` already sets the install and build
+   commands; the build writes `.vercel/output` (Build Output API), so no output directory needs configuring.
+2. **Settings → Build & Deployment → Node.js Version**: `24.x` (the build scripts need ≥ 22.18).
+3. **Settings → Environment Variables → Production**:
 
 | Variable | Value |
 |---|---|
-| `NODE_VERSION` | `24` (the build scripts need ≥ 22.18) |
 | `NEXT_PUBLIC_API_BASE_URL` | `https://backend.riseflake.com/api/v2/website` |
 | `NEXT_PUBLIC_BLOG_API_URL` | `https://backend.riseflake.com/api/v2` |
 | `NEXT_PUBLIC_APP_BASE_URL` | `https://app.riseflake.com` |
@@ -127,55 +118,14 @@ the build. Settings:
 | **`WEBSITE_ISR_SECRET`** | the backend's own `WEBSITE_ISR_SECRET` value — **this is what makes builds fast and reliable** |
 | `SKIP_RESUME_BUILD` | `1` — reuses the committed `public/resume` instead of rebuilding that sub-app (saves ~2 min) |
 
-A Git-connected project rebuilds on `git push` only. To also pick up new jobs on a schedule, add a **Deploy
-hook** (Settings → Builds) and put its URL in the GitHub secret `CF_PAGES_DEPLOY_HOOK` —
-`.github/workflows/trigger-cloudflare-build.yml` then triggers a build every 3 hours. If you build this way, disable
-`deploy-cloudflare-pages.yml` (it deploys to a *Direct Upload* project and can't target a Git-connected one).
+4. **Scheduled refresh**: Vercel rebuilds on every push to `main`. For new jobs to appear between pushes,
+   create a Deploy Hook (Settings → Git → Deploy Hooks, branch `main`) and store its URL as the GitHub secret
+   `VERCEL_DEPLOY_HOOK`; `.github/workflows/refresh-vercel.yml` then triggers a build every 3 hours.
+5. **Domain**: Settings → Domains → add `riseflake.com` and follow the DNS instructions.
 
-## One-time setup
-
-1. **Create the Pages project** (Direct Upload — GitHub Actions does the build, not Cloudflare):
-   ```bash
-   npx wrangler login
-   npx wrangler pages project create riseflake-website --production-branch=main
-   ```
-2. **Create an API token**: Cloudflare dashboard → My Profile → API Tokens → *Create Token* → template
-   *Edit Cloudflare Workers* is too broad — use a custom token with **Account → Cloudflare Pages → Edit**.
-   Also note your **Account ID** (dashboard → Workers & Pages → right sidebar).
-3. **GitHub repository secrets** (Settings → Secrets and variables → Actions):
-
-   | Secret | Value |
-   |---|---|
-   | `CLOUDFLARE_API_TOKEN` | the token from step 2 |
-   | `CLOUDFLARE_ACCOUNT_ID` | your account ID |
-   | `WEBSITE_ISR_SECRET` | same value the backend already uses for `x-riseflake-internal-key` (lets the build bypass the API rate limiter — see `scripts/cf/preload.cjs`) |
-
-   Optional repository **variable** `CF_PAGES_PROJECT` if the project isn't named `riseflake-website`.
-4. **Run the workflow once** (Actions → *Deploy to Cloudflare Pages* → Run workflow). The result is live at
-   `https://riseflake-website.pages.dev` — the real domain is untouched until step 2 of the cutover below.
-
-## Cutover checklist (do these in order; the old EC2 site keeps serving until step 3)
-
-1. **Verify the preview** at `https://riseflake-website.pages.dev`:
-   ```bash
-   npm run smoke -- https://riseflake-website.pages.dev --all        # every sitemap URL is a real page
-   npm run seo-diff -- https://riseflake-website.pages.dev --sample=60   # <head>/JSON-LD vs the live site
-   ```
-   `seo-diff` should show only the differences listed under *Behaviour changes* below.
-   *(Client-side lists and the browser fallback call the API from the browser; the backend's CORS only allows
-   the real site origins, so on `*.pages.dev` those parts show empty/404 states. That is expected and resolves
-   on riseflake.com.)*
-2. **Remove the old Cloudflare Cache Rule** for riseflake.com (the one caching `/` and `/jobs` for up to a year).
-   It made sense in front of the EC2 origin; in front of Pages it would pin stale HTML. Pages already
-   revalidates at the edge and is purged automatically on every deploy.
-3. **Attach the custom domain**: Workers & Pages → riseflake-website → Custom domains → add `riseflake.com`
-   (and `www.riseflake.com` if used). The zone is already on Cloudflare, so DNS is switched for you.
-4. **Re-run the smoke test against `https://riseflake.com`** and spot-check a few pages in a browser.
-5. **Search Console**: nothing to resubmit — `sitemap.xml` keeps its URL and structure. Watch *Pages* and
-   *Sitemaps* for a week. (The old `sitemap-india-companies.xml` is gone on purpose: that registry API is
-   currently unavailable and 3.6 M pages can't be static.)
-6. **Decommission**: once happy, stop the `riseflake-website` PM2 app on the EC2 box (the backend and other apps
-   there are unaffected). Rollback path until then: see *Rollback*.
+Vercel caps a build at 45 minutes. A cold build (first deploy, or after a code change) renders every page, so
+keep `WEBSITE_ISR_SECRET` set; later builds reuse unchanged pages from the live site (`/_rf`, see
+*Incremental builds*).
 
 ## Day-to-day
 
@@ -188,8 +138,7 @@ hook** (Settings → Builds) and put its URL in the GitHub secret `CF_PAGES_DEPL
 - **Deploying the backend before the website**: the website build uses the backend's
   `GET /api/v2/website/hiring-companies-sitemap.xml`. Until that is deployed the build falls back to the 1,500
   most recently updated companies (with a warning in the log) — nothing breaks, it just isn't as precise.
-- **Cost**: Cloudflare Pages $0. GitHub Actions: private repos get 2,000 free minutes/month; see the
-  *build time* note in the workflow before tightening the schedule.
+- **Cost**: static files only — no Functions or ISR usage. Each scheduled build counts against Vercel build minutes.
 - **Tuning the page budget** (environment variables, all optional; defaults in `scripts/cf/build-manifest.mjs`):
 
   | Variable | Default | Meaning |
@@ -232,9 +181,9 @@ export NEXT_PUBLIC_API_BASE_URL=https://backend.riseflake.com/api/v2/website \
        NEXT_PUBLIC_APP_BASE_URL=https://app.riseflake.com \
        NEXT_PUBLIC_TRACK_404_URL=https://backend.riseflake.com/api/v2/track-404
 SKIP_RESUME_BUILD=1 CF_LIMIT_PER_ROUTE=25 npm run build   # small + fast
-npm run preview                                           # wrangler pages dev ./out on :8788
+npx vercel build && npx vercel dev --prebuilt           # or: vercel deploy --prebuilt for a preview URL
 ```
-`npm run preview` uses Cloudflare's own runtime, so `_redirects`, clean URLs and 404 behaviour match production.
+Redirects, clean URLs and the 404 behaviour come from `.vercel/output/config.json` (scripts/cf/vercel.mjs).
 
 ## Behaviour changes vs the old server-rendered site
 
@@ -254,10 +203,9 @@ descriptions, canonicals, hreflang, robots, Open Graph text, JSON-LD — is byte
 
 ## Rollback
 
-- **Bad deploy**: Cloudflare dashboard → Workers & Pages → riseflake-website → Deployments → *Rollback* on a
-  previous deployment (instant), and/or re-run the workflow.
+- **Bad deploy**: Vercel → project → Deployments → pick a previous one → *Promote to Production* (instant).
 - **Back to EC2**: the branch `legacy-ec2-deploy` keeps the pre-migration code and the old `deploy.yml`.
-  Point DNS back at the EC2 origin (or remove the Pages custom domain) and re-add the old Cloudflare Cache Rule.
+  Point DNS back at the EC2 origin (or remove the Vercel domain).
 
 ## Troubleshooting a failed build
 
@@ -267,7 +215,7 @@ The post-build step prints every failed gate. Common ones:
 |---|---|
 | `N pages rendered as not-found/degraded` | the backend was unhealthy during the build — re-run; nothing was deployed |
 | `N backend requests failed after retries` | same, or the rate limiter blocked the build — check `WEBSITE_ISR_SECRET` is set (and equals the backend's) |
-| `WEBSITE_ISR_SECRET is not set: the backend will throttle this build` | add it as a build variable (see *Building on Cloudflare Pages itself*). Until then each build renders only `CF_RENDER_BUDGET` pages |
+| `WEBSITE_ISR_SECRET is not set: the backend will throttle this build` | add it as a build variable (see *Vercel setup*). Until then each build renders only `CF_RENDER_BUDGET` pages |
 | `This build could only afford N of the M pages the live site has` | the shrink guard: code changed, so every page must be re-rendered, and the render budget can't cover it. Set `WEBSITE_ISR_SECRET`, or raise `CF_RENDER_BUDGET` |
 | `baseline: … no build state` / `full build … no matching previous deployment` | first deployment, or the code changed since the last one — a full render is expected. If it repeats on every build, the live site isn't serving `/_rf/state.json` (check `CF_BASELINE_URL`) |
 | `[cf-fetch] attempt N/M failed … GET <url>` / `manifest build FAILED: GET <url> failed after 5 attempts` | that backend endpoint is slow or unreachable from the build machine (the URL is named). Re-run; if it repeats, check the backend/EC2 health |

@@ -1,7 +1,7 @@
 {
   "name": "riseflake-landing",
   "version": "1.0.0",
-  "description": "riseflake.com — SEO-first job portal & professional network website (Next.js static export on Cloudflare Pages)",
+  "description": "riseflake.com \u2014 SEO-first job portal & professional network website (Next.js static export on Vercel)",
   "private": true,
   "scripts": {
     "predev": "test -f .build/manifest.json || CF_LIMIT_PER_ROUTE=25 node scripts/cf/build-manifest.mjs",
@@ -10,7 +10,7 @@
     "build:manifest": "node scripts/cf/build-manifest.mjs",
     "build:resume": "bash scripts/build-resume.sh",
     "build:next": "next build",
-    "preview": "npx --yes wrangler@4 pages dev out",
+    "preview": "npx --yes serve out",
     "smoke": "node scripts/cf/smoke.mjs",
     "lint": "next lint",
     "seo-diff": "node scripts/cf/seo-diff.mjs"

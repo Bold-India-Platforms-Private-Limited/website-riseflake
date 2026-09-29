@@ -3,8 +3,8 @@
  * dedicated page.
  *
  * These used to live in next.config.js (`async redirects()`), which `output: 'export'`
- * does not support. Cloudflare Pages applies them from the generated `_redirects`
- * file instead — still real HTTP 308s at the edge, still no Worker involved.
+ * does not support. Vercel applies them from the generated .vercel/output/config.json
+ * instead — still real HTTP 308s at the edge, no Function involved.
  *
  * Kept in sync with src/lib/facets.ts (CITIES minus 'remote', INTERNSHIP_DOMAIN_SLUGS).
  */

@@ -30,18 +30,15 @@ npm run build
 # Output in: ./out
 ```
 
-### 4. Deploy to Cloudflare Pages (1 minute)
+### 4. Deploy to Vercel
 
-**Via GitHub:**
-1. Push code to GitHub: `git push origin main`
-2. Cloudflare automatically detects & deploys
-3. Site live at: `https://riseflake.com`
+**Via GitHub:** import the repo in Vercel once (see DEPLOYMENT_GUIDE.md § Vercel setup), then every
+`git push origin main` builds and deploys automatically.
 
-**Via Wrangler CLI:**
+**Via Vercel CLI:**
 ```bash
-npm install -g wrangler
-wrangler login
-wrangler pages deploy out
+npx vercel build --prod
+npx vercel deploy --prebuilt --prod
 ```
 
 ---
@@ -118,29 +115,12 @@ In `src/app/layout.tsx`, add inside `<head>`:
 
 ## 🚀 Deployment
 
-### Cloudflare Pages (Recommended)
+### Vercel
 
-1. **Push to GitHub**
-   ```bash
-   git add .
-   git commit -m "Deploy to Cloudflare Pages"
-   git push origin main
-   ```
-
-2. **Cloudflare Auto-deploys** (3 minutes)
-   - Automatic on every push
-   - Live at: https://riseflake.com
-   - Preview URLs for pull requests
-
-3. **Custom Domain**
-   - Already configured in Cloudflare
-   - Uses nameservers or CNAME
-
-### Alternative: Vercel
-
-```bash
-vercel deploy --prod
-```
+1. **Push to GitHub** — `git push origin main`
+2. **Vercel auto-deploys** on every push (plus every 3 h via `.github/workflows/refresh-vercel.yml`),
+   with preview URLs for pull requests.
+3. **Custom domain** — Vercel → Settings → Domains → `riseflake.com`.
 
 ---
 
@@ -153,7 +133,7 @@ vercel deploy --prod
 - [ ] Dark theme displays correctly
 - [ ] Newsletter form renders
 - [ ] Git pushed to main branch
-- [ ] Cloudflare deployment successful
+- [ ] Vercel deployment successful
 - [ ] SSL/HTTPS enabled
 - [ ] robots.txt accessible
 - [ ] sitemap.xml accessible
@@ -170,7 +150,7 @@ See `SEO_GUIDE.md` for:
 
 ### Deployment Issues
 See `DEPLOYMENT_GUIDE.md` for:
-- Cloudflare Pages setup
+- Vercel setup
 - Troubleshooting
 - Performance optimization
 
@@ -197,7 +177,7 @@ See `DEPLOYMENT_GUIDE.md` for:
 
 3. **Deploy**
    - Push to GitHub
-   - Monitor Cloudflare deployment
+   - Monitor Vercel deployment
    - Test production site
 
 4. **Post-Launch**

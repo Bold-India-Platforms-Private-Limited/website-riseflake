@@ -1,0 +1,32 @@
+name: Refresh site on Vercel
+
+# The site is a static export, so new jobs / companies / blog posts reach visitors only by rebuilding.
+# Vercel rebuilds on every push to main; this also triggers a build every 3 hours via a Deploy Hook
+# (an incremental build — unchanged pages are reused, see DEPLOYMENT_GUIDE.md).
+#
+# Setup: Vercel → project → Settings → Git → Deploy Hooks → create a hook for branch `main`,
+# then save its URL as the repository secret VERCEL_DEPLOY_HOOK. Without it this workflow does nothing.
+on:
+  schedule:
+    # Every 3 hours (UTC). Odd minute on purpose: top-of-the-hour cron slots are the most congested.
+    - cron: "37 */3 * * *"
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  trigger:
+    name: Call the Vercel deploy hook
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: POST to the deploy hook
+        env:
+          HOOK_URL: ${{ secrets.VERCEL_DEPLOY_HOOK }}
+        run: |
+          if [ -z "$HOOK_URL" ]; then
+            echo "VERCEL_DEPLOY_HOOK is not set — nothing to trigger."
+            exit 0
+          fi
+          curl --fail --silent --show-error --max-time 30 -X POST "$HOOK_URL" > /dev/null
+          echo "Build triggered."
