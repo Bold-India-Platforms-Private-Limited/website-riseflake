@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { hreflangAlternates } from '../../lib/config'
 
 export const metadata: Metadata = {
-  title: 'Campus Ambassador Program — Earn ₹15,000/Month & Rewards',
+  title: { default: 'Campus Ambassador Program — Earn ₹15,000/Month & Rewards', template: '%s | Riseflake Jobportal' },
   description:
     'Join the Riseflake Campus Ambassador Program. Represent Riseflake at your college, grow your network, and earn up to ₹15,000 per month — plus your official CA ID Card, verified certificates and premium gifts.',
   keywords: [

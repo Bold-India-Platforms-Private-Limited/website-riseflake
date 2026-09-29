@@ -95,7 +95,7 @@ export async function generateMetadata(
   const { city } = await params
   const page = 1
   if (!CITIES.includes(city.toLowerCase())) {
-    return { title: 'Internships | Riseflake Jobportal', robots: { index: false, follow: false } }
+    return { title: 'Internships', robots: { index: false, follow: false } }
   }
 
   const cityLabel = titleCase(city)

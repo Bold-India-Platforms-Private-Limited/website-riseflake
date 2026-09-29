@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { hreflangAlternates } from '../../lib/config'
 
 export const metadata: Metadata = {
-  title: 'About Us - India\'s Job Portal & Professional Networking Platform',
+  title: { default: 'About Us - India\'s Job Portal & Professional Networking Platform', template: '%s | Riseflake Jobportal' },
   description: 'Learn about Riseflake — India\'s job portal and professional networking platform helping students, freshers and professionals find their next career opportunity. Our mission is to connect talent with opportunity across India.',
   openGraph: {
     locale: 'en_IN',

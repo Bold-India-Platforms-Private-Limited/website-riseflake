@@ -28,7 +28,7 @@ export async function generateMetadata(
 
   const data = await fetchSkillDetail(slug, page)
   if (!data) {
-    return { title: 'Skills | Riseflake Jobportal', robots: { index: false, follow: false } }
+    return { title: 'Skills', robots: { index: false, follow: false } }
   }
 
   const name = data.skill.name
@@ -41,7 +41,7 @@ export async function generateMetadata(
   const shouldIndex = data.result.length > 0 && page <= data.totalPages
 
   return {
-    title,
+    title: { absolute: title },
     description,
     alternates: { canonical: canonicalUrl, ...hreflangAlternates(canonicalUrl) },
     openGraph: { title, description, url: canonicalUrl, siteName: 'Riseflake Jobportal', type: 'website' },

@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { hreflangAlternates } from '../../lib/config'
 
 export const metadata: Metadata = {
-  title: 'Jobs in India - Find Full-Time & Part-Time Jobs',
+  title: { default: 'Jobs in India - Find Full-Time & Part-Time Jobs', template: '%s | Riseflake Jobportal' },
   description: 'Browse thousands of jobs across India on Riseflake. Find software engineer, data analyst, product manager, marketing, finance and more jobs in Bangalore, Mumbai, Delhi, Hyderabad, Pune, Chennai. Apply now.',
   keywords: [
     'jobs in india', 'find jobs india', 'software engineer jobs india', 'it jobs india',

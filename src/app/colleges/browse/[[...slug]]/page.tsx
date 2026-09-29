@@ -53,13 +53,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       robots: { index: true, follow: true },
     }
   }
-  if (slugArr.length > 1) return { title: 'Colleges | Riseflake Jobportal', robots: { index: false, follow: false } }
+  if (slugArr.length > 1) return { title: 'Colleges', robots: { index: false, follow: false } }
 
   const slug = slugArr[0]
   const page = PAGE
   const landing = await fetchCollegeLanding(slug, page)
   if (!landing || landing === 'retry') {
-    return { title: 'Colleges | Riseflake Jobportal', robots: { index: false, follow: false } }
+    return { title: 'Colleges', robots: { index: false, follow: false } }
   }
 
   const cleanUrl = `${HUB}/${slug}`

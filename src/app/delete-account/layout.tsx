@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Delete Your Account',
+  title: { default: 'Delete Your Account', template: '%s | Riseflake Jobportal' },
   description: 'Request deletion of your Riseflake account and personal data.',
   robots: { index: false, follow: false },
   alternates: { canonical: 'https://jobportal.riseflake.com/delete-account' },

@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { hreflangAlternates } from '../../lib/config'
 
 export const metadata: Metadata = {
-  title: 'Internships in India - Find Paid & Unpaid Internships',
+  title: { default: 'Internships in India - Find Paid & Unpaid Internships', template: '%s | Riseflake Jobportal' },
   description: 'Browse internships across India on Riseflake. Find software development, data science, marketing, design, finance and more internships in Bangalore, Mumbai, Delhi, Hyderabad. Ideal for college students and freshers.',
   keywords: [
     'internships in india', 'internship india', 'student internships india', 'fresher internship',

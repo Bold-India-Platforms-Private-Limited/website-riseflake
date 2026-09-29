@@ -38,13 +38,13 @@ export async function buildBrowseMetadata(
     }
   }
 
-  if (slugArr.length > 1) return { title: `${label} | Riseflake Jobportal`, robots: { index: false, follow: false } }
+  if (slugArr.length > 1) return { title: `${label}`, robots: { index: false, follow: false } }
 
   const slug = slugArr[0]
   const landing = await fetchLanding(vertical, slug, PAGE)
 
   if (!landing || landing.status === false) {
-    return { title: `${label} | Riseflake Jobportal`, robots: { index: false, follow: false } }
+    return { title: `${label}`, robots: { index: false, follow: false } }
   }
   // Redirect here (in generateMetadata, before the page body streams behind the
   // /internships loading.tsx boundary) so crawlers get a real HTTP 308.
@@ -62,7 +62,7 @@ export async function buildBrowseMetadata(
   const indexable = (count ?? 0) >= 3
 
   return {
-    title,
+    title: { absolute: title },
     description,
     keywords: buildFacetKeywords(v, kind, labels),
     alternates: { canonical, ...hreflangAlternates(canonical) },

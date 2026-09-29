@@ -13,7 +13,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const title = `Skills Directory ${year} — Jobs & Internships by Skill | Riseflake Jobportal`
   const description = `Browse verified jobs and internships in India by skill — Python, React, Java, AWS, Figma, data analysis and more. See who is hiring, salary info and related skills.`
   return {
-    title,
+    title: { absolute: title },
     description,
     alternates: { canonical: canonicalUrl, ...hreflangAlternates(canonicalUrl) },
     openGraph: { title, description, url: canonicalUrl, siteName: 'Riseflake Jobportal', type: 'website' },
