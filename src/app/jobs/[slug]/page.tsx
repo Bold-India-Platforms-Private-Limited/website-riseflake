@@ -105,7 +105,7 @@ function buildJobPostingSchema(job: JobDetail, canonicalUrl: string) {
 
   // hiringOrganization.sameAs: company's own page on Riseflake, then their website
   const companySameAs: string[] = []
-  if (job.company_slug) companySameAs.push(`https://jobportal.riseflake.com/companies/${job.company_slug}`)
+  if (job.company_slug) companySameAs.push(`${WEBSITE_BASE_URL}/companies/${job.company_slug}`)
   if (job.company_website) companySameAs.push(job.company_website)
 
   const schema: Record<string, unknown> = {

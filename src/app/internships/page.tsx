@@ -4,7 +4,7 @@ import Navbar from '../components/Navbar'
 import InternshipsClient from './InternshipsClient'
 import MobileFilters from './components/MobileFilters'
 import LoginPromptModal from '../components/LoginPromptModalLoader'
-import { hreflangAlternates } from '../../lib/config'
+import { hreflangAlternates, WEBSITE_BASE_URL } from '../../lib/config'
 import { currentPeriod } from '../../lib/period'
 
 // Static export: the server never sees the query string, so every `/internships?…`
@@ -12,7 +12,7 @@ import { currentPeriod } from '../../lib/period'
 // /internships URL. The list itself is fetched in the browser by <InternshipsClient />.
 export function generateMetadata(): Metadata {
   const { monthYear } = currentPeriod()
-  const canonical = 'https://jobportal.riseflake.com/internships'
+  const canonical = `${WEBSITE_BASE_URL}/internships`
   return {
     title: `Internships in India ${monthYear} — Find Verified Internships`,
     description: `Browse 1000s of internship opportunities across India (updated ${monthYear}). Filter by location, domain, and stipend. Apply directly on Riseflake.`,
@@ -23,11 +23,11 @@ export function generateMetadata(): Metadata {
     },
     openGraph: {
       type: 'website',
-      url: 'https://jobportal.riseflake.com/internships',
+      url: `${WEBSITE_BASE_URL}/internships`,
       siteName: 'Riseflake Jobportal',
       title: `Internships in India ${monthYear} | Riseflake Jobportal`,
       description: 'Browse verified internship opportunities across India. Filter by location, domain, and stipend on Riseflake.',
-      images: [{ url: 'https://jobportal.riseflake.com/og-image.webp', width: 1200, height: 630, alt: 'Riseflake Internships' }],
+      images: [{ url: `${WEBSITE_BASE_URL}/og-image.webp`, width: 1200, height: 630, alt: 'Riseflake Internships' }],
     },
     twitter: {
       card: 'summary_large_image',
@@ -43,8 +43,8 @@ const breadcrumbSchema = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
   itemListElement: [
-    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://jobportal.riseflake.com' },
-    { '@type': 'ListItem', position: 2, name: 'Internships', item: 'https://jobportal.riseflake.com/internships' },
+    { '@type': 'ListItem', position: 1, name: 'Home', item: WEBSITE_BASE_URL },
+    { '@type': 'ListItem', position: 2, name: 'Internships', item: `${WEBSITE_BASE_URL}/internships` },
   ],
 }
 

@@ -1,10 +1,10 @@
 import type { Metadata } from 'next';
-import { hreflangAlternates } from '../../lib/config';
+import { hreflangAlternates, WEBSITE_BASE_URL } from '../../lib/config';
 
 export const metadata: Metadata = {
   title: { default: 'Refund Policy', template: '%s | Riseflake Jobportal' },
   description: 'Read the Riseflake Refund Policy to understand our terms for subscription and payment refunds.',
-  alternates: { canonical: 'https://jobportal.riseflake.com/refund-policy', ...hreflangAlternates('https://jobportal.riseflake.com/refund-policy') },
+  alternates: { canonical: `${WEBSITE_BASE_URL}/refund-policy`, ...hreflangAlternates(`${WEBSITE_BASE_URL}/refund-policy`) },
   robots: { index: true, follow: true },
 };
 

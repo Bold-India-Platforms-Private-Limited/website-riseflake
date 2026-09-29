@@ -121,7 +121,7 @@ export default function ProfileView({
       ? { hasOccupation: { '@type': 'Occupation', name: rich.current_designation } }
       : {}),
     sameAs: [appProfileUrl],
-    memberOf: { '@type': 'Organization', name: 'Riseflake', url: 'https://jobportal.riseflake.com' },
+    memberOf: { '@type': 'Organization', name: 'Riseflake', url: WEBSITE_BASE_URL },
   }
 
   const breadcrumbLd = {

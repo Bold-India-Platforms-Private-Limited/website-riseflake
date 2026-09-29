@@ -3,7 +3,7 @@ import { Suspense } from 'react'
 import Navbar from '../components/Navbar'
 import CompaniesClient from './CompaniesClient'
 import LoginPromptModal from '../components/LoginPromptModalLoader'
-import { hreflangAlternates, OG_FALLBACK_IMAGE } from '../../lib/config'
+import { hreflangAlternates, OG_FALLBACK_IMAGE, WEBSITE_BASE_URL } from '../../lib/config'
 
 export const metadata: Metadata = {
   title: 'Top Companies Hiring',
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     title: 'Top Companies Hiring | Riseflake Jobportal',
     description:
       'Discover top employers on Riseflake. Browse verified company profiles and explore open positions across India.',
-    url: 'https://jobportal.riseflake.com/companies',
+    url: `${WEBSITE_BASE_URL}/companies`,
     siteName: 'Riseflake Jobportal',
     images: [{ url: OG_FALLBACK_IMAGE, width: 1200, height: 630 }],
     type: 'website',
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     description: 'Browse verified company profiles and explore open positions across India.',
     images: [OG_FALLBACK_IMAGE],
   },
-  alternates: { canonical: 'https://jobportal.riseflake.com/companies', ...hreflangAlternates('https://jobportal.riseflake.com/companies') },
+  alternates: { canonical: `${WEBSITE_BASE_URL}/companies`, ...hreflangAlternates(`${WEBSITE_BASE_URL}/companies`) },
   robots: { index: true, follow: true },
 }
 
@@ -40,8 +40,8 @@ const breadcrumbSchema = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
   itemListElement: [
-    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://jobportal.riseflake.com' },
-    { '@type': 'ListItem', position: 2, name: 'Companies', item: 'https://jobportal.riseflake.com/companies' },
+    { '@type': 'ListItem', position: 1, name: 'Home', item: WEBSITE_BASE_URL },
+    { '@type': 'ListItem', position: 2, name: 'Companies', item: `${WEBSITE_BASE_URL}/companies` },
   ],
 }
 

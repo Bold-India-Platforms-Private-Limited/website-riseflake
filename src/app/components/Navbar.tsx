@@ -1,4 +1,5 @@
 'use client'
+import { WEBSITE_BASE_URL } from '@/lib/config'
 
 import { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
@@ -201,11 +202,11 @@ export default function Navbar({ bgTransparent = false }: { bgTransparent?: bool
                     List Your Jobs
                   </a>
                   <div className="h-px bg-slate-100 my-1"></div>
-                  <a href="https://jobportal.riseflake.com/resume" className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-indigo-600 transition-colors">
+                  <a href={`${WEBSITE_BASE_URL}/resume`} className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-indigo-600 transition-colors">
                     <FileText className="h-4 w-4 text-slate-400" />
                     Build Resume
                   </a>
-                  <a href="https://jobportal.riseflake.com/resume/ats-checker" className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-indigo-600 transition-colors">
+                  <a href={`${WEBSITE_BASE_URL}/resume/ats-checker`} className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-indigo-600 transition-colors">
                     <FileCheck className="h-4 w-4 text-slate-400" />
                     ATS Checker
                   </a>
@@ -613,7 +614,7 @@ export default function Navbar({ bgTransparent = false }: { bgTransparent?: bool
                 <ChevronRight className="h-5 w-5 opacity-50" />
               </a>
               <a
-                href="https://jobportal.riseflake.com/resume"
+                href={`${WEBSITE_BASE_URL}/resume`}
                 className="flex items-center justify-between rounded-xl px-4 py-3 text-base font-medium transition text-slate-700 hover:bg-slate-100"
                 onClick={() => setOpen(false)}
               >
@@ -624,7 +625,7 @@ export default function Navbar({ bgTransparent = false }: { bgTransparent?: bool
                 <ChevronRight className="h-5 w-5 opacity-50" />
               </a>
               <a
-                href="https://jobportal.riseflake.com/resume/ats-checker"
+                href={`${WEBSITE_BASE_URL}/resume/ats-checker`}
                 className="flex items-center justify-between rounded-xl px-4 py-3 text-base font-medium transition text-slate-700 hover:bg-slate-100"
                 onClick={() => setOpen(false)}
               >

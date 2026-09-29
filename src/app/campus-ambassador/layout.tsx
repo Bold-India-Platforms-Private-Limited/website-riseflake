@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { hreflangAlternates } from '../../lib/config'
+import { hreflangAlternates, WEBSITE_BASE_URL } from '../../lib/config'
 
 export const metadata: Metadata = {
   title: { default: 'Campus Ambassador Program — Earn ₹15,000/Month & Rewards', template: '%s | Riseflake Jobportal' },
@@ -18,11 +18,11 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Campus Ambassador Program – Riseflake Jobportal',
     description: 'Represent Riseflake at your college & earn real rewards.',
-    url: 'https://jobportal.riseflake.com/campus-ambassador',
+    url: `${WEBSITE_BASE_URL}/campus-ambassador`,
     siteName: 'Riseflake Jobportal',
     type: 'website',
   },
-  alternates: { canonical: 'https://jobportal.riseflake.com/campus-ambassador', ...hreflangAlternates('https://jobportal.riseflake.com/campus-ambassador') },
+  alternates: { canonical: `${WEBSITE_BASE_URL}/campus-ambassador`, ...hreflangAlternates(`${WEBSITE_BASE_URL}/campus-ambassador`) },
   robots: { index: true, follow: true },
 }
 

@@ -2,14 +2,14 @@ import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
 import { Briefcase, GraduationCap, Building2, School, Globe, Home, FileText, ClipboardList, Info, Users, Mail, Rocket, HelpCircle, ScrollText, Lock, CreditCard, Shield, AlertTriangle, Cookie, Trash2, ExternalLink, Newspaper, Trophy, Network } from 'lucide-react'
 import Navbar from '../components/Navbar'
-import { API_BASE_URL, hreflangAlternates } from '../../lib/config'
+import { API_BASE_URL, hreflangAlternates, WEBSITE_BASE_URL } from '../../lib/config'
 import { PARKED_VERTICALS } from '../../lib/parkedVerticals'
 import { FAQ_TOPICS } from '../../lib/faqs'
 
 export const metadata: Metadata = {
   title: 'Sitemap — All Pages & Sections',
   description: 'Full sitemap of Riseflake. Find all jobs, internships, companies, colleges, and static pages in one place.',
-  alternates: { canonical: 'https://jobportal.riseflake.com/sitemap', ...hreflangAlternates('https://jobportal.riseflake.com/sitemap') },
+  alternates: { canonical: `${WEBSITE_BASE_URL}/sitemap`, ...hreflangAlternates(`${WEBSITE_BASE_URL}/sitemap`) },
   robots: { index: true, follow: true },
 }
 
@@ -374,7 +374,7 @@ function TreeRoot() {
     <li className="flex items-center gap-2 py-1.5 mb-2">
       <Globe className="h-4 w-4 flex-shrink-0 text-slate-500" />
       <a
-        href="https://jobportal.riseflake.com"
+        href={WEBSITE_BASE_URL}
         className="text-sm font-bold text-slate-900 hover:text-indigo-600 transition-colors"
       >
         riseflake.com

@@ -11,7 +11,6 @@ Allow: /in/
 Allow: /resume/ats-checker
 Disallow: /api/
 Disallow: /dashboard/
-Disallow: /_next/
 Disallow: /resume/
 
 # ------------------------------------------
@@ -23,7 +22,6 @@ Allow: /in/
 Allow: /resume/ats-checker
 Disallow: /api/
 Disallow: /dashboard/
-Disallow: /_next/
 Disallow: /resume/
 
 # ------------------------------------------
@@ -36,7 +34,6 @@ Allow: /in/
 Allow: /resume/ats-checker
 Disallow: /api/
 Disallow: /dashboard/
-Disallow: /_next/
 Disallow: /resume/
 
 # ------------------------------------------
@@ -48,7 +45,6 @@ Allow: /in/
 Allow: /resume/ats-checker
 Disallow: /api/
 Disallow: /dashboard/
-Disallow: /_next/
 Disallow: /resume/
 
 # ------------------------------------------
@@ -63,7 +59,6 @@ Allow: /internships/
 Allow: /in/
 Disallow: /api/
 Disallow: /dashboard/
-Disallow: /_next/
 Disallow: /resume/
 
 # ------------------------------------------
@@ -75,7 +70,6 @@ Allow: /
 Allow: /in/
 Disallow: /api/
 Disallow: /dashboard/
-Disallow: /_next/
 Disallow: /resume/
 
 # ------------------------------------------
@@ -168,4 +162,4 @@ Disallow: /
 # ------------------------------------------
 # Sitemaps
 # ------------------------------------------
-Sitemap: https://jobportal.riseflake.com/sitemap.xml
+Sitemap: https://jobportal.riseflake.com/sitemap.xml   # rewritten from SITE_ORIGIN at build time (scripts/cf/postbuild.mjs)

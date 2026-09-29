@@ -2,7 +2,7 @@ import './globals.css'
 import type { Metadata, Viewport } from 'next'
 import Script from 'next/script'
 import ClientOnly from './components/ClientOnly'
-import { hreflangAlternates } from '../lib/config'
+import { hreflangAlternates, WEBSITE_BASE_URL } from '../lib/config'
 import { currentYear } from '../lib/facets'
 
 // Rendered at build time; the site rebuilds every few hours, so it rolls over to the new year on its own.
@@ -17,7 +17,7 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://jobportal.riseflake.com'),
+  metadataBase: new URL(WEBSITE_BASE_URL),
   title: {
     default: SITE_TITLE,
     template: '%s | Riseflake Jobportal',
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_IN',
-    url: 'https://jobportal.riseflake.com',
+    url: WEBSITE_BASE_URL,
     siteName: 'Riseflake Jobportal',
     title: SITE_TITLE,
     description: SITE_DESCRIPTION,
@@ -78,8 +78,8 @@ export const metadata: Metadata = {
     },
   },
   alternates: {
-    canonical: 'https://jobportal.riseflake.com',
-    ...hreflangAlternates('https://jobportal.riseflake.com'),
+    canonical: WEBSITE_BASE_URL,
+    ...hreflangAlternates(WEBSITE_BASE_URL),
   },
   // verification: { google: 'YOUR_TOKEN', other: { 'msvalidate.01': 'YOUR_BING_TOKEN' } },
 }
@@ -125,7 +125,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               '@context': 'https://schema.org',
               '@type': 'Organization',
               name: 'Riseflake',
-              url: 'https://jobportal.riseflake.com',
+              url: WEBSITE_BASE_URL,
               logo: 'https://assets.riseflake.com/logo.webp',
               description: 'India\'s job portal and professional networking platform for career growth',
               sameAs: [
@@ -160,14 +160,14 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               '@context': 'https://schema.org',
               '@type': 'WebSite',
               name: 'Riseflake Jobportal',
-              url: 'https://jobportal.riseflake.com',
+              url: WEBSITE_BASE_URL,
               description: 'India\'s job portal and professional networking platform',
               potentialAction: [
                 {
                   '@type': 'SearchAction',
                   target: {
                     '@type': 'EntryPoint',
-                    urlTemplate: 'https://jobportal.riseflake.com/jobs?position={search_term_string}',
+                    urlTemplate: `${WEBSITE_BASE_URL}/jobs?position={search_term_string}`,
                   },
                   'query-input': 'required name=search_term_string',
                 },
@@ -175,7 +175,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                   '@type': 'SearchAction',
                   target: {
                     '@type': 'EntryPoint',
-                    urlTemplate: 'https://jobportal.riseflake.com/internships?position={search_term_string}',
+                    urlTemplate: `${WEBSITE_BASE_URL}/internships?position={search_term_string}`,
                   },
                   'query-input': 'required name=search_term_string',
                 },

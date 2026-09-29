@@ -1,10 +1,10 @@
 import type { Metadata } from 'next';
-import { hreflangAlternates } from '../../lib/config';
+import { hreflangAlternates, WEBSITE_BASE_URL } from '../../lib/config';
 
 export const metadata: Metadata = {
   title: { default: 'Cookie Policy', template: '%s | Riseflake Jobportal' },
   description: 'Understand how Riseflake uses cookies and similar technologies to improve your experience.',
-  alternates: { canonical: 'https://jobportal.riseflake.com/cookie-policy', ...hreflangAlternates('https://jobportal.riseflake.com/cookie-policy') },
+  alternates: { canonical: `${WEBSITE_BASE_URL}/cookie-policy`, ...hreflangAlternates(`${WEBSITE_BASE_URL}/cookie-policy`) },
   robots: { index: true, follow: true },
 };
 

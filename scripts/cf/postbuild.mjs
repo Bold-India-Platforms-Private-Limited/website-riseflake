@@ -25,7 +25,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import {
-  BASELINE_PUBLIC_DIR, FAILURE_LOG, OUT_DIR, PLACEHOLDER_SLUG, PLATFORM_FILE_LIMIT, ROOT, envInt, log, readManifest, walkFiles, warn,
+  BASELINE_PUBLIC_DIR, FAILURE_LOG, OUT_DIR, PLACEHOLDER_SLUG, PLATFORM_FILE_LIMIT, ROOT, SITE_ORIGIN, envInt, log, readManifest, walkFiles, warn,
 } from './lib.mjs'
 import { FACET_REDIRECTS } from './redirects.mjs'
 import { STATIC_PAGE_PATHS, generateSitemaps } from './sitemaps.mjs'
@@ -205,6 +205,16 @@ for (const u of urls) {
 }
 if (dangling) fail(`${dangling} sitemap URLs do not resolve to a file`)
 log(`sitemaps: ${sitemapFiles.length} files, ${urls.length} page URLs`)
+
+// robots.txt comes from public/robots.txt; its Sitemap line always points at this build's own origin.
+const robotsPath = path.join(OUT_DIR, 'robots.txt')
+if (fs.existsSync(robotsPath)) {
+  const robots = fs.readFileSync(robotsPath, 'utf8').replace(/^Sitemap:.*$/gm, '').trimEnd()
+  fs.writeFileSync(robotsPath, `${robots}\nSitemap: ${SITE_ORIGIN}/sitemap.xml\n`)
+  log(`robots.txt: Sitemap → ${SITE_ORIGIN}/sitemap.xml`)
+} else {
+  fail('public/robots.txt is missing from the export')
+}
 
 // ── 4. Redirects (applied by Vercel, see scripts/cf/vercel.mjs) ─────────────
 // Hand-written rules live in public/_redirects ("<source> <destination> <status>" per line); the generated

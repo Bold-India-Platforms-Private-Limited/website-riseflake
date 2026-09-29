@@ -1,10 +1,10 @@
 import type { Metadata } from 'next';
-import { hreflangAlternates } from '../../lib/config';
+import { hreflangAlternates, WEBSITE_BASE_URL } from '../../lib/config';
 
 export const metadata: Metadata = {
   title: { default: 'Disclaimer', template: '%s | Riseflake Jobportal' },
   description: 'Read the Riseflake disclaimer regarding the accuracy and completeness of information on our platform.',
-  alternates: { canonical: 'https://jobportal.riseflake.com/disclaimer', ...hreflangAlternates('https://jobportal.riseflake.com/disclaimer') },
+  alternates: { canonical: `${WEBSITE_BASE_URL}/disclaimer`, ...hreflangAlternates(`${WEBSITE_BASE_URL}/disclaimer`) },
   robots: { index: true, follow: true },
 };
 

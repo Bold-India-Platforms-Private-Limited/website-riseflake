@@ -1,4 +1,5 @@
 'use client'
+import { WEBSITE_BASE_URL } from '@/lib/config'
 
 import { useState } from 'react'
 import { Copy, Check, Linkedin, Twitter, Share2 } from 'lucide-react'
@@ -6,7 +7,7 @@ import { Copy, Check, Linkedin, Twitter, Share2 } from 'lucide-react'
 export default function ShareCard({ slug, companyName }: { slug: string; companyName: string }) {
   const [copied, setCopied] = useState(false)
 
-  const url = `https://jobportal.riseflake.com/companies/${slug}`
+  const url = `${WEBSITE_BASE_URL}/companies/${slug}`
   const text = `Check out ${companyName} on Riseflake`
 
   const handleCopy = async () => {

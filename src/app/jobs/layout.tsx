@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { hreflangAlternates } from '../../lib/config'
+import { hreflangAlternates, WEBSITE_BASE_URL } from '../../lib/config'
 
 export const metadata: Metadata = {
   title: { default: 'Jobs in India - Find Full-Time & Part-Time Jobs', template: '%s | Riseflake Jobportal' },
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_IN',
-    url: 'https://jobportal.riseflake.com/jobs',
+    url: `${WEBSITE_BASE_URL}/jobs`,
     siteName: 'Riseflake Jobportal',
     title: 'Jobs in India - Browse & Apply on Riseflake',
     description: 'Discover thousands of job openings across India. Filter by city, role, salary and experience. Apply directly on Riseflake.',
@@ -27,8 +27,8 @@ export const metadata: Metadata = {
     images: ['/og-image.webp'],
   },
   alternates: {
-    canonical: 'https://jobportal.riseflake.com/jobs',
-    ...hreflangAlternates('https://jobportal.riseflake.com/jobs'),
+    canonical: `${WEBSITE_BASE_URL}/jobs`,
+    ...hreflangAlternates(`${WEBSITE_BASE_URL}/jobs`),
   },
 }
 

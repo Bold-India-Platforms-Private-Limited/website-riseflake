@@ -46,7 +46,7 @@ const jsonLd = {
   description:
     'Discover students, freshers, and early-career professionals on Riseflake — India\'s professional network.',
   url: `${WEBSITE_BASE_URL}/network`,
-  isPartOf: { '@type': 'WebSite', name: 'Riseflake', url: 'https://jobportal.riseflake.com' },
+  isPartOf: { '@type': 'WebSite', name: 'Riseflake', url: WEBSITE_BASE_URL },
 }
 
 const breadcrumbSchema = {
@@ -148,7 +148,7 @@ export default function NetworkPage() {
             Riseflake is India&apos;s professional network for students and early-career professionals.
             Create a public profile to appear on Google, connect with peers, and get discovered
             by recruiters. Browse individual profiles at{' '}
-            <Link href="https://jobportal.riseflake.com/in" className="underline underline-offset-2 hover:text-slate-600">
+            <Link href={`${WEBSITE_BASE_URL}/in`} className="underline underline-offset-2 hover:text-slate-600">
               riseflake.com/in/[username]
             </Link>
             .
