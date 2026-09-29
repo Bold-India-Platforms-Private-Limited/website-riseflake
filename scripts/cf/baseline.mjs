@@ -25,7 +25,7 @@
  * A runner that already persists .cache/ (GitHub Actions cache) skips the download entirely.
  *
  * Tunables: CF_BASELINE_URL (where to look; default: the Vercel project's production URL, then
- * https://riseflake.com), CF_BASELINE=off (never use a baseline).
+ * https://jobportal.riseflake.com), CF_BASELINE=off (never use a baseline).
  */
 import fs from 'node:fs'
 import path from 'node:path'

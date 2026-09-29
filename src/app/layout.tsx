@@ -11,7 +11,7 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://riseflake.com'),
+  metadataBase: new URL('https://jobportal.riseflake.com'),
   title: {
     default: 'Riseflake - Job Portal & Professional Networking Platform in India',
     template: '%s | Riseflake',
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_IN',
-    url: 'https://riseflake.com',
+    url: 'https://jobportal.riseflake.com',
     siteName: 'Riseflake',
     title: 'Riseflake - Job Portal & Professional Networking in India',
     description: 'Discover your next opportunity in India. Find jobs and internships across Bangalore, Mumbai, Delhi, Hyderabad and more. Connect with top Indian companies on Riseflake.',
@@ -70,8 +70,8 @@ export const metadata: Metadata = {
     },
   },
   alternates: {
-    canonical: 'https://riseflake.com',
-    ...hreflangAlternates('https://riseflake.com'),
+    canonical: 'https://jobportal.riseflake.com',
+    ...hreflangAlternates('https://jobportal.riseflake.com'),
   },
   // verification: { google: 'YOUR_TOKEN', other: { 'msvalidate.01': 'YOUR_BING_TOKEN' } },
 }
@@ -117,7 +117,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               '@context': 'https://schema.org',
               '@type': 'Organization',
               name: 'Riseflake',
-              url: 'https://riseflake.com',
+              url: 'https://jobportal.riseflake.com',
               logo: 'https://assets.riseflake.com/logo.webp',
               description: 'India\'s job portal and professional networking platform for career growth',
               sameAs: [
@@ -152,14 +152,14 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               '@context': 'https://schema.org',
               '@type': 'WebSite',
               name: 'Riseflake',
-              url: 'https://riseflake.com',
+              url: 'https://jobportal.riseflake.com',
               description: 'India\'s job portal and professional networking platform',
               potentialAction: [
                 {
                   '@type': 'SearchAction',
                   target: {
                     '@type': 'EntryPoint',
-                    urlTemplate: 'https://riseflake.com/jobs?position={search_term_string}',
+                    urlTemplate: 'https://jobportal.riseflake.com/jobs?position={search_term_string}',
                   },
                   'query-input': 'required name=search_term_string',
                 },
@@ -167,7 +167,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                   '@type': 'SearchAction',
                   target: {
                     '@type': 'EntryPoint',
-                    urlTemplate: 'https://riseflake.com/internships?position={search_term_string}',
+                    urlTemplate: 'https://jobportal.riseflake.com/internships?position={search_term_string}',
                   },
                   'query-input': 'required name=search_term_string',
                 },

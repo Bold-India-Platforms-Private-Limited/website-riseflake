@@ -6,10 +6,10 @@ export const metadata: Metadata = {
   description: 'Learn about Riseflake — India\'s job portal and professional networking platform helping students, freshers and professionals find their next career opportunity. Our mission is to connect talent with opportunity across India.',
   openGraph: {
     locale: 'en_IN',
-    url: 'https://riseflake.com/about',
+    url: 'https://jobportal.riseflake.com/about',
     images: [{ url: '/og-image.webp', width: 1200, height: 630 }],
   },
-  alternates: { canonical: 'https://riseflake.com/about', ...hreflangAlternates('https://riseflake.com/about') },
+  alternates: { canonical: 'https://jobportal.riseflake.com/about', ...hreflangAlternates('https://jobportal.riseflake.com/about') },
   robots: { index: true, follow: true },
 }
 

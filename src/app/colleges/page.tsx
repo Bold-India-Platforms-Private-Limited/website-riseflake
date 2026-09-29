@@ -12,12 +12,12 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     locale: 'en_IN',
-    url: 'https://riseflake.com/colleges',
+    url: 'https://jobportal.riseflake.com/colleges',
     title: 'Top Colleges & Universities in India | Riseflake',
     description: 'Explore top colleges and universities across India with placement records and hiring partners.',
     images: [{ url: '/og-image.webp', width: 1200, height: 630 }],
   },
-  alternates: { canonical: 'https://riseflake.com/colleges', ...hreflangAlternates('https://riseflake.com/colleges') },
+  alternates: { canonical: 'https://jobportal.riseflake.com/colleges', ...hreflangAlternates('https://jobportal.riseflake.com/colleges') },
   robots: { index: true, follow: true },
 };
 import Navbar from '../components/Navbar';
@@ -28,8 +28,8 @@ const breadcrumbSchema = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
   itemListElement: [
-    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://riseflake.com' },
-    { '@type': 'ListItem', position: 2, name: 'Colleges', item: 'https://riseflake.com/colleges' },
+    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://jobportal.riseflake.com' },
+    { '@type': 'ListItem', position: 2, name: 'Colleges', item: 'https://jobportal.riseflake.com/colleges' },
   ],
 };
 

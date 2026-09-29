@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_IN',
-    url: 'https://riseflake.com/internships',
+    url: 'https://jobportal.riseflake.com/internships',
     siteName: 'Riseflake',
     title: 'Internships in India - Browse & Apply on Riseflake',
     description: 'Find internships across India for students and freshers. Filter by domain, city and stipend. Apply directly on Riseflake.',
@@ -29,8 +29,8 @@ export const metadata: Metadata = {
     images: ['/og-image.webp'],
   },
   alternates: {
-    canonical: 'https://riseflake.com/internships',
-    ...hreflangAlternates('https://riseflake.com/internships'),
+    canonical: 'https://jobportal.riseflake.com/internships',
+    ...hreflangAlternates('https://jobportal.riseflake.com/internships'),
   },
 }
 

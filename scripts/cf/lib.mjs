@@ -87,7 +87,7 @@ export function loadState() {
   }
 }
 
-export const SITE_ORIGIN = 'https://riseflake.com'
+export const SITE_ORIGIN = 'https://jobportal.riseflake.com'
 
 /** Public website API (…/api/v2/website) and blog API (…/api/v2). */
 export const API_BASE_URL = (

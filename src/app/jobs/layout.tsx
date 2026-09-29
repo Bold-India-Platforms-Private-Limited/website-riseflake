@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_IN',
-    url: 'https://riseflake.com/jobs',
+    url: 'https://jobportal.riseflake.com/jobs',
     siteName: 'Riseflake',
     title: 'Jobs in India - Browse & Apply on Riseflake',
     description: 'Discover thousands of job openings across India. Filter by city, role, salary and experience. Apply directly on Riseflake.',
@@ -27,8 +27,8 @@ export const metadata: Metadata = {
     images: ['/og-image.webp'],
   },
   alternates: {
-    canonical: 'https://riseflake.com/jobs',
-    ...hreflangAlternates('https://riseflake.com/jobs'),
+    canonical: 'https://jobportal.riseflake.com/jobs',
+    ...hreflangAlternates('https://jobportal.riseflake.com/jobs'),
   },
 }
 

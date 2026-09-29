@@ -168,4 +168,4 @@ Disallow: /
 # ------------------------------------------
 # Sitemaps
 # ------------------------------------------
-Sitemap: https://riseflake.com/sitemap.xml
+Sitemap: https://jobportal.riseflake.com/sitemap.xml

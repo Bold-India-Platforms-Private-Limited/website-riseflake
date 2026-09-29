@@ -4,7 +4,7 @@ import { hreflangAlternates } from '../../lib/config';
 export const metadata: Metadata = {
   title: 'Disclaimer',
   description: 'Read the Riseflake disclaimer regarding the accuracy and completeness of information on our platform.',
-  alternates: { canonical: 'https://riseflake.com/disclaimer', ...hreflangAlternates('https://riseflake.com/disclaimer') },
+  alternates: { canonical: 'https://jobportal.riseflake.com/disclaimer', ...hreflangAlternates('https://jobportal.riseflake.com/disclaimer') },
   robots: { index: true, follow: true },
 };
 

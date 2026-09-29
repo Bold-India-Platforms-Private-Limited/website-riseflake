@@ -6,7 +6,7 @@ import { Copy, Check, Linkedin, Twitter, Share2 } from 'lucide-react'
 export default function ShareCard({ slug, companyName }: { slug: string; companyName: string }) {
   const [copied, setCopied] = useState(false)
 
-  const url = `https://riseflake.com/companies/${slug}`
+  const url = `https://jobportal.riseflake.com/companies/${slug}`
   const text = `Check out ${companyName} on Riseflake`
 
   const handleCopy = async () => {

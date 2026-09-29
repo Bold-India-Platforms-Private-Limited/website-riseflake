@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     title: 'Top Companies Hiring | Riseflake',
     description:
       'Discover top employers on Riseflake. Browse verified company profiles and explore open positions across India.',
-    url: 'https://riseflake.com/companies',
+    url: 'https://jobportal.riseflake.com/companies',
     siteName: 'Riseflake',
     images: [{ url: OG_FALLBACK_IMAGE, width: 1200, height: 630 }],
     type: 'website',
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     description: 'Browse verified company profiles and explore open positions across India.',
     images: [OG_FALLBACK_IMAGE],
   },
-  alternates: { canonical: 'https://riseflake.com/companies', ...hreflangAlternates('https://riseflake.com/companies') },
+  alternates: { canonical: 'https://jobportal.riseflake.com/companies', ...hreflangAlternates('https://jobportal.riseflake.com/companies') },
   robots: { index: true, follow: true },
 }
 
@@ -40,8 +40,8 @@ const breadcrumbSchema = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
   itemListElement: [
-    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://riseflake.com' },
-    { '@type': 'ListItem', position: 2, name: 'Companies', item: 'https://riseflake.com/companies' },
+    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://jobportal.riseflake.com' },
+    { '@type': 'ListItem', position: 2, name: 'Companies', item: 'https://jobportal.riseflake.com/companies' },
   ],
 }
 

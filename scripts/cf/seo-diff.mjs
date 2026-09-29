@@ -3,7 +3,7 @@
  * SEO parity check: compares the SEO-relevant <head> of pages on the currently live site
  * with the same paths on a preview of the static build.
  *
- *   node scripts/cf/seo-diff.mjs <preview-base-url> [--live=https://riseflake.com] [--sample=40] [path ...]
+ *   node scripts/cf/seo-diff.mjs <preview-base-url> [--live=https://jobportal.riseflake.com] [--sample=40] [path ...]
  *   npm run seo-diff -- http://localhost:8788
  *
  * For every path it extracts <title>, meta description / robots / keywords, canonical,
@@ -17,7 +17,7 @@ import { locsOf } from './lib.mjs'
 
 const args = process.argv.slice(2)
 const preview = (args.find((a) => /^https?:\/\//.test(a)) ?? '').replace(/\/+$/, '')
-const live = (args.find((a) => a.startsWith('--live='))?.split('=')[1] ?? 'https://riseflake.com').replace(/\/+$/, '')
+const live = (args.find((a) => a.startsWith('--live='))?.split('=')[1] ?? 'https://jobportal.riseflake.com').replace(/\/+$/, '')
 const SAMPLE = Number(args.find((a) => a.startsWith('--sample='))?.split('=')[1] ?? 40)
 let paths = args.filter((a) => a.startsWith('/'))
 if (!preview) {

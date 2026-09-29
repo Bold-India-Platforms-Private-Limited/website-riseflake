@@ -9,7 +9,7 @@ import { FAQ_TOPICS } from '../../lib/faqs'
 export const metadata: Metadata = {
   title: 'Sitemap — All Pages & Sections',
   description: 'Full sitemap of Riseflake. Find all jobs, internships, companies, colleges, and static pages in one place.',
-  alternates: { canonical: 'https://riseflake.com/sitemap', ...hreflangAlternates('https://riseflake.com/sitemap') },
+  alternates: { canonical: 'https://jobportal.riseflake.com/sitemap', ...hreflangAlternates('https://jobportal.riseflake.com/sitemap') },
   robots: { index: true, follow: true },
 }
 
@@ -374,7 +374,7 @@ function TreeRoot() {
     <li className="flex items-center gap-2 py-1.5 mb-2">
       <Globe className="h-4 w-4 flex-shrink-0 text-slate-500" />
       <a
-        href="https://riseflake.com"
+        href="https://jobportal.riseflake.com"
         className="text-sm font-bold text-slate-900 hover:text-indigo-600 transition-colors"
       >
         riseflake.com

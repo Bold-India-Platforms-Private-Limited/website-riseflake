@@ -18,11 +18,11 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Campus Ambassador Program – Riseflake',
     description: 'Represent Riseflake at your college & earn real rewards.',
-    url: 'https://riseflake.com/campus-ambassador',
+    url: 'https://jobportal.riseflake.com/campus-ambassador',
     siteName: 'Riseflake',
     type: 'website',
   },
-  alternates: { canonical: 'https://riseflake.com/campus-ambassador', ...hreflangAlternates('https://riseflake.com/campus-ambassador') },
+  alternates: { canonical: 'https://jobportal.riseflake.com/campus-ambassador', ...hreflangAlternates('https://jobportal.riseflake.com/campus-ambassador') },
   robots: { index: true, follow: true },
 }
 

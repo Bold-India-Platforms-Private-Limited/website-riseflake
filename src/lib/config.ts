@@ -15,7 +15,7 @@ export const BLOG_API_URL =
   process.env.NEXT_PUBLIC_BLOG_API_URL ??
   'https://backend.riseflake.com/api/v2'
 
-export const WEBSITE_BASE_URL = 'https://riseflake.com'
+export const WEBSITE_BASE_URL = 'https://jobportal.riseflake.com'
 
 /**
  * Social-share image for pages that used to get a per-page card from the
