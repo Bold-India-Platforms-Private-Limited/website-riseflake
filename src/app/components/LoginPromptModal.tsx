@@ -40,7 +40,10 @@ async function isUserLoggedIn(): Promise<boolean> {
       credentials: 'include',
       cache: 'no-store',
     })
-    return res.ok
+    if (!res.ok) return false
+    // Guests get 200 with `result: null` (no 401), so check for an actual user.
+    const body = await res.json().catch(() => null)
+    return Boolean(body?.result?.id)
   } catch {
     return false
   }
