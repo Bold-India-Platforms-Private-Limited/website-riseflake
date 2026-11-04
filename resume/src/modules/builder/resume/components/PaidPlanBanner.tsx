@@ -43,12 +43,12 @@ const PaidPlanBanner = () => {
   if (!isVisible || !plan) return null;
 
   return (
-    <div className="fixed left-1/2 top-16 z-40 flex w-fit max-w-[calc(100vw-1rem)] -translate-x-1/2 items-center gap-3 rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-700 shadow-md print:hidden">
+    <div className="fixed left-1/2 top-16 z-40 flex w-fit max-w-[calc(100vw-1rem)] -translate-x-1/2 items-center gap-3 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700 shadow-md print:hidden">
       <span>
         {plan.title}: unlimited downloads, {plan.status === 'cancelled' ? 'ends' : 'renews'}{' '}
         {formatDate(plan.next_charge_at || plan.current_end)}
       </span>
-      <Link href="/profile" className="font-semibold text-[#414BEA]">
+      <Link href="/profile" className="font-semibold underline">
         Account
       </Link>
     </div>

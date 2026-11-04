@@ -32,10 +32,10 @@ const TITLES: Record<AuthMode, { title: string; note: string }> = {
 };
 
 const inputClass =
-  'w-full rounded-lg border border-slate-300 px-3.5 py-3 text-[15px] outline-none focus:border-[#414BEA] focus:ring-1 focus:ring-[#414BEA]';
+  'w-full rounded-lg border border-slate-300 px-3.5 py-3 text-[15px] outline-none focus:border-[#2f5ee7] focus:ring-1 focus:ring-[#2f5ee7]';
 const primaryClass =
-  'w-full rounded-lg bg-[#414BEA] py-3 text-[15px] font-semibold text-white hover:bg-[#3540d6] disabled:opacity-60 cursor-pointer disabled:cursor-default';
-const linkClass = 'font-semibold text-[#414BEA] hover:underline cursor-pointer';
+  'w-full rounded-full bg-[#2f5ee7] py-3 text-[15px] font-semibold text-white hover:bg-[#2650cc] disabled:opacity-60 cursor-pointer disabled:cursor-default';
+const linkClass = 'font-semibold text-[#2f5ee7] hover:underline cursor-pointer';
 
 const AuthSheet = ({ mode, onModeChange, onClose, onSignedIn }: AuthSheetProps) => {
   const refresh = useAuthStore((state) => state.refresh);
@@ -224,7 +224,7 @@ const AuthSheet = ({ mode, onModeChange, onClose, onSignedIn }: AuthSheetProps) 
 
         <div className="px-6 pb-8 pt-5">
           {notice && (
-            <p className="mb-4 rounded-lg border border-[#d5d8fb] bg-[#f3f4fe] px-3.5 py-3 text-sm text-slate-800">{notice}</p>
+            <p className="mb-4 rounded-lg border border-indigo-100 bg-indigo-50 px-3.5 py-3 text-sm text-slate-800">{notice}</p>
           )}
 
           {mode === 'login' && (

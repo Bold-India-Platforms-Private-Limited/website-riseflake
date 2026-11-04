@@ -3,7 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
-import { Check } from 'lucide-react';
+import { Check, CheckCircle2, ShieldCheck } from 'lucide-react';
 import { toast } from 'sonner';
 import AuthSheet, { AuthMode } from '@/components/auth/AuthSheet';
 import LandingFooter from '@/components/landing/LandingFooter';
@@ -13,7 +13,6 @@ import {
   PlanItem,
   ResumeConfig,
   createSubscription,
-  formatDate,
   getConfig,
 } from '@/lib/authApi';
 import { useAuthStore } from '@/stores/auth.store';
@@ -29,11 +28,17 @@ const RAZORPAY_SCRIPT = 'https://checkout.razorpay.com/v1/checkout.js';
 const ACTIVATION_CHECKS = 10;
 const ACTIVATION_GAP_MS = 2000;
 
+// The offer shown on this page. Razorpay charges the plan price, which is what
+// "Total payable amount" shows; the MRP is that price with the offer added back.
+const OFFER_PERCENT = 25;
+const mrpOf = (price: number) => Math.round(price / (1 - OFFER_PERCENT / 100));
+const inr = (value: number) => value.toLocaleString('en-IN');
+
 const planFeatures = (plan: PlanItem) => [
-  'All resume templates, no watermark',
-  'Unlimited PDF downloads',
-  `${plan.job_apply_limit.toLocaleString('en-IN')} job applications a day`,
-  `${plan.job_view_limit.toLocaleString('en-IN')} job views a day`,
+  'Unlimited downloads',
+  'ATS-friendly premium templates',
+  `${inr(plan.job_apply_limit)} job applications a day`,
+  `${inr(plan.job_view_limit)} job views a day`,
   ...(plan.job_apply_limit >= 500 ? ['Priority application review', 'Priority interview scheduling'] : []),
 ];
 
@@ -53,28 +58,46 @@ const loadRazorpay = () =>
 const wait = (ms: number) => new Promise((resolve) => window.setTimeout(resolve, ms));
 
 const PlansPage = () => {
+  const [config, setConfig] = useState<ResumeConfig | null>(null);
+  const [configFailed, setConfigFailed] = useState(false);
+  const [selectedPlanId, setSelectedPlanId] = useState<number | null>(null);
+
+  const [step, setStep] = useState<1 | 2 | 3>(1);
+  const [cartCompleted, setCartCompleted] = useState(false);
+  const [paymentCompleted, setPaymentCompleted] = useState(false);
+  const [paymentRetryMode, setPaymentRetryMode] = useState(false);
+  const [processingPayment, setProcessingPayment] = useState(false);
+  const [awaitingActivation, setAwaitingActivation] = useState(false);
+  const [error, setError] = useState('');
+  const [authMode, setAuthMode] = useState<AuthMode | null>(null);
+  const [timeLeft, setTimeLeft] = useState(1800); // 30 minutes in seconds
+  const [isVerifying, setIsVerifying] = useState(false);
+  const [isNavigating, setIsNavigating] = useState(false);
+  // Payment opens by itself after login only if Continue is what led to the login.
+  const continueAfterLogin = useRef(false);
+
   const router = useRouter();
   const user = useAuthStore((state) => state.user);
   const access = useAuthStore((state) => state.access);
   const ready = useAuthStore((state) => state.ready);
-  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const refresh = useAuthStore((state) => state.refresh);
-  const logout = useAuthStore((state) => state.logout);
 
-  const [config, setConfig] = useState<ResumeConfig | null>(null);
-  const [configFailed, setConfigFailed] = useState(false);
-  const [selectedId, setSelectedId] = useState<number | null>(null);
-  const [authMode, setAuthMode] = useState<AuthMode | null>(null);
-  const [paying, setPaying] = useState(false);
-  const [activating, setActivating] = useState(false);
-  const [awaitingActivation, setAwaitingActivation] = useState(false);
-  const [error, setError] = useState('');
-  // Payment opens by itself after login only if Continue is what led to the login.
-  const continueAfterLogin = useRef(false);
-
+  const loginCompleted = Boolean(user);
+  const hasAccess = Boolean(access?.has_access);
+  const loadingPlans = !config && !configFailed;
   const plans = useMemo(() => config?.plans || [], [config]);
-  const selected = plans.find((plan) => plan.id === selectedId) || plans[0] || null;
-  const currentPlan = access?.has_access ? access.plan : null;
+
+  const selectedPlan = useMemo(
+    () => plans.find((plan) => plan.id === selectedPlanId) || plans[0] || null,
+    [plans, selectedPlanId]
+  );
+
+  const amount = Number(selectedPlan?.price || 0);
+  const mrp = mrpOf(amount);
+  const saving = mrp - amount;
+  const discount = 0;
+  const tax = 0;
+  const total = amount;
 
   const loadConfig = useCallback(async () => {
     setConfigFailed(false);
@@ -89,306 +112,507 @@ const PlansPage = () => {
     loadConfig();
   }, [loadConfig]);
 
+  const openAuthDrawer = (mode: AuthMode) => {
+    setAuthMode(mode);
+    setStep(2);
+  };
+
+  const closeAuthDrawer = () => {
+    continueAfterLogin.current = false;
+    setAuthMode(null);
+    setStep(1);
+  };
+
   useEffect(() => {
-    if (!router.isReady || !ready || isAuthenticated) return;
+    if (!router.isReady || !ready || loginCompleted) return;
+
     const { auth } = router.query;
-    if (auth === 'login' || auth === 'register') setAuthMode(auth);
-  }, [router.isReady, router.query, ready, isAuthenticated]);
+    if (auth === 'register' || auth === 'login') {
+      setCartCompleted(true);
+      openAuthDrawer(auth);
+    }
+  }, [router.isReady, router.query.auth, ready, loginCompleted]);
+
+  useEffect(() => {
+    if (timeLeft <= 0) return;
+
+    const intervalId = setInterval(() => {
+      setTimeLeft((prev) => prev - 1);
+    }, 1000);
+
+    return () => clearInterval(intervalId);
+  }, [timeLeft]);
+
+  const formatTime = (seconds: number) => {
+    const min = Math.floor(seconds / 60);
+    const sec = seconds % 60;
+    return `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
+  };
 
   // Activation comes from Razorpay's webhook, usually within seconds of paying.
   const waitForActivation = useCallback(async () => {
-    setActivating(true);
+    setIsVerifying(true);
     setAwaitingActivation(false);
     setError('');
     for (let check = 0; check < ACTIVATION_CHECKS; check += 1) {
       const latest = await refresh();
       if (latest?.has_access) {
-        toast.success('Your subscription is active.');
+        setPaymentCompleted(true);
+        setPaymentRetryMode(false);
+        toast.success('Payment successful. Redirecting you in a few seconds...');
         await router.push('/builder-paid');
         return;
       }
       await wait(ACTIVATION_GAP_MS);
     }
-    setActivating(false);
+    setIsVerifying(false);
     setAwaitingActivation(true);
   }, [refresh, router]);
 
-  const startCheckout = useCallback(
+  const openRazorpayCheckout = useCallback(
     async (plan: PlanItem) => {
-      setPaying(true);
+      setProcessingPayment(true);
       setError('');
+      setStep(3);
+      setPaymentCompleted(false);
+
       try {
         const { data } = await createSubscription(plan.razorpay_plan_id);
         await loadRazorpay();
-        const checkout = new window.Razorpay({
+
+        const razorpay = new window.Razorpay({
           key: config?.razorpay_key,
           subscription_id: data.subscription_id,
-          name: 'Riseflake',
-          description: data.plan_name,
+          name: 'Riseflake Resume Builder',
+          description: `${data.plan_name} Purchase`,
           prefill: data.user_prefill,
-          theme: { color: '#414BEA' },
+          theme: {
+            color: '#2f5ee7',
+          },
           handler: () => waitForActivation(),
           modal: {
-            ondismiss: () => setError('Payment was not completed. You can try again whenever you are ready.'),
+            ondismiss: () => {
+              const message = 'Payment failed or cancelled.';
+              toast.error(message);
+              setError(message);
+              setPaymentRetryMode(true);
+            },
           },
         });
-        checkout.on('payment.failed', (response: { error?: { description?: string } }) => {
-          setError(response?.error?.description || 'Payment failed. Please try again.');
+        razorpay.on('payment.failed', (response: { error?: { description?: string } }) => {
+          const message = response?.error?.description || 'Payment failed. Please try again.';
+          toast.error(message);
+          setError(message);
+          setPaymentRetryMode(true);
         });
-        checkout.open();
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Could not start the payment.');
+        razorpay.open();
+      } catch (payErr) {
+        const message = payErr instanceof Error ? payErr.message : 'Unable to start the payment.';
+        toast.error(message);
+        setError(message);
+        setPaymentRetryMode(true);
       } finally {
-        setPaying(false);
+        setProcessingPayment(false);
       }
     },
     [config, waitForActivation]
   );
 
-  const handleContinue = async () => {
-    if (!selected) return;
-    if (currentPlan) {
+  const handleContinueFromCart = async () => {
+    setError('');
+    setCartCompleted(true);
+
+    if (hasAccess) {
+      setIsNavigating(true);
       await router.push('/builder-paid');
       return;
     }
-    if (!isAuthenticated) {
+
+    if (!loginCompleted) {
       continueAfterLogin.current = true;
-      setAuthMode(router.query.auth === 'login' ? 'login' : 'register');
+      // Default to register unless explicitly set to login
+      openAuthDrawer(router.query.auth === 'login' ? 'login' : 'register');
       return;
     }
-    await startCheckout(selected);
+
+    if (selectedPlan) await openRazorpayCheckout(selectedPlan);
   };
 
   const handleSignedIn = useCallback(async () => {
     setAuthMode(null);
+    setStep(1);
     if (router.query.auth) router.replace('/plans', undefined, { shallow: true });
-    const state = useAuthStore.getState();
-    if (state.access?.has_access) {
+    if (useAuthStore.getState().access?.has_access) {
       await router.push('/builder-paid');
       return;
     }
-    if (continueAfterLogin.current && selected) {
+    if (continueAfterLogin.current && selectedPlan) {
       continueAfterLogin.current = false;
-      await startCheckout(selected);
+      await openRazorpayCheckout(selectedPlan);
     }
-  }, [router, selected, startCheckout]);
+  }, [router, selectedPlan, openRazorpayCheckout]);
+
+  const stepLabelClass = (index: 1 | 2 | 3) => {
+    const active = step === index;
+    return active ? 'text-slate-900 font-semibold' : 'text-slate-600 font-medium';
+  };
 
   return (
     <>
       <Head>
-        <title>Plans | Riseflake Resume</title>
-        <meta name="description" content="Build your resume with a Riseflake subscription." />
+        <title>Plans & Checkout | RF Resume</title>
       </Head>
 
       <LoadingOverlay
-        isVisible={activating}
-        title="Activating your subscription"
-        message="Please keep this page open. This usually takes a few seconds."
+        isVisible={isNavigating}
       />
 
-      <div className="min-h-screen bg-[#f1f5f9] text-slate-900">
-        <header className="border-b border-slate-200 bg-white">
-          <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 px-4 sm:px-6">
-            <Link href="/" className="flex items-center gap-2.5">
-              <Image src={withBasePath('/hero.jpg')} alt="Riseflake" width={32} height={32} />
-              <span className="text-lg font-bold text-slate-900">Riseflake Resume</span>
+      <LoadingOverlay
+        isVisible={isVerifying}
+        title="Verifying your payment..."
+        message="Do not leave or refresh this page. It may take from 2 seconds up to 12 seconds."
+      />
+
+      <main className="plans-scroll-thin plans-font min-h-screen bg-[#f5f6fa] text-slate-900">
+        <header className="bg-white border-b border-slate-200 sticky top-0 z-30">
+          <div className="max-w-7xl mx-auto h-16 px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
+            <Link href="/" className="flex items-center gap-2 min-w-[130px]">
+              <Image src={withBasePath('/hero.jpg')} alt="Riseflake" width={34} height={34} />
+              <span className="text-2xl leading-none font-bold text-[#2f5ee7] hidden sm:inline">Riseflake</span>
             </Link>
 
-            {user ? (
-              <div className="flex items-center gap-4 text-sm">
-                <Link href="/profile" className="hidden font-medium text-slate-700 hover:text-[#414BEA] sm:inline">
-                  {user.first_name || user.full_name}
-                </Link>
-                <button type="button" onClick={() => logout()} className="cursor-pointer font-medium text-slate-500 hover:text-slate-800">
-                  Logout
-                </button>
+            <div className="flex items-center gap-3 text-[11px] sm:text-base font-medium">
+              <span className={stepLabelClass(1)}>
+                1. Cart {cartCompleted && <CheckCircle2 className="inline h-3 w-3 sm:h-4 sm:w-4 text-green-600" />}
+              </span>
+              <span className={stepLabelClass(2)}>
+                2. Login {loginCompleted && <CheckCircle2 className="inline h-3 w-3 sm:h-4 sm:w-4 text-green-600" />}
+              </span>
+              <span className={stepLabelClass(3)}>
+                3. Payment {paymentCompleted && <CheckCircle2 className="inline h-3 w-3 sm:h-4 sm:w-4 text-green-600" />}
+              </span>
+            </div>
+
+            <div className="hidden lg:flex items-center gap-2 text-slate-600 min-w-[240px] justify-end">
+              <ShieldCheck className="h-5 w-5 text-slate-500" />
+              <div className="text-xs leading-tight">
+                <p className="font-semibold">Buy Safely with Riseflake.com</p>
+                <p>We support secure payment methods</p>
               </div>
-            ) : (
-              <button
-                type="button"
-                onClick={() => setAuthMode('login')}
-                className="cursor-pointer rounded-lg border border-slate-300 px-3.5 py-2 text-sm font-semibold text-slate-800 hover:border-[#414BEA] hover:text-[#414BEA]"
-              >
-                Login with Riseflake
-              </button>
-            )}
+            </div>
           </div>
         </header>
 
-        <main className="mx-auto max-w-6xl px-4 pb-32 pt-7 sm:px-6 sm:pt-10 lg:pb-16">
-          <h1 className="text-[26px] font-bold leading-tight sm:text-4xl">
-            {currentPlan ? 'Your resume builder is ready' : 'Build your resume with a Riseflake subscription'}
-          </h1>
-          <p className="mt-2 max-w-2xl text-[15px] text-slate-600 sm:text-base">
-            {currentPlan
-              ? `You are on ${currentPlan.title}, so every template and download is open to you.`
-              : 'One subscription covers the resume builder and your job applications on Riseflake. Already subscribed? Login and start building.'}
-          </p>
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 pb-16">
+          <h1 className="text-2xl sm:text-4xl font-bold text-slate-900 mb-4 sm:mb-2">My cart</h1>
+          <div className="relative overflow-hidden bg-gradient-to-br from-[#f0f4ff] to-[#f5f3ff] rounded-[16px] sm:rounded-[24px] p-3 sm:p-5 mb-4 sm:mb-10 shadow-xl shadow-indigo-100/50 border border-indigo-100">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-200/20 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl opacity-50" />
 
-          {awaitingActivation && (
-            <div className="mt-5 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
-              <p>Your payment went through and your subscription is still being activated. This can take a minute.</p>
-              <button type="button" onClick={waitForActivation} className="mt-2 cursor-pointer font-semibold underline">
-                Check again
-              </button>
+            <div className="relative flex flex-col lg:flex-row items-center justify-between gap-3 sm:gap-6 px-1 sm:px-2">
+              <div className="flex items-center gap-3 sm:gap-5">
+                <div className="flex-shrink-0 bg-white rounded-xl sm:rounded-2xl p-2 sm:p-3 border border-indigo-100 shadow-sm">
+                  <div className="relative">
+                    <CheckCircle2 className="h-5 w-5 sm:h-7 sm:w-7 text-[#4f46e5]" />
+                    <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5 sm:h-3.5 sm:w-3.5">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2.5 w-2.5 sm:h-3.5 sm:w-3.5 bg-indigo-500"></span>
+                    </span>
+                  </div>
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="bg-[#4f46e5] text-white text-[8px] sm:text-[10px] font-black px-1.5 sm:py-0.5 rounded uppercase tracking-tighter">
+                      Limited Time
+                    </span>
+                    <h3 className="text-[#1e1b4b] font-black text-base sm:text-xl tracking-tight leading-none">BOLDSALE26</h3>
+                  </div>
+                  <p className="text-[#4338ca] text-[12px] sm:text-base font-bold">
+                    Extra 25% Off Applied!
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-4 bg-white/80 backdrop-blur-md rounded-xl sm:rounded-2xl p-2 sm:p-3 border border-indigo-100 w-full lg:w-auto justify-center shadow-sm">
+                <div className="text-right pr-4 border-r border-indigo-100 hidden sm:block">
+                  <span className="block text-[10px] text-slate-400 font-black uppercase tracking-widest leading-none mb-1 text-center">Active Offer</span>
+                  <span className="block text-xs text-[#1e1b4b] font-bold opacity-80 italic">Save ₹{inr(saving)} Instantly</span>
+                </div>
+                <div className="flex items-center gap-4 lg:gap-3">
+                  <div className="flex flex-col items-center">
+                    <span className="text-[20px] sm:text-[28px] font-black text-[#4f46e5] leading-none tabular-nums tracking-tighter">
+                      {formatTime(timeLeft)}
+                    </span>
+                    <span className="text-[8px] sm:text-[10px] text-slate-400 font-black uppercase tracking-[0.2em] mt-0.5">Minutes left</span>
+                  </div>
+                </div>
+              </div>
             </div>
-          )}
+          </div>
 
-          <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_340px]">
-            <section className="grid gap-4 md:grid-cols-2" aria-label="Plans">
-              {!config &&
-                !configFailed &&
-                [0, 1].map((item) => <div key={item} className="h-80 animate-pulse rounded-xl bg-white" />)}
-
+          <div className="grid lg:grid-cols-[1fr_420px] gap-6">
+            <div className="space-y-5">
               {configFailed && (
-                <div className="rounded-xl bg-white p-6 md:col-span-2">
+                <div className="rounded-3xl bg-white border border-slate-200 p-6">
                   <p className="text-slate-700">We could not load the plans right now.</p>
-                  <button type="button" onClick={loadConfig} className="mt-2 cursor-pointer font-semibold text-[#414BEA]">
+                  <button type="button" onClick={loadConfig} className="mt-2 font-semibold text-[#2f5ee7] cursor-pointer">
                     Try again
                   </button>
                 </div>
               )}
-
-              {plans.map((plan) => {
-                const isSelected = selected?.id === plan.id;
-                const isCurrent = currentPlan?.id === plan.id;
-                return (
-                  <button
-                    key={plan.id}
-                    type="button"
-                    aria-pressed={isSelected}
-                    disabled={Boolean(currentPlan)}
-                    onClick={() => setSelectedId(plan.id)}
-                    className={`flex flex-col rounded-xl border-2 bg-white p-5 text-left transition-colors sm:p-6 ${
-                      isSelected && !currentPlan ? 'border-[#414BEA]' : 'border-transparent'
-                    } ${currentPlan ? 'cursor-default' : 'cursor-pointer hover:border-[#c3c7f7]'}`}
-                  >
-                    <div className="flex items-start justify-between gap-3">
-                      <h2 className="text-lg font-bold">{plan.title}</h2>
-                      {!currentPlan && (
-                        <span
-                          className={`mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 ${
-                            isSelected ? 'border-[#414BEA]' : 'border-slate-300'
-                          }`}
-                        >
-                          {isSelected && <span className="h-2.5 w-2.5 rounded-full bg-[#414BEA]" />}
-                        </span>
-                      )}
-                      {isCurrent && <span className="text-sm font-semibold text-[#414BEA]">Current plan</span>}
-                    </div>
-                    <p className="mt-3">
-                      <span className="text-[34px] font-bold leading-none">₹{plan.price.toLocaleString('en-IN')}</span>
-                      <span className="text-[15px] text-slate-500"> / {plan.interval}</span>
-                    </p>
-                    <ul className="mt-5 space-y-2.5 text-[15px] text-slate-700">
-                      {planFeatures(plan).map((feature) => (
-                        <li key={feature} className="flex items-start gap-2.5">
-                          <Check className="mt-0.5 h-[18px] w-[18px] shrink-0 text-[#414BEA]" />
-                          <span>{feature}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </button>
-                );
-              })}
-            </section>
-
-            <aside className="hidden lg:block">
-              <div className="sticky top-6 rounded-xl bg-white p-6">
-                {currentPlan ? (
-                  <>
-                    <h2 className="text-lg font-bold">{currentPlan.title}</h2>
-                    <dl className="mt-4 space-y-2.5 text-[15px]">
-                      <div className="flex justify-between gap-4">
-                        <dt className="text-slate-500">{currentPlan.status === 'cancelled' ? 'Ends on' : 'Renews on'}</dt>
-                        <dd className="font-medium">{formatDate(currentPlan.next_charge_at || currentPlan.current_end)}</dd>
+              {loadingPlans
+                ? Array.from({ length: 2 }).map((_, index) => (
+                  <div key={`plan-skeleton-${index}`} className="rounded-3xl bg-white border border-slate-200 p-6">
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="flex items-start gap-3 flex-1">
+                        <div className="skeleton-shimmer mt-1 h-4 w-4 rounded-full" />
+                        <div className="w-full max-w-md">
+                          <div className="skeleton-shimmer h-8 w-44 rounded-lg" />
+                          <div className="mt-4 space-y-2">
+                            <div className="skeleton-shimmer h-4 w-56 rounded" />
+                            <div className="skeleton-shimmer h-4 w-48 rounded" />
+                          </div>
+                        </div>
                       </div>
-                    </dl>
-                    <Link href="/builder-paid" className="mt-5 block rounded-lg bg-[#414BEA] py-3 text-center font-semibold text-white hover:bg-[#3540d6]">
-                      Open Resume Builder
-                    </Link>
-                    <a href={MANAGE_SUBSCRIPTION_URL} className="mt-3 block text-center text-sm font-semibold text-[#414BEA] hover:underline">
-                      Manage subscription
-                    </a>
+                      <div className="skeleton-shimmer h-10 w-28 rounded-lg" />
+                    </div>
+                  </div>
+                ))
+                : plans.map((plan) => {
+                  const isSelected = selectedPlanId === plan.id;
+                  return (
+                    <label
+                      key={plan.id}
+                      className={`relative block rounded-3xl bg-white border p-6 cursor-pointer transition-all duration-300 transform ${isSelected
+                        ? 'border-indigo-600 ring-4 ring-indigo-50 shadow-xl -translate-y-1'
+                        : 'border-slate-200 hover:border-indigo-300 hover:shadow-lg'
+                        }`}
+                    >
+                      {isSelected && (
+                        <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-orange-400 to-red-500 text-white text-[10px] font-black px-4 py-1.5 rounded-full shadow-lg border-2 border-white uppercase tracking-wider z-10 animate-bounce">
+                          🔥 Selected Best Value
+                        </div>
+                      )}
+                      {!isSelected && plan.id !== plans[0].id && (
+                        <div className="absolute top-4 right-4 bg-indigo-100 text-indigo-700 text-[10px] font-bold px-3 py-1 rounded-full">
+                          RECOMMENDED
+                        </div>
+                      )}
+
+                      <div className="flex flex-col sm:flex-row items-start justify-between gap-6 sm:gap-4">
+                        <div className="flex items-start gap-3 sm:gap-4">
+                          <div className={`mt-1.5 flex-shrink-0 flex items-center justify-center w-5 h-5 rounded-full border-2 transition-colors ${isSelected ? 'border-indigo-600 bg-indigo-600' : 'border-slate-300'}`}>
+                            {isSelected && <div className="w-2 h-2 rounded-full bg-white" />}
+                          </div>
+                          <input
+                            type="radio"
+                            name="selectedPlan"
+                            className="hidden"
+                            checked={isSelected}
+                            onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                              if (event.target.checked) {
+                                setSelectedPlanId(plan.id);
+                              }
+                            }}
+                          />
+                          <div>
+                            <p className={`text-xl sm:text-2xl font-bold transition-colors ${isSelected ? 'text-indigo-900' : 'text-slate-800'}`}>
+                              {plan.title}
+                            </p>
+                            <ul className="mt-3 sm:mt-4 space-y-2 sm:space-y-2.5 text-xs sm:text-sm text-slate-600">
+                              {planFeatures(plan).map((feature) => (
+                                <li key={feature} className="flex items-center gap-2.5">
+                                  <div className="flex-shrink-0 bg-emerald-100 rounded-full p-0.5">
+                                    <Check className="h-3 w-3 text-emerald-600" />
+                                  </div>
+                                  <span className="font-medium text-slate-700">{feature}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        </div>
+
+                        <div className="w-full sm:w-auto text-left sm:text-right flex sm:flex-col items-center sm:items-end justify-between sm:justify-start gap-4 sm:gap-0">
+                          <div className="bg-emerald-50 text-emerald-700 text-[10px] font-black px-2 py-0.5 rounded-md sm:mb-2 border border-emerald-100 uppercase">
+                            SAVE 25%
+                          </div>
+                          <div className="flex flex-col items-end">
+                            <p className="text-[10px] sm:text-xs font-bold text-slate-400 line-through mb-0.5 tracking-tight">
+                              MRP ₹{inr(mrpOf(plan.price))}
+                            </p>
+                            <div className="flex items-baseline gap-1">
+                              <span className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tighter">₹{inr(Number(plan.price))}</span>
+                              <span className="text-[10px] sm:text-xs font-bold text-slate-500">/{plan.interval}</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </label>
+                  );
+                })}
+            </div>
+
+            <aside>
+              <div className="rounded-3xl bg-white border border-slate-200 p-6 sticky top-28">
+                {loadingPlans || !selectedPlan ? (
+                  <>
+                    <div className="skeleton-shimmer h-10 w-44 rounded-lg" />
+                    <div className="mt-5 space-y-3">
+                      <div className="flex items-center justify-between">
+                        <div className="skeleton-shimmer h-5 w-20 rounded" />
+                        <div className="skeleton-shimmer h-5 w-16 rounded" />
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <div className="skeleton-shimmer h-5 w-24 rounded" />
+                        <div className="skeleton-shimmer h-5 w-16 rounded" />
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <div className="skeleton-shimmer h-5 w-28 rounded" />
+                        <div className="skeleton-shimmer h-5 w-16 rounded" />
+                      </div>
+                    </div>
+                    <div className="mt-5 border-t border-slate-200 pt-4 flex items-center justify-between">
+                      <div className="skeleton-shimmer h-7 w-44 rounded" />
+                      <div className="skeleton-shimmer h-7 w-20 rounded" />
+                    </div>
+                    <div className="skeleton-shimmer mt-5 h-12 w-full rounded-full" />
                   </>
                 ) : (
                   <>
-                    <h2 className="text-lg font-bold">Summary</h2>
-                    <dl className="mt-4 space-y-2.5 text-[15px]">
-                      <div className="flex justify-between gap-4">
-                        <dt className="text-slate-500">Plan</dt>
-                        <dd className="text-right font-medium">{selected?.title || '-'}</dd>
+                    <h3 className="text-2xl sm:text-3xl font-semibold">Price details</h3>
+                    <div className="mt-5 space-y-3 text-slate-700">
+                      <div className="flex items-center justify-between">
+                        <span>MRP Total</span>
+                        <span className="plans-currency line-through text-slate-400">
+                          ₹ {inr(mrp)}
+                        </span>
                       </div>
-                      <div className="flex justify-between gap-4">
-                        <dt className="text-slate-500">Billing</dt>
-                        <dd className="font-medium">Monthly</dd>
+                      <div className="flex items-center justify-between text-emerald-600 font-medium">
+                        <span>Discount (BOLDSALE26)</span>
+                        <span className="plans-currency">-₹ {inr(saving)}</span>
                       </div>
-                    </dl>
-                    <div className="mt-4 flex items-baseline justify-between border-t border-slate-200 pt-4">
-                      <span className="font-semibold">Pay today</span>
-                      <span className="text-2xl font-bold">₹{selected ? selected.price.toLocaleString('en-IN') : '-'}</span>
+                      <div className="flex items-center justify-between">
+                        <span>Discount</span>
+                        <span className="plans-currency">₹ {discount}</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span>Estimated GST</span>
+                        <span className="plans-currency">₹ {tax}</span>
+                      </div>
                     </div>
+                    <div className="mt-5 border-t border-slate-200 pt-4 flex items-center justify-between font-semibold text-1xl">
+                      <span>Total payable amount</span>
+                      <span className="plans-currency">₹ {inr(total)}</span>
+                    </div>
+
                     <button
                       type="button"
-                      onClick={handleContinue}
-                      disabled={!selected || paying}
-                      className="mt-5 w-full cursor-pointer rounded-lg bg-[#414BEA] py-3 font-semibold text-white hover:bg-[#3540d6] disabled:cursor-default disabled:opacity-60"
+                      onClick={handleContinueFromCart}
+                      disabled={loadingPlans || processingPayment || paymentCompleted}
+                      className="mt-5 w-full rounded-full bg-[#2f5ee7] text-white py-3 font-semibold cursor-pointer disabled:opacity-70"
                     >
-                      {paying ? 'Opening payment...' : 'Continue'}
+                      {processingPayment
+                        ? 'Processing...'
+                        : paymentCompleted
+                          ? 'Completed'
+                          : hasAccess
+                            ? 'Open Resume Builder'
+                            : paymentRetryMode
+                              ? 'Retry Payment'
+                              : 'Continue'}
                     </button>
-                    <p className="mt-3 text-[13px] leading-relaxed text-slate-500">
-                      Renews every month. Cancel anytime from your Riseflake account. Payments are handled by Razorpay.
-                    </p>
+                    {paymentRetryMode && !processingPayment && (
+                      <p className="mt-3 text-sm text-amber-700">
+                        Your previous payment was not completed. Click <span className="font-semibold">Retry Payment</span>{' '}
+                        to try again.
+                      </p>
+                    )}
+                    {awaitingActivation && (
+                      <p className="mt-3 text-sm text-amber-700">
+                        Your payment went through and your subscription is still being activated.{' '}
+                        <button type="button" onClick={waitForActivation} className="font-semibold underline cursor-pointer">
+                          Check again
+                        </button>
+                      </p>
+                    )}
+                    {hasAccess ? (
+                      <p className="mt-3 text-center text-sm text-slate-600">
+                        You are on {access?.plan?.title}.{' '}
+                        <a href={MANAGE_SUBSCRIPTION_URL} className="font-semibold text-[#2f5ee7] hover:underline">
+                          Manage subscription
+                        </a>
+                      </p>
+                    ) : (
+                      !loginCompleted && (
+                        <p className="mt-3 text-center text-sm text-slate-600">
+                          Already on Riseflake?{' '}
+                          <button
+                            type="button"
+                            onClick={() => openAuthDrawer('login')}
+                            className="font-semibold text-[#2f5ee7] hover:underline cursor-pointer"
+                          >
+                            Login with Riseflake
+                          </button>
+                        </p>
+                      )
+                    )}
                   </>
                 )}
-                {error && <p className="mt-3 text-sm text-red-700">{error}</p>}
               </div>
             </aside>
           </div>
 
-          {!currentPlan && config && (
-            <p className="mt-6 text-[15px] text-slate-600">
-              Want to look around first?{' '}
-              <Link href={config.free_builder ? '/builder-free' : '/builder-trial'} className="font-semibold text-[#414BEA] hover:underline">
-                {config.free_builder ? 'Try the free builder' : 'Try the builder'}
-              </Link>
-            </p>
-          )}
-        </main>
-
-        <div className="fixed inset-x-0 bottom-0 z-30 border-t border-slate-200 bg-white px-4 py-3 lg:hidden">
-          {error && <p className="mb-2 text-sm text-red-700">{error}</p>}
-          {currentPlan ? (
-            <Link href="/builder-paid" className="block rounded-lg bg-[#414BEA] py-3 text-center font-semibold text-white">
-              Open Resume Builder
-            </Link>
-          ) : (
-            <div className="flex items-center gap-4">
-              <div className="min-w-0">
-                <p className="truncate text-[13px] text-slate-500">{selected?.title || 'Choose a plan'}</p>
-                <p className="text-lg font-bold leading-tight">
-                  ₹{selected ? selected.price.toLocaleString('en-IN') : '-'}
-                  <span className="text-[13px] font-normal text-slate-500"> / month</span>
-                </p>
-              </div>
-              <button
-                type="button"
-                onClick={handleContinue}
-                disabled={!selected || paying}
-                className="flex-1 cursor-pointer rounded-lg bg-[#414BEA] py-3 font-semibold text-white disabled:opacity-60"
-              >
-                {paying ? 'Opening...' : 'Continue'}
-              </button>
-            </div>
-          )}
-        </div>
+          {error && <p className="mt-5 text-red-600 text-sm">{error}</p>}
+        </section>
 
         <LandingFooter />
-      </div>
 
-      {authMode && (
-        <AuthSheet mode={authMode} onModeChange={setAuthMode} onClose={() => { continueAfterLogin.current = false; setAuthMode(null); }} onSignedIn={handleSignedIn} />
-      )}
+        {authMode && (
+          <AuthSheet mode={authMode} onModeChange={setAuthMode} onClose={closeAuthDrawer} onSignedIn={handleSignedIn} />
+        )}
+
+        <style jsx global>{`
+          .plans-font {
+            font-family: 'Inter', 'Noto Sans', 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+          }
+          .plans-currency {
+            font-family: 'Noto Sans', 'Inter', 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+            font-variant-numeric: tabular-nums;
+          }
+          .plans-scroll-thin {
+            scrollbar-width: thin;
+            scrollbar-color: #f8fafc transparent;
+          }
+          .plans-scroll-thin::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+          }
+          .plans-scroll-thin::-webkit-scrollbar-track {
+            background: transparent;
+          }
+          .plans-scroll-thin::-webkit-scrollbar-thumb {
+            background: #f8fafc;
+            border-radius: 9999px;
+          }
+          .skeleton-shimmer {
+            position: relative;
+            overflow: hidden;
+            background: #e2e8f0;
+          }
+          .skeleton-shimmer::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            transform: translateX(-100%);
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.65), transparent);
+            animation: plans-shimmer 1.1s infinite;
+          }
+          @keyframes plans-shimmer {
+            100% {
+              transform: translateX(100%);
+            }
+          }
+        `}</style>
+      </main>
     </>
   );
 };
