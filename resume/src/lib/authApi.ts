@@ -115,7 +115,10 @@ export const loginAccount = (payload: {
 }) => request<{ status: boolean }>('/auth/login-with-identifier', payload);
 
 export const forgotPassword = (email: string, token: string) =>
-  request<{ message: string }>('/password/forgot-password', { email, cf_turnstile_token: token });
+  request<{ message: string }>('/resume/auth/forgot-password', { email, cf_turnstile_token: token });
+
+export const googleLogin = (idToken: string) =>
+  request('/auth/google', { google_id_token: idToken, signup_source: { utm_source: 'resume_builder' } });
 
 export const logoutSession = () => request('/auth/logout', {});
 

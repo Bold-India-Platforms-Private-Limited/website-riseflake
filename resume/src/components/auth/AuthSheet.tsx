@@ -8,11 +8,13 @@ import {
   ApiError,
   checkAccount,
   forgotPassword,
+  googleLogin,
   loginAccount,
   registerAccount,
   sendEmailOtp,
   verifyEmailOtp,
 } from '@/lib/authApi';
+import { getGoogleIdToken, preloadGoogleSignIn } from '@/lib/googleSignIn';
 import { useAuthStore } from '@/stores/auth.store';
 
 export type AuthMode = 'login' | 'register' | 'otp' | 'forgot';
@@ -36,6 +38,17 @@ const inputClass =
 const primaryClass =
   'w-full rounded-full bg-[#2f5ee7] py-3 text-[15px] font-semibold text-white hover:bg-[#2650cc] disabled:opacity-60 cursor-pointer disabled:cursor-default';
 const linkClass = 'font-semibold text-[#2f5ee7] hover:underline cursor-pointer';
+const googleClass =
+  'flex w-full items-center justify-center gap-2.5 rounded-full border border-slate-300 bg-white py-3 text-[15px] font-semibold text-slate-800 hover:bg-slate-50 disabled:opacity-60 cursor-pointer disabled:cursor-default';
+
+const GoogleLogo = () => (
+  <svg aria-hidden="true" width="18" height="18" viewBox="0 0 48 48">
+    <path fill="#EA4335" d="M24 9.5c3.5 0 6.7 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.5 5.4 2.6 13.2l7.9 6.1C12.4 13.6 17.7 9.5 24 9.5z" />
+    <path fill="#4285F4" d="M46.9 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.9c-.6 3-2.3 5.5-4.8 7.2l7.6 5.9c4.4-4.1 7.2-10.2 7.2-17.6z" />
+    <path fill="#FBBC05" d="M10.5 28.7c-.5-1.4-.8-3-.8-4.7s.3-3.2.8-4.7l-7.9-6.1C1 16.5 0 20.1 0 24s1 7.5 2.6 10.8l7.9-6.1z" />
+    <path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.8-5.8l-7.6-5.9c-2.1 1.4-4.9 2.3-8.2 2.3-6.3 0-11.6-4.1-13.5-9.8l-7.9 6.1C6.5 42.6 14.6 48 24 48z" />
+  </svg>
+);
 
 const AuthSheet = ({ mode, onModeChange, onClose, onSignedIn }: AuthSheetProps) => {
   const refresh = useAuthStore((state) => state.refresh);
@@ -43,6 +56,7 @@ const AuthSheet = ({ mode, onModeChange, onClose, onSignedIn }: AuthSheetProps) 
 
   const [captcha, setCaptcha] = useState('');
   const [busy, setBusy] = useState(false);
+  const [googleBusy, setGoogleBusy] = useState(false);
   const [error, setError] = useState('');
   const [notice, setNotice] = useState('');
 
@@ -59,8 +73,8 @@ const AuthSheet = ({ mode, onModeChange, onClose, onSignedIn }: AuthSheetProps) 
 
   const mobileNo = mobile ? `+${mobile}` : '';
 
-  // Someone who signs in on app.riseflake.com in another tab (Google, LinkedIn and so
-  // on) is signed in here too as soon as they come back, because the cookie is shared.
+  // Someone who signs in on app.riseflake.com in another tab (LinkedIn and so on) is
+  // signed in here too as soon as they come back, because the cookie is shared.
   useEffect(() => {
     const onFocus = async () => {
       await refresh();
@@ -69,6 +83,10 @@ const AuthSheet = ({ mode, onModeChange, onClose, onSignedIn }: AuthSheetProps) 
     window.addEventListener('focus', onFocus);
     return () => window.removeEventListener('focus', onFocus);
   }, [refresh, onSignedIn]);
+
+  useEffect(() => {
+    preloadGoogleSignIn().catch(() => {});
+  }, []);
 
   useEffect(() => {
     if (resendIn <= 0) return undefined;
@@ -100,6 +118,23 @@ const AuthSheet = ({ mode, onModeChange, onClose, onSignedIn }: AuthSheetProps) 
     setError('');
     setNotice(err.message);
     onModeChange('login');
+  };
+
+  const handleGoogle = async () => {
+    setGoogleBusy(true);
+    setError('');
+    try {
+      await googleLogin(await getGoogleIdToken());
+      await finishSignIn();
+    } catch (err) {
+      const code = (err as { code?: string }).code;
+      if (code === 'auth/popup-closed-by-user' || code === 'auth/cancelled-popup-request') return;
+      if (code === 'auth/popup-blocked') setError('Your browser blocked the Google window. Allow pop-ups for this site and try again.');
+      else if (err instanceof ApiError) setError(err.message);
+      else setError('Google sign-in did not work here. Please login with your email, or reset your password.');
+    } finally {
+      setGoogleBusy(false);
+    }
   };
 
   const handleLogin = async (event: FormEvent) => {
@@ -227,6 +262,20 @@ const AuthSheet = ({ mode, onModeChange, onClose, onSignedIn }: AuthSheetProps) 
             <p className="mb-4 rounded-lg border border-indigo-100 bg-indigo-50 px-3.5 py-3 text-sm text-slate-800">{notice}</p>
           )}
 
+          {(mode === 'login' || mode === 'register') && (
+            <div className="mb-4 space-y-4">
+              <button type="button" onClick={handleGoogle} disabled={busy || googleBusy} className={googleClass}>
+                <GoogleLogo />
+                {googleBusy ? 'Opening Google...' : 'Continue with Google'}
+              </button>
+              <div className="flex items-center gap-3 text-[13px] text-slate-400">
+                <span className="h-px flex-1 bg-slate-200" />
+                or
+                <span className="h-px flex-1 bg-slate-200" />
+              </div>
+            </div>
+          )}
+
           {mode === 'login' && (
             <form className="space-y-3.5" onSubmit={handleLogin}>
               <input
@@ -258,7 +307,7 @@ const AuthSheet = ({ mode, onModeChange, onClose, onSignedIn }: AuthSheetProps) 
                 </button>
               </div>
               <p className="pt-2 text-[13px] leading-relaxed text-slate-500">
-                Signed up with Google or LinkedIn?{' '}
+                Signed up with LinkedIn?{' '}
                 <a href={`${APP_URL}/login`} target="_blank" rel="noreferrer" className={linkClass}>
                   Login on Riseflake
                 </a>{' '}

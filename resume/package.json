@@ -30,6 +30,7 @@
     "color": "^5.0.0",
     "dayjs": "^1.11.13",
     "export-from-json": "^1.7.4",
+    "firebase": "^11.10.0",
     "framer-motion": "^12.23.24",
     "html-react-parser": "^5.2.5",
     "immer": "^10.1.1",
