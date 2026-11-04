@@ -5,8 +5,8 @@
  *
  * On every page load it:
  *   1. Reads UTM params from the current URL and saves them to localStorage.
- *   2. Installs a click interceptor that injects UTMs into any link to
- *      app.riseflake.com at click-time.
+ *   2. Installs a click interceptor that adds the stored attribution (as att_*
+ *      params) to any link to app.riseflake.com at click-time.
  *
  * UTMs are injected only at click-time, never by mutating rendered <a href>
  * attributes ahead of time — doing that used to fight React's hydration

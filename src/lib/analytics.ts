@@ -55,6 +55,7 @@ export function attributionHandoffQuery(): string {
       utm_content: 'att_content', utm_term: 'att_term', ref: 'att_ref',
     }
     for (const [from, to] of Object.entries(map)) if (a[from]) p.set(to, a[from])
+    if (a.auto_detected) p.set('att_auto', '1')
     return p.toString()
   } catch {
     return '' // localStorage unavailable

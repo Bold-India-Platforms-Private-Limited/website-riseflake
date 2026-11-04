@@ -18,8 +18,8 @@
  * CROSS-DOMAIN FLOW
  * ─────────────────
  *  riseflake.com/?utm_source=linkedin  →  UTMCapture stores it
- *  User clicks any app.riseflake.com link  →  appendUTMsToUrl injects params
- *  app.riseflake.com/?utm_source=linkedin  →  React app captures + saves to DB
+ *  User clicks any app.riseflake.com link  →  appendUTMsToUrl adds att_* params
+ *  app.riseflake.com/?att_source=linkedin  →  React app captures + saves to DB
  */
 
 export const UTM_PARAMS  = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'ref'] as const
@@ -44,10 +44,11 @@ const CLICK_ID_MAP: Array<{ param: string; utm_source: string; utm_medium: strin
 
 // ── Layer 4: Referrer hostname patterns ──────────────────────────────────────
 const REFERRER_MAP: Array<{ match: RegExp; utm_source: string; utm_medium: string }> = [
-  { match: /linkedin\.com/i,                            utm_source: 'linkedin',          utm_medium: 'social'    },
+  { match: /linkedin\.com|lnkd\.in|com\.linkedin\.android/i, utm_source: 'linkedin',        utm_medium: 'social'    },
   { match: /l\.instagram\.com|instagram\.com/i,         utm_source: 'instagram',         utm_medium: 'social'    },
   { match: /l\.facebook\.com|facebook\.com|fb\.com/i,   utm_source: 'facebook',          utm_medium: 'social'    },
-  { match: /t\.co$|twitter\.com|x\.com/i,               utm_source: 'twitter',           utm_medium: 'social'    },
+  { match: /t\.co$|twitter\.com|x\.com|com\.twitter\.android/i, utm_source: 'twitter',    utm_medium: 'social'    },
+  { match: /reddit\.com|com\.reddit\.frontpage/i,        utm_source: 'reddit',            utm_medium: 'social'    },
   { match: /wa\.me|whatsapp\.com/i,                     utm_source: 'whatsapp',          utm_medium: 'messaging' },
   { match: /t\.me$|telegram\.org/i,                     utm_source: 'telegram',          utm_medium: 'messaging' },
   { match: /bing\.com/i,                                utm_source: 'bing',              utm_medium: 'organic'   },
@@ -57,6 +58,9 @@ const REFERRER_MAP: Array<{ match: RegExp; utm_source: string; utm_medium: strin
   { match: /indeed\.com/i,                              utm_source: 'indeed',            utm_medium: 'job_board' },
   { match: /shine\.com/i,                               utm_source: 'shine',             utm_medium: 'job_board' },
 ]
+
+// Webmail and mail apps: a click from an inbox is email traffic, not a search or social visit.
+const EMAIL_CLIENT_RE = /^(mail\.google\.com|com\.google\.android\.gm|outlook\.(live|office|office365)\.com|com\.microsoft\.office\.outlook|mail\.yahoo\.com|com\.yahoo\.mobile\.client\.android\.mail)$/i;
 
 function _detectFromReferrer(referrer: string): Pick<Attribution, 'utm_source' | 'utm_medium'> | null {
   if (!referrer) return null
@@ -70,6 +74,11 @@ function _detectFromReferrer(referrer: string): Pick<Attribution, 'utm_source' |
     if (typeof window !== 'undefined' && host === window.location.hostname.toLowerCase()) {
       return null
     }
+
+    // Our own sites are not a traffic source.
+    if (host === 'riseflake.com' || host.endsWith('.riseflake.com')) return null
+
+    if (EMAIL_CLIENT_RE.test(host)) return { utm_source: host.replace(/^www\./, ''), utm_medium: 'email' }
 
     // Google: distinguish Jobs vs organic search
     if (/google\./i.test(host)) {
@@ -159,7 +168,8 @@ export function getStoredUTMs(): Attribution | null {
 }
 
 /**
- * Append stored UTM params (from any of the 4 layers) to a URL string.
+ * Append stored attribution (from any of the 4 layers) to a URL string as att_* params. Not utm_*:
+ * those would start a new GA4 session on a link between our own sites (see lib/analytics.ts).
  * Only adds params that are not already present in the URL.
  * Returns the original URL unchanged if nothing is stored.
  */
@@ -169,10 +179,12 @@ export function appendUTMsToUrl(url: string, attr?: Attribution | null): string 
   try {
     const u = new URL(url)
     UTM_PARAMS.forEach(p => {
-      if (source[p] && !u.searchParams.has(p)) {
-        u.searchParams.set(p, source[p] as string)
+      const key = p === 'ref' ? 'att_ref' : p.replace('utm_', 'att_')
+      if (source[p] && !u.searchParams.has(key)) {
+        u.searchParams.set(key, source[p] as string)
       }
     })
+    if (source.auto_detected && !u.searchParams.has('att_auto')) u.searchParams.set('att_auto', '1')
     return u.toString()
   } catch {
     return url
