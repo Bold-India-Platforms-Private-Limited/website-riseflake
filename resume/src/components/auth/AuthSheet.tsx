@@ -49,8 +49,7 @@ const AuthSheet = ({ mode, onModeChange, onClose, onSignedIn }: AuthSheetProps) 
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
 
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
+  const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [mobile, setMobile] = useState('');
   const [otp, setOtp] = useState('');
@@ -120,13 +119,18 @@ const AuthSheet = ({ mode, onModeChange, onClose, onSignedIn }: AuthSheetProps) 
   };
 
   const createAccount = async () => {
-    await registerAccount({
-      full_name: `${firstName.trim()} ${lastName.trim()}`.trim(),
-      email: email.trim().toLowerCase(),
-      mobile_no: mobileNo,
-      password,
-      cf_turnstile_token: captcha,
-    });
+    try {
+      await registerAccount({
+        full_name: fullName.trim().replace(/\s+/g, ' '),
+        email: email.trim().toLowerCase(),
+        mobile_no: mobileNo,
+        password,
+        cf_turnstile_token: captcha,
+      });
+    } catch (err) {
+      turnstileRef.current?.reset();
+      throw err;
+    }
     await finishSignIn();
   };
 
@@ -161,10 +165,7 @@ const AuthSheet = ({ mode, onModeChange, onClose, onSignedIn }: AuthSheetProps) 
       await createAccount();
     } catch (err) {
       if (err instanceof ApiError && err.code === 'ACCOUNT_EXISTS') suggestLogin(err);
-      else {
-        setError(err instanceof Error ? err.message : 'Could not verify the code.');
-        turnstileRef.current?.reset();
-      }
+      else setError(err instanceof Error ? err.message : 'Could not verify the code.');
     } finally {
       setBusy(false);
     }
@@ -268,10 +269,7 @@ const AuthSheet = ({ mode, onModeChange, onClose, onSignedIn }: AuthSheetProps) 
 
           {mode === 'register' && (
             <form className="space-y-3.5" onSubmit={handleRegister}>
-              <div className="grid grid-cols-2 gap-3">
-                <input className={inputClass} value={firstName} onChange={(event) => setFirstName(event.target.value)} placeholder="First name" autoComplete="given-name" required />
-                <input className={inputClass} value={lastName} onChange={(event) => setLastName(event.target.value)} placeholder="Last name" autoComplete="family-name" required />
-              </div>
+              <input className={inputClass} value={fullName} onChange={(event) => setFullName(event.target.value)} placeholder="Full name" autoComplete="name" required />
               <input className={inputClass} type="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="Email" autoComplete="email" required />
               <PhoneInput
                 country="in"
