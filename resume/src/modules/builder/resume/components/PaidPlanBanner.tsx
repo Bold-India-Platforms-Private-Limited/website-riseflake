@@ -1,201 +1,56 @@
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
-import { consumeDownloadClick, getCurrentPlan, PaymentSnapshot } from '@/lib/authApi';
+import { formatDate, recordDownload } from '@/lib/authApi';
 import { useAuthStore } from '@/stores/auth.store';
+import { useTemplates } from '@/stores/useTemplate';
+
+const BANNER_SECONDS = 12;
 
 const PaidPlanBanner = () => {
-  const token = useAuthStore((state) => state.token);
-  const [payment, setPayment] = useState<PaymentSnapshot | null>(null);
-  const [hasActivePlan, setHasActivePlan] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const plan = useAuthStore((state) => (state.access?.has_access ? state.access.plan : null));
   const [isVisible, setIsVisible] = useState(true);
-  const bannerRef = useRef<HTMLDivElement | null>(null);
-  const isHandlingShortcutRef = useRef(false);
+  const printingRef = useRef(false);
 
   useEffect(() => {
-    const fetchPlan = async () => {
-      setIsLoading(true);
+    const timer = window.setTimeout(() => setIsVisible(false), BANNER_SECONDS * 1000);
+    return () => window.clearTimeout(timer);
+  }, []);
 
-      if (!token) {
-        setHasActivePlan(false);
-        setPayment(null);
-        setIsLoading(false);
-        return;
-      }
-
-      try {
-        const response = await getCurrentPlan(token);
-        setHasActivePlan(response.hasActivePlan);
-        setPayment(response.payment);
-      } catch (_error) {
-        setHasActivePlan(false);
-        setPayment(null);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchPlan();
-
-    const listener = () => {
-      fetchPlan();
-    };
-
-    window.addEventListener('payment-plan-updated', listener);
-
-    return () => {
-      window.removeEventListener('payment-plan-updated', listener);
-    };
-  }, [token]);
-
+  // Ctrl/Cmd+P is a download too, so it gets the same check and the same log entry.
   useEffect(() => {
-    if (isLoading) {
-      setIsVisible(true);
-      return;
-    }
-
-    setIsVisible(true);
-
-    const timeoutId = window.setTimeout(() => {
-      setIsVisible(false);
-    }, 20000);
-
-    return () => {
-      window.clearTimeout(timeoutId);
-    };
-  }, [isLoading, hasActivePlan, payment, token]);
-
-  useEffect(() => {
-    if (!isVisible) {
-      return;
-    }
-
-    const handleOutsideClick = (event: MouseEvent | TouchEvent) => {
-      if (!bannerRef.current) {
-        return;
-      }
-
-      if (!bannerRef.current.contains(event.target as Node)) {
-        setIsVisible(false);
-      }
-    };
-
-    window.addEventListener('mousedown', handleOutsideClick);
-    window.addEventListener('touchstart', handleOutsideClick);
-
-    return () => {
-      window.removeEventListener('mousedown', handleOutsideClick);
-      window.removeEventListener('touchstart', handleOutsideClick);
-    };
-  }, [isVisible]);
-
-  useEffect(() => {
-    const hasValidPaidAccess = Boolean(token && hasActivePlan && payment);
-
     const handleKeyDown = async (event: KeyboardEvent) => {
-      const isPrintShortcut = (event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'p';
-
-      if (!isPrintShortcut) {
-        return;
-      }
-
+      if (!(event.ctrlKey || event.metaKey) || event.key.toLowerCase() !== 'p') return;
       event.preventDefault();
       event.stopPropagation();
+      if (printingRef.current) return;
 
-      if (isHandlingShortcutRef.current) {
-        return;
+      printingRef.current = true;
+      try {
+        await recordDownload(useTemplates.getState().activeTemplate?.id);
+        window.print();
+      } catch (error) {
+        toast.error(error instanceof Error ? error.message : 'Could not start the download.');
+      } finally {
+        printingRef.current = false;
       }
-
-      if (hasValidPaidAccess && token) {
-        isHandlingShortcutRef.current = true;
-
-        try {
-          await consumeDownloadClick(token);
-          window.dispatchEvent(new Event('payment-plan-updated'));
-          window.print();
-        } catch (error) {
-          const message =
-            error instanceof Error
-              ? error.message
-              : 'Your paid plan has expired. Please renew to download/print resume.';
-          toast.error(message);
-          window.dispatchEvent(new Event('payment-plan-updated'));
-        } finally {
-          isHandlingShortcutRef.current = false;
-        }
-
-        return;
-      }
-
-      toast.error(
-        <div className="flex flex-col gap-2">
-          <span>No active paid plan found. Please renew to download/print resume.</span>
-          <Link href="/plans" className="text-white bg-red-600 px-3 py-1 rounded text-center font-bold text-xs hover:bg-red-700">
-            Buy Plan
-          </Link>
-        </div>,
-        { duration: 5000 }
-      );
     };
 
     window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [token, hasActivePlan, payment]);
-
-  if (!isVisible) {
-    return null;
-  }
-
-  if (isLoading) {
-    return (
-      <div
-        ref={bannerRef}
-        className="fixed top-16 left-1/2 -translate-x-1/2 z-40 max-w-[calc(100vw-1rem)] w-fit rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 shadow-md print:hidden"
-      >
-        Loading plan details...
-      </div>
-    );
-  }
-
-  if (!token) {
-    return (
-      <div
-        ref={bannerRef}
-        className="fixed top-16 left-1/2 -translate-x-1/2 z-40 max-w-[calc(100vw-1rem)] w-fit rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800 shadow-md print:hidden"
-      >
-        Login required for paid downloads. <Link href="/plans?auth=login" className="underline">Login</Link>
-      </div>
-    );
-  }
-
-  if (!hasActivePlan || !payment) {
-    return (
-      <div
-        ref={bannerRef}
-        className="fixed top-16 left-1/2 -translate-x-1/2 z-40 max-w-[calc(100vw-1rem)] w-fit rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 shadow-lg print:hidden flex items-center gap-3"
-      >
-        <span>No active paid plan found. Buy plan again to continue.</span>
-        <Link
-          href="/plans"
-          className="bg-red-600 text-white px-3 py-1.5 rounded-md font-bold text-xs hover:bg-red-700 transition-colors shadow-sm whitespace-nowrap"
-        >
-          Buy Plan
-        </Link>
-      </div>
-    );
-  }
+  if (!isVisible || !plan) return null;
 
   return (
-    <div
-      ref={bannerRef}
-      className="fixed top-16 left-1/2 -translate-x-1/2 z-40 max-w-[calc(100vw-1rem)] w-fit rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700 shadow-md print:hidden"
-    >
-      {payment.plan_name}: {payment.downloads_left} downloads left · valid till{' '}
-      {new Date(payment.end_time).toLocaleString()}
+    <div className="fixed left-1/2 top-16 z-40 flex w-fit max-w-[calc(100vw-1rem)] -translate-x-1/2 items-center gap-3 rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-700 shadow-md print:hidden">
+      <span>
+        {plan.title}: unlimited downloads, {plan.status === 'cancelled' ? 'ends' : 'renews'}{' '}
+        {formatDate(plan.next_charge_at || plan.current_end)}
+      </span>
+      <Link href="/profile" className="font-semibold text-[#414BEA]">
+        Account
+      </Link>
     </div>
   );
 };

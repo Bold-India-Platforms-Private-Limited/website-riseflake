@@ -6,23 +6,22 @@ import { Button } from '@mui/material';
 import BuilderLayout from '@/modules/builder/BuilderLayout';
 import { withBasePath } from '@/utils/withBasePath';
 import { useAuthStore } from '@/stores/auth.store';
-import { getCurrentPlan, getPublicBuilderSettings } from '@/lib/authApi';
+import { getConfig } from '@/lib/authApi';
 import LandingNavbar from '@/components/landing/LandingNavbar';
 import LandingFooter from '@/components/landing/LandingFooter';
 
 const BuilderFreePage: NextPage = () => {
   const router = useRouter();
-  const token = useAuthStore((state) => state.token);
+  const hasAccess = useAuthStore((state) => Boolean(state.access?.has_access));
   const [freeBuilderEnabled, setFreeBuilderEnabled] = useState(true);
   const [settingsLoading, setSettingsLoading] = useState(true);
-  const [checkingPlan, setCheckingPlan] = useState(false);
 
   useEffect(() => {
     const loadSettings = async () => {
       setSettingsLoading(true);
       try {
-        const response = await getPublicBuilderSettings();
-        setFreeBuilderEnabled(Boolean(response.settings.builder_free_visibility));
+        const config = await getConfig();
+        setFreeBuilderEnabled(config.free_builder);
       } catch (_error) {
         setFreeBuilderEnabled(true);
       } finally {
@@ -33,26 +32,8 @@ const BuilderFreePage: NextPage = () => {
     loadSettings();
   }, []);
 
-  const handleGoToPaidBuilder = async () => {
-    if (!token) {
-      router.push('/plans');
-      return;
-    }
-
-    setCheckingPlan(true);
-    try {
-      const response = await getCurrentPlan(token);
-      if (response.hasAnyPlan) {
-        router.push('/builder-paid');
-        return;
-      }
-    } catch (_error) {
-      // fallback to plans
-    } finally {
-      setCheckingPlan(false);
-    }
-
-    router.push('/plans');
+  const handleGoToPaidBuilder = () => {
+    router.push(hasAccess ? '/builder-paid' : '/plans');
   };
 
   return (
@@ -85,17 +66,16 @@ const BuilderFreePage: NextPage = () => {
                 Free Builder No longer available
               </h1>
               <p className="text-lg text-slate-600 mt-4 font-medium">
-                Continue with paid builder access to unlock all resume features.
+                A Riseflake subscription unlocks every template and download.
               </p>
 
               <Button
                 variant="contained"
                 onClick={handleGoToPaidBuilder}
-                disabled={checkingPlan}
                 size="large"
                 className="!mt-10 !bg-gradient-to-r !from-indigo-600 !to-purple-600 !px-10 !py-4 !rounded-xl !font-bold !text-lg !shadow-xl hover:!shadow-2xl transition-all"
               >
-                {checkingPlan ? 'Checking your plan...' : 'Go To Paid Builder'}
+                {hasAccess ? 'Open Resume Builder' : 'See plans'}
               </Button>
             </div>
           </main>

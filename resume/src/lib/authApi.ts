@@ -1,396 +1,136 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3001';
+// Everything the resume site asks the Riseflake backend. Accounts are Riseflake
+// accounts and the session is the httpOnly cookie the backend sets, shared with
+// app.riseflake.com, so nothing here stores or passes a token.
+
+const API_ROOT = `${process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000'}/api/v2`;
+
+export const APP_URL = 'https://app.riseflake.com';
+export const MANAGE_SUBSCRIPTION_URL = `${APP_URL}/dashboard/subscription-plans`;
 
 export interface AuthUser {
-  id: number | string;
+  id: number;
   email: string;
   mobile_no?: string | null;
   full_name: string;
   first_name: string;
-  avatar_url: string;
-  signup_method: string;
   role: number;
-  is_active: boolean;
 }
 
-interface AuthResponse {
-  success: boolean;
-  message: string;
-  token?: string;
-  user?: AuthUser;
+export interface CurrentPlan {
+  id: number;
+  title: string;
+  price: number;
+  interval: string;
+  status: string;
+  current_end: string | null;
+  next_charge_at: string | null;
+}
+
+export interface ResumeAccess {
+  has_access: boolean;
+  plan: CurrentPlan | null;
 }
 
 export interface PlanItem {
   id: number;
-  name: string;
+  razorpay_plan_id: string;
+  title: string;
+  description: string | null;
   price: number;
   currency: string;
-  durationHours: number;
-  maxResumeDownload: number;
+  interval: string;
+  job_view_limit: number;
+  job_apply_limit: number;
 }
 
-export interface PaymentSnapshot {
-  id: number;
-  plan_id: number;
-  plan_name: string;
-  status: string;
-  plan_status: string;
-  start_time: string;
-  end_time: string;
-  download_limit: number;
-  download_used: number;
-  downloads_left: number;
-  razorpay_order_id: string;
-  razorpay_payment_id: string;
-  razorpay_invoice_id?: string | null;
-  created_at: string;
+export interface ResumeConfig {
+  plans: PlanItem[];
+  free_builder: boolean;
+  razorpay_key: string | null;
 }
 
-export interface BuilderSettingsPayload {
-  builder_free_visibility: boolean;
+export class ApiError extends Error {
+  status: number;
+  code?: string;
+  field?: string;
+
+  constructor(message: string, status: number, code?: string, field?: string) {
+    super(message);
+    this.status = status;
+    this.code = code;
+    this.field = field;
+  }
 }
 
-export interface AdminUserListItem {
-  user: AuthUser;
-  latest_payment: PaymentSnapshot | null;
-  payment_count: number;
-  payment_id_count: number;
-  quota: {
-    used: number;
-    limit: number;
-    available: number;
-  } | null;
-}
-
-export interface PaginationMeta {
-  page: number;
-  limit: number;
-  totalItems: number;
-  totalPages: number;
-}
-
-export interface AdminAnalytics {
-  cards: {
-    total_users: number;
-    active_users: number;
-    total_admins: number;
-    total_payments: number;
-    active_plans: number;
-    expired_plans: number;
-    failed_payments: number;
-    total_download_used: number;
-    total_download_limit: number;
-  };
-  charts: {
-    payments_by_plan: Array<{ label: string; value: number }>;
-    payment_status_breakdown: Array<{ label: string; value: number }>;
-    recent_user_registrations: Array<{ date: string; count: number }>;
-    recent_payments: Array<{ date: string; count: number }>;
-  };
-}
-
-const parseResponse = async <T>(response: Response): Promise<T> => {
-  const data = await response.json();
-
-  if (!response.ok) {
-    throw new Error(data.message || 'Request failed');
+const request = async <T>(path: string, body?: unknown): Promise<T> => {
+  let response: Response;
+  try {
+    response = await fetch(`${API_ROOT}${path}`, {
+      method: body === undefined ? 'GET' : 'POST',
+      credentials: 'include',
+      headers: body === undefined ? undefined : { 'Content-Type': 'application/json' },
+      body: body === undefined ? undefined : JSON.stringify(body),
+    });
+  } catch (_error) {
+    throw new ApiError('Could not reach Riseflake. Please check your connection and try again.', 0);
   }
 
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    const message = data.message || data.error?.[0]?.msg || 'Something went wrong. Please try again.';
+    throw new ApiError(message, response.status, data.code, data.field);
+  }
   return data;
 };
 
-export const registerUser = async (payload: {
-  firstName: string;
-  lastName: string;
+export const getConfig = () => request<ResumeConfig & { status: boolean }>('/resume/config');
+
+export const getSession = () =>
+  request<{ user: AuthUser | null; access: ResumeAccess | null }>('/resume/me');
+
+export const checkAccount = (payload: { email: string; mobile_no: string }) =>
+  request<{ exists: boolean }>('/resume/auth/check-account', payload);
+
+export const sendEmailOtp = (email: string) =>
+  request<{ otpDisabled?: boolean; resendAfter?: number; message?: string }>('/auth/send-otp', {
+    email,
+    flow: 'candidate_registration',
+  });
+
+export const verifyEmailOtp = (email: string, otp: string) =>
+  request<{ success: boolean }>('/auth/verify-otp', { email, otp });
+
+export const registerAccount = (payload: {
+  full_name: string;
   email: string;
-  mobileNo: string;
+  mobile_no: string;
   password: string;
-}) => {
-  const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload),
-  });
+  cf_turnstile_token: string;
+}) => request<{ status: boolean }>('/resume/auth/register', payload);
 
-  return parseResponse<AuthResponse>(response);
-};
-
-export const loginUser = async (payload: { email: string; password: string }) => {
-  const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload),
-  });
-
-  return parseResponse<AuthResponse>(response);
-};
-
-const authHeaders = (token: string) => ({
-  'Content-Type': 'application/json',
-  Authorization: `Bearer ${token}`,
-});
-
-export const getCurrentUser = async (token: string): Promise<AuthResponse> => {
-  const response = await fetch(`${API_BASE_URL}/api/auth/me`, {
-    method: 'GET',
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  return parseResponse<AuthResponse>(response);
-};
-
-export const getPlans = async (): Promise<{ success: boolean; plans: PlanItem[] }> => {
-  const response = await fetch(`${API_BASE_URL}/api/payments/plans`, {
-    method: 'GET',
-  });
-
-  return parseResponse<{ success: boolean; plans: PlanItem[] }>(response);
-};
-
-export const createOrder = async (token: string, planId: number | string) => {
-  const response = await fetch(`${API_BASE_URL}/api/payments/create-order`, {
-    method: 'POST',
-    headers: authHeaders(token),
-    body: JSON.stringify({ planId }),
-  });
-
-  return parseResponse<{
-    success: boolean;
-    payment_id: number;
-    order: { id: string; amount: number; currency: string };
-    invoice?: { id: string; short_url?: string; status?: string };
-    prefill: { name: string; email: string; contact?: string };
-  }>(response);
-};
-
-export const verifyOrderPayment = async (
-  token: string,
-  payload: {
-    razorpay_order_id: string;
-    razorpay_payment_id: string;
-    razorpay_signature: string;
-  }
-) => {
-  const response = await fetch(`${API_BASE_URL}/api/payments/verify`, {
-    method: 'POST',
-    headers: authHeaders(token),
-    body: JSON.stringify(payload),
-  });
-
-  return parseResponse<{ success: boolean; message: string }>(response);
-};
-
-export const consumeDownloadClick = async (token: string) => {
-  const response = await fetch(`${API_BASE_URL}/api/payments/consume-download`, {
-    method: 'POST',
-    headers: authHeaders(token),
-  });
-
-  return parseResponse<{ success: boolean; message: string }>(response);
-};
-
-export const getCurrentPlan = async (
-  token: string
-): Promise<{
-  success: boolean;
-  hasActivePlan: boolean;
-  hasAnyPlan: boolean;
-  payment: PaymentSnapshot | null;
-}> => {
-  const response = await fetch(`${API_BASE_URL}/api/payments/current-plan`, {
-    method: 'GET',
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  return parseResponse<{
-    success: boolean;
-    hasActivePlan: boolean;
-    hasAnyPlan: boolean;
-    payment: PaymentSnapshot | null;
-  }>(response);
-};
-
-export const getPaymentLogs = async (
-  token: string
-): Promise<{ success: boolean; payments: PaymentSnapshot[] }> => {
-  const response = await fetch(`${API_BASE_URL}/api/payments/logs`, {
-    method: 'GET',
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  return parseResponse<{ success: boolean; payments: PaymentSnapshot[] }>(response);
-};
-
-export const registerAdmin = async (payload: {
-  firstName: string;
-  lastName: string;
-  email: string;
-  mobileNo: string;
+export const loginAccount = (payload: {
+  identifier: string;
   password: string;
-}) => {
-  const response = await fetch(`${API_BASE_URL}/api/admin/register`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload),
-  });
+  cf_turnstile_token: string;
+}) => request<{ status: boolean }>('/auth/login-with-identifier', payload);
 
-  return parseResponse<AuthResponse>(response);
-};
+export const forgotPassword = (email: string, token: string) =>
+  request<{ message: string }>('/password/forgot-password', { email, cf_turnstile_token: token });
 
-export const loginAdmin = async (payload: { email: string; password: string }) => {
-  const response = await fetch(`${API_BASE_URL}/api/admin/login`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload),
-  });
+export const logoutSession = () => request('/auth/logout', {});
 
-  return parseResponse<AuthResponse>(response);
-};
+export const createSubscription = (razorpayPlanId: string) =>
+  request<{
+    data: {
+      subscription_id: string;
+      plan_name: string;
+      user_prefill: { name: string; email: string; contact: string };
+    };
+  }>('/subscription/create', { plan_id: razorpayPlanId });
 
-export const getAdminDashboardAnalytics = async (
-  token: string
-): Promise<{ success: boolean; analytics: AdminAnalytics }> => {
-  const response = await fetch(`${API_BASE_URL}/api/admin/dashboard-analytics`, {
-    method: 'GET',
-    headers: authHeaders(token),
-  });
+export const recordDownload = (template?: string) => request('/resume/downloads', { template });
 
-  return parseResponse<{ success: boolean; analytics: AdminAnalytics }>(response);
-};
-
-export const getAdminUsers = async (
-  token: string,
-  filters: {
-    plan_select?: string;
-    payment_status?: string;
-    plan_status?: string;
-    download_used?: string;
-  },
-  pagination?: {
-    page?: number;
-    limit?: number;
-  }
-): Promise<{ success: boolean; users: AdminUserListItem[]; pagination: PaginationMeta }> => {
-  const search = new URLSearchParams();
-
-  Object.entries(filters).forEach(([key, value]) => {
-    if (value) {
-      search.set(key, value);
-    }
-  });
-
-  if (pagination?.page) {
-    search.set('page', String(pagination.page));
-  }
-
-  if (pagination?.limit) {
-    search.set('limit', String(pagination.limit));
-  }
-
-  const query = search.toString();
-  const response = await fetch(`${API_BASE_URL}/api/admin/users${query ? `?${query}` : ''}`, {
-    method: 'GET',
-    headers: authHeaders(token),
-  });
-
-  return parseResponse<{ success: boolean; users: AdminUserListItem[]; pagination: PaginationMeta }>(
-    response
-  );
-};
-
-export const getAdminUserProfile = async (
-  token: string,
-  userId: number | string
-): Promise<{ success: boolean; user: AuthUser }> => {
-  const response = await fetch(`${API_BASE_URL}/api/admin/users/${userId}/profile`, {
-    method: 'GET',
-    headers: authHeaders(token),
-  });
-
-  return parseResponse<{ success: boolean; user: AuthUser }>(response);
-};
-
-export const getAdminUserPlans = async (
-  token: string,
-  userId: number | string
-): Promise<{ success: boolean; payments: PaymentSnapshot[] }> => {
-  const response = await fetch(`${API_BASE_URL}/api/admin/users/${userId}/plans`, {
-    method: 'GET',
-    headers: authHeaders(token),
-  });
-
-  return parseResponse<{ success: boolean; payments: PaymentSnapshot[] }>(response);
-};
-
-export const getPublicBuilderSettings = async (): Promise<{
-  success: boolean;
-  settings: BuilderSettingsPayload;
-}> => {
-  const response = await fetch(`${API_BASE_URL}/api/settings/public`, {
-    method: 'GET',
-  });
-
-  return parseResponse<{ success: boolean; settings: BuilderSettingsPayload }>(response);
-};
-
-export const getAdminSettings = async (
-  token: string
-): Promise<{ success: boolean; settings: BuilderSettingsPayload }> => {
-  const response = await fetch(`${API_BASE_URL}/api/admin/settings`, {
-    method: 'GET',
-    headers: authHeaders(token),
-  });
-
-  return parseResponse<{ success: boolean; settings: BuilderSettingsPayload }>(response);
-};
-
-export const updateAdminSettings = async (
-  token: string,
-  payload: BuilderSettingsPayload
-): Promise<{ success: boolean; settings: BuilderSettingsPayload }> => {
-  const response = await fetch(`${API_BASE_URL}/api/admin/settings`, {
-    method: 'PUT',
-    headers: authHeaders(token),
-    body: JSON.stringify(payload),
-  });
-
-  return parseResponse<{ success: boolean; settings: BuilderSettingsPayload }>(response);
-};
-
-export const deleteAdminUsers = async (
-  token: string,
-  userIds: (string | number)[]
-): Promise<{ success: boolean; message: string; deletedCount: number }> => {
-  const response = await fetch(`${API_BASE_URL}/api/admin/users`, {
-    method: 'DELETE',
-    headers: authHeaders(token),
-    body: JSON.stringify({ userIds }),
-  });
-
-  return parseResponse<{ success: boolean; message: string; deletedCount: number }>(response);
-};
-
-export const forgotPassword = async (email: string) => {
-  const response = await fetch(`${API_BASE_URL}/api/auth/forgot-password`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email }),
-  });
-
-  return parseResponse<{ success: boolean; message: string }>(response);
-};
-
-export const resetPassword = async (token: string, password: string) => {
-  const response = await fetch(`${API_BASE_URL}/api/auth/reset-password`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ token, password }),
-  });
-
-  return parseResponse<{ success: boolean; message: string }>(response);
-};
+export const formatDate = (value?: string | null) =>
+  value
+    ? new Date(value).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })
+    : '-';

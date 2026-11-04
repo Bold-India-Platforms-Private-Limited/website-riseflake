@@ -11,7 +11,6 @@ import { useRouter } from 'next/router';
 // import Person from './components/Person';
 import { ChevronDown, Menu as MenuIcon, X } from 'lucide-react';
 import { useAuthStore } from '@/stores/auth.store';
-import { getCurrentPlan } from '@/lib/authApi';
 import InitialsAvatar from '@/components/common/InitialsAvatar';
 import { COMPANY_LOGO_URLS, COMPANY_LOGO_NAMES } from '@/config/companyLogos';
 import LoadingOverlay from '@/components/common/LoadingOverlay';
@@ -40,7 +39,7 @@ const HomeLayout = () => {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const router = useRouter();
   const user = useAuthStore((state) => state.user);
-  const token = useAuthStore((state) => state.token);
+  const hasAccess = useAuthStore((state) => Boolean(state.access?.has_access));
   const logout = useAuthStore((state) => state.logout);
   const firstName = useMemo(() => {
     if (!user?.first_name) return '';
@@ -67,8 +66,8 @@ const HomeLayout = () => {
     setMobileNavOpen(false);
   };
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logout();
     closeProfileMenu();
     window.location.reload();
   };
@@ -81,11 +80,10 @@ const HomeLayout = () => {
 
   const [isNavigating, setIsNavigating] = useState(false);
 
-  // Always go to /plans?auth=register on Buy Now
   const handlePaidNavigation = () => {
     setIsNavigating(true);
     closeMobileNav();
-    router.push('/plans?auth=register');
+    router.push(hasAccess ? '/builder-paid' : '/plans');
   };
 
   const handleFreeNavigation = () => {
@@ -166,27 +164,10 @@ const HomeLayout = () => {
                     />
 
                     <span className="relative flex items-center gap-2">
-                      Buy now at ₹299
-                      <span className="bg-white/20 backdrop-blur-sm px-1.5 py-0.5 rounded text-[9px] uppercase font-black tracking-tighter border border-white/10">
-                        25 % off
-                      </span>
+                      {hasAccess ? 'Open Resume Builder' : 'Plans from ₹199 a month'}
                     </span>
                   </Button>
 
-                  {/* Floating Urgency Label */}
-                  <motion.div
-                    className="absolute -bottom-7 left-0 right-0 text-center pointer-events-none hidden sm:block"
-                    animate={{ y: [0, -4, 0] }}
-                    transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}
-                  >
-                    <span className="inline-flex items-center gap-1.5 text-[10px] text-indigo-700 font-extrabold uppercase tracking-widest bg-indigo-50/80 backdrop-blur-sm px-3 py-1 rounded-full border border-indigo-100 shadow-sm">
-                      <span className="flex h-2 w-2 relative">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
-                        <span className="relative inline-flex rounded-full h-2 w-2 bg-indigo-600"></span>
-                      </span>
-                      Limited period offer
-                    </span>
-                  </motion.div>
                 </motion.div>
 
                 <div className="flex gap-3 w-full sm:w-auto">

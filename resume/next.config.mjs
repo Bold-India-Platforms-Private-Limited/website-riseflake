@@ -5,9 +5,9 @@ const nextConfig = {
   reactStrictMode: true,
   devIndicators: false,
   env: {
-    NEXT_PUBLIC_API_BASE_URL: process.env.RESUME_NEXT_PUBLIC_API_BASE_URL || 'https://resume-builder-api-five.vercel.app',
+    NEXT_PUBLIC_API_BASE_URL: process.env.RESUME_NEXT_PUBLIC_API_BASE_URL || 'https://backend.riseflake.com',
     NEXT_PUBLIC_ENVIRONMENT: process.env.RESUME_NEXT_PUBLIC_ENVIRONMENT || 'production',
-    NEXT_PUBLIC_RAZORPAY_KEY_ID: process.env.RESUME_NEXT_PUBLIC_RAZORPAY_KEY_ID || 'rzp_test_S7CmsWZjSwRDHD',
+    NEXT_PUBLIC_TURNSTILE_SITE_KEY: process.env.RESUME_NEXT_PUBLIC_TURNSTILE_SITE_KEY || '0x4AAAAAADR3vt6rRrmI-T-k',
   },
   eslint: {
     dirs: [

@@ -4,7 +4,7 @@ import { useResumeStore } from '@/stores/useResumeStore';
 import { useTemplates } from '@/stores/useTemplate';
 import { useRouter } from 'next/router';
 import { useAuthStore } from '@/stores/auth.store';
-import { consumeDownloadClick } from '@/lib/authApi';
+import { recordDownload } from '@/lib/authApi';
 import { toast } from 'sonner';
 import { BuilderMode } from '@/stores/useTemplate';
 import { useBasicDetails } from '@/stores/basic';
@@ -127,21 +127,20 @@ export const PrintResume: React.FC<{ isMenuButton?: boolean }> = ({ isMenuButton
   const resumeData = useResumeStore();
   const builderMode = useTemplates((state) => state.builderMode);
   const router = useRouter();
-  const token = useAuthStore((state) => state.token);
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
 
   const handlePrint = async () => {
     if (builderMode === 'paid') {
-      if (!token) {
+      if (!isAuthenticated) {
         toast.error('Please login first to continue.');
         router.push('/plans?auth=login');
         return;
       }
 
       try {
-        await consumeDownloadClick(token);
-        window.dispatchEvent(new Event('payment-plan-updated'));
+        await recordDownload(useTemplates.getState().activeTemplate?.id);
       } catch (error) {
-        const message = error instanceof Error ? error.message : 'Unable to use download quota.';
+        const message = error instanceof Error ? error.message : 'Could not start the download.';
         toast.error(
           <div className="flex flex-col gap-2">
             <span>{message}</span>
@@ -149,12 +148,11 @@ export const PrintResume: React.FC<{ isMenuButton?: boolean }> = ({ isMenuButton
               href="/plans"
               className="text-white bg-red-600 px-3 py-1 rounded text-center font-bold text-xs hover:bg-red-700 transition-colors"
             >
-              Buy Plan
+              See plans
             </Link>
           </div>,
           { duration: 6000 }
         );
-        window.dispatchEvent(new Event('payment-plan-updated'));
         return;
       }
     }

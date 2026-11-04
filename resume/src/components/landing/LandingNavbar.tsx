@@ -6,7 +6,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useMemo, useState } from 'react';
 import { ChevronDown, Menu as MenuIcon, X } from 'lucide-react';
-import { getCurrentPlan } from '@/lib/authApi';
 import { useAuthStore } from '@/stores/auth.store';
 import InitialsAvatar from '@/components/common/InitialsAvatar';
 import { withBasePath } from '@/utils/withBasePath';
@@ -16,7 +15,7 @@ const LandingNavbar = () => {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const router = useRouter();
   const user = useAuthStore((state) => state.user);
-  const token = useAuthStore((state) => state.token);
+  const hasAccess = useAuthStore((state) => Boolean(state.access?.has_access));
   const logout = useAuthStore((state) => state.logout);
 
   const firstName = useMemo(() => {
@@ -40,8 +39,8 @@ const LandingNavbar = () => {
     setMobileNavOpen(false);
   };
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logout();
     closeProfileMenu();
     window.location.reload();
   };
@@ -52,24 +51,9 @@ const LandingNavbar = () => {
     router.push('/profile');
   };
 
-  const handlePaidNavigation = async () => {
+  const handlePaidNavigation = () => {
     closeMobileNav();
-
-    if (!token) {
-      router.push('/plans');
-      return;
-    }
-
-    try {
-      const response = await getCurrentPlan(token);
-      if (response.hasAnyPlan) {
-        router.push('/builder-paid');
-        return;
-      }
-    } catch (_error) {
-    }
-
-    router.push('/plans');
+    router.push(hasAccess ? '/builder-paid' : '/plans');
   };
 
   return (

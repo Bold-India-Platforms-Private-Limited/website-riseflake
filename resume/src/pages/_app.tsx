@@ -12,10 +12,18 @@ import { LocalizationProvider } from '@mui/x-date-pickers';
 import { ThemeProvider } from '@mui/material/styles';
 import { Toaster } from 'sonner';
 import { useEffect } from 'react';
+import { useAuthStore } from '@/stores/auth.store';
 const clientCache = createEmotionCache({ enableCssLayer: true, key: 'css' });
 
 export default function App(props: AppProps & { emotionCache?: EmotionCache }) {
   const { Component, pageProps, emotionCache = clientCache } = props;
+
+  // The session is the Riseflake cookie, so someone already signed in on
+  // app.riseflake.com is signed in here on first load.
+  useEffect(() => {
+    useAuthStore.getState().refresh();
+  }, []);
+
   useEffect(() => {
     if (process.env.NODE_ENV !== 'production') return;
 
