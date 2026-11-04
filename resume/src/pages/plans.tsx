@@ -335,7 +335,7 @@ const PlansPage = () => {
               <div className="flex items-center gap-4 bg-white/80 backdrop-blur-md rounded-xl sm:rounded-2xl p-2 sm:p-3 border border-indigo-100 w-full lg:w-auto justify-center shadow-sm">
                 <div className="text-right pr-4 border-r border-indigo-100 hidden sm:block">
                   <span className="block text-[10px] text-slate-400 font-black uppercase tracking-widest leading-none mb-1 text-center">Active Offer</span>
-                  <span className="block text-xs text-[#1e1b4b] font-bold opacity-80 italic">Save ₹{inr(saving)} Instantly</span>
+                  <span className="block text-xs text-[#1e1b4b] font-bold opacity-80 italic">{selectedPlan ? `Save ₹${inr(saving)} Instantly` : `Save ${OFFER_PERCENT}% Instantly`}</span>
                 </div>
                 <div className="flex items-center gap-4 lg:gap-3">
                   <div className="flex flex-col items-center">
