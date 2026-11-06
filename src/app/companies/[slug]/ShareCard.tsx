@@ -3,9 +3,11 @@ import { WEBSITE_BASE_URL } from '@/lib/config'
 
 import { useState } from 'react'
 import { Copy, Check, Linkedin, Twitter, Share2 } from 'lucide-react'
+import { useNativeShare } from '@/lib/nativeShare'
 
 export default function ShareCard({ slug, companyName }: { slug: string; companyName: string }) {
   const [copied, setCopied] = useState(false)
+  const { canShare, share } = useNativeShare()
 
   const url = `${WEBSITE_BASE_URL}/companies/${slug}`
   const text = `Check out ${companyName} on Riseflake`
@@ -82,21 +84,32 @@ export default function ShareCard({ slug, companyName }: { slug: string; company
         </button>
       </div>
 
-      {/* Social share buttons */}
-      <div className="mt-3 grid grid-cols-2 gap-2">
-        {shareLinks.map((s) => (
-          <a
-            key={s.label}
-            href={s.href}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={`inline-flex items-center justify-center gap-2 rounded-xl py-2.5 text-xs font-semibold transition-colors ${s.className}`}
-          >
-            {s.icon}
-            {s.label}
-          </a>
-        ))}
-      </div>
+      {/* Device share sheet, or plain links where the browser has none */}
+      {canShare ? (
+        <button
+          type="button"
+          onClick={() => share({ title: companyName, text, url })}
+          className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#414BEA] py-2.5 text-xs font-semibold text-white transition-colors hover:bg-[#3540c9]"
+        >
+          <Share2 className="h-4 w-4" />
+          Share
+        </button>
+      ) : (
+        <div className="mt-3 grid grid-cols-2 gap-2">
+          {shareLinks.map((s) => (
+            <a
+              key={s.label}
+              href={s.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`inline-flex items-center justify-center gap-2 rounded-xl py-2.5 text-xs font-semibold transition-colors ${s.className}`}
+            >
+              {s.icon}
+              {s.label}
+            </a>
+          ))}
+        </div>
+      )}
     </div>
   )
 }
