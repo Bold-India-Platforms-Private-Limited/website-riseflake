@@ -76,3 +76,6 @@ Drop `CF_LIMIT_PER_ROUTE` for the real thing (`npm run build` — about 17k file
   rendering and the build's audit fails ("no server-rendered `<h1>`").
 - SEO surfaces (`generateMetadata`, JSON-LD, canonicals, robots) are unchanged by the static migration; run
   `npm run seo-diff` after touching them.
+
+
+new
