@@ -43,7 +43,7 @@ export const FAQ_TOPICS: FaqTopic[] = [
     faqs: [
       {
         q: 'What is RiseFlake?',
-        a: 'RiseFlake is an Indian job portal and professional networking platform. It brings together thousands of verified jobs and internships, public company pages, professional networking, hackathons and assessments, employer branding for companies, and a College Operating System for training and placement cells — in one place.',
+        a: 'RiseFlake is an Indian job portal and professional networking platform. It brings together thousands of verified jobs and internships, public company pages, professional networking, assessments, employer branding for companies, and a College Operating System for training and placement cells — in one place.',
       },
       {
         q: 'Who can use RiseFlake?',
@@ -59,7 +59,7 @@ export const FAQ_TOPICS: FaqTopic[] = [
       },
       {
         q: 'How is RiseFlake different from other job portals?',
-        a: 'RiseFlake combines a job portal, a professional network and campus placement tools. Candidates can find verified jobs, connect with professionals and mentors, and take part in hackathons; companies can build their employer brand; and colleges can manage placements through the same platform.',
+        a: 'RiseFlake combines a job portal, a professional network and campus placement tools. Candidates can find verified jobs, connect with professionals and mentors, and take assessments; companies can build their employer brand; and colleges can manage placements through the same platform.',
       },
       {
         q: 'Is there a RiseFlake mobile app?',
@@ -136,13 +136,13 @@ export const FAQ_TOPICS: FaqTopic[] = [
     h1: 'Internships & Fresher Jobs — FAQs for Students',
     metaTitle: 'Internships & Fresher Jobs for Students — FAQs',
     metaDescription:
-      'How students and freshers can find verified internships, work-from-home internships, fresher jobs and hackathons on RiseFlake. Eligibility, stipends and certificates explained.',
+      'How students and freshers can find verified internships, work-from-home internships and fresher jobs on RiseFlake. Eligibility, stipends and certificates explained.',
     intro:
-      'Students and fresh graduates can use RiseFlake to find verified internships and entry-level jobs, join hackathons, and build a profile that recruiters can discover.',
+      'Students and fresh graduates can use RiseFlake to find verified internships and entry-level jobs and build a profile that recruiters can discover.',
     faqs: [
       {
         q: 'Can students and freshers use RiseFlake?',
-        a: 'Yes. RiseFlake has internships and entry-level jobs for students and fresh graduates, along with hackathons and assessments to show your skills. You must be 18 or older to register.',
+        a: 'Yes. RiseFlake has internships and entry-level jobs for students and fresh graduates, along with assessments to show your skills. You must be 18 or older to register.',
       },
       {
         q: 'How do I find internships on RiseFlake?',
@@ -157,12 +157,8 @@ export const FAQ_TOPICS: FaqTopic[] = [
         a: 'Many are. Each internship shows its stipend (or states that it is unpaid) so you can filter by stipend range before applying.',
       },
       {
-        q: 'What are hackathons on RiseFlake?',
-        a: 'Hackathons are online and on-campus challenges hosted by companies and colleges. You can register alone or as a team, submit your project, and get noticed by the organisers — often with prizes, certificates or interview opportunities.',
-      },
-      {
         q: 'How can a fresher with no experience stand out?',
-        a: 'Complete every section of your profile, add projects, certificates and skills, take part in hackathons and assessments, and connect with professionals and mentors in your field. A complete profile is easier for recruiters to find.',
+        a: 'Complete every section of your profile, add projects, certificates and skills, take assessments, and connect with professionals and mentors in your field. A complete profile is easier for recruiters to find.',
       },
       {
         q: 'What is the RiseFlake Campus Ambassador programme?',
@@ -173,7 +169,6 @@ export const FAQ_TOPICS: FaqTopic[] = [
       { label: 'Browse internships', href: '/internships' },
       { label: 'Work-from-home internships', href: '/internships/work-from-home' },
       { label: 'Internships by role & city', href: '/internships/browse' },
-      { label: 'Hackathons', href: '/hackathons' },
       { label: 'Campus Ambassador', href: '/campus-ambassador' },
     ],
   },
@@ -228,9 +223,9 @@ export const FAQ_TOPICS: FaqTopic[] = [
     h1: 'Hiring on RiseFlake — FAQs for Employers & Recruiters',
     metaTitle: 'Post Jobs Free & Employer Branding — Recruiter FAQs',
     metaDescription:
-      'How companies and recruiters post jobs for free, run assessments and hackathons, manage applicants and build their employer brand on RiseFlake.',
+      'How companies and recruiters post jobs for free, run assessments, manage applicants and build their employer brand on RiseFlake.',
     intro:
-      'Companies and recruiters can post jobs and internships on RiseFlake for free, screen candidates with assessments, host hackathons, and build their employer brand with a public company page.',
+      'Companies and recruiters can post jobs and internships on RiseFlake for free, screen candidates with assessments and build their employer brand with a public company page.',
     faqs: [
       {
         q: 'How do I post a job on RiseFlake?',
@@ -242,7 +237,7 @@ export const FAQ_TOPICS: FaqTopic[] = [
       },
       {
         q: 'What is employer branding on RiseFlake?',
-        a: 'Employer branding helps your company attract talent. You get a public company page with your open roles, and you can host hackathons, case competitions and challenges to engage students and professionals.',
+        a: 'Employer branding helps your company attract talent. You get a public company page with your open roles, and you can host case competitions and challenges to engage students and professionals.',
       },
       {
         q: 'How do I manage applicants?',
@@ -267,7 +262,6 @@ export const FAQ_TOPICS: FaqTopic[] = [
     ],
     links: [
       { label: 'Company pages', href: '/companies' },
-      { label: 'Hackathons', href: '/hackathons' },
       { label: 'Terms of Service', href: '/terms-of-service' },
       { label: 'Contact sales', href: '/contact' },
     ],
@@ -299,8 +293,8 @@ export const FAQ_TOPICS: FaqTopic[] = [
         a: 'A TPO can manage the student roster, set placement eligibility, share job and internship opportunities with students, and follow placement activity — all from the college dashboard.',
       },
       {
-        q: 'Can companies run campus hiring and hackathons with our college?',
-        a: 'Yes. Companies on RiseFlake can reach students through their college, host hackathons and challenges, and run assessments, which helps colleges bring more hiring partners to campus.',
+        q: 'Can companies run campus hiring with our college?',
+        a: 'Yes. Companies on RiseFlake can reach students through their college, host challenges and run assessments, which helps colleges bring more hiring partners to campus.',
       },
       {
         q: 'What student data can the college see?',
@@ -309,7 +303,6 @@ export const FAQ_TOPICS: FaqTopic[] = [
     ],
     links: [
       { label: 'Campus Ambassador programme', href: '/campus-ambassador' },
-      { label: 'Hackathons', href: '/hackathons' },
       { label: 'Contact us', href: '/contact' },
     ],
   },

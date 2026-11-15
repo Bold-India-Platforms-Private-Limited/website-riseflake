@@ -28,7 +28,7 @@ asks the backend what exists and writes the list:
 |---|---|
 | **active** jobs and internships (~1,000 + ~55) | expired / closed jobs |
 | companies that have **an active job or internship** (~750) — backend `hiring-companies-sitemap.xml` | the other ~5,500 companies of the registry |
-| SEO landing pages: job / internship / company facets, skills, blog, hackathons, static pages (~700) | colleges (68,000), profile pages (`CF_COLLEGES_MAX` / `CF_EXTRA_PROFILES_MAX` opt in) |
+| SEO landing pages: job / internship / company facets, skills, blog, static pages (~700) | colleges (68,000), profile pages (`CF_COLLEGES_MAX` / `CF_EXTRA_PROFILES_MAX` opt in) |
 
 **Every dynamic route's `generateStaticParams()` and every sitemap read that one list**, so a URL is either a
 real file *and* in the sitemap, or neither. Leaf pages (job / internship / company) drop their `.txt` payload

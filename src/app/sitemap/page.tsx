@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
-import { Briefcase, GraduationCap, Building2, School, Globe, Home, FileText, ClipboardList, Info, Users, Mail, Rocket, HelpCircle, ScrollText, Lock, CreditCard, Shield, AlertTriangle, Cookie, Trash2, ExternalLink, Newspaper, Trophy, Network } from 'lucide-react'
+import { Briefcase, GraduationCap, Building2, School, Globe, Home, FileText, ClipboardList, Info, Users, Mail, Rocket, HelpCircle, ScrollText, Lock, CreditCard, Shield, AlertTriangle, Cookie, Trash2, ExternalLink, Newspaper, Network } from 'lucide-react'
 import Navbar from '../components/Navbar'
 import { API_BASE_URL, hreflangAlternates, WEBSITE_BASE_URL } from '../../lib/config'
 import { PARKED_VERTICALS } from '../../lib/parkedVerticals'
@@ -210,20 +210,6 @@ export default async function SitemapHtmlPage() {
                 <TreeInfo label="MCA/ROC public-record companies · batched in XML sitemaps of 45,000" />
               </TreeBranch>
 
-              {/* Hackathons */}
-              <TreeBranch
-                icon={<Trophy className="h-4 w-4" />}
-                label="Hackathons"
-                href="/hackathons"
-                badge="live"
-                badgeColor="violet"
-                defaultOpen={false}
-              >
-                <TreeLeaf href="/hackathons" label="Browse all hackathons" icon={<ExternalLink className="h-3 w-3" />} />
-                <TreeLeaf href="/sitemap-hackathons.xml" label="Hackathons XML sitemap (auto-updated)" icon={<FileText className="h-3 w-3" />} muted />
-                <TreeInfo label="Every hackathon detail page · auto-indexed via XML sitemap" />
-              </TreeBranch>
-
               {/* Blog */}
               <TreeBranch
                 icon={<Newspaper className="h-4 w-4" />}
@@ -317,7 +303,6 @@ export default async function SitemapHtmlPage() {
                 </>
               )}
               <XmlCard href="/sitemap-blogs.xml" title="Blog Sitemap" desc="Every published article · refreshes hourly" />
-              <XmlCard href="/sitemap-hackathons.xml" title="Hackathons Sitemap" desc="Every hackathon detail page · refreshes hourly" />
               <XmlCard href="/sitemap-static.xml" title="Static Pages Sitemap" desc="Core pages, discovery hubs & city landing pages · refreshes daily" />
             </div>
 

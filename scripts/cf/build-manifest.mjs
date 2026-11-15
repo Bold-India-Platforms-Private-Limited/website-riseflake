@@ -20,7 +20,7 @@
  *   jobs, internships   only ACTIVE ones (the backend's jobs/internships sitemaps already filter to those)
  *   companies           only companies that currently have an active job or internship
  *                       (backend: hiring-companies-sitemap.xml) — not the whole ~6k company registry
- *   hubs                facet landing pages, skills, blog, hackathons, static pages
+ *   hubs                facet landing pages, skills, blog, static pages
  *   colleges, profiles  not pre-rendered (opt in with CF_COLLEGES_MAX / CF_EXTRA_PROFILES_MAX)
  *
  * Then the incremental planner (scripts/cf/incremental.mjs) decides which of those actually get RENDERED
@@ -252,7 +252,7 @@ async function main() {
       `colleges=${collegeFacets.length} people=${peopleFacets.length} skills=${skills.length}`,
   )
 
-  // ── blog & hackathons ──────────────────────────────────────────────────
+  // ── blog ──────────────────────────────────────────────────
   let blogs = []
   try {
     const j = await getJson(`${BLOG_API_URL}/blogs/public/slugs`)
@@ -265,16 +265,6 @@ async function main() {
   const haveBlog = new Set(blogs.map((b) => b.s))
   for (const e of STATIC_BLOG_SITEMAP_ENTRIES) {
     if (!haveBlog.has(e.slug)) blogs.push({ s: e.slug, ...(e.updated_at ? { m: String(e.updated_at).slice(0, 10) } : {}) })
-  }
-
-  let hackathons = []
-  try {
-    const j = await getJson(`${BLOG_API_URL}/hackathons?limit=500&sort=newest`)
-    hackathons = (j?.hackathons ?? [])
-      .filter((h) => safeSlug(h.slug))
-      .map((h) => ({ s: h.slug, ...(h.updated_at ? { m: String(h.updated_at).slice(0, 10) } : {}) }))
-  } catch (err) {
-    throw new Error(`hackathons unavailable: ${err.message}`)
   }
 
   // ── sanity floors: never publish a site built from a broken backend answer ──
@@ -293,7 +283,7 @@ async function main() {
   // (job / internship / company / college / profile detail), whose .txt is dropped in
   // postbuild — links to them are plain navigations — so they cost 1 file each.
   const hubPages =
-    STATIC_ROUTE_ESTIMATE + skills.length + blogs.length + hackathons.length +
+    STATIC_ROUTE_ESTIMATE + skills.length + blogs.length +
     jobFacets.length + internshipFacets.length + companyFacets.length + collegeFacets.length + peopleFacets.length +
     66 /* jobs-in + internships-in city pages */ + 12 /* internship domain pages + WFH */
   const mandatoryLeaves = jobs.length + internships.length + companies.length + people.length
@@ -333,7 +323,6 @@ async function main() {
     extraProfiles: cut(extraProfiles),
     skills: cut(skills),
     blogs: cut(blogs),
-    hackathons: cut(hackathons),
     facets: {
       jobs: cut(jobFacets),
       internships: cut(internshipFacets),

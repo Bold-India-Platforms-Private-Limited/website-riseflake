@@ -86,7 +86,6 @@ const STATIC_PAGES = [
   P('/campus-ambassador', 'monthly', '0.5'),
   P('/network', 'daily', '0.7'),
   ...(PARKED_VERTICALS.people ? [] : [P('/in/people', 'daily', '0.7')]),
-  P('/hackathons', 'daily', '0.8'),
   P('/internships/work-from-home', 'daily', '0.9'),
   // Faceted discovery hubs — individual facet URLs live in the sitemap-*-facets.xml files
   P('/internships/browse', 'daily', '0.8'),
@@ -166,7 +165,6 @@ export function generateSitemaps(m, outDir) {
   add('sitemap-internships-facets', flat('sitemap-internships-facets', mapEntries(m.facets.internships, '/internships/browse/', 'daily', '0.6')))
   add('sitemap-companies', batched('sitemap-companies', mapEntries(m.companies, '/companies/', 'weekly', '0.7')))
   add('sitemap-companies-facets', flat('sitemap-companies-facets', mapEntries(m.facets.companies, '/companies/browse/', 'weekly', '0.6')))
-  add('sitemap-hackathons', flat('sitemap-hackathons', mapEntries(m.hackathons, '/hackathons/', 'daily', '0.8')))
   add('sitemap-colleges', flat('sitemap-colleges', mapEntries(m.colleges, '/colleges/', 'weekly', '0.6')))
   add('sitemap-colleges-facets', flat('sitemap-colleges-facets', mapEntries(m.facets.colleges, '/colleges/browse/', 'monthly', '0.4')))
   add('sitemap-skills', flat('sitemap-skills', mapEntries(m.skills, '/skills/', undefined, undefined)))

@@ -159,7 +159,7 @@ const CardSlider: React.FC<{ cards: React.ReactNode[]; direction: 'top' | 'botto
 // ─── Main component ───────────────────────────────────────────────────────────
 export default function Assessment() {
   const allCards: CardDef[] = [
-    { icon: Code, title: 'Hackathons & Challenges' },
+    { icon: Code, title: 'Case Challenges' },
     { icon: HelpCircle, title: 'Innovation Competition' },
     { icon: Briefcase, title: 'Jobs Listings' },
     { icon: FileText, title: 'Internship Posting' },
@@ -185,7 +185,7 @@ export default function Assessment() {
 
   const cardFeatures: Record<string, string[]> = {
     'Employer Branding': [
-      'Hackathons, Case Competitions, Simulations, Challenges',
+      'Case Competitions, Simulations, Challenges',
       'Internship & Job Listings',
       'Branded Employer Microsite',
     ],

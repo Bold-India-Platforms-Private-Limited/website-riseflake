@@ -77,7 +77,6 @@ const LEAVES = [
 const HUBS = [
   [(m) => m.skills, (m, v) => (m.skills = v), 'skills'],
   [(m) => m.blogs, (m, v) => (m.blogs = v), 'blog'],
-  [(m) => m.hackathons, (m, v) => (m.hackathons = v), 'hackathons'],
   [(m) => m.facets.jobs, (m, v) => (m.facets.jobs = v), 'jobs/browse'],
   [(m) => m.facets.internships, (m, v) => (m.facets.internships = v), 'internships/browse'],
   [(m) => m.facets.companies, (m, v) => (m.facets.companies = v), 'companies/browse'],

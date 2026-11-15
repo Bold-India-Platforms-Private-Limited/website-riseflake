@@ -29,7 +29,6 @@ export type Manifest = {
   extraProfiles: Entry[]
   skills: Entry[]
   blogs: Entry[]
-  hackathons: Entry[]
   facets: {
     jobs: Entry[]
     internships: Entry[]
@@ -43,7 +42,7 @@ const EMPTY: Manifest = {
   generatedAt: '',
   incremental: false,
   jobs: [], internships: [], companies: [], colleges: [], people: [], extraProfiles: [],
-  skills: [], blogs: [], hackathons: [],
+  skills: [], blogs: [],
   facets: { jobs: [], internships: [], companies: [], colleges: [], people: [] },
 }
 
@@ -67,7 +66,7 @@ export function getManifest(): Manifest {
 /**
  * Next refuses `output: 'export'` for a dynamic route whose generateStaticParams() is empty
  * ("is missing generateStaticParams()"). A perfectly normal build can have an empty list
- * (e.g. no hackathons right now), so an empty list yields ONE placeholder param instead.
+ * (e.g. no blog posts reused in an incremental build), so an empty list yields ONE placeholder param instead.
  * That page renders as a not-found shell (or, under a loading.tsx, a skeleton), which
  * scripts/cf/postbuild.mjs deletes on sight — so it never ships, and the route simply has no pages.
  * (An INCREMENTAL build hits this constantly: when every page of a kind is reused there is nothing to render.)
@@ -89,5 +88,4 @@ export const collegeSlugs = () => slugs(getManifest().colleges)
 export const profileSlugs = () => slugs(getManifest().people, getManifest().extraProfiles)
 export const skillSlugs = () => slugs(getManifest().skills)
 export const blogSlugs = () => slugs(getManifest().blogs)
-export const hackathonSlugs = () => slugs(getManifest().hackathons)
 export const facetSlugs = (kind: keyof Manifest['facets']) => slugs(getManifest().facets[kind])

@@ -1,7 +1,7 @@
 # Riseflake Jobportal
 
 The public internships & jobs portal at **[jobportal.riseflake.com](https://jobportal.riseflake.com)** — internships,
-jobs, companies, skills, hackathons and blog, focused on India. Built for search: every indexable page is
+jobs, companies, skills and blog, focused on India. Built for search: every indexable page is
 pre-rendered HTML with its own metadata and structured data, and every page title ends in
 "| Riseflake Jobportal" so its traffic is easy to separate in Google Analytics.
 
