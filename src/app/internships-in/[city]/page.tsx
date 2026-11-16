@@ -22,6 +22,11 @@ const CITIES = [
   'coimbatore', 'kochi', 'remote',
 ]
 
+// The API matches the listing's own location text, which says "Bengaluru", never "Bangalore": a
+// "bangalore" query found 0 listings, so the page rendered empty and marked itself noindex.
+const API_LOCATION: Record<string, string> = { bangalore: 'bengaluru' }
+const apiLocation = (city: string) => API_LOCATION[city] ?? city
+
 function titleCase(str: string) {
   return str.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
 }
@@ -50,7 +55,7 @@ async function fetchInternshipsByCity(city: string, page = 1): Promise<Internshi
     const params = new URLSearchParams({
       limit: '24',
       page: String(page),
-      location: city === 'remote' ? '' : city,
+      location: city === 'remote' ? '' : apiLocation(city),
       ...(city === 'remote' ? { workplace_type: '1' } : {}),
     })
     const res = await fetch(`${API_BASE_URL}/internships?${params}`, {
@@ -297,7 +302,7 @@ export default async function InternshipsInCityPage(
           )}
 
           <BrowseAllCta
-            href={isRemote ? '/internships?workplace_type=1' : `/internships?location=${city}`}
+            href={isRemote ? '/internships?workplace_type=1' : `/internships?location=${apiLocation(city)}`}
             label={isRemote ? 'Browse all remote internships' : `Browse all internships in ${cityLabel}`}
             total={total}
             shown={internships.length}

@@ -124,18 +124,22 @@ export function generateSitemaps(m, outDir) {
     files.push(name)
   }
 
-  /** Emits `${base}.xml` as an index of `${base}-{N}.xml` batches; returns false if empty. */
+  /** Emits `${base}-{N}.xml` batches plus `${base}.xml` as their own index (kept for any direct
+   *  Search Console submission). Returns the batch URLs, or [] if empty. The top-level sitemap.xml
+   *  must list the BATCHES, not `${base}.xml`: Google does not follow a sitemap index nested inside
+   *  another index, so listing `${base}.xml` there left every job, internship, company and profile
+   *  page out of the sitemap Google reads. */
   const batched = (base, entries) => {
-    if (!entries.length) return false
-    const children = []
+    if (!entries.length) return []
+    const batches = []
     for (let i = 0; i < entries.length; i += BATCH) {
       const n = i / BATCH + 1
       write(`${base}-${n}.xml`, urlset(entries.slice(i, i + BATCH)))
-      children.push(loc(`/${base}-${n}.xml`))
+      batches.push(loc(`/${base}-${n}.xml`))
     }
-    write(`${base}.xml`, sitemapIndex(children, t))
+    write(`${base}.xml`, sitemapIndex(batches, t))
     urls.push(...entries.map((e) => e.url))
-    return true
+    return batches
   }
 
   const flat = (name, entries) => {
@@ -150,6 +154,7 @@ export function generateSitemaps(m, outDir) {
 
   const children = []
   const add = (name, ok) => ok && children.push(loc(`/${name}.xml`))
+  const addBatches = (batches) => children.push(...batches)
 
   add('sitemap-static', flat('sitemap-static', STATIC_PAGES.map((p) => ({ ...p, lastmod: p.lastmod ?? t }))))
   add(
@@ -159,17 +164,17 @@ export function generateSitemaps(m, outDir) {
       ...mapEntries(m.blogs, '/blog/', 'monthly', '0.7'),
     ]),
   )
-  add('sitemap-jobs', batched('sitemap-jobs', mapEntries(m.jobs, '/jobs/', 'daily', '0.8')))
-  add('sitemap-internships', batched('sitemap-internships', mapEntries(m.internships, '/internships/', 'daily', '0.8')))
+  addBatches(batched('sitemap-jobs', mapEntries(m.jobs, '/jobs/', 'daily', '0.8')))
+  addBatches(batched('sitemap-internships', mapEntries(m.internships, '/internships/', 'daily', '0.8')))
   add('sitemap-jobs-facets', flat('sitemap-jobs-facets', mapEntries(m.facets.jobs, '/jobs/browse/', 'daily', '0.6')))
   add('sitemap-internships-facets', flat('sitemap-internships-facets', mapEntries(m.facets.internships, '/internships/browse/', 'daily', '0.6')))
-  add('sitemap-companies', batched('sitemap-companies', mapEntries(m.companies, '/companies/', 'weekly', '0.7')))
+  addBatches(batched('sitemap-companies', mapEntries(m.companies, '/companies/', 'weekly', '0.7')))
   add('sitemap-companies-facets', flat('sitemap-companies-facets', mapEntries(m.facets.companies, '/companies/browse/', 'weekly', '0.6')))
   add('sitemap-colleges', flat('sitemap-colleges', mapEntries(m.colleges, '/colleges/', 'weekly', '0.6')))
   add('sitemap-colleges-facets', flat('sitemap-colleges-facets', mapEntries(m.facets.colleges, '/colleges/browse/', 'monthly', '0.4')))
   add('sitemap-skills', flat('sitemap-skills', mapEntries(m.skills, '/skills/', undefined, undefined)))
-  add('sitemap-users', batched('sitemap-users', mapEntries(m.extraProfiles, '/in/', 'weekly', '0.6')))
-  add('sitemap-people', batched('sitemap-people', mapEntries(m.people, '/in/', 'weekly', '0.6')))
+  addBatches(batched('sitemap-users', mapEntries(m.extraProfiles, '/in/', 'weekly', '0.6')))
+  addBatches(batched('sitemap-people', mapEntries(m.people, '/in/', 'weekly', '0.6')))
   add('sitemap-people-directory', flat('sitemap-people-directory', mapEntries(m.facets.people, '/in/people/', undefined, undefined)))
 
   write('sitemap.xml', sitemapIndex(children, t))

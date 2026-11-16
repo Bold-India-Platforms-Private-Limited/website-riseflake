@@ -46,8 +46,10 @@ async function collectSitemapUrls() {
       continue
     }
     const locs = locsOf(await r.text())
-    // A child can itself be an index (jobs, companies, …) — one more level.
+    // A child must never be an index itself: Google does not follow an index nested in an index.
+    // Still read one more level so the page sample covers it, but fail the check.
     if (/<sitemapindex/.test(await (await get(toPath(child))).text())) {
+      bad(`sitemap child ${toPath(child)} is itself a sitemap index (Google ignores nested indexes)`)
       for (const g of locs) {
         const gr = await get(toPath(g))
         if (gr.status === 200) pages.push(...locsOf(await gr.text()))
