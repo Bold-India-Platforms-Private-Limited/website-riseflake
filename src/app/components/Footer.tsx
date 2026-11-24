@@ -304,9 +304,9 @@ export default function Footer() {
                 <a href="https://play.google.com/store/apps/details?id=com.riseflake.app" target="_blank" rel="noopener noreferrer" className="w-1/2 max-w-[130px]">
                   <img src="https://assets.riseflake.com/images/illustrations/play-store.jpg" alt="Get it on Google Play" className="h-auto w-full object-contain" />
                 </a>
-                <a href="https://apps.apple.com/app/idYOUR_APP_ID" target="_blank" rel="noopener noreferrer" className="w-1/2 max-w-[130px]">
+                <div className="w-1/2 max-w-[130px]">
                   <img src="https://assets.riseflake.com/images/illustrations/app-store.jpg" alt="Download on the App Store" className="h-auto w-full object-contain" />
-                </a>
+                </div>
               </div>
               <div className="mt-10 flex justify-center lg:justify-start">
                 <iframe

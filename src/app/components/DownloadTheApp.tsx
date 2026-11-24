@@ -60,19 +60,14 @@ export default function DownloadTheApp() {
 
           <div className="mt-2 flex items-center gap-2 border-t border-slate-200 pt-2 text-xs text-slate-500">
             <span>Available on</span>
-            <a
-              href="https://apps.apple.com/app/idYOUR_APP_ID"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="transition hover:opacity-80"
-            >
+            <span>
               <img
                 src="https://assets.riseflake.com/images/illustrations/apple_v1.png"
                 alt="Apple"
-                className="h-3.5 cursor-pointer"
+                className="h-3.5"
                 loading="lazy"
               />
-            </a>
+            </span>
             <a
               href="https://play.google.com/store/apps/details?id=com.riseflake.app"
               target="_blank"

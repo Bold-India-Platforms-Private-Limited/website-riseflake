@@ -48,18 +48,13 @@ export default function AppDownloadSection() {
                   className="h-10 w-auto cursor-pointer"
                 />
               </a>
-              <a
-                href="https://apps.apple.com/app/idYOUR_APP_ID"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="transition hover:-translate-y-0.5"
-              >
+              <div>
                 <img
                   src="/download-on-the-app-store.svg"
                   alt="Download on App Store"
-                  className="h-10 w-auto cursor-pointer"
+                  className="h-10 w-auto"
                 />
-              </a>
+              </div>
             </div>
           </div>
 
