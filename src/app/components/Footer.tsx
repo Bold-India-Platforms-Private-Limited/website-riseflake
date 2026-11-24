@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import type { AnchorHTMLAttributes, ReactNode } from 'react'
-import { APP_BASE_URL, BASE_ASSETS_URL } from '../../lib/config'
+import { APP_BASE_URL, BASE_ASSETS_URL, BLOG_URL } from '../../lib/config'
 import { PARKED_VERTICALS } from '../../lib/parkedVerticals'
 
 type SectionKey = 'resources' | 'company' | 'quickLinks' | 'explore'
@@ -18,9 +18,7 @@ const links = {
     { label: 'XML Sitemap', href: '/sitemap.xml' },
   ],
   explore: [
-    { label: 'Blog', href: '/blog' },
-    { label: 'Tech & Engineering', href: '/blog?category=tech-engineering' },
-    { label: 'Career Tips', href: '/blog?category=career-tips' },
+    { label: 'Blog', href: BLOG_URL },
     { label: 'Browse Colleges', href: '/colleges/browse' },
     { label: 'Engineering Colleges', href: '/colleges/browse/engineering-colleges-in-india' },
   ],
@@ -273,7 +271,7 @@ export default function Footer() {
                 onClick={() => isMobile && toggleSection('explore')}
               >
                 <h4 className="mb-2 text-sm font-medium text-gray-800 sm:mb-6">
-                  <a href="/blog" className="hover:text-indigo-600 transition-colors">Blog</a>
+                  <a href={BLOG_URL} className="hover:text-indigo-600 transition-colors">Blog</a>
                 </h4>
                 {isMobile && (
                   <span className="text-lg text-gray-500 sm:hidden">

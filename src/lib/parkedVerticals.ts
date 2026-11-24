@@ -15,8 +15,8 @@
  * parked vertical stays in the codebase and starts working again the moment its flag flips back
  * to `false` (and the site redeploys).
  *
- * scripts/cf/*.mjs import this file directly via Node's native TypeScript stripping (the same
- * pattern already used for src/lib/staticBlogPosts.ts) — there is exactly one copy of this
+ * scripts/cf/*.mjs import this file directly via Node's native TypeScript stripping, so there
+ * is exactly one copy of this
  * decision, not one per build script.
  */
 export const PARKED_VERTICALS = {

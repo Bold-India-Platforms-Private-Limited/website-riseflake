@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
-import { Briefcase, GraduationCap, Building2, School, Globe, Home, FileText, Users, ScrollText, Trash2, ExternalLink, Newspaper, Network } from 'lucide-react'
+import { Briefcase, GraduationCap, Building2, School, Globe, Home, FileText, Users, ScrollText, Trash2, ExternalLink, Network } from 'lucide-react'
 import Navbar from '../components/Navbar'
 import { API_BASE_URL, hreflangAlternates, WEBSITE_BASE_URL } from '../../lib/config'
 import { PARKED_VERTICALS } from '../../lib/parkedVerticals'
@@ -209,18 +209,6 @@ export default async function SitemapHtmlPage() {
                 <TreeInfo label="MCA/ROC public-record companies · batched in XML sitemaps of 45,000" />
               </TreeBranch>
 
-              {/* Blog */}
-              <TreeBranch
-                icon={<Newspaper className="h-4 w-4" />}
-                label="Blog"
-                href="/blog"
-                defaultOpen={false}
-              >
-                <TreeLeaf href="/blog" label="All articles & career guides" icon={<ExternalLink className="h-3 w-3" />} />
-                <TreeLeaf href="/sitemap-blogs.xml" label="Blog XML sitemap (auto-updated)" icon={<FileText className="h-3 w-3" />} muted />
-                <TreeInfo label="Every published post · auto-indexed via XML sitemap" />
-              </TreeBranch>
-
               {/* Profiles & network */}
               <TreeBranch
                 icon={<Network className="h-4 w-4" />}
@@ -278,7 +266,6 @@ export default async function SitemapHtmlPage() {
                   <XmlCard href="/sitemap-users.xml" title="Members Sitemap Index" desc="Public member profiles · batched XML sitemaps" />
                 </>
               )}
-              <XmlCard href="/sitemap-blogs.xml" title="Blog Sitemap" desc="Every published article · refreshes hourly" />
               <XmlCard href="/sitemap-static.xml" title="Static Pages Sitemap" desc="Core pages, discovery hubs & city landing pages · refreshes daily" />
             </div>
 

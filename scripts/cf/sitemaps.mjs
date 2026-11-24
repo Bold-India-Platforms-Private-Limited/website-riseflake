@@ -143,13 +143,6 @@ export function generateSitemaps(m, outDir) {
   const addBatches = (batches) => children.push(...batches)
 
   add('sitemap-static', flat('sitemap-static', STATIC_PAGES.map((p) => ({ ...p, lastmod: p.lastmod ?? t }))))
-  add(
-    'sitemap-blogs',
-    flat('sitemap-blogs', [
-      { url: loc('/blog'), lastmod: t, changefreq: 'daily', priority: '0.8' },
-      ...mapEntries(m.blogs, '/blog/', 'monthly', '0.7'),
-    ]),
-  )
   addBatches(batched('sitemap-jobs', mapEntries(m.jobs, '/jobs/', 'daily', '0.8')))
   addBatches(batched('sitemap-internships', mapEntries(m.internships, '/internships/', 'daily', '0.8')))
   add('sitemap-jobs-facets', flat('sitemap-jobs-facets', mapEntries(m.facets.jobs, '/jobs/browse/', 'daily', '0.6')))

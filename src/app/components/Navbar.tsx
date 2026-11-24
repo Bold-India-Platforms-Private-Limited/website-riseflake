@@ -1,5 +1,5 @@
 'use client'
-import { WEBSITE_BASE_URL } from '@/lib/config'
+import { BLOG_URL, WEBSITE_BASE_URL } from '@/lib/config'
 
 import { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
@@ -211,10 +211,10 @@ export default function Navbar({ bgTransparent = false }: { bgTransparent?: bool
                     ATS Checker
                   </a>
                   <div className="h-px bg-slate-100 my-1"></div>
-                  <Link href="/blog" className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-indigo-600 transition-colors">
+                  <a href={BLOG_URL} className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-indigo-600 transition-colors">
                     <BookOpen className="h-4 w-4 text-slate-400" />
                     Blog
-                  </Link>
+                  </a>
                 </div>
               </div>
             </nav>
@@ -629,12 +629,9 @@ export default function Navbar({ bgTransparent = false }: { bgTransparent?: bool
                 </div>
                 <ChevronRight className="h-5 w-5 opacity-50" />
               </a>
-              <Link
-                href="/blog"
-                className={`flex items-center justify-between rounded-xl px-4 py-3 text-base font-medium transition ${isActive('/blog')
-                  ? 'bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 text-white shadow'
-                  : 'text-slate-700 hover:bg-slate-100'
-                  }`}
+              <a
+                href={BLOG_URL}
+                className="flex items-center justify-between rounded-xl px-4 py-3 text-base font-medium transition text-slate-700 hover:bg-slate-100"
                 onClick={() => setOpen(false)}
               >
                 <div className="flex items-center gap-3">
@@ -642,7 +639,7 @@ export default function Navbar({ bgTransparent = false }: { bgTransparent?: bool
                   <span>Blog</span>
                 </div>
                 <ChevronRight className="h-5 w-5 opacity-70" />
-              </Link>
+              </a>
             </div>
 
             {/* Pinned footer CTA */}

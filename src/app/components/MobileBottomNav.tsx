@@ -1,5 +1,5 @@
 'use client'
-import { WEBSITE_BASE_URL } from '@/lib/config'
+import { BLOG_URL, WEBSITE_BASE_URL } from '@/lib/config'
 
 import { useState } from 'react'
 import { usePathname } from 'next/navigation'
@@ -35,7 +35,7 @@ const MORE_LINKS = [
   { href: '/discover/companies/india', label: 'Discover', icon: Globe2, color: 'bg-fuchsia-50 text-fuchsia-600' },
   { href: `${WEBSITE_BASE_URL}/resume`, label: 'Build Resume', icon: FileText, color: 'bg-slate-100 text-slate-600', external: true },
   { href: `${WEBSITE_BASE_URL}/resume/ats-checker`, label: 'ATS Checker', icon: FileCheck, color: 'bg-orange-50 text-orange-600', external: true },
-  { href: '/blog', label: 'Blog', icon: BookOpen, color: 'bg-blue-50 text-blue-600' },
+  { href: BLOG_URL, label: 'Blog', icon: BookOpen, color: 'bg-blue-50 text-blue-600', external: true },
 ]
 
 export default function MobileBottomNav() {

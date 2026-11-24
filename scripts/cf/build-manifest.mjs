@@ -20,7 +20,7 @@
  *   jobs, internships   only ACTIVE ones (the backend's jobs/internships sitemaps already filter to those)
  *   companies           only companies that currently have an active job or internship
  *                       (backend: hiring-companies-sitemap.xml) — not the whole ~6k company registry
- *   hubs                facet landing pages, skills, blog, static pages
+ *   hubs                facet landing pages, skills, static pages
  *   colleges, profiles  not pre-rendered (opt in with CF_COLLEGES_MAX / CF_EXTRA_PROFILES_MAX)
  *
  * Then the incremental planner (scripts/cf/incremental.mjs) decides which of those actually get RENDERED
@@ -33,7 +33,7 @@
  */
 import fs from 'node:fs'
 import {
-  API_BASE_URL, BLOG_API_URL, BUILD_DIR, HAS_INTERNAL_KEY, MANIFEST_PATH, PAGE_KINDS, PLATFORM_FILE_LIMIT,
+  API_BASE_URL, BUILD_DIR, HAS_INTERNAL_KEY, MANIFEST_PATH, PAGE_KINDS, PLATFORM_FILE_LIMIT,
   envInt, getJson, getText, installBuildFetch, listOf, loadState, locsOf, log, safeSlug, slugAfter, warn, xmlUnescape,
 } from './lib.mjs'
 import { REDIRECTED_SOURCES } from './redirects.mjs'
@@ -252,21 +252,6 @@ async function main() {
       `colleges=${collegeFacets.length} people=${peopleFacets.length} skills=${skills.length}`,
   )
 
-  // ── blog ──────────────────────────────────────────────────
-  let blogs = []
-  try {
-    const j = await getJson(`${BLOG_API_URL}/blogs/public/slugs`)
-    blogs = (j?.slugs ?? []).filter((b) => safeSlug(b.slug)).map((b) => ({ s: b.slug, ...(b.updated_at ? { m: String(b.updated_at).slice(0, 10) } : {}) }))
-  } catch (err) {
-    throw new Error(`blog slugs unavailable: ${err.message}`)
-  }
-  // Hand-written posts that ship with the site (no backend dependency).
-  const { STATIC_BLOG_SITEMAP_ENTRIES } = await import(new URL('../../src/lib/staticBlogPosts.ts', import.meta.url).href)
-  const haveBlog = new Set(blogs.map((b) => b.s))
-  for (const e of STATIC_BLOG_SITEMAP_ENTRIES) {
-    if (!haveBlog.has(e.slug)) blogs.push({ s: e.slug, ...(e.updated_at ? { m: String(e.updated_at).slice(0, 10) } : {}) })
-  }
-
   // ── sanity floors: never publish a site built from a broken backend answer ──
   // (skipped for a parked vertical — an empty list there is the intended state, not a
   // sign the backend answered badly)
@@ -283,7 +268,7 @@ async function main() {
   // (job / internship / company / college / profile detail), whose .txt is dropped in
   // postbuild — links to them are plain navigations — so they cost 1 file each.
   const hubPages =
-    STATIC_ROUTE_ESTIMATE + skills.length + blogs.length +
+    STATIC_ROUTE_ESTIMATE + skills.length +
     jobFacets.length + internshipFacets.length + companyFacets.length + collegeFacets.length + peopleFacets.length +
     66 /* jobs-in + internships-in city pages */ + 12 /* internship domain pages + WFH */
   const mandatoryLeaves = jobs.length + internships.length + companies.length + people.length
@@ -322,7 +307,6 @@ async function main() {
     people: cut(people),
     extraProfiles: cut(extraProfiles),
     skills: cut(skills),
-    blogs: cut(blogs),
     facets: {
       jobs: cut(jobFacets),
       internships: cut(internshipFacets),

@@ -39,6 +39,9 @@ export const TRACK_404_URL =
   'https://backend.riseflake.com/api/v2/track-404'
 export const BASE_ASSETS_URL = 'https://assets.riseflake.com/images'
 
+/** The blog lives on www.riseflake.com; jobportal only links to it. */
+export const BLOG_URL = 'https://www.riseflake.com/blog'
+
 /**
  * Base URL of the React web app (app.riseflake.com).
  * Used for "Apply" hand-off links — the app owns auth + the application flow.

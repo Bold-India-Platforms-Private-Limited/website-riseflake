@@ -52,7 +52,6 @@ export const PAGE_KINDS = [
   { id: 'people', list: ['people'], dir: 'in', route: '/in/[slug]', leaf: true, entity: true, guarded: true, maxAgeH: 168 },
   { id: 'extraProfiles', list: ['extraProfiles'], dir: 'in', route: '/in/[slug]', leaf: true, entity: true, guarded: true, maxAgeH: 168 },
   { id: 'skills', list: ['skills'], dir: 'skills', route: '/skills/[slug]', leaf: false, entity: false, guarded: true, maxAgeH: 12 },
-  { id: 'blogs', list: ['blogs'], dir: 'blog', route: '/blog/[slug]', leaf: false, entity: true, guarded: false, maxAgeH: 24 },
   { id: 'facets.jobs', list: ['facets', 'jobs'], dir: 'jobs/browse', route: '/jobs/browse/[[...slug]]', leaf: false, entity: false, guarded: false, maxAgeH: 12 },
   { id: 'facets.internships', list: ['facets', 'internships'], dir: 'internships/browse', route: '/internships/browse/[[...slug]]', leaf: false, entity: false, guarded: false, maxAgeH: 12 },
   { id: 'facets.companies', list: ['facets', 'companies'], dir: 'companies/browse', route: '/companies/browse/[[...slug]]', leaf: false, entity: false, guarded: false, maxAgeH: 24 },

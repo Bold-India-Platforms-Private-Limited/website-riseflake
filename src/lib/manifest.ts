@@ -28,7 +28,6 @@ export type Manifest = {
   people: Entry[]
   extraProfiles: Entry[]
   skills: Entry[]
-  blogs: Entry[]
   facets: {
     jobs: Entry[]
     internships: Entry[]
@@ -42,7 +41,7 @@ const EMPTY: Manifest = {
   generatedAt: '',
   incremental: false,
   jobs: [], internships: [], companies: [], colleges: [], people: [], extraProfiles: [],
-  skills: [], blogs: [],
+  skills: [],
   facets: { jobs: [], internships: [], companies: [], colleges: [], people: [] },
 }
 
@@ -87,5 +86,4 @@ export const collegeSlugs = () => slugs(getManifest().colleges)
 /** Curated (indexable) profiles first, then the budget-permitting extras. */
 export const profileSlugs = () => slugs(getManifest().people, getManifest().extraProfiles)
 export const skillSlugs = () => slugs(getManifest().skills)
-export const blogSlugs = () => slugs(getManifest().blogs)
 export const facetSlugs = (kind: keyof Manifest['facets']) => slugs(getManifest().facets[kind])
