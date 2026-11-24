@@ -3,8 +3,8 @@ export default function PolicyBody() {
   return (
     <>
 <section>
-<p><strong>Version 2.0</strong></p>
-<p><strong>Last Updated:</strong> September 25, 2026 &nbsp;|&nbsp; <strong>Effective Date:</strong> September 19, 2026</p>
+<p><strong>Version 2.1</strong></p>
+<p><strong>Last Updated:</strong> November 24, 2026 &nbsp;|&nbsp; <strong>Effective Date:</strong> September 19, 2026</p>
 </section>
 <div className="callout">
 <p><strong>The short version</strong></p>
@@ -13,6 +13,7 @@ export default function PolicyBody() {
 <li>We use it to run RiseFlake: accounts, jobs and internships, networking, assessments, hackathons and colleges’ placement work. We do <strong>not sell</strong> your personal data.</li>
 <li>Recruiters and companies see what you apply with or choose to make visible. Your profile can be public and searchable on Google unless you switch that off in <em>Settings → Profile Visibility</em>.</li>
 <li>You can access, correct, delete, hibernate, withdraw consent, nominate someone, and complain — see Section 14. Write to <a href="mailto:privacy@riseflake.com">privacy@riseflake.com</a>.</li>
+<li>Verifying your profile with DigiLocker (Aadhaar) is optional. We never receive your full Aadhaar number, DigiLocker password or OTP, and other members see only the verified mark and a short summary (Section 5.8).</li>
 <li>RiseFlake is for people aged <strong>18 or older</strong>.</li>
 </ul>
 </div>
@@ -59,6 +60,7 @@ export default function PolicyBody() {
 <thead><tr><th>Data</th><th>Why we need it</th><th>Kept</th></tr></thead>
 <tbody>
 <tr><td><strong>Account &amp; identity:</strong> name, username, email*, mobile number*, password (stored only as a salted hash), date of birth, gender, profile photo, account type, email/phone verification status</td><td>Create and secure your account, verify you by one-time password, prevent fraud and duplicate accounts, show you to others as you choose</td><td>While your account is active</td></tr>
+<tr><td><strong>Identity verification</strong> (optional): the details DigiLocker shares when you verify with Aadhaar, listed in Section 5.8</td><td>Confirm you are a real person, show the DigiLocker verified mark, prevent fake and duplicate accounts</td><td>While your account is active, or until you ask us to remove the verification</td></tr>
 <tr><td><strong>Profile &amp; career:</strong> headline, about you, career goals, job preferences, work experience, education (institution, course, marks/CGPA, board), skills, certificates, projects, hobbies, social and portfolio links</td><td>Build your profile, match you to jobs, internships, people and content, let recruiters evaluate you</td><td>While your account is active</td></tr>
 <tr><td><strong>Resume &amp; documents:</strong> resume file or link you provide</td><td>Apply for jobs and let recruiters you apply to (or that you make visible to) review it</td><td>While your account is active</td></tr>
 <tr><td><strong>Addresses &amp; locations:</strong> current and permanent address, current and preferred work location</td><td>Location-based matching and, where you provide them, verification by employers or colleges</td><td>While your account is active</td></tr>
@@ -130,6 +132,7 @@ export default function PolicyBody() {
 <li><strong>Referrals:</strong> a user may give us your email or phone number to invite you. We use it only to send that invitation and honour your unsubscribe.</li>
 <li><strong>Hackathons and assessments:</strong> teammates or organisers may add your details to a team or event.</li>
 <li><strong>Payment provider:</strong> confirmation and status of payments from Razorpay.</li>
+<li><strong>DigiLocker:</strong> if you choose to verify your profile, the details described in Section 5.8.</li>
 </ul>
 </section>
 
@@ -167,6 +170,15 @@ export default function PolicyBody() {
 
 <h3>5.7 Support and administrator access</h3>
 <p>Authorised RiseFlake staff can view account data to provide support, investigate abuse, moderate photos and content, and meet legal obligations. Where staff sign in as you to reproduce a problem, the session is time-limited, an on-screen banner is shown, and it is logged (who, whom, when, from which IP). Access is limited by role.</p>
+<h3>5.8 Identity verification with DigiLocker (Aadhaar)</h3>
+<p>You can choose to verify your profile through DigiLocker (MeriPehchaan), a Government of India service. Verification is optional and is never a condition of using RiseFlake. You sign in with your Aadhaar on DigiLocker’s own pages and approve what is shared on DigiLocker’s consent screen. Your DigiLocker password, Aadhaar OTP and full Aadhaar number are never entered on RiseFlake, and we do not receive or store them.</p>
+<ul>
+<li><strong>What we receive:</strong> the details you approve on the consent screen, such as your name, date of birth, gender, the mobile number and email linked to DigiLocker, care-of name, address, Aadhaar photo, masked Aadhaar number (last 4 digits only), the digitally signed e-Aadhaar file where DigiLocker provides it, and an age check result. PAN or driving licence details are received only if you choose to share those documents. We also record each verification attempt (time, result, IP address and device).</li>
+<li><strong>Why we use it:</strong> to confirm you are a real person, show a “DigiLocker verified” mark on your profile, compare these details with your profile and flag mismatches for review, stop one identity from verifying more than one account of the same type, and prevent fraud and fake profiles. If you choose, we copy your date of birth, gender or mobile number from DigiLocker to your profile. We do not use these details for advertising and we do not sell them.</li>
+<li><strong>Who sees it:</strong> signed-in members who view your profile see the verified mark with your name as in DigiLocker, gender, age (not your date of birth), district, state and the date you verified. Your address, Aadhaar photo, mobile number, email, masked Aadhaar number and PAN or licence details are never shown to other members, recruiters or colleges. Only authorised staff who handle identity verification can open the full record, to review mismatches, settle disputes and investigate fraud, and each such access is logged.</li>
+<li><strong>How it is protected:</strong> personal details are encrypted (AES-256) before they are stored, and the Aadhaar photo and e-Aadhaar file are kept encrypted in private storage that is never public. Duplicate checks use one-way keyed hashes instead of the details themselves.</li>
+<li><strong>How long, and how to remove it:</strong> we keep the record while your account is active. To remove your verification, write to <a href="mailto:privacy@riseflake.com">privacy@riseflake.com</a>; we delete the record and its files, and the verified mark is removed. Deleting your account deletes it too.</li>
+</ul>
 </section>
 
 <section>
@@ -176,7 +188,7 @@ export default function PolicyBody() {
 <li><strong>Matching and recommendations</strong> — using your profile, skills, education, experience and location to suggest jobs, people and content.</li>
 <li><strong>Security and fraud prevention</strong> — detecting fake postings, bots, account takeover and scraping.</li>
 <li><strong>Service communications</strong> — OTPs, application updates, interview schedules, security alerts, policy changes. These are not marketing and are not optional while you hold an account.</li>
-<li><strong>Optional purposes (your consent)</strong> — promotional emails and push notifications, public/searchable profile, contact and email/phone visibility to recruiters, Find Nearby, phone-contact sync, location in assessments. Each can be turned off separately (Section 15).</li>
+<li><strong>Optional purposes (your consent)</strong> — promotional emails and push notifications, public/searchable profile, contact and email/phone visibility to recruiters, Find Nearby, phone-contact sync, location in assessments, identity verification with DigiLocker. Each can be turned off separately (Section 15).</li>
 <li><strong>Analytics and improvement</strong> — measuring how the Platform is used, with cookies only as described in the Cookie Policy.</li>
 <li><strong>Legal compliance</strong> — tax, accounting, responding to lawful requests, enforcing our Terms.</li>
 </ul>
@@ -212,6 +224,7 @@ export default function PolicyBody() {
 <tr><td>ip-api.com</td><td>Turns IP addresses into an approximate city/region for session security</td><td>IP address</td></tr>
 <tr><td>OpenStreetMap (Nominatim) and map tile providers</td><td>Turns coordinates into place names; shows maps</td><td>Coordinates, your IP address</td></tr>
 <tr><td>Better Stack</td><td>Service-status notices in the web app</td><td>IP address</td></tr>
+<tr><td>DigiLocker (MeriPehchaan), Government of India</td><td>Identity verification with Aadhaar, only if you choose to verify (Section 5.8)</td><td>The details you approve on DigiLocker’s consent screen</td></tr>
 </tbody>
 </table>
 <p>Each provider handles data under its own terms and privacy policy. We share only what each needs, and we review this list when our providers change.</p>
@@ -235,6 +248,7 @@ export default function PolicyBody() {
 <tr><td>Chat messages and images</td><td>Deleted automatically after 30 days.</td></tr>
 <tr><td>Phone contacts (Android)</td><td>Until you withdraw consent, ask us to delete them, or your account is erased.</td></tr>
 <tr><td>Location (Find Nearby)</td><td>Latest position only, while the feature is enabled; deleted with your account, or earlier on request.</td></tr>
+<tr><td>Identity verification (DigiLocker)</td><td>While your account is active, or until you ask us to remove the verification. The Aadhaar photo and e-Aadhaar file are deleted with the record.</td></tr>
 <tr><td>One-time passwords</td><td>Minutes.</td></tr>
 <tr><td>Security, session and access logs (IP, device, timestamps)</td><td>At least one year, as the DPDP Rules require, then deleted or anonymised (see 10.2 for logs that outlive an account).</td></tr>
 <tr><td>Support and grievance records</td><td>As long as needed to resolve the matter and evidence compliance, up to 3 years after closure unless a dispute is pending.</td></tr>
@@ -307,7 +321,7 @@ export default function PolicyBody() {
 <section>
 <h2>15. Consent</h2>
 <ul>
-<li>When you create an account you are asked to accept the Terms of Service and this Policy. Optional items — promotional messages, public profile and indexing, recruiter visibility of email/phone, Find Nearby, phone-contact sync, assessment location — are separate choices and are never a condition of using the core service.</li>
+<li>When you create an account you are asked to accept the Terms of Service and this Policy. Optional items — promotional messages, public profile and indexing, recruiter visibility of email/phone, Find Nearby, phone-contact sync, assessment location, identity verification — are separate choices and are never a condition of using the core service.</li>
 <li>We record what you agreed to, when, and which version of this Policy applied.</li>
 <li>You can withdraw any consent in <em>Settings</em> (visibility, notifications, location), by revoking device permissions, by using the unsubscribe link in our emails, or by writing to <a href="mailto:privacy@riseflake.com">privacy@riseflake.com</a>. Withdrawing may switch off features that depend on that data.</li>
 <li>Processing that does not depend on consent (for example keeping tax records) continues as the law requires.</li>

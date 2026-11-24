@@ -4,8 +4,8 @@ export default function AppPolicyBody() {
   return (
     <>
 <section>
-<p><strong>Version 2.0</strong></p>
-<p><strong>Last Updated:</strong> September 25, 2026 &nbsp;|&nbsp; <strong>Effective Date:</strong> September 19, 2026</p>
+<p><strong>Version 2.1</strong></p>
+<p><strong>Last Updated:</strong> November 24, 2026 &nbsp;|&nbsp; <strong>Effective Date:</strong> September 19, 2026</p>
 <p>This Privacy Policy applies to the <strong>RiseFlake</strong> mobile apps on Google Play and the Apple App Store, our website (www.riseflake.com) and web app (app.riseflake.com). The app is published by <strong>Bold India Platforms Private Limited</strong> (“we”, “us”), Pune, India.</p>
 </section>
 
@@ -17,6 +17,7 @@ export default function AppPolicyBody() {
 <li>We <strong>do not sell</strong> your personal data and do not use it to target ads.</li>
 <li>All data is encrypted in transit (HTTPS/TLS). Servers are in India (AWS Mumbai).</li>
 <li>You can delete your account and data anytime from the app or at <a href="/delete-account">riseflake.com/delete-account</a>.</li>
+<li>Verifying your profile with DigiLocker (Aadhaar) is optional. We never receive your full Aadhaar number, DigiLocker password or OTP.</li>
 <li>RiseFlake is for people aged <strong>18 or older</strong>.</li>
 </ul>
 </div>
@@ -27,6 +28,7 @@ export default function AppPolicyBody() {
 <thead><tr><th>Type</th><th>Examples</th><th>Why</th></tr></thead>
 <tbody>
 <tr><td><strong>Personal info</strong></td><td>Name, email*, mobile number*, date of birth, gender, profile photo, address</td><td>Create and secure your account, verify you by OTP, show your profile</td></tr>
+<tr><td><strong>Identity verification</strong> (optional)</td><td>Details you approve on DigiLocker when you verify with Aadhaar: name, date of birth, gender, linked mobile and email, address, Aadhaar photo, masked Aadhaar number (last 4 digits), e-Aadhaar file; PAN or driving licence only if you share them</td><td>Confirm you are a real person, show the DigiLocker verified mark, prevent fake and duplicate accounts</td></tr>
 <tr><td><strong>Career info</strong></td><td>Education, work experience, skills, projects, certificates, job preferences, resume</td><td>Match you to jobs and people; let recruiters you apply to evaluate you</td></tr>
 <tr><td><strong>Messages</strong></td><td>Chat messages and images</td><td>Let you talk to connections. Auto-deleted after 30 days</td></tr>
 <tr><td><strong>App activity</strong></td><td>Jobs viewed, saved and applied to; searches; assessment answers and scores</td><td>Run applications, assessments and recommendations</td></tr>
@@ -86,6 +88,7 @@ export default function AppPolicyBody() {
 <ul>
 <li><strong>With recruiters and companies</strong> you apply to, or when you make your profile visible to them. Your email and phone are shown only if you turn on Email / Phone Visibility.</li>
 <li><strong>With other users</strong> — your public profile and messages you send.</li>
+<li><strong>Identity verification:</strong> if you verify with DigiLocker, signed-in members see the verified mark with your name as in DigiLocker, gender, age, district, state and verification date. Your address, Aadhaar photo, contact details and document numbers are never shown to other members, recruiters or colleges.</li>
 <li><strong>With your college</strong>, if your account is linked to its placement cell.</li>
 <li><strong>With assessment / hackathon organisers</strong> — your answers, scores and registration details.</li>
 <li><strong>With service providers</strong> who help us run the app: Amazon Web Services (hosting, India), Cloudflare (security, file storage), Cloudinary (chat images), MongoDB (chat), Google (Firebase notifications, sign-in, analytics, Gemini), Microsoft &amp; LinkedIn (sign-in), Razorpay (payments), email delivery, ip-api.com and OpenStreetMap (location lookups). Some process limited data outside India under contractual safeguards.</li>
@@ -101,6 +104,7 @@ export default function AppPolicyBody() {
 <li>Passwords are stored only as salted hashes.</li>
 <li>Role-based access, two-factor authentication for admins, and logging of all staff access.</li>
 <li>Bot protection, rate limiting and private storage for sensitive documents.</li>
+<li>Identity verification details are encrypted before they are stored; the Aadhaar photo and e-Aadhaar file are kept in private storage, and staff access to them is logged.</li>
 </ul>
 <p>If a data breach affects you, we will tell you and the authorities without delay.</p>
 </section>
@@ -111,6 +115,7 @@ export default function AppPolicyBody() {
 <li><strong>Account and profile data:</strong> while your account is active.</li>
 <li><strong>Chat messages and images:</strong> auto-deleted after 30 days.</li>
 <li><strong>Contacts &amp; location:</strong> until you withdraw permission, ask us to delete, or delete your account.</li>
+<li><strong>Identity verification (DigiLocker):</strong> while your account is active, or until you ask us at <a href="mailto:privacy@riseflake.com">privacy@riseflake.com</a> to remove it.</li>
 <li><strong>Security logs:</strong> 1 year. <strong>Payment/tax records:</strong> as required by law (up to 8 years).</li>
 <li><strong>Inactive accounts:</strong> erased after 36 months of no activity, with prior email notice.</li>
 </ul>
