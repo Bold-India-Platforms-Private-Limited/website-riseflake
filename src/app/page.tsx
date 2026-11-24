@@ -124,7 +124,7 @@ export default function Home() {
 
           <div className="flex justify-center gap-8 text-sm text-slate-600 mb-12">
             <div>
-              <p className="font-bold text-2xl text-slate-900">3L+</p>
+              <p className="font-bold text-2xl text-slate-900">3M+</p>
               <p>Active Users</p>
             </div>
             <div className="w-px bg-slate-300"></div>
