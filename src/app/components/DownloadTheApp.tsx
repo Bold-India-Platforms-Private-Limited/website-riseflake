@@ -43,15 +43,15 @@ export default function DownloadTheApp() {
           <div className="mb-2 flex items-center gap-5">
             <div className="flex flex-col">
               <div className="flex items-center gap-1 text-xl font-bold text-slate-900">
-                4.9
+                4.5
                 <Star size={18} className="text-amber-400" fill="currentColor" />
               </div>
-              <div className="text-xs font-normal text-slate-400">2.3K+ Review</div>
+              <div className="text-xs font-normal text-slate-400">116 reviews</div>
             </div>
             <div className="h-8 w-px bg-slate-200" />
             <div className="flex flex-col">
               <div className="flex items-center gap-1 text-xl font-bold text-slate-900">
-                10K+
+                5K+
                 <Download size={18} className="text-slate-700" />
               </div>
               <div className="text-xs font-normal text-slate-400">Downloads</div>
