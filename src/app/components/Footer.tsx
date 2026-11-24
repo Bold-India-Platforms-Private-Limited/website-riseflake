@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import type { AnchorHTMLAttributes, ReactNode } from 'react'
-import { BASE_ASSETS_URL } from '../../lib/config'
+import { APP_BASE_URL, BASE_ASSETS_URL } from '../../lib/config'
 import { PARKED_VERTICALS } from '../../lib/parkedVerticals'
 
 type SectionKey = 'resources' | 'company' | 'quickLinks' | 'explore'
@@ -11,9 +11,9 @@ const BRAND_NAME = 'Riseflake'
 
 const links = {
   resources: [
-    { label: 'Support', href: '/support' },
-    { label: 'FAQs', href: '/faq' },
-    { label: 'Login & Register', href: '/' },
+    { label: 'Support', href: `${APP_BASE_URL}/support` },
+    { label: 'FAQs', href: `${APP_BASE_URL}/support?tab=faq` },
+    { label: 'Login & Register', href: `${APP_BASE_URL}/` },
     { label: 'HTML Sitemap', href: '/sitemap' },
     { label: 'XML Sitemap', href: '/sitemap.xml' },
   ],
@@ -25,17 +25,16 @@ const links = {
     { label: 'Engineering Colleges', href: '/colleges/browse/engineering-colleges-in-india' },
   ],
   company: [
-    { label: 'Contact Us', href: '/contact' },
-    { label: 'About Us', href: '/about' },
-    { label: 'Careers', href: '/careers' },
-    { label: 'Campus Ambassador', href: '/campus-ambassador' },
-    { label: 'Disclaimer', href: '/disclaimer' },
+    { label: 'Contact Us', href: `${APP_BASE_URL}/contact` },
+    { label: 'About Us', href: `${APP_BASE_URL}/about` },
+    { label: 'Careers', href: `${APP_BASE_URL}/careers` },
+    { label: 'Disclaimer', href: `${APP_BASE_URL}/disclaimer` },
   ],
   quickLinks: [
-    { label: 'Privacy Policy', href: '/privacy-policy' },
-    { label: 'Refund Policy', href: '/refund-policy' },
-    { label: 'Terms of Service', href: '/terms-of-service' },
-    { label: 'Trust & Safety', href: '/trust-and-safety' },
+    { label: 'Privacy Policy', href: `${APP_BASE_URL}/privacy-policy` },
+    { label: 'Refund Policy', href: `${APP_BASE_URL}/refund-policy` },
+    { label: 'Terms of Service', href: `${APP_BASE_URL}/terms-of-service` },
+    { label: 'Trust & Safety', href: `${APP_BASE_URL}/trust-and-safety` },
   ],
 }
 
@@ -90,13 +89,13 @@ const businessLogos = [
 ]
 
 const bottomLinks = [
-  { label: 'Regulatory & Other Info', href: '/regulatory-info' },
-  { label: 'Disclaimer Disclosure', href: '/disclaimer' },
-  { label: 'Information Security Practices', href: '/information-security' },
-  { label: 'Investors', href: '/investors' },
-  { label: 'Bug Bounty', href: '/bug-bounty' },
-  { label: 'Fraud alert', href: '/fraud-alert' },
-  { label: 'Cookie Policy', href: '/cookie-policy' },
+  { label: 'Regulatory & Other Info', href: `${APP_BASE_URL}/regulatory-info` },
+  { label: 'Disclaimer Disclosure', href: `${APP_BASE_URL}/disclaimer` },
+  { label: 'Information Security Practices', href: `${APP_BASE_URL}/information-security` },
+  { label: 'Investors', href: `${APP_BASE_URL}/investors` },
+  { label: 'Bug Bounty', href: `${APP_BASE_URL}/bug-bounty` },
+  { label: 'Fraud alert', href: `${APP_BASE_URL}/fraud-alert` },
+  { label: 'Cookie Policy', href: `${APP_BASE_URL}/cookie-policy` },
 ]
 
 const contactInfo = {

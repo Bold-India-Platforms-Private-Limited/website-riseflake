@@ -1,10 +1,9 @@
 import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
-import { Briefcase, GraduationCap, Building2, School, Globe, Home, FileText, ClipboardList, Info, Users, Mail, Rocket, HelpCircle, ScrollText, Lock, CreditCard, Shield, AlertTriangle, Cookie, Trash2, ExternalLink, Newspaper, Network } from 'lucide-react'
+import { Briefcase, GraduationCap, Building2, School, Globe, Home, FileText, Users, ScrollText, Trash2, ExternalLink, Newspaper, Network } from 'lucide-react'
 import Navbar from '../components/Navbar'
 import { API_BASE_URL, hreflangAlternates, WEBSITE_BASE_URL } from '../../lib/config'
 import { PARKED_VERTICALS } from '../../lib/parkedVerticals'
-import { FAQ_TOPICS } from '../../lib/faqs'
 
 export const metadata: Metadata = {
   title: 'Sitemap — All Pages & Sections',
@@ -230,7 +229,6 @@ export default async function SitemapHtmlPage() {
                 defaultOpen={false}
               >
                 <TreeLeaf href="/network" label="Profile network — crawlable hub for /in/* pages" icon={<ExternalLink className="h-3 w-3" />} />
-                <TreeLeaf href="/campus-ambassador" label="Campus Ambassador programme" icon={<Rocket className="h-3 w-3" />} />
                 {!PARKED_VERTICALS.people && (
                   <>
                     <TreeLeaf href="/sitemap-users.xml" label="Member profiles XML sitemap index" icon={<FileText className="h-3 w-3" />} muted />
@@ -239,30 +237,8 @@ export default async function SitemapHtmlPage() {
                 )}
               </TreeBranch>
 
-              {/* Company section */}
-              <TreeBranch icon={<Info className="h-4 w-4" />} label="About Riseflake" defaultOpen={false}>
-                <TreeLeaf href="/about" label="About us" icon={<Users className="h-3 w-3" />} />
-                <TreeLeaf href="/contact" label="Contact" icon={<Mail className="h-3 w-3" />} />
-                <TreeLeaf href="/careers" label="Careers at Riseflake" icon={<Rocket className="h-3 w-3" />} />
-                <TreeLeaf href="/support" label="Support & Help" icon={<HelpCircle className="h-3 w-3" />} />
-              </TreeBranch>
-
-              {/* FAQ */}
-              <TreeBranch icon={<HelpCircle className="h-4 w-4" />} label="FAQ" href="/faq" defaultOpen={false}>
-                <TreeLeaf href="/faq" label="All FAQs" icon={<HelpCircle className="h-3 w-3" />} />
-                {FAQ_TOPICS.map((t) => (
-                  <TreeLeaf key={t.slug} href={`/faq/${t.slug}`} label={`${t.label} FAQs`} icon={<HelpCircle className="h-3 w-3" />} />
-                ))}
-              </TreeBranch>
-
               {/* Legal */}
               <TreeBranch icon={<ScrollText className="h-4 w-4" />} label="Legal & Policies" defaultOpen={false}>
-                <TreeLeaf href="/privacy-policy" label="Privacy Policy" icon={<Lock className="h-3 w-3" />} />
-                <TreeLeaf href="/terms-of-service" label="Terms of Service" icon={<ClipboardList className="h-3 w-3" />} />
-                <TreeLeaf href="/refund-policy" label="Refund Policy" icon={<CreditCard className="h-3 w-3" />} />
-                <TreeLeaf href="/trust-and-safety" label="Trust & Safety" icon={<Shield className="h-3 w-3" />} />
-                <TreeLeaf href="/disclaimer" label="Disclaimer" icon={<AlertTriangle className="h-3 w-3" />} />
-                <TreeLeaf href="/cookie-policy" label="Cookie Policy" icon={<Cookie className="h-3 w-3" />} />
                 <TreeLeaf href="/delete-account" label="Delete Account" icon={<Trash2 className="h-3 w-3" />} />
               </TreeBranch>
 

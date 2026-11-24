@@ -4,7 +4,7 @@ import { WEBSITE_BASE_URL } from '@/lib/config'
 import { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
-import { Menu, X, ChevronRight, ChevronDown, Building2, GraduationCap, Briefcase, Cloud, FileText, FileCheck, Star, BookOpen } from 'lucide-react'
+import { Menu, X, ChevronRight, ChevronDown, Building2, GraduationCap, Briefcase, Cloud, FileText, FileCheck, BookOpen } from 'lucide-react'
 import BrowseMegaMenu from './BrowseMegaMenu'
 import MobileBottomNav from './MobileBottomNav'
 import { PARKED_VERTICALS } from '../../lib/parkedVerticals'
@@ -210,12 +210,6 @@ export default function Navbar({ bgTransparent = false }: { bgTransparent?: bool
                     <FileCheck className="h-4 w-4 text-slate-400" />
                     ATS Checker
                   </a>
-                  <div className="h-px bg-slate-100 my-1"></div>
-                  <Link href="/campus-ambassador" className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-medium text-violet-700 hover:bg-violet-50 transition-colors">
-                    <Star className="h-4 w-4 text-violet-400" />
-                    Campus Ambassador
-                    <span className="ml-auto text-[10px] font-bold bg-violet-100 text-violet-600 px-1.5 py-0.5 rounded-full">New</span>
-                  </Link>
                   <div className="h-px bg-slate-100 my-1"></div>
                   <Link href="/blog" className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-indigo-600 transition-colors">
                     <BookOpen className="h-4 w-4 text-slate-400" />
@@ -635,18 +629,6 @@ export default function Navbar({ bgTransparent = false }: { bgTransparent?: bool
                 </div>
                 <ChevronRight className="h-5 w-5 opacity-50" />
               </a>
-              <Link
-                href="/campus-ambassador"
-                className="flex items-center justify-between rounded-xl px-4 py-3 text-base font-medium transition text-violet-700 hover:bg-violet-50"
-                onClick={() => setOpen(false)}
-              >
-                <div className="flex items-center gap-3">
-                  <Star className="h-5 w-5 text-violet-500" />
-                  <span>Campus Ambassador</span>
-                  <span className="text-[10px] font-bold bg-violet-100 text-violet-600 px-1.5 py-0.5 rounded-full">New</span>
-                </div>
-                <ChevronRight className="h-5 w-5 opacity-50" />
-              </Link>
               <Link
                 href="/blog"
                 className={`flex items-center justify-between rounded-xl px-4 py-3 text-base font-medium transition ${isActive('/blog')

@@ -15,7 +15,6 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { SITE_ORIGIN, xmlEscape } from './lib.mjs'
 const { PARKED_VERTICALS } = await import(new URL('../../src/lib/parkedVerticals.ts', import.meta.url).href)
-const { FAQ_TOPICS, FAQ_LAST_UPDATED } = await import(new URL('../../src/lib/faqs.ts', import.meta.url).href)
 
 const BATCH = 10_000 // URLs per child sitemap (protocol max is 50,000)
 const XML_HEAD = '<?xml version="1.0" encoding="UTF-8"?>\n'
@@ -68,22 +67,9 @@ const STATIC_PAGES = [
   P('/internships', 'hourly', '0.9'),
   P('/companies', 'daily', '0.7'),
   ...(PARKED_VERTICALS.colleges ? [] : [P('/colleges', 'weekly', '0.6')]),
-  P('/about', 'monthly', '0.5'),
-  P('/contact', 'monthly', '0.5'),
-  P('/careers', 'monthly', '0.4'),
-  P('/support', 'monthly', '0.4'),
-  P('/faq', 'monthly', '0.6', FAQ_LAST_UPDATED),
-  ...FAQ_TOPICS.map((t) => P(`/faq/${t.slug}`, 'monthly', '0.6', FAQ_LAST_UPDATED)),
   // Human-readable sitemap — indexable hub that links every section
   P('/sitemap', 'weekly', '0.4'),
-  P('/privacy-policy', 'yearly', '0.3', '2026-01-08'),
-  P('/terms-of-service', 'yearly', '0.3', '2026-01-08'),
-  P('/refund-policy', 'yearly', '0.3', '2026-01-08'),
-  P('/trust-and-safety', 'yearly', '0.3', '2026-01-08'),
-  P('/disclaimer', 'yearly', '0.3', '2026-01-08'),
-  P('/cookie-policy', 'yearly', '0.3', '2026-01-08'),
   P('/delete-account', 'monthly', '0.3'),
-  P('/campus-ambassador', 'monthly', '0.5'),
   P('/network', 'daily', '0.7'),
   ...(PARKED_VERTICALS.people ? [] : [P('/in/people', 'daily', '0.7')]),
   P('/internships/work-from-home', 'daily', '0.9'),

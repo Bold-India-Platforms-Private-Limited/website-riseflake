@@ -17,7 +17,6 @@ import {
   Globe2,
   FileText,
   FileCheck,
-  Star,
   BookOpen,
 } from 'lucide-react'
 import { PARKED_VERTICALS } from '../../lib/parkedVerticals'
@@ -36,7 +35,6 @@ const MORE_LINKS = [
   { href: '/discover/companies/india', label: 'Discover', icon: Globe2, color: 'bg-fuchsia-50 text-fuchsia-600' },
   { href: `${WEBSITE_BASE_URL}/resume`, label: 'Build Resume', icon: FileText, color: 'bg-slate-100 text-slate-600', external: true },
   { href: `${WEBSITE_BASE_URL}/resume/ats-checker`, label: 'ATS Checker', icon: FileCheck, color: 'bg-orange-50 text-orange-600', external: true },
-  { href: '/campus-ambassador', label: 'Campus Ambassador', icon: Star, color: 'bg-violet-50 text-violet-600' },
   { href: '/blog', label: 'Blog', icon: BookOpen, color: 'bg-blue-50 text-blue-600' },
 ]
 

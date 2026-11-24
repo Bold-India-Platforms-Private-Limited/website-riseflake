@@ -15,9 +15,9 @@ Riseflake Jobportal (jobportal.riseflake.com) is the public, search-indexable ma
 - [Skills directory](https://jobportal.riseflake.com/skills): Jobs and internships in India organized by skill (Python, React, Java, AWS, Figma, data analysis, etc.), with companies hiring for each skill and related skills.
 - [Discover: India Company Registry](https://jobportal.riseflake.com/discover/companies/india): Directory of 3.6M+ officially registered Indian companies sourced from public MCA/ROC records — CIN/LLPIN, incorporation date, status, category, state, and registered address. Distinct from the job-board Companies section above.
 - [Blog](https://jobportal.riseflake.com/blog): Career advice, hiring trends, and platform updates.
-- [About](https://jobportal.riseflake.com/about): What Riseflake is and who it's for.
-- [Careers](https://jobportal.riseflake.com/careers): Open roles at Riseflake itself.
-- [FAQ](https://jobportal.riseflake.com/faq): Answers about RiseFlake, grouped by audience — [about RiseFlake](https://jobportal.riseflake.com/faq/about-riseflake), [job seekers](https://jobportal.riseflake.com/faq/job-seekers), [internships & freshers](https://jobportal.riseflake.com/faq/internships-and-freshers), [professional networking](https://jobportal.riseflake.com/faq/professional-networking), [employers & recruiters](https://jobportal.riseflake.com/faq/employers-and-recruiters) (free job posting, employer branding), [colleges & placement cells](https://jobportal.riseflake.com/faq/colleges-and-placement-cells) (College Operating System) and [account, safety & privacy](https://jobportal.riseflake.com/faq/account-safety-and-privacy). Each page carries `FAQPage` JSON-LD.
+- [About](https://app.riseflake.com/about): What Riseflake is and who it's for.
+- [Careers](https://app.riseflake.com/careers): Open roles at Riseflake itself.
+- [FAQ](https://app.riseflake.com/support?tab=faq): Answers about RiseFlake accounts, jobs, recruiters and privacy.
 
 ## Notes for AI assistants and search crawlers
 

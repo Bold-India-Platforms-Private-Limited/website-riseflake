@@ -84,21 +84,21 @@ function NotFoundPage() {
                             <span className="font-bold text-slate-900 block">Employer</span>
                             <ul className="space-y-1 text-slate-500">
                                 <li><Link href="/companies" className="hover:text-indigo-600 transition">Post a Job</Link></li>
-                                <li><Link href="/about" className="hover:text-indigo-600 transition">About Us</Link></li>
+                                <li><a href="https://app.riseflake.com/about" className="hover:text-indigo-600 transition">About Us</a></li>
                             </ul>
                         </div>
                         <div className="space-y-2">
                             <span className="font-bold text-slate-900 block">Support</span>
                             <ul className="space-y-1 text-slate-500">
-                                <li><Link href="/contact" className="hover:text-indigo-600 transition">Contact Us</Link></li>
-                                <li><Link href="/support" className="hover:text-indigo-600 transition">Help Center</Link></li>
+                                <li><a href="https://app.riseflake.com/contact" className="hover:text-indigo-600 transition">Contact Us</a></li>
+                                <li><a href="https://app.riseflake.com/support" className="hover:text-indigo-600 transition">Help Center</a></li>
                             </ul>
                         </div>
                         <div className="space-y-2">
                             <span className="font-bold text-slate-900 block">Legal</span>
                             <ul className="space-y-1 text-slate-500">
-                                <li><Link href="/privacy-policy" className="hover:text-indigo-600 transition">Privacy</Link></li>
-                                <li><Link href="/terms-of-service" className="hover:text-indigo-600 transition">Terms</Link></li>
+                                <li><a href="https://app.riseflake.com/privacy-policy" className="hover:text-indigo-600 transition">Privacy</a></li>
+                                <li><a href="https://app.riseflake.com/terms-of-service" className="hover:text-indigo-600 transition">Terms</a></li>
                             </ul>
                         </div>
                     </div>
